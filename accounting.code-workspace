@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"name": "Accounting",
+			"path": "."
+		},
+		{
+			"path": "../../agungdhewe/webapps"
+		}
+	],
+	"settings": {
+		"editor.insertSpaces": false,
+		"codium.codeCompletion.enable": false
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Chrome",
+				"request": "launch",
+				"type": "chrome",
+				"url": "https://act-dev.transfashion.id",
+				"webRoot": "${workspaceFolder}",
+				"windows": {
+					"userDataDir": "C:/Users/agung/.vscode/chrome-profile-core"
+				},
+				"linux": {
+					"userDataDir": "/home/agung/.vscode/chrome-profile-core"
+				}
+			}
+		]
+	}
+}

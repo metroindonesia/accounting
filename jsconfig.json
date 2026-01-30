@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "checkJs": false,
+    "allowJs": true,
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "node"
+  },
+  "include": ["src"]
+}
