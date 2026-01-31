@@ -1,0 +1,158 @@
+<form id="programgroupHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="programgroupHeaderEdit-obj_programgroup_id">
+
+	<!-- Textbox: programgroup_id-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_id-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_id">
+		<label for="programgroupHeaderEdit-obj_programgroup_id">ID</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="programgroup_id"
+			data-tabindex="1" 
+			required 
+			invalid-message-required="ID harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+			minlength="1" 
+			invalid-message-minlength="maksimal berisi 1 angka" 
+		>
+	</div>
+
+
+	<!-- Checkbox: programgroup_isparent-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_isparent-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_isparent">
+		<label for="programgroupHeaderEdit-obj_programgroup_isparent">IsParent</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_isparent"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="programgroup_isparent"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: programgroup_name-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_name-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_name">
+		<label for="programgroupHeaderEdit-obj_programgroup_name">Name</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_name"  fgta5-component="Textbox" placeholder="Nama Group" autocomplete="off" spellcheck="false" 
+			binding="programgroup_name"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="90" 
+		>
+	</div>
+
+
+	<!-- Combobox: programgroup_parent-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_parent-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_parent">
+		<label for="programgroupHeaderEdit-obj_programgroup_parent">Parent</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_parent"  fgta5-component="Combobox" placeholder="Parent Group" autocomplete="off" spellcheck="false" 
+			binding="programgroup_parent"
+			data-tabindex="4" 
+			data-display="programgroup_parent_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: programgroup_descr-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_descr-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_descr">
+		<label for="programgroupHeaderEdit-obj_programgroup_descr">Descr</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_descr"  fgta5-component="Textbox" placeholder="Dekskirpsi Group" autocomplete="off" spellcheck="false" 
+			binding="programgroup_descr"
+			data-tabindex="5" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Textbox: programgroup_icon-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_icon-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_icon">
+		<label for="programgroupHeaderEdit-obj_programgroup_icon">Icon</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_icon"  fgta5-component="Textbox" placeholder="icon" autocomplete="off" spellcheck="false" 
+			binding="programgroup_icon"
+			data-tabindex="6" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Numberbox: programgroup_level-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_level-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_level">
+		<label for="programgroupHeaderEdit-obj_programgroup_level">Level</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_level"  fgta5-component="Numberbox" placeholder="level" autocomplete="off" spellcheck="false" 
+			binding="programgroup_level"
+			value="0" 
+			data-tabindex="7" 
+			maxlength="9" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: programgroup_pathid-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_pathid-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_pathid">
+		<label for="programgroupHeaderEdit-obj_programgroup_pathid">PathID</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_pathid"  fgta5-component="Textbox" placeholder="path id" autocomplete="off" spellcheck="false" 
+			binding="programgroup_pathid"
+			data-tabindex="8" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: programgroup_path-->	
+	<div id="programgroupHeaderEdit-obj_programgroup_path-container" class="input-field" field="programgroupHeaderEdit-obj_programgroup_path">
+		<label for="programgroupHeaderEdit-obj_programgroup_path">Path</label>
+		<input id="programgroupHeaderEdit-obj_programgroup_path"  fgta5-component="Textbox" placeholder="path" autocomplete="off" spellcheck="false" 
+			binding="programgroup_path"
+			data-tabindex="9" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+			disabled 
+		>
+	</div>
+	
+</form>
+
+
+<div id="programgroupHeaderEdit-footer">
+</div>
+
+<div id="programgroupHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="programgroupHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="programgroupHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="programgroupHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="programgroupHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="programgroupHeaderEdit-btn_save">Save</button>
+		<button id="programgroupHeaderEdit-btn_edit">Edit</button>
+		<button id="programgroupHeaderEdit-btn_new" data-action="programgroupHeader-new">New</button>
+		<button id="programgroupHeaderEdit-btn_reset">Reset</button>
+		<button id="programgroupHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="programgroupHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

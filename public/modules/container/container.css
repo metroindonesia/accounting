@@ -1,0 +1,736 @@
+.fgta5-app-head {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: var(--fgta5-app-header-height);
+	background-color: black;
+	color: white;
+	font-size: 1.2rem;
+	font-weight: bold;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	padding: 0 0.5rem 0 0.5rem;
+}
+
+@media screen and (max-width: 500px) {
+	.fgta5-app-main {
+		margin: calc(var(--fgta5-app-header-height) + 20px) 10px 2rem 10px
+	}
+}
+
+@media screen and (min-width: 501px) {
+	.fgta5-app-main {
+		margin: calc(var(--fgta5-app-header-height) + 1rem) 1rem 2rem 1rem
+	}
+}
+
+
+
+
+.fgta5-app-footer {
+	background-color: #fff;
+	left: 0;
+	border-top: 1px solid #eee;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@media screen and (max-width: 500px) {
+	.fgta5-app-footer {
+		font-size: 0.7rem;
+		height: 5rem;
+	}
+
+	.fgta5-app-main[data-withfooter] {
+		margin-bottom: 5.5rem;
+	}
+}
+
+@media screen and (min-width: 500px) {
+	.fgta5-app-footer {
+		height: 2.5rem;
+	}
+
+	.fgta5-app-main[data-withfooter] {
+		margin-bottom: 3.5rem;
+	}
+}
+
+
+
+
+
+.fgta5-button-head {
+	display: block;
+	text-decoration: none;
+	width: 1.2rem;
+	height: 1.2rem;
+	min-width: 1.2rem;
+	min-height: 1.2rem;
+	color: white;
+	padding: 5px;
+	opacity: 1;
+	transition: transform 0.3s ease, opacity 0.5s ease;
+}
+
+.fgta5-button-head:hover {
+	transform: scale(1.2);
+	/* opacity: 0.5; */
+}
+
+.fgta5-button-menu {
+	display: block;
+	text-decoration: none;
+	width: 2rem;
+	height: 2rem;
+	color: var(--fgta5-app-buttonmenu-color);
+	padding: 5px;
+}
+
+
+.fgta5-appmanager-nav {
+	position: fixed;
+	top: 0;
+	right: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: white;
+	opacity: 0;
+	transform: translateX(100%);
+	transition: opacity 0.5s ease, transform 0.3s ease;
+	box-shadow: -10px 0px 20px rgba(0, 0, 0, 0.5);
+
+	display: flex;
+	justify-content: stretch;
+}
+
+.fgta5-appmanager-nav[showed] {
+	transform: translateX(0);
+	opacity: 1;
+}
+
+.fgta5-appmanager-nav div[header] {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: var(--fgta5-app-header-height);
+	background-color: #aaa;
+	color: white;
+	font-size: 1.2rem;
+	font-weight: bold;
+
+	display: flex;
+	justify-content: space-between;
+
+	align-items: center;
+
+	padding: 0 0.5rem 0 0.5rem;
+
+	transition: box-shadow 0.3s ease-in-out;
+	/* Animasi shadow */
+
+
+}
+
+.fgta5-fixheader-scrolled {
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.fgta5-appmanager-nav div[main] {
+	padding: calc(var(--fgta5-app-header-height) + 1rem) 0 3rem 0;
+	overflow-y: scroll;
+	width: 100%;
+}
+
+.fgta5-appmanager-nav div[main]>div {
+	padding: 0 1rem 0 1rem;
+}
+
+
+
+
+@media screen and (max-width: 501px) {
+	.fgta5-favourite-trashcontainer {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 501px) {
+	.fgta5-favourite {
+		padding: 5px;
+		border: 3px solid transparent
+	}
+
+	.fgta5-favourite[data-dragover] {
+		border: 3px dashed #5d7bff;
+		background-color: #5d7bff53;
+	}
+
+	.fgta5-favourite-trashcontainer {
+		position: absolute;
+		top: calc(var(--fgta5-app-header-height) + 10px);
+		color: default;
+		display: flex;
+		justify-content: center;
+		width: 100%;
+	}
+
+	.fgta5-favourite-trashcontainer>div {
+		height: 3rem;
+		width: 10rem;
+		border: 3px dashed red;
+		background-color: rgba(255, 0, 0, 0.294);
+		border-radius: 10px;
+		color: red;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 3px;
+		opacity: .4;
+	}
+
+	.fgta5-favourite-trashcontainer>div [data-icon] {
+		width: 1.2rem;
+		height: 1.2rem;
+	}
+
+	.fgta5-favourite-trashcontainer>div[data-dragover] {
+		opacity: 1;
+	}
+
+}
+
+
+
+
+
+.fgta5-iframe {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	border: none;
+	outline: none;
+	margin: 0;
+	padding: 0;
+}
+
+.fgta5-appmanager-home-subtitle {
+	font-weight: bold;
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	/* Ketebalan garis */
+	text-underline-offset: 4px;
+	/* Jarak underline dari teks */
+	text-decoration-color: #ccc;
+	margin-top: 2rem;
+	margin-bottom: 1rem;
+}
+
+.fgta5-menu {
+	position: relative;
+	transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+@media screen and (max-width: 500px) {
+	.fgta5-menu {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		/* 4 kolom dengan lebar sama */
+		gap: 10px;
+		/* Jarak antar elemen */
+
+		/* Memusatkan konten di dalam setiap grid cell */
+		align-items: center;
+		/* Vertikal */
+		justify-items: center;
+		/* Horizontal */
+	}
+
+}
+
+
+/* khusus desktop */
+@media screen and (min-width: 501px) {
+	.fgta5-menu {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(4rem, 1fr));
+		/* Kolom fleksibel */
+		row-gap: 1rem;
+		column-gap: 1rem;
+	}
+}
+
+/* geser ke kiri, menghilang */
+@keyframes fadeOutLeft {
+	0% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateX(-100px);
+	}
+}
+
+/* geser ke kanan, menghilang */
+@keyframes fadeOutRight {
+	0% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	100% {
+		opacity: 0;
+		transform: translateX(100px);
+	}
+}
+
+/* masuk dari kiri (sebelumnya harus di taruh dulu di kiri) */
+/* .taruh-kiri { transform: translateX(-100px); opacity: 0; } */
+@keyframes fadeInLeft {
+	0% {
+		opacity: 0;
+		transform: translateX(-100px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+/* masuk dari kanan, (sebelumnya harus di taruh dulu di kanan) */
+/* .taruh-kanan { transform: translateX(100px); opacity: 0; } */
+@keyframes fadeInRight {
+	0% {
+		opacity: 0;
+		transform: translateX(100px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+
+
+.fgta5-menu [data-iconcontainer] {
+	display: flex;
+	flex-direction: column;
+	row-gap: 0.25rem;
+	width: 4rem;
+	height: 4rem;
+	margin: 0;
+	padding: 0;
+
+	justify-content: space-between;
+	align-items: center;
+}
+
+/* .fgta5-menu [data-iconcontainer][disabled] {
+	pointer-events: none;
+	opacity: .2;
+} */
+
+.fgta5-menu [data-iconcontainer][disabled] [data-iconimage] {
+	pointer-events: none;
+	cursor: default;
+	filter: grayscale(1) opacity(.3)
+}
+
+.fgta5-menu [data-iconcontainer][disabled] [data-icontext] {
+	opacity: .3;
+}
+
+.fgta5-menu [data-iconimage] {
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	background-repeat: no-repeat;
+	/* Agar tidak tile */
+	background-size: cover;
+	/* Menyesuaikan gambar dengan ukuran box */
+	transform: scale(0.8);
+	transition: transform 0.3s ease-in-out;
+}
+
+@keyframes iconClicked {
+	0% {
+		opacity: 1;
+		transform: scale(1.3);
+	}
+
+	100% {
+		opacity: 0;
+		transform: scale(2);
+	}
+}
+
+
+.fgta5-menu [data-iconimage]:hover {
+	transform: scale(1.3);
+}
+
+.fgta5-menu [data-icontext] {
+	height: 1.25rem;
+	font-size: 0.6rem;
+}
+
+
+/* ini hanya untuk menambahkan border saja 
+   sesuai setingan di group menu
+*/
+.fgta5-icongroup [data-iconimage] {
+	border: 1px solid #b8b8b8;
+	border-radius: 7px;
+}
+
+
+.fgta5-menu-footer {
+	left: 0;
+	border-top: 1px solid #eee;
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background-color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@media screen and (max-width: 500px) {
+	.fgta5-menu-footer {
+		font-size: 0.7rem;
+		height: 5rem;
+	}
+
+	.fgta5-appmanager-nav div[main] {
+		padding-bottom: 5.5rem;
+	}
+}
+
+@media screen and (min-width: 500px) {
+	.fgta5-menu-footer {
+		height: 2.5rem;
+	}
+
+	.fgta5-appmanager-nav div[main] {
+		padding-bottom: 3rem;
+	}
+}
+
+.fgta5-menu-footer>a {
+	display: flex;
+	align-items: center;
+	column-gap: 0.5rem;
+	text-decoration: none;
+	color: black;
+	height: 1rem;
+	line-height: 1rem;
+	padding: 5px;
+}
+
+
+.fgta5-menu-footer>a div[icon] {
+	width: 1rem;
+	height: 1rem;
+}
+
+
+
+
+.fgta5-menu-toppanel {
+	display: grid;
+	position: relative;
+	margin-bottom: 2rem;
+}
+
+.fgta5-menu-toppanel [data-gridarea="left"] {
+	grid-area: left;
+	display: flex;
+	gap: 0.5rem
+}
+
+.fgta5-menu-toppanel [data-gridarea="center"] {
+	grid-area: center;
+	display: flex;
+	justify-content: center;
+	align-items: end;
+	padding: 5px;
+}
+
+.fgta5-menu-toppanel [data-gridarea="right"] {
+	grid-area: right;
+	display: flex;
+	justify-content: right;
+	gap: 0.5rem
+}
+
+.fgta5-menu-search {
+	display: flex;
+	position: relative;
+	border-bottom: 1px solid #a3a3a3;
+	margin-bottom: 1px;
+}
+
+.fgta5-menu-search:focus-within {
+	border-bottom: 2px solid #5c5c5c;
+	margin-bottom: 0;
+}
+
+.fgta5-menu-search *:focus {
+	border: none !important;
+	margin-bottom: 0 !important;
+}
+
+.fgta5-menu-search input {
+	outline: none;
+	border: none;
+	padding-right: 1.8rem;
+	background-color: transparent;
+	height: 1.5rem;
+	margin-bottom: 0;
+}
+
+.fgta5-menu-search button {
+	border: none;
+	outline: none;
+	width: 2rem;
+	background-color: transparent;
+	position: absolute;
+	right: 0;
+	top: 0.2rem;
+	color: var(--fgta5-app-buttonmenu-color);
+	margin-bottom: 0;
+}
+
+
+
+
+
+
+
+/* khusus mobile */
+@media screen and (max-width: 500px) {
+	.fgta5-menu-toppanel {
+		grid-template-areas:
+			"left right"
+			"center center";
+		grid-template-columns: 50% 50%;
+		row-gap: 20px;
+	}
+
+	.fgta5-menu-search {
+		flex-grow: 1;
+	}
+
+	.fgta5-menu-search button {
+		top: 0
+	}
+
+}
+
+
+/* khusus desktop */
+@media screen and (min-width: 501px) {
+	.fgta5-menu-toppanel {
+		grid-template-areas: "left center right";
+		grid-template-columns: 25% 50% 25%;
+		/* Desktop layout */
+	}
+}
+
+
+@keyframes dropped {
+	0% {
+		opacity: 0;
+		transform: translateY(-20px);
+	}
+
+	100% {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
+@keyframes removing {
+	0% {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	100% {
+		opacity: 0;
+		transform: scale(0)
+	}
+
+}
+
+
+
+@media screen and (max-width: 500px) {
+	.fgta5-openedmodule {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.fgta5-openedmodule-shortcut {
+		width: 100%;
+		max-width: 100%;
+	}
+
+
+}
+
+@media screen and (min-width: 501px) {
+	.fgta5-openedmodule {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
+		gap: 1rem;
+	}
+}
+
+
+
+
+
+.fgta5-openedmodule-shortcut {
+	display: grid;
+	grid-template-columns: 1.5rem auto 1.5rem;
+	grid-template-rows: auto auto;
+	column-gap: 0.8rem;
+	max-width: 300px;
+	font-size: 0.8rem;
+	padding: 0.5rem;
+	grid-template-areas: "icon title buttonclose"
+		"icon info buttonclose";
+	border: 1px solid #ddd;
+	border-radius: 7px;
+	background-color: #fff;
+}
+
+
+
+
+.fgta5-openedmodule-shortcut:hover {
+	box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+	transform: translateX(-3px) translateY(-3px);
+	cursor: pointer;
+}
+
+.fgta5-openedmodule-shortcut [data-icon] {
+	grid-area: icon;
+	background-repeat: no-repeat;
+	/* Agar tidak tile */
+	background-size: contain;
+	/* Menyesuaikan gambar dengan ukuran box */
+}
+
+
+
+.fgta5-openedmodule-shortcut [data-title] {
+	grid-area: title;
+	font-weight: bold;
+}
+
+.fgta5-openedmodule-shortcut [data-info] {
+	grid-area: info;
+	font-style: italic;
+}
+
+.fgta5-openedmodule-shortcut [data-buttonclose] {
+	grid-area: buttonclose;
+	display: flex;
+	justify-content: end;
+
+}
+
+.fgta5-button-shorcutclose {
+	width: 0.7rem;
+	height: 0.7rem;
+	color: #999;
+	transition: transform 0.3s ease-in-out;
+}
+
+.fgta5-button-shorcutclose:hover {
+	transform: scale(2);
+	color: red
+}
+
+
+@media screen and (max-width: 500px) {
+	.fgta5-button-shorcutclose {
+		color: red;
+	}
+}
+
+.fgta5-roundbox {
+	display: inline-block;
+	text-align: center;
+	padding: 2px;
+	border: 2px solid blue;
+	background-color: yellow;
+	color: blue;
+	border-radius: 1rem;
+	width: 1rem;
+	height: 1rem;
+}
+
+
+.fgta5-carousellcontainer {
+	position: relative;
+	display: flex;
+}
+
+.fgta5-app-section {
+	position: relative;
+	width: 100%;
+	padding-bottom: 5.5rem;
+}
+
+.fgta5-app-section div[data-topbar] {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 2rem;
+}
+
+.fgta5-app-section div[data-backbutton] {
+	width: 15px;
+}
+
+.fgta5-app-section div[data-title] {
+	font-weight: bold;
+	font-size: 1.3rem;
+	height: 1.3rem;
+	line-height: 1.3rem;
+}
+
+.fgta5-app-section a[data-backbutton] {
+	width: 1.2rem;
+	height: 1.2rem;
+	overflow: hidden;
+	color: rgb(106, 106, 106);
+	transition: transform 0.3s ease;
+}
+
+.fgta5-app-section a[data-backbutton]:hover {
+	transform: scale(2);
+}

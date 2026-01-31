@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+}
+
+
+
+.loginbox {
+	margin: 10px;
+	width: 200px;
+	height: 300px;
+}
+
+.loginbox h1 {
+	text-align: center;
+}
+
+.loginbox div {
+	text-align: center;
+}
+
+.loginbox input {
+	padding: 8px 0 8px 0;
+	margin: 5px 0 5px 0;
+	width: 100%;
+	text-align: center;
+	border: 1px solid rgb(30, 31, 33);
+}
+
+.loginbox button {
+	margin-top: 10px;
+	margin-left: 1px;
+	padding: 10px 0 10px 0;
+	width: 100%;
+	font-weight: bold;
+	cursor: pointer;
+	background-color: rgb(30, 31, 33);
+	color: rgb(220, 222, 233);
+	outline: 0;
+	border: 2px solid rgb(30, 31, 33);
+
+
+}

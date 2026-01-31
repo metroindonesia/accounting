@@ -1,6 +1,6 @@
 {
   "name": "@metroindonesia/accounting",
-  "version": "1.0.2",
+  "version": "0.0.1",
   "description": "accounting system for metroindonesia",
   "type": "module",
   "main": "./src/index.js",

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Login</title>
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="theme-color" content="#000000">
+
+	<link rel="manifest" href="/public/manifest.json">
+	<link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
+
+	<% if (fgta5jsDebugMode) { %>
+		<!-- DEBUG MODE -->
+		<%- include(libDebug) %>
+			<% } else { %>
+				<!-- PRODUCTION -->
+				<%- include(libProduction) %>
+					<% } %>
+
+						<!-- WebModule library-->
+						<script src="public/libs/webmodule/module.js"></script>
+						<link rel="stylesheet" href="public/libs/webmodule/module.css" />
+
+						<!-- Login CSS -->
+						<link rel="stylesheet" href="login/login.css" />
+
+						<style>
+							#loadingindicator {
+								position: fixed;
+								top: 0;
+								left: 0;
+								right: 0;
+								bottom: 0;
+								display: flex;
+								justify-content: center;
+								align-items: center;
+								background-color: #fff;
+								transition: opacity 0.5s ease, visibility 0.5s ease;
+							}
+						</style>
+
+						<style>
+							@import url("public/fonts/karla.css");
+
+							* {
+								font-family: "Karla";
+							}
+
+							input {
+								user-select: text;
+							}
+
+							dialog {
+								outline: none;
+							}
+
+							body {
+								background-color: white;
+								overscroll-behavior-y: contain;
+								user-select: none;
+								padding: 0px;
+								margin: 0px;
+								overscroll-behavior: contain;
+								font-size: 14px;
+							}
+
+							/* khusus mobile */
+							@media screen and (max-width: 500px) {
+
+								html,
+								body,
+								input,
+								button {
+									font-size: 20px;
+								}
+							}
+						</style>
+
+
+</head>
+
+<body>
+	<div id="loadingindicator">
+		<div style="font-family: system-ui, sans-serif">
+			loading module...
+		</div>
+	</div>
+
+	<!-- <%= moduleName %> -->
+	<main id="mainapp">
+		<%- include(loginPagePath) %>
+	</main>
+</body>
+
+<script type="module">
+
+	function removeLoadingIndicator() {
+		const mainapp = document.getElementById('mainapp')
+		const pagemask = document.getElementById('loadingindicator')
+		mainapp.classList.remove('hidden')
+		setTimeout(() => {
+			pagemask.style.opacity = 0
+			pagemask.style.visibility = 'hidden'
+			setTimeout(() => {
+				pagemask.parentNode.removeChild(pagemask)
+			}, 500)
+		}, 50)
+	}
+
+	async function Start() {
+		window.addEventListener("load", async (event) => {
+			try {
+				const Application = await import('./login/login.mjs')
+				const $app = new Application.default();
+				await $app.main();
+			} catch (err) {
+				console.error(err)
+				const mainapp = document.getElementById('mainapp')
+				mainapp.innerHTML = '<div><h1 style="color:red">Module Error</h1><div>' + err.message + '</div></div>'
+			} finally {
+				removeLoadingIndicator()
+			}
+		});
+	}
+
+	Start()
+
+</script>
+
+</html>
