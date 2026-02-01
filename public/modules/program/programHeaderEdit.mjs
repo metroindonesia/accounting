@@ -1,5 +1,5 @@
-import Context from './programgroup-context.mjs'
-import * as Ext from './programgroup-ext.mjs'
+import Context from './program-context.mjs'
+import * as Ext from './program-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,40 +7,40 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.programgroupHeaderEdit
+const CurrentSectionId = Context.Sections.programHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Program Group'
-const TitleWhenView = 'View Program Group'
-const TitleWhenEdit = 'Edit Program Group'
+const TitleWhenNew = 'New Program'
+const TitleWhenView = 'View Program'
+const TitleWhenEdit = 'Edit Program'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('programgroupHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('programgroupHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('programgroupHeaderEdit-btn_new', 'programgroupHeader-new')
-const btn_del = new $fgta5.ActionButton('programgroupHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('programgroupHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('programgroupHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('programgroupHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('programHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('programHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('programHeaderEdit-btn_new', 'programHeader-new')
+const btn_del = new $fgta5.ActionButton('programHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('programHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('programHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('programHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('programgroupHeader-btn_recordstatus')
-const btn_logs = document.getElementById('programgroupHeader-btn_logs')
-const btn_about = document.getElementById('programgroupHeader-btn_about')
+const btn_recordstatus = document.getElementById('programHeader-btn_recordstatus')
+const btn_logs = document.getElementById('programHeader-btn_logs')
+const btn_about = document.getElementById('programHeader-btn_about')
 
-const frm = new $fgta5.Form('programgroupHeaderEdit-frm');
-const obj_programgroup_id = frm.Inputs['programgroupHeaderEdit-obj_programgroup_id']
-const obj_programgroup_isparent = frm.Inputs['programgroupHeaderEdit-obj_programgroup_isparent']
-const obj_programgroup_name = frm.Inputs['programgroupHeaderEdit-obj_programgroup_name']
-const obj_programgroup_parent = frm.Inputs['programgroupHeaderEdit-obj_programgroup_parent']
-const obj_programgroup_descr = frm.Inputs['programgroupHeaderEdit-obj_programgroup_descr']
-const obj_programgroup_icon = frm.Inputs['programgroupHeaderEdit-obj_programgroup_icon']
-const obj_programgroup_level = frm.Inputs['programgroupHeaderEdit-obj_programgroup_level']
-const obj_programgroup_pathid = frm.Inputs['programgroupHeaderEdit-obj_programgroup_pathid']
-const obj_programgroup_path = frm.Inputs['programgroupHeaderEdit-obj_programgroup_path']	
+const frm = new $fgta5.Form('programHeaderEdit-frm');
+const obj_program_id = frm.Inputs['programHeaderEdit-obj_program_id']
+const obj_program_isdisabled = frm.Inputs['programHeaderEdit-obj_program_isdisabled']
+const obj_program_name = frm.Inputs['programHeaderEdit-obj_program_name']
+const obj_apps_id = frm.Inputs['programHeaderEdit-obj_apps_id']
+const obj_programgroup_id = frm.Inputs['programHeaderEdit-obj_programgroup_id']
+const obj_program_title = frm.Inputs['programHeaderEdit-obj_program_title']
+const obj_program_variance = frm.Inputs['programHeaderEdit-obj_program_variance']
+const obj_program_descr = frm.Inputs['programHeaderEdit-obj_program_descr']
+const obj_program_icon = frm.Inputs['programHeaderEdit-obj_program_icon']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -51,7 +51,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing programgroupHeaderEdit ...')
+	console.log('initializing programHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -81,8 +81,8 @@ export async function init(self, args) {
 		edit: btn_edit,	
 	}
 	
-	// export async function programgroupHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'programgroupHeaderEdit_init'
+	// export async function programHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'programHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -92,17 +92,74 @@ export async function init(self, args) {
 	
 
 	
-	// Combobox: obj_programgroup_parent
-	obj_programgroup_parent.addEventListener('selecting', async (evt)=>{
+	// Combobox: obj_apps_id
+	obj_apps_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_programgroup_parent_selecting'
+		const fn_selecting_name = 'obj_apps_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_programgroup_parent_selecting(self, obj_programgroup_parent, frm, evt) {}
-			fn_selecting(self, obj_programgroup_parent, frm, evt)
+			// export async function obj_apps_id_selecting(self, obj_apps_id, frm, evt) {}
+			fn_selecting(self, obj_apps_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'apps/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_apps_id_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_apps_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.apps_id, row.apps_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_programgroup_id
+	obj_programgroup_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_programgroup_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_programgroup_id_selecting(self, obj_programgroup_id, frm, evt) {}
+			fn_selecting(self, obj_programgroup_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
@@ -117,11 +174,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_programgroup_parent_selecting_criteria(self, obj_programgroup_parent, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_programgroup_parent_selecting_criteria'
+			// export function obj_programgroup_id_selecting_criteria(self, obj_programgroup_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_programgroup_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_programgroup_parent, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_programgroup_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -148,6 +205,21 @@ export async function init(self, args) {
 		}		
 	})
 	
+	obj_programgroup_id.addEventListener('populating', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_populating_name = 'obj_programgroup_id_populating'
+		const fn_populating = Extender[fn_populating_name]
+		if (typeof fn_populating === 'function') {
+			// create function di Extender:
+			// export async function obj_programgroup_id_populating(self, obj_programgroup_id, frm, evt) {}
+			fn_populating(self, obj_programgroup_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_programgroup_id_populating is not implemented')
+		}		
+	})
+	
 		
 	
 }
@@ -157,7 +229,8 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_programgroup_parent.clear()
+		obj_apps_id.clear()
+		obj_programgroup_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -166,8 +239,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function programgroupHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'programgroupHeaderEdit_isEditDisabled'
+		// export async function programHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'programHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -181,8 +254,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function programgroupHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'programgroupHeaderEdit_formOpened'
+		// export async function programHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'programHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -319,7 +392,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.programgroupHeaderList
+		const listId =  Context.Sections.programHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -341,8 +414,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function programgroupHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'programgroupHeaderEdit_formLocked'
+	// export function programHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'programHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -377,8 +450,8 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function programgroupHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'programgroupHeaderEdit_formUnlocked'
+	// export function programHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'programHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -419,8 +492,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const programgroupHeaderList = self.Modules.programgroupHeaderList
-	const listsecid = programgroupHeaderList.Section.Id
+	const programHeaderList = self.Modules.programHeaderList
+	const listsecid = programHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -450,16 +523,15 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
-			programgroup_level: 0,
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'programgroupHeaderEdit_newData'
+		const fn_newdata_name = 'programHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function programgroupHeaderEdit_newData(self, datainit, frm) {}
+			// export async function programHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -481,7 +553,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.programgroupHeaderList.Section.show()
+			self.Modules.programHeaderList.Section.show()
 		}
 	}
 }
@@ -491,7 +563,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'programgroupHeaderEdit_autofill'
+	const fn_autofill_name = 'programHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -542,9 +614,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function programgroupHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function programHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'programgroupHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'programHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -594,10 +666,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'programgroupHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'programHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function programgroupHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function programHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -613,10 +685,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.programgroupHeaderList.addNewRow(self, data)
+			self.Modules.programHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.programgroupHeaderList.updateCurrentRow(self, data)
+			self.Modules.programHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -655,10 +727,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.programgroupHeaderList.removeCurrentRow(self)
+		self.Modules.programHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.programgroupHeaderList.Section.show()
+		self.Modules.programHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -703,12 +775,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.programgroupHeaderList.selectPreviousRow(self)
+	self.Modules.programHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.programgroupHeaderList.selectNextRow(self)
+	self.Modules.programHeaderList.selectNextRow(self)
 }
 
 
@@ -742,7 +814,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'programgroupHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'programHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -784,7 +856,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'core.programgroup',
+				table: 'core.program',
 				id: id
 			}
 
@@ -814,7 +886,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Program Group'
+		AboutSection.Title = 'About Program'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -822,7 +894,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = 'grouping program, untuk mengelompokkan program-program dalam hierarki'
+			divDescr.innerHTML = 'daftar program'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}
@@ -831,7 +903,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 1 Feb 2026 07:27'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 1 Feb 2026 10:43'
 			section.appendChild(divFooter)
 		}
 		

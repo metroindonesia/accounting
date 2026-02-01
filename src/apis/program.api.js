@@ -5,12 +5,13 @@ import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import context from '@agung_dhewe/webapps/src/context.js'  
 import logger from '@agung_dhewe/webapps/src/logger.js'
+import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
 
-import * as Extender from './extenders/programgroup.apiext.js'
+import * as Extender from './extenders/program.apiext.js'
 
-const moduleName = 'programgroup'
+const moduleName = 'program'
 const headerSectionName = 'header'
-const headerTableName = 'core.programgroup' 	
+const headerTableName = 'core.program' 	
 
 // api: account
 export default class extends Api {
@@ -23,20 +24,20 @@ export default class extends Api {
 	// dipanggil dengan model snake syntax
 	// contoh: header-list
 	//         header-open-data
-	async init(body) { return await programgroup_init(this, body) }
+	async init(body) { return await program_init(this, body) }
 
 	// header
-	async headerList(body) { return await programgroup_headerList(this, body) }
-	async headerOpen(body) { return await programgroup_headerOpen(this, body) }
-	async headerUpdate(body) { return await programgroup_headerUpdate(this, body)}
-	async headerCreate(body) { return await programgroup_headerCreate(this, body)}
-	async headerDelete(body) { return await programgroup_headerDelete(this, body) }
+	async headerList(body) { return await program_headerList(this, body) }
+	async headerOpen(body) { return await program_headerOpen(this, body) }
+	async headerUpdate(body) { return await program_headerUpdate(this, body)}
+	async headerCreate(body) { return await program_headerCreate(this, body)}
+	async headerDelete(body) { return await program_headerDelete(this, body) }
 	
 			
 }	
 
 // init module
-async function programgroup_init(self, body) {
+async function program_init(self, body) {
 	const req = self.req
 
 	// set sid untuk session ini, diperlukan ini agar session aktif
@@ -66,9 +67,9 @@ async function programgroup_init(self, body) {
 			setting: {}
 		}
 		
-		if (typeof Extender.programgroup_init === 'function') {
-			// export async function programgroup_init(self, initialData) {}
-			await Extender.programgroup_init(self, initialData)
+		if (typeof Extender.program_init === 'function') {
+			// export async function program_init(self, initialData) {}
+			await Extender.program_init(self, initialData)
 		}
 
 		return initialData
@@ -80,7 +81,7 @@ async function programgroup_init(self, body) {
 
 
 // data logging
-async function programgroup_log(self, body, startTime, tablename, id, action, data={}, remark='') {
+async function program_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -97,11 +98,11 @@ async function programgroup_log(self, body, startTime, tablename, id, action, da
 
 
 
-async function programgroup_headerList(self, body) {
+async function program_headerList(self, body) {
 	const tablename = headerTableName
 	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
-		searchtext: `programgroup_name ILIKE '%' || \${searchtext} || '%'`,
+		searchtext: `program_name ILIKE '%' || \${searchtext} || '%' OR program_title ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
@@ -139,10 +140,15 @@ async function programgroup_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			// lookup: programgroup_parent_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.programgroup.programgroup_parent)
+			// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
 			{
-				const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', row.programgroup_parent)
-				row.programgroup_parent_name = programgroup_name
+				const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', row.apps_id)
+				row.apps_name = apps_name
+			}
+			// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
+			{
+				const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', row.programgroup_id)
+				row.programgroup_name = programgroup_name
 			}
 			
 			// pasang extender di sini
@@ -171,13 +177,13 @@ async function programgroup_headerList(self, body) {
 	}
 }
 
-async function programgroup_headerOpen(self, body) {
+async function program_headerOpen(self, body) {
 	const tablename = headerTableName
 
 	try {
 		const { id } = body 
-		const criteria = { programgroup_id: id }
-		const searchMap = { programgroup_id: `programgroup_id = \${programgroup_id}`}
+		const criteria = { program_id: id }
+		const searchMap = { program_id: `program_id = \${program_id}`}
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
 		const sql = sqlUtil.createSqlSelect({
 			tablename: tablename, 
@@ -193,10 +199,15 @@ async function programgroup_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
-		// lookup: programgroup_parent_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.programgroup.programgroup_parent)
+		// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
 		{
-			const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', data.programgroup_parent)
-			data.programgroup_parent_name = programgroup_name
+			const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', data.apps_id)
+			data.apps_name = apps_name
+		}
+		// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
+		{
+			const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', data.programgroup_id)
+			data.programgroup_name = programgroup_name
 		}
 		
 
@@ -226,8 +237,8 @@ async function programgroup_headerOpen(self, body) {
 }
 
 
-async function programgroup_headerCreate(self, body) {
-	const { source='programgroup', data={} } = body
+async function program_headerCreate(self, body) {
+	const { source='program', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -246,14 +257,30 @@ async function programgroup_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', prefix:'PROG' }
 
-				
+			
+			// buat short sequencer	
+			const sequencer = createSequencerLine(tx, {})
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+			// generate short id sesuai prefix (default: PROG) reset pertahun
+			const seqdata = await sequencer.yearlyshort(args.prefix)
+			data.program_id = seqdata.id
+
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
 			if (typeof Extender.headerCreating === 'function') {
 				// export async function headerCreating(self, tx, data, seqdata, args) {}
-				await Extender.headerCreating(self, tx, data, null, args)
+				await Extender.headerCreating(self, tx, data, seqdata, args)
 			}
+
+			
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
@@ -268,7 +295,7 @@ async function programgroup_headerCreate(self, body) {
 			}
 
 			// record log
-			programgroup_log(self, body, startTime, tablename, ret.programgroup_id, 'CREATE', logMetadata)
+			program_log(self, body, startTime, tablename, ret.program_id, 'CREATE', logMetadata)
 
 			return ret
 		})
@@ -279,8 +306,8 @@ async function programgroup_headerCreate(self, body) {
 	}
 }
 
-async function programgroup_headerUpdate(self, body) {
-	const { source='programgroup', data={} } = body
+async function program_headerUpdate(self, body) {
+	const { source='program', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -306,7 +333,7 @@ async function programgroup_headerUpdate(self, body) {
 			}
 
 			// eksekusi update
-			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['programgroup_id'])
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['program_id'])
 			const ret = await cmd.execute(data)
 
 			
@@ -319,7 +346,7 @@ async function programgroup_headerUpdate(self, body) {
 			}			
 
 			// record log
-			programgroup_log(self, body, startTime, tablename, data.programgroup_id, 'UPDATE')
+			program_log(self, body, startTime, tablename, data.program_id, 'UPDATE')
 
 			return ret
 		})
@@ -332,7 +359,7 @@ async function programgroup_headerUpdate(self, body) {
 }
 
 
-async function programgroup_headerDelete(self, body) {
+async function program_headerDelete(self, body) {
 	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -344,7 +371,7 @@ async function programgroup_headerDelete(self, body) {
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {programgroup_id: id}
+			const dataToRemove = {program_id: id}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender headerDeleting
 			if (typeof Extender.headerDeleting === 'function') {
@@ -355,7 +382,7 @@ async function programgroup_headerDelete(self, body) {
 			
 
 			// hapus data header
-			const cmd = sqlUtil.createDeleteCommand(tablename, ['programgroup_id'])
+			const cmd = sqlUtil.createDeleteCommand(tablename, ['program_id'])
 			const deletedRow = await cmd.execute(dataToRemove)
 
 			const logMetadata = {}
@@ -367,7 +394,7 @@ async function programgroup_headerDelete(self, body) {
 			}
 
 			// record log
-			programgroup_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
+			program_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
 
 			return deletedRow
 		})

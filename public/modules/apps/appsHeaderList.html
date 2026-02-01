@@ -1,0 +1,30 @@
+<div id="appsHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="appsHeaderList-pnl_search" class="search-parameters">
+		<input id="appsHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="appsHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="appsHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="apps_id">
+			<th data-name="apps_name" binding="apps_name" >Nama</th>
+			<th data-name="apps_id" binding="apps_id" sorting="true">ID</th>
+			<th data-name="apps_url" binding="apps_url" >Url</th>
+			<th data-name="apps_isdisabled" binding="apps_isdisabled" formatter="checkmark(value)" style="text-align: center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="appsHeaderList-btn_new" data-action="appsHeader-new" data-sectionsource="appsHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

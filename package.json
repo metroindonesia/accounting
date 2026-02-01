@@ -6,6 +6,7 @@
   "main": "./src/index.js",
   "scripts": {
     "server": "node .",
+    "debug": "nodemon .",
     "clean": "kill -9 $(lsof -t -i :3001)"
   },
   "author": "Agung Nugroho",

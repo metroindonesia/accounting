@@ -1,0 +1,125 @@
+<form id="docHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="docHeaderEdit-obj_doc_id">
+
+	<!-- Textbox: doc_id-->	
+	<div id="docHeaderEdit-obj_doc_id-container" class="input-field" field="docHeaderEdit-obj_doc_id">
+		<label for="docHeaderEdit-obj_doc_id">Code</label>
+		<input id="docHeaderEdit-obj_doc_id"  fgta5-component="Textbox" placeholder="id dokumen" autocomplete="off" spellcheck="false" 
+			binding="doc_id"
+			data-tabindex="1" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="code document harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+			minlength="2" 
+		>
+	</div>
+
+
+	<!-- Textbox: doc_prefix-->	
+	<div id="docHeaderEdit-obj_doc_prefix-container" class="input-field" field="docHeaderEdit-obj_doc_prefix">
+		<label for="docHeaderEdit-obj_doc_prefix">Prefix</label>
+		<input id="docHeaderEdit-obj_doc_prefix"  fgta5-component="Textbox" placeholder="prefix" autocomplete="off" spellcheck="false" 
+			binding="doc_prefix"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+		>
+	</div>
+
+
+	<!-- Textbox: doc_name-->	
+	<div id="docHeaderEdit-obj_doc_name-container" class="input-field" field="docHeaderEdit-obj_doc_name">
+		<label for="docHeaderEdit-obj_doc_name">Name</label>
+		<input id="docHeaderEdit-obj_doc_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="doc_name"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="90" 
+		>
+	</div>
+
+
+	<!-- Textbox: doc_descr-->	
+	<div id="docHeaderEdit-obj_doc_descr-container" class="input-field" field="docHeaderEdit-obj_doc_descr">
+		<label for="docHeaderEdit-obj_doc_descr">Descr</label>
+		<input id="docHeaderEdit-obj_doc_descr"  fgta5-component="Textbox" placeholder="deskripsi" autocomplete="off" spellcheck="false" 
+			binding="doc_descr"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Numberbox: doc_seqclust-->	
+	<div id="docHeaderEdit-obj_doc_seqclust-container" class="input-field" field="docHeaderEdit-obj_doc_seqclust">
+		<label for="docHeaderEdit-obj_doc_seqclust">Seq.Clust</label>
+		<input id="docHeaderEdit-obj_doc_seqclust"  fgta5-component="Numberbox" placeholder="sequencer cluster" autocomplete="off" spellcheck="false" 
+			binding="doc_seqclust"
+			value="0" 
+			data-tabindex="5" 
+			maxlength="9" 
+			digitgrouping="false" 
+		>
+	</div>
+
+
+	<!-- Numberbox: doc_seqnum-->	
+	<div id="docHeaderEdit-obj_doc_seqnum-container" class="input-field" field="docHeaderEdit-obj_doc_seqnum">
+		<label for="docHeaderEdit-obj_doc_seqnum">Seq.Num</label>
+		<input id="docHeaderEdit-obj_doc_seqnum"  fgta5-component="Numberbox" placeholder="seq. number" autocomplete="off" spellcheck="false" 
+			binding="doc_seqnum"
+			value="0" 
+			data-tabindex="6" 
+			maxlength="9" 
+			min="0" 
+			max="99" 
+			invalid-message-max="maksimum nilai code document adalah 99" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="docHeaderEdit-footer">
+</div>
+
+<div id="docHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="docHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="docHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="docHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="docHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="docHeaderEdit-btn_save">Save</button>
+		<button id="docHeaderEdit-btn_edit">Edit</button>
+		<button id="docHeaderEdit-btn_new" data-action="docHeader-new">New</button>
+		<button id="docHeaderEdit-btn_reset">Reset</button>
+		<button id="docHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="docHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

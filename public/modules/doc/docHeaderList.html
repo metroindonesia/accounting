@@ -1,0 +1,30 @@
+<div id="docHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="docHeaderList-pnl_search" class="search-parameters">
+		<input id="docHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="docHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="docHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="doc_id">
+			<th data-name="doc_id" binding="doc_id" >Code</th>
+			<th data-name="doc_name" binding="doc_name" >Name</th>
+			<th data-name="doc_seqclust" binding="doc_seqclust" sorting="true">Seq.Clust</th>
+			<th data-name="doc_seqnum" binding="doc_seqnum" sorting="true">Seq.Num</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="docHeaderList-btn_new" data-action="docHeader-new" data-sectionsource="docHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

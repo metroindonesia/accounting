@@ -1,7 +1,7 @@
-import Context from './programgroup-context.mjs'  
-import * as programgroupHeaderList from './programgroupHeaderList.mjs' 
-import * as programgroupHeaderEdit from './programgroupHeaderEdit.mjs' 
-import * as Extender from './programgroup-ext.mjs'
+import Context from './program-context.mjs'  
+import * as programHeaderList from './programHeaderList.mjs' 
+import * as programHeaderEdit from './programHeaderEdit.mjs' 
+import * as Extender from './program-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -15,7 +15,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Program Group')
+		app.setTitle('Program')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -27,8 +27,8 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			programgroupHeaderList, 
-			programgroupHeaderEdit, 
+			programHeaderList, 
+			programHeaderEdit, 
 		}
 
 		try {
@@ -49,8 +49,8 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				programgroupHeaderList.init(self, args), 
-				programgroupHeaderEdit.init(self, args), 
+				programHeaderList.init(self, args), 
+				programHeaderEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -62,7 +62,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['programgroupHeaderEdit']
+			const modNameList = ['programHeaderEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -93,7 +93,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/programgroup/programgroup.svg')
+		Crsl.setIconUrl('public/modules/program/program.svg')
 
 
 		// Set listener untuk section carousel
@@ -162,7 +162,7 @@ async function render(self) {
 		});
 
 		
-		// programgroup-ext.mjs, export function extendPage(self) {} 
+		// program-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {

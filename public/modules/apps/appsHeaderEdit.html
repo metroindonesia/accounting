@@ -1,0 +1,120 @@
+<form id="appsHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="appsHeaderEdit-obj_apps_id">
+
+	<!-- Textbox: apps_id-->	
+	<div id="appsHeaderEdit-obj_apps_id-container" class="input-field" field="appsHeaderEdit-obj_apps_id">
+		<label for="appsHeaderEdit-obj_apps_id">ID</label>
+		<input id="appsHeaderEdit-obj_apps_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="apps_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: apps_isdisabled-->	
+	<div id="appsHeaderEdit-obj_apps_isdisabled-container" class="input-field" field="appsHeaderEdit-obj_apps_isdisabled">
+		<label for="appsHeaderEdit-obj_apps_isdisabled">Disabled</label>
+		<input id="appsHeaderEdit-obj_apps_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="apps_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: apps_name-->	
+	<div id="appsHeaderEdit-obj_apps_name-container" class="input-field" field="appsHeaderEdit-obj_apps_name">
+		<label for="appsHeaderEdit-obj_apps_name">Nama</label>
+		<input id="appsHeaderEdit-obj_apps_name"  fgta5-component="Textbox" placeholder="nama applikasi" autocomplete="off" spellcheck="false" 
+			binding="apps_name"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="Nama harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: apps_url-->	
+	<div id="appsHeaderEdit-obj_apps_url-container" class="input-field" field="appsHeaderEdit-obj_apps_url">
+		<label for="appsHeaderEdit-obj_apps_url">Url</label>
+		<input id="appsHeaderEdit-obj_apps_url"  fgta5-component="Textbox" placeholder="url" autocomplete="off" spellcheck="false" 
+			binding="apps_url"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="url harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="90" 
+		>
+	</div>
+
+
+	<!-- Textbox: apps_descr-->	
+	<div id="appsHeaderEdit-obj_apps_descr-container" class="input-field" field="appsHeaderEdit-obj_apps_descr">
+		<label for="appsHeaderEdit-obj_apps_descr">Descr</label>
+		<input id="appsHeaderEdit-obj_apps_descr"  fgta5-component="Textbox" placeholder="deskripsi" autocomplete="off" spellcheck="false" 
+			binding="apps_descr"
+			data-tabindex="5" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="90" 
+		>
+	</div>
+
+
+	<!-- Textbox: apps_directory-->	
+	<div id="appsHeaderEdit-obj_apps_directory-container" class="input-field" field="appsHeaderEdit-obj_apps_directory">
+		<label for="appsHeaderEdit-obj_apps_directory">Directory</label>
+		<input id="appsHeaderEdit-obj_apps_directory"  fgta5-component="Textbox" placeholder="target directory" autocomplete="off" spellcheck="false" 
+			binding="apps_directory"
+			data-tabindex="6" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="appsHeaderEdit-footer">
+</div>
+
+<div id="appsHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="appsHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="appsHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="appsHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="appsHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="appsHeaderEdit-btn_save">Save</button>
+		<button id="appsHeaderEdit-btn_edit">Edit</button>
+		<button id="appsHeaderEdit-btn_new" data-action="appsHeader-new">New</button>
+		<button id="appsHeaderEdit-btn_reset">Reset</button>
+		<button id="appsHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="appsHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

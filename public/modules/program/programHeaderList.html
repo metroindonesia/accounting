@@ -1,0 +1,30 @@
+<div id="programHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="programHeaderList-pnl_search" class="search-parameters">
+		<input id="programHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="programHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="programHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="program_id">
+			<th data-name="program_title" binding="program_title" >Title</th>
+			<th data-name="apps_name" binding="apps_name" >Application</th>
+			<th data-name="programgroup_name" binding="programgroup_name" >Group</th>
+			<th data-name="program_isdisabled" binding="program_isdisabled" formatter="checkmark(value)" style="text-align: center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="programHeaderList-btn_new" data-action="programHeader-new" data-sectionsource="programHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>
