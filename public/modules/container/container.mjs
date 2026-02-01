@@ -135,11 +135,14 @@ async function appmgr_openprofile(self, evt) {
 
 async function appmgr_openpreference(self, evt) {
 	try {
+
+		const currentUrl = new URL(window.location.href)
+
 		// buka program profile
 		const type = 'program'
 		const name = 'preference'
 		const title = 'Preference'
-		const url = 'preference'
+		const url = currentUrl.origin + '/preference'
 		appmgr.openModule({
 			type,
 			name,
