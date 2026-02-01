@@ -140,15 +140,15 @@ async function program_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
-			{
-				const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', row.apps_id)
-				row.apps_name = apps_name
-			}
 			// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
 			{
 				const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', row.programgroup_id)
 				row.programgroup_name = programgroup_name
+			}
+			// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
+			{
+				const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', row.apps_id)
+				row.apps_name = apps_name
 			}
 			
 			// pasang extender di sini
@@ -199,15 +199,15 @@ async function program_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
-		// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
-		{
-			const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', data.apps_id)
-			data.apps_name = apps_name
-		}
 		// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
 		{
 			const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', data.programgroup_id)
 			data.programgroup_name = programgroup_name
+		}
+		// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
+		{
+			const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', data.apps_id)
+			data.apps_name = apps_name
 		}
 		
 

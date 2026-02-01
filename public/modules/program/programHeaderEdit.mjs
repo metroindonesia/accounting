@@ -35,11 +35,11 @@ const frm = new $fgta5.Form('programHeaderEdit-frm');
 const obj_program_id = frm.Inputs['programHeaderEdit-obj_program_id']
 const obj_program_isdisabled = frm.Inputs['programHeaderEdit-obj_program_isdisabled']
 const obj_program_name = frm.Inputs['programHeaderEdit-obj_program_name']
-const obj_apps_id = frm.Inputs['programHeaderEdit-obj_apps_id']
-const obj_programgroup_id = frm.Inputs['programHeaderEdit-obj_programgroup_id']
 const obj_program_title = frm.Inputs['programHeaderEdit-obj_program_title']
-const obj_program_variance = frm.Inputs['programHeaderEdit-obj_program_variance']
 const obj_program_descr = frm.Inputs['programHeaderEdit-obj_program_descr']
+const obj_programgroup_id = frm.Inputs['programHeaderEdit-obj_programgroup_id']
+const obj_apps_id = frm.Inputs['programHeaderEdit-obj_apps_id']
+const obj_program_variance = frm.Inputs['programHeaderEdit-obj_program_variance']
 const obj_program_icon = frm.Inputs['programHeaderEdit-obj_program_icon']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -91,63 +91,6 @@ export async function init(self, args) {
 
 	
 
-	
-	// Combobox: obj_apps_id
-	obj_apps_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_apps_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_apps_id_selecting(self, obj_apps_id, frm, evt) {}
-			fn_selecting(self, obj_apps_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'apps/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_apps_id_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_apps_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.apps_id, row.apps_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
 	
 	// Combobox: obj_programgroup_id
 	obj_programgroup_id.addEventListener('selecting', async (evt)=>{
@@ -220,6 +163,63 @@ export async function init(self, args) {
 		}		
 	})
 	
+	
+	// Combobox: obj_apps_id
+	obj_apps_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_apps_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_apps_id_selecting(self, obj_apps_id, frm, evt) {}
+			fn_selecting(self, obj_apps_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'apps/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_apps_id_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_apps_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_apps_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.apps_id, row.apps_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
 		
 	
 }
@@ -229,8 +229,8 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_apps_id.clear()
 		obj_programgroup_id.clear()
+		obj_apps_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -903,7 +903,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 1 Feb 2026 15:38'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 1 Feb 2026 16:58'
 			section.appendChild(divFooter)
 		}
 		
