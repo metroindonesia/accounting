@@ -1,0 +1,98 @@
+<form id="groupHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="groupHeaderEdit-obj_group_id">
+
+	<!-- Textbox: group_id-->	
+	<div id="groupHeaderEdit-obj_group_id-container" class="input-field hidden" field="groupHeaderEdit-obj_group_id">
+		<label for="groupHeaderEdit-obj_group_id">ID</label>
+		<input id="groupHeaderEdit-obj_group_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="group_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: group_name-->	
+	<div id="groupHeaderEdit-obj_group_name-container" class="input-field" field="groupHeaderEdit-obj_group_name">
+		<label for="groupHeaderEdit-obj_group_name">Group</label>
+		<input id="groupHeaderEdit-obj_group_name"  fgta5-component="Textbox" placeholder="nama group" autocomplete="off" spellcheck="false" 
+			binding="group_name"
+			data-tabindex="2" 
+			character-case="lowercase" 
+			required 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: group_descr-->	
+	<div id="groupHeaderEdit-obj_group_descr-container" class="input-field" field="groupHeaderEdit-obj_group_descr">
+		<label for="groupHeaderEdit-obj_group_descr">Descr</label>
+		<input id="groupHeaderEdit-obj_group_descr"  fgta5-component="Textbox" placeholder="Descr" autocomplete="off" spellcheck="false" 
+			binding="group_descr"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: group_isdisabled-->	
+	<div id="groupHeaderEdit-obj_group_isdisabled-container" class="input-field" field="groupHeaderEdit-obj_group_isdisabled">
+		<label for="groupHeaderEdit-obj_group_isdisabled">Disabled</label>
+		<input id="groupHeaderEdit-obj_group_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="group_isdisabled"
+			data-tabindex="4" 
+			type="checkbox" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="groupHeaderEdit-footer">
+</div>
+
+<div id="groupHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil ">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+		<div class="panel-detil-row" id="groupHeaderEdit-info-program-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="groupProgramList" data-current-section="groupHeaderEdit">Programs</a></div>
+			<div data-info>&nbsp</div>
+		</div>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" >
+	<div><a id="groupHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="groupHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="groupHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="groupHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="groupHeaderEdit-btn_save">Save</button>
+		<button id="groupHeaderEdit-btn_edit">Edit</button>
+		<button id="groupHeaderEdit-btn_new" data-action="groupHeader-new">New</button>
+		<button id="groupHeaderEdit-btn_reset">Reset</button>
+		<button id="groupHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="groupHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

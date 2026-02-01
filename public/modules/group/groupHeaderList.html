@@ -1,0 +1,29 @@
+<div id="groupHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="groupHeaderList-pnl_search" class="search-parameters">
+		<input id="groupHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="groupHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="groupHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="group_id">
+			<th data-name="group_name" binding="group_name" >Group</th>
+			<th data-name="group_descr" binding="group_descr" >Descr</th>
+			<th data-name="group_isdisabled" binding="group_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="groupHeaderList-btn_new" data-action="groupHeader-new" data-sectionsource="groupHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

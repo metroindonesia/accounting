@@ -1,0 +1,29 @@
+<div id="groupProgramList-head">
+	<div id="groupProgramList-head-title" class="section-detil-title"></div>
+	<div id="groupProgramList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="groupProgramList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="groupprogram_id">
+			<th rowselector></th>
+			<th data-name="groupprogram_id" binding="groupprogram_id" >ID</th>
+			<th data-name="program_name" binding="program_name" >Program</th>
+			<th data-name="groupprogram_isdisabled" binding="groupprogram_isdisabled" formatter="checkmark(value)" style='text-align:center'>Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="groupProgramList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="groupProgramList-btn_addrow" data-action="groupProgram-addrow" data-sectionsource="groupProgramList-section">Add Row</button>
+		<button id="groupProgramList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>
