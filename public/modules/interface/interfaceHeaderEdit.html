@@ -1,0 +1,74 @@
+<form id="interfaceHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="interfaceHeaderEdit-obj_interface_id">
+
+	<!-- Textbox: interface_id-->	
+	<div id="interfaceHeaderEdit-obj_interface_id-container" class="input-field" field="interfaceHeaderEdit-obj_interface_id">
+		<label for="interfaceHeaderEdit-obj_interface_id">ID</label>
+		<input id="interfaceHeaderEdit-obj_interface_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="interface_id"
+			data-tabindex="1" 
+			required 
+			invalid-message-required="ID harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="2" 
+		>
+	</div>
+
+
+	<!-- Textbox: interface_name-->	
+	<div id="interfaceHeaderEdit-obj_interface_name-container" class="input-field" field="interfaceHeaderEdit-obj_interface_name">
+		<label for="interfaceHeaderEdit-obj_interface_name">Name</label>
+		<input id="interfaceHeaderEdit-obj_interface_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="interface_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama interface harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="interfaceHeaderEdit-footer">
+</div>
+
+<div id="interfaceHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="interfaceHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="interfaceHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="interfaceHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="interfaceHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="interfaceHeaderEdit-btn_save">Save</button>
+		<button id="interfaceHeaderEdit-btn_edit">Edit</button>
+		<button id="interfaceHeaderEdit-btn_new" data-action="interfaceHeader-new">New</button>
+		<button id="interfaceHeaderEdit-btn_reset">Reset</button>
+		<button id="interfaceHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="interfaceHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>
