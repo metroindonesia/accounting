@@ -1,5 +1,5 @@
-import Context from './group-context.mjs'
-import * as Ext from './group-ext.mjs'
+import Context from './user-context.mjs'
+import * as Ext from './user-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,35 +7,40 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.groupHeaderEdit
+const CurrentSectionId = Context.Sections.userHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Group'
-const TitleWhenView = 'View Group'
-const TitleWhenEdit = 'Edit Group'
+const TitleWhenNew = 'New User'
+const TitleWhenView = 'View User'
+const TitleWhenEdit = 'Edit User'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('groupHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('groupHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('groupHeaderEdit-btn_new', 'groupHeader-new')
-const btn_del = new $fgta5.ActionButton('groupHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('groupHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('groupHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('groupHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('userHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('userHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('userHeaderEdit-btn_new', 'userHeader-new')
+const btn_del = new $fgta5.ActionButton('userHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('userHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('userHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('userHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('groupHeader-btn_recordstatus')
-const btn_logs = document.getElementById('groupHeader-btn_logs')
-const btn_about = document.getElementById('groupHeader-btn_about')
+const btn_recordstatus = document.getElementById('userHeader-btn_recordstatus')
+const btn_logs = document.getElementById('userHeader-btn_logs')
+const btn_about = document.getElementById('userHeader-btn_about')
 
-const frm = new $fgta5.Form('groupHeaderEdit-frm');
-const obj_group_id = frm.Inputs['groupHeaderEdit-obj_group_id']
-const obj_group_name = frm.Inputs['groupHeaderEdit-obj_group_name']
-const obj_group_descr = frm.Inputs['groupHeaderEdit-obj_group_descr']
-const obj_group_isdisabled = frm.Inputs['groupHeaderEdit-obj_group_isdisabled']	
+const frm = new $fgta5.Form('userHeaderEdit-frm');
+const obj_user_id = frm.Inputs['userHeaderEdit-obj_user_id']
+const obj_user_name = frm.Inputs['userHeaderEdit-obj_user_name']
+const obj_user_isdisabled = frm.Inputs['userHeaderEdit-obj_user_isdisabled']
+const obj_user_fullname = frm.Inputs['userHeaderEdit-obj_user_fullname']
+const obj_user_nickname = frm.Inputs['userHeaderEdit-obj_user_nickname']
+const obj_user_email = frm.Inputs['userHeaderEdit-obj_user_email']
+const obj_user_password = frm.Inputs['userHeaderEdit-obj_user_password']
+const obj_user_isdev = frm.Inputs['userHeaderEdit-obj_user_isdev']
+const obj_user_isshowallprogram = frm.Inputs['userHeaderEdit-obj_user_isshowallprogram']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -46,7 +51,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing groupHeaderEdit ...')
+	console.log('initializing userHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -76,8 +81,8 @@ export async function init(self, args) {
 		edit: btn_edit,	
 	}
 	
-	// export async function groupHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'groupHeaderEdit_init'
+	// export async function userHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'userHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -103,8 +108,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function groupHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'groupHeaderEdit_isEditDisabled'
+		// export async function userHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'userHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -118,8 +123,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function groupHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'groupHeaderEdit_formOpened'
+		// export async function userHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'userHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -256,7 +261,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.groupHeaderList
+		const listId =  Context.Sections.userHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -278,8 +283,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function groupHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'groupHeaderEdit_formLocked'
+	// export function userHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'userHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -291,9 +296,21 @@ async function  frm_locked(self, evt) {
 	}
 
 	
-	// trigger lock event di program
-	self.Modules.groupProgramList.headerLocked(self)
-	self.Modules.groupProgramEdit.headerLocked(self)
+	// trigger lock event di login
+	self.Modules.userLoginList.headerLocked(self)
+	self.Modules.userLoginEdit.headerLocked(self)
+	
+	// trigger lock event di prop
+	self.Modules.userPropList.headerLocked(self)
+	self.Modules.userPropEdit.headerLocked(self)
+	
+	// trigger lock event di group
+	self.Modules.userGroupList.headerLocked(self)
+	self.Modules.userGroupEdit.headerLocked(self)
+	
+	// trigger lock event di favourite
+	self.Modules.userFavouriteList.headerLocked(self)
+	self.Modules.userFavouriteEdit.headerLocked(self)
 		
 
 }
@@ -318,17 +335,29 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function groupHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'groupHeaderEdit_formUnlocked'
+	// export function userHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'userHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
 	}
 
 	
-	// trigger unlock event di program
-	self.Modules.groupProgramList.headerUnlocked(self)
-	self.Modules.groupProgramEdit.headerUnlocked(self)	
+	// trigger unlock event di login
+	self.Modules.userLoginList.headerUnlocked(self)
+	self.Modules.userLoginEdit.headerUnlocked(self)	
+	
+	// trigger unlock event di prop
+	self.Modules.userPropList.headerUnlocked(self)
+	self.Modules.userPropEdit.headerUnlocked(self)	
+	
+	// trigger unlock event di group
+	self.Modules.userGroupList.headerUnlocked(self)
+	self.Modules.userGroupEdit.headerUnlocked(self)	
+	
+	// trigger unlock event di favourite
+	self.Modules.userFavouriteList.headerUnlocked(self)
+	self.Modules.userFavouriteEdit.headerUnlocked(self)	
 		
 }
 
@@ -364,8 +393,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const groupHeaderList = self.Modules.groupHeaderList
-	const listsecid = groupHeaderList.Section.Id
+	const userHeaderList = self.Modules.userHeaderList
+	const listsecid = userHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -400,10 +429,10 @@ async function btn_new_click(self, evt) {
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'groupHeaderEdit_newData'
+		const fn_newdata_name = 'userHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function groupHeaderEdit_newData(self, datainit, frm) {}
+			// export async function userHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -425,7 +454,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.groupHeaderList.Section.show()
+			self.Modules.userHeaderList.Section.show()
 		}
 	}
 }
@@ -435,7 +464,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'groupHeaderEdit_autofill'
+	const fn_autofill_name = 'userHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -486,9 +515,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function groupHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function userHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'groupHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'userHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -538,10 +567,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'groupHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'userHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function groupHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function userHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -557,10 +586,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.groupHeaderList.addNewRow(self, data)
+			self.Modules.userHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.groupHeaderList.updateCurrentRow(self, data)
+			self.Modules.userHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -599,10 +628,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.groupHeaderList.removeCurrentRow(self)
+		self.Modules.userHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.groupHeaderList.Section.show()
+		self.Modules.userHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -647,12 +676,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.groupHeaderList.selectPreviousRow(self)
+	self.Modules.userHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.groupHeaderList.selectNextRow(self)
+	self.Modules.userHeaderList.selectNextRow(self)
 }
 
 
@@ -686,7 +715,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'groupHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'userHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -728,7 +757,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'core.group',
+				table: 'core.user',
 				id: id
 			}
 
@@ -758,7 +787,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Group'
+		AboutSection.Title = 'About User'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -766,7 +795,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = 'group'
+			divDescr.innerHTML = 'daftar user'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}

@@ -37,6 +37,7 @@ async function main(self, args) {
 		appmgr.setTitle(Context.title)
 		appmgr.setUser({ userid: Context.userId, displayname: Context.userFullname, profilepic: '' })
 		appmgr.setMenu(Context.programs)
+		appmgr.setMenuIcon('/public/icons/icon-logo-metro-32x32.svg')
 		appmgr.setFavourite(Context.favourites)
 
 		appmgr.addEventListener('logout', (evt) => {

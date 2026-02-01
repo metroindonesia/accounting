@@ -1,53 +1,49 @@
-import Context from './group-context.mjs'
-import * as Ext from './group-ext.mjs'
+import Context from './user-context.mjs'
+import * as Ext from './user-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
-const Extender = Ext.extenderHeader ?? Ext
+const Extender = Ext.extenderFavourite ?? Ext
 
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.groupHeaderEdit
+const CurrentSectionId = Context.Sections.userFavouriteEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
-
-const TitleWhenNew = 'New Group'
-const TitleWhenView = 'View Group'
-const TitleWhenEdit = 'Edit Group'
+const TitleWhenNew = 'New Favourite'
+const TitleWhenView = 'View Favourite'
+const TitleWhenEdit = 'Edit Favourite'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('groupHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('groupHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('groupHeaderEdit-btn_new', 'groupHeader-new')
-const btn_del = new $fgta5.ActionButton('groupHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('groupHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('groupHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('groupHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('groupHeader-btn_recordstatus')
-const btn_logs = document.getElementById('groupHeader-btn_logs')
-const btn_about = document.getElementById('groupHeader-btn_about')
+const btn_edit = new $fgta5.ActionButton('userFavouriteEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('userFavouriteEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('userFavouriteEdit-btn_new', 'userFavourite-addrow')
+const btn_del = new $fgta5.ActionButton('userFavouriteEdit-btn_delete', 'userFavourite-delrow')
+const btn_reset = new $fgta5.ActionButton('userFavouriteEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('userFavouriteEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('userFavouriteEdit-btn_next')
 
-const frm = new $fgta5.Form('groupHeaderEdit-frm');
-const obj_group_id = frm.Inputs['groupHeaderEdit-obj_group_id']
-const obj_group_name = frm.Inputs['groupHeaderEdit-obj_group_name']
-const obj_group_descr = frm.Inputs['groupHeaderEdit-obj_group_descr']
-const obj_group_isdisabled = frm.Inputs['groupHeaderEdit-obj_group_isdisabled']	
+const btn_recordstatus = document.getElementById('userFavourite-btn_recordstatus')
+const btn_logs = document.getElementById('userFavourite-btn_logs')
+
+const frm = new $fgta5.Form('userFavouriteEdit-frm');
+const obj_userfavouriteprogram_id = frm.Inputs['userFavouriteEdit-obj_userfavouriteprogram_id']
+const obj_program_id = frm.Inputs['userFavouriteEdit-obj_program_id']
+const obj_user_id = frm.Inputs['userFavouriteEdit-obj_user_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
 const rec_modifydate = document.getElementById('fRecord-section-modifydate')
 const rec_id = document.getElementById('fRecord-section-id')
 
-
 export const Section = CurrentSection
 
+
 export async function init(self, args) {
-	console.log('initializing groupHeaderEdit ...')
-	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 		backToList(self, evt)
@@ -59,56 +55,112 @@ export async function init(self, args) {
 
 	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
 	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt)})
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt)})
+	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
 	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
 	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
 	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-
+	
 
 	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
 	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
-	btn_about.addEventListener('click', evt=>{ btn_about_click(self, evt) })
 
-	// set actions
+	CurrentState.headerFormLocked = true 
+	CurrentState.editDisabled = false
+
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
-	}
-	
-	// export async function groupHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'groupHeaderEdit_init'
-	const fn_init = Extender[fn_init_name]
-	if (typeof fn_init === 'function') {
-		await fn_init(self, CurrentState)
+		edit: btn_edit,
 	}
 
+	CurrentState.getHeaderForm = () => {
+		const userHeaderEdit = self.Modules.userHeaderEdit
+		const frmHeader = userHeaderEdit.getHeaderForm()
+		return frmHeader
+	}
+
 
 	
+	// Combobox: obj_program_id
+	obj_program_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_program_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_program_id_selecting(self, obj_program_id, frm, evt) {}
+			fn_selecting(self, obj_program_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'program/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
 
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_program_id_selecting_criteria(self, obj_program_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_program_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_program_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.program_id, row.program_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
 		
-	
 }
+
 
 export async function openSelectedData(self, params) {
 	console.log('openSelectedData')
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-					
+		obj_program_id.clear()
+		
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
 		
 
 		CurrentState.currentOpenedId = id
-
-		// export async function groupHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'groupHeaderEdit_isEditDisabled'
-		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
-		if (typeof fn_iseditdisabled === 'function') {
-			const editDisabled = fn_iseditdisabled(self, data)
-			CurrentState.editDisabled = editDisabled
+		
+		
+		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
+		if (!CurrentState.headerFormLocked) {
+			const fn_iseditdisabled_name = 'userFavouriteEdit_isEditDisabled'
+			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
+			if (typeof fn_iseditdisabled === 'function') {
+				const editDisabled = fn_iseditdisabled(self, data)
+				CurrentState.editDisabled = editDisabled
+			}
 		}
 
 		// disable primary key
@@ -116,14 +168,15 @@ export async function openSelectedData(self, params) {
 
 		// isi form dengan data
 		frm.setData(data)
-
+	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function groupHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'groupHeaderEdit_formOpened'
+		// export function userFavouriteEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'userFavouriteEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
-			await fn_formopened(self, frm, CurrentState)
+			fn_formopened(self, frm, CurrentState)
 		}
+
 
 		// finally, accept changes dan lock form
 		frm.acceptChanges()
@@ -138,10 +191,8 @@ export async function openSelectedData(self, params) {
 	}
 }
 
-
-
-export function getHeaderForm(self) {
-	return frm
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getForm(self) {
@@ -150,6 +201,34 @@ export function getForm(self) {
 
 export function clearForm(self, text) {
 	frm.clear(text)
+}
+
+export function headerLocked(self) {
+	CurrentState.headerFormLocked = true
+	CurrentState.editDisabled = true
+	btn_new.disabled = true
+
+	// Extender untuk event Locked
+	// export function userFavouriteEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'userFavouriteEdit_formLocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
+}
+
+export function headerUnlocked(self) {
+	CurrentState.headerFormLocked = false
+	CurrentState.editDisabled = false
+	btn_new.disabled = false
+
+	// Extender untuk event Unlocked
+	// export function userFavouriteEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'userFavouriteEdit_formUnlocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
 }
 
 export function disableNextButton(self, disabled=true) {
@@ -195,8 +274,9 @@ async function newData(self, datainit) {
 	}
 }
 
+
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/header-open`
+	const url = `/${Context.moduleName}/favourite-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -206,7 +286,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-create`
+	const url = `/${Context.moduleName}/favourite-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -215,9 +295,8 @@ async function createData(self, data, formData) {
 	} 	
 }
 
-
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-update`
+	const url = `/${Context.moduleName}/favourite-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -226,9 +305,8 @@ async function updateData(self, data, formData) {
 	} 
 }
 
-
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/header-delete`
+	const url = `/${Context.moduleName}/favourite-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -256,16 +334,21 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.groupHeaderList
+		const listId =  Context.Sections.userFavouriteList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
 }
 
+
 async function  frm_locked(self, evt) {
+	console.log('frm_locked')
+
 	CurrentSection.Title = TitleWhenView
 
 	btn_edit.setText(EditModeText)
+
+	//  todo: cek dulu apakah boleh add/remove rows 
 
 	btn_edit.disabled = false
 	btn_save.disabled = true
@@ -275,32 +358,30 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
-	
+
 	// Extender untuk event locked
-	// export function groupHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'groupHeaderEdit_formLocked'
+	// export function userFavouriteEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'userFavouriteEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}
+	}	
 
+	// jika heder form dalam kondisi lock,
+	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
-		// jika karena suatu kondisi data mengharuskan data tidak boleh diedit
 		btn_edit.disabled = true
-	}
-
-	
-	// trigger lock event di program
-	self.Modules.groupProgramList.headerLocked(self)
-	self.Modules.groupProgramEdit.headerLocked(self)
-		
+		btn_new.disabled = true
+	} 
 
 }
 
 async function  frm_unlocked(self, evt) {
+	console.log('frm_unlocked')
+
 	if (frm.isNew()) {
 		CurrentSection.Title = TitleWhenNew
+
 	} else {
 		CurrentSection.Title = TitleWhenEdit
 	}
@@ -315,21 +396,13 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
-
 	// Extender untuk event Unlocked
-	// export function groupHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'groupHeaderEdit_formUnlocked'
+	// export function userFavouriteEdit_formUnlocked(self, frm) {}
+	const fn_name = 'userFavouriteEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
-		fn(self, frm, CurrentState)
+		fn(self, frm)
 	}
-
-	
-	// trigger unlock event di program
-	self.Modules.groupProgramList.headerUnlocked(self)
-	self.Modules.groupProgramEdit.headerUnlocked(self)	
-		
 }
 
 async function setPrimaryKeyState(self, opt) {
@@ -360,16 +433,18 @@ async function btn_edit_click(self, evt) {
 	}
 }
 
+
 async function btn_new_click(self, evt) {
-	console.log('btn_new_click')
+	console.log('new')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const groupHeaderList = self.Modules.groupHeaderList
-	const listsecid = groupHeaderList.Section.Id
+	const userFavouriteList = self.Modules.userFavouriteList
+	const listsecid = userFavouriteList.Section.Id
 	const fromListSection = sourceSection===listsecid
+
 	if (fromListSection) {
-		// klik new dari list (tidak perlu cek ada perubahan data)
-		// tampilkan dulu form
+		console.log('tambahkan row baru')
+		CurrentSection.setSectionReturn(userFavouriteList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -390,21 +465,30 @@ async function btn_new_click(self, evt) {
 	} else {
 		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
 	}
-
+	
+	
 	try {
+	
+		// ambil id header
+		const userHeaderEdit = self.Modules.userHeaderEdit
+		const frmHeader = userHeaderEdit.getHeaderForm()
+		const header_pk = frmHeader.getPrimaryInput()
+		const user_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
+			user_id,
 		}
 
 
 		// jika perlu modifikasi data initial,
-		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'groupHeaderEdit_newData'
+		// atau dialog untuk opsi data baru, 
+		// dapat dibuat di Extender.newData
+		// export async function userFavouriteEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'userFavouriteEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function groupHeaderEdit_newData(self, datainit, frm) {}
-			await fn_newdata(self, datainit, frm)
+			await fn_newdata(self, datainit, frm, CurrentState)
 		}
 
 		// buat data baru
@@ -412,10 +496,6 @@ async function btn_new_click(self, evt) {
 
 		// buka lock, agar user bisa edit
 		frm.lock(false)
-
-		// jika edit di suspend, enable dulu
-		btn_edit.suspend(false)
-
 
 		// matikan tombol edit dan del saat kondisi form adalah data baru 
 		btn_edit.disabled = true
@@ -425,17 +505,18 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.groupHeaderList.Section.show()
+			self.Modules.userFavouriteList.Section.show()
 		}
 	}
 }
 
+
 async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
-
 	// Extender Autofill
-	const fn_autofill_name = 'groupHeaderEdit_autofill'
+	// export async function userFavouriteEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'userFavouriteEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -471,8 +552,7 @@ async function btn_save_click(self, evt) {
 		dataToSave = frm.getData()		
 	}
 
-
-
+	
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
@@ -486,9 +566,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function groupHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function userFavouriteEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'groupHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'userFavouriteEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -499,7 +579,7 @@ async function btn_save_click(self, evt) {
 		console.log('save is canceled')
 		return
 	}
-	
+
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -538,10 +618,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'groupHeaderEdit_dataSaved'
+		// export async function userFavouriteEdit_dataSaved(self, data, frm) {}
+		const fn_datasaved_name = 'userFavouriteEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function groupHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -557,10 +637,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.groupHeaderList.addNewRow(self, data)
+			self.Modules.userFavouriteList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.groupHeaderList.updateCurrentRow(self, data)
+			self.Modules.userFavouriteList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -599,10 +679,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.groupHeaderList.removeCurrentRow(self)
+		self.Modules.userFavouriteList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.groupHeaderList.Section.show()
+		self.Modules.userFavouriteList.Section.show()
 
 
 		// lock kembali form
@@ -615,9 +695,7 @@ async function btn_del_click(self, evt) {
 		mask.close()
 		mask = null
 	}
-
 }
-
 
 async function btn_reset_click(self, evt) {
 	console.log('btn_reset_click')
@@ -642,19 +720,18 @@ async function btn_reset_click(self, evt) {
 			console.log('tidak ada perubahan data, reset data tidak dieksekusi')
 		}
 	}
-
 }
+
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.groupHeaderList.selectPreviousRow(self)
+	self.Modules.userFavouriteList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.groupHeaderList.selectNextRow(self)
+	self.Modules.userFavouriteList.selectNextRow(self)
 }
-
 
 
 
@@ -686,10 +763,15 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'groupHeaderEdit_addRecordInfo'
+
+			// jika mau menambah beberapa informasi mengenai record,
+			// misalnya commit by, postby, dll
+			// melalui extender userFavouriteEdit_addRecordInfo
+			// export async function userFavouriteEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'userFavouriteEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self, data)
+				await fn_addrecordinfo(self,  data)
 			}
 
 		} catch (err) {
@@ -724,11 +806,12 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
+
 			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'core.group',
+				table: 'core.userfavouriteprogram',
 				id: id
 			}
 
@@ -747,37 +830,5 @@ async function btn_logs_click(self, evt) {
 			mask = null
 		}
 
-	})
-}
-
-async function btn_about_click(self, evt) {
-	const params = {
-		Context,
-		sectionReturn: CurrentSection
-	}
-	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
-		
-		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Group'
-
-		const section = document.getElementById('fAbout-section')
-
-		if ( document.getElementById('fAbout-section-fdescr') == null) {
-			const divDescr = document.createElement('div')
-			divDescr.setAttribute('id', 'fAbout-section-fdescr')
-			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = 'group'
-			const divTopbar = section.querySelector('div[data-topbar]')
-			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
-		}
-
-		if ( document.getElementById('fAbout-section-footer') == null) {
-			const divFooter = document.createElement('div')
-			divFooter.setAttribute('id', 'fAbout-section-footer')
-			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 1 Feb 2026 15:38'
-			section.appendChild(divFooter)
-		}
-		
 	})
 }

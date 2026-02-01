@@ -1,0 +1,92 @@
+<section id="userHeaderList-section" class="fgta5-carousell" data-title="User">
+<%- include(`${moduleDir}/userHeaderList.html`) %>
+</section>
+
+<section id="userHeaderEdit-section" class="fgta5-carousell" data-title="Edit User">
+<%- include(`${moduleDir}/userHeaderEdit.html`) %>
+</section>
+
+<section id="userLoginList-section" class="fgta5-carousell" data-title="List Login">
+<%- include(`${moduleDir}/userLoginList.html`) %>
+</section>
+
+<section id="userLoginEdit-section" class="fgta5-carousell" data-title="Edit Login">
+<%- include(`${moduleDir}/userLoginEdit.html`) %>
+</section>
+
+<section id="userPropList-section" class="fgta5-carousell" data-title="List Properties">
+<%- include(`${moduleDir}/userPropList.html`) %>
+</section>
+
+<section id="userPropEdit-section" class="fgta5-carousell" data-title="Edit Properties">
+<%- include(`${moduleDir}/userPropEdit.html`) %>
+</section>
+
+<section id="userGroupList-section" class="fgta5-carousell" data-title="List Group">
+<%- include(`${moduleDir}/userGroupList.html`) %>
+</section>
+
+<section id="userGroupEdit-section" class="fgta5-carousell" data-title="Edit Group">
+<%- include(`${moduleDir}/userGroupEdit.html`) %>
+</section>
+
+<section id="userFavouriteList-section" class="fgta5-carousell" data-title="List Favourite">
+<%- include(`${moduleDir}/userFavouriteList.html`) %>
+</section>
+
+<section id="userFavouriteEdit-section" class="fgta5-carousell" data-title="Edit Favourite">
+<%- include(`${moduleDir}/userFavouriteEdit.html`) %>
+</section>
+
+
+
+<section id="fRecord-section" class="fgta5-carousell" data-title="Record Status">
+
+	<div name="panel">
+		<div name="row">
+			<span name="caption">Id</span>
+			<span name="value" id="fRecord-section-id">-</span>
+		</div>
+	</div>	
+
+
+	<div name="panel">
+		<!-- LEFT: Standard Info -->
+		<div name="column">
+			<div name="row">
+				<span name="caption">Create By</span>
+				<span name="value" id="fRecord-section-createby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Create Date</span>
+				<span name="value" id="fRecord-section-createdate">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify By</span>
+				<span name="value" id="fRecord-section-modifyby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify Date</span>
+				<span name="value"id="fRecord-section-modifydate">-</span>
+			</div>
+
+		</div>
+
+
+		<!-- RIGHT: Extended Info -->
+		<div name="column" exteder>
+		<%- include(`${moduleDir}/user-ext-record.html`) %>	
+		</div> 
+
+	</div>	
+</section>
+
+<section id="fLogs-section" class="fgta5-carousell" data-title="Logs">
+<%- include(`${moduleDir}/user-logs.html`) %>	
+</section>
+
+<section id="fAbout-section" class="fgta5-carousell" data-title="About">
+<%- include(`${moduleDir}/user-ext-about.html`) %>	
+</section>
+
+

@@ -1,0 +1,83 @@
+<div id="userGroupEdit-head">
+	<div id="userGroupEdit-head-title" class="section-detil-title"></div>
+	<div id="userGroupEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="userGroupEdit-frm" class="module-form" locked="true" autoid="true" primarykey="userGroupEdit-obj_usergroup_id">
+
+	<!-- Textbox: usergroup_id-->	
+	<div id="userGroupEdit-obj_usergroup_id-container" class="input-field hidden" field="userGroupEdit-obj_usergroup_id">
+		<label for="userGroupEdit-obj_usergroup_id">ID</label>
+		<input id="userGroupEdit-obj_usergroup_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="usergroup_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: group_id-->	
+	<div id="userGroupEdit-obj_group_id-container" class="input-field" field="userGroupEdit-obj_group_id">
+		<label for="userGroupEdit-obj_group_id">Group</label>
+		<input id="userGroupEdit-obj_group_id"  fgta5-component="Combobox" placeholder="group" autocomplete="off" spellcheck="false" 
+			binding="group_id"
+			data-tabindex="2" 
+			required 
+			data-display="group_name" 
+		>
+	</div>
+
+
+	<!-- Checkbox: usergroup_isdisabled-->	
+	<div id="userGroupEdit-obj_usergroup_isdisabled-container" class="input-field" field="userGroupEdit-obj_usergroup_isdisabled">
+		<label for="userGroupEdit-obj_usergroup_isdisabled">Disabled</label>
+		<input id="userGroupEdit-obj_usergroup_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="usergroup_isdisabled"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: user_id-->	
+	<div id="userGroupEdit-obj_user_id-container" class="input-field hidden hidden" field="userGroupEdit-obj_user_id">
+		<label for="userGroupEdit-obj_user_id">ID</label>
+		<input id="userGroupEdit-obj_user_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="user_id"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="userGroupEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="userGroup-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="userGroup-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="userGroupEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="userGroupEdit-btn_save">Save</button>
+		<button id="userGroupEdit-btn_edit">Edit</button>
+		<button id="userGroupEdit-btn_new" data-action="userGroup-addrow">New</button>
+		<button id="userGroupEdit-btn_reset">Reset</button>
+		<button id="userGroupEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="userGroupEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

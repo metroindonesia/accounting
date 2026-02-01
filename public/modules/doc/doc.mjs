@@ -79,7 +79,7 @@ export default class extends Module {
 				}
 			};
 
-
+			app.finalize()
 		} catch (err) {
 			throw err
 		}

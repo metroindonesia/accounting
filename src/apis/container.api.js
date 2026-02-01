@@ -29,7 +29,7 @@ async function container_init(self, body) {
 
 	try {
 		return {
-			title: 'Application',
+			title: 'Accounting & Finance',
 			userId: req.session.user.userId,
 			userName: req.session.user.userName,
 			userFullname: req.session.user.userFullname,

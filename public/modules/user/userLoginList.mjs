@@ -1,17 +1,17 @@
-import Context from './group-context.mjs'
-import * as Ext from './group-ext.mjs'
+import Context from './user-context.mjs'
+import * as Ext from './user-ext.mjs'
 
-const Extender = Ext.extenderProgram ?? Ext
+const Extender = Ext.extenderLogin ?? Ext
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.groupProgramList
+const CurrentSectionId = Context.Sections.userLoginList
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const CurrentState = {}
 
-const tbl =  new $fgta5.Gridview('groupProgramList-tbl')
+const tbl =  new $fgta5.Gridview('userLoginList-tbl')
 
-const btn_addrow = document.getElementById('groupProgramList-btn_addrow') // tidak perlu pakai action, karna action didefine di edit
-const btn_delrow = new $fgta5.ActionButton('groupProgramList-btn_delrow')
+const btn_addrow = document.getElementById('userLoginList-btn_addrow') // tidak perlu pakai action, karna action didefine di edit
+const btn_delrow = new $fgta5.ActionButton('userLoginList-btn_delrow')
 
 let headerForm
 
@@ -22,7 +22,7 @@ export async function init(self, args) {
 
 	// Back
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
-		const sectionId =  Context.Sections.groupHeaderEdit
+		const sectionId =  Context.Sections.userHeaderEdit
 		const section = Crsl.Items[sectionId]
 		section.show({direction: 1})
 	})
@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function programList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'programList_addTableEvents'
+	// export function loginList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'loginList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -50,11 +50,11 @@ export async function init(self, args) {
 	btn_delrow.addEventListener('click', (evt)=>{ btn_delrow_click(self, evt) })
 	
 	// Extend list detil
-	// export function groupProgramList_init(self) {}
-	const fn_name = 'groupProgramList_init'
-	const fn_groupProgramList_init = Extender[fn_name]
-	if (typeof fn_groupProgramList_init === 'function') {
-		fn_groupProgramList_init(self)
+	// export function userLoginList_init(self) {}
+	const fn_name = 'userLoginList_init'
+	const fn_userLoginList_init = Extender[fn_name]
+	if (typeof fn_userLoginList_init === 'function') {
+		fn_userLoginList_init(self)
 	}
 
 	CurrentState.headerFormLocked = true 
@@ -65,13 +65,10 @@ function setDefaultHeadTitle(self, headerForm) {
 
 	const detilTitleElements = document.getElementsByClassName('section-detil-title')
 	for (let el of detilTitleElements) {
-		el.innerHTML = data.group_name
+		el.innerHTML = data.user_fullname
 	}
 	
-	const detilDescrElements = document.getElementsByClassName('section-detil-descr')
-	for (let el of detilDescrElements) {
-		el.innerHTML = data.group_descr
-	}
+	
 
 }
 
@@ -88,25 +85,25 @@ export async function openList(self, params) {
 
 	// apabila mau menambahkan informasi saat detil list dibuka,
 	// misalnya menambahkan informasi beberapa data dari formHeader
-	// bisa di set pada Extender.groupProgramList_openList :  bisa menggunakan template untuk di embed ke header pada detil list
-	// export function groupProgramList_openList(self, headerForm) {}
-	const fn_name = 'groupProgramList_openList'
-	const fn_groupProgramList_openList = Extender[fn_name]
-	if (typeof fn_groupProgramList_openList === 'function') {
-		fn_groupProgramList_openList(self, headerForm)
+	// bisa di set pada Extender.userLoginList_openList :  bisa menggunakan template untuk di embed ke header pada detil list
+	// export function userLoginList_openList(self, headerForm) {}
+	const fn_name = 'userLoginList_openList'
+	const fn_userLoginList_openList = Extender[fn_name]
+	if (typeof fn_userLoginList_openList === 'function') {
+		fn_userLoginList_openList(self, headerForm)
 	}
 	
 	const criteria={
-		group_id: id
+		user_id: id
 	}
 	const sort = tbl.getSort()
 
 	tbl.clear()
 	tbl_loadData(self, {criteria, sort})
 
-	const groupProgramEdit = self.Modules.groupProgramEdit
-	const btn_addrow = groupProgramEdit.getCurrentState().Actions.newdata
-	const btn_edit = groupProgramEdit.getCurrentState().Actions.edit
+	const userLoginEdit = self.Modules.userLoginEdit
+	const btn_addrow = userLoginEdit.getCurrentState().Actions.newdata
+	const btn_edit = userLoginEdit.getCurrentState().Actions.edit
 	
 	if (CurrentState.headerFormLocked) {
  		btn_addrow.disabled = true
@@ -195,9 +192,9 @@ export function keyboardAction(self, actionName) {
 	} else if (actionName=='down') {
 		tbl.nextRecord()
 	} else if (actionName=='enter') {
-		const groupProgramEdit = self.Modules.groupProgramEdit
+		const userLoginEdit = self.Modules.userLoginEdit
 		if (tbl.CurrentRow!=null) {
-			groupProgramEdit.Section.show({}, (evt)=>{
+			userLoginEdit.Section.show({}, (evt)=>{
 				openRow(self, tbl.CurrentRow)
 			})
 		}
@@ -219,14 +216,14 @@ async function openRow(self, tr) {
 	const keyvalue = tr.getAttribute('keyvalue')
 	const key = tr.getAttribute('key')
 
-	const groupProgramEdit = self.Modules.groupProgramEdit
-	groupProgramEdit.clearForm(self, 'loading...')
+	const userLoginEdit = self.Modules.userLoginEdit
+	userLoginEdit.clearForm(self, 'loading...')
 
 	try {
 		setCurrentRow(self, tr)
 		CurrentState.SelectedRow.keyValue = keyvalue
 		CurrentState.SelectedRow.key = key
-		await groupProgramEdit.openSelectedData(self, {key:key, keyvalue:keyvalue})
+		await userLoginEdit.openSelectedData(self, {key:key, keyvalue:keyvalue})
 	} catch (err) {
 		console.error(err)
 		await $fgta5.MessageBox.error(err.message)
@@ -236,16 +233,16 @@ async function openRow(self, tr) {
 	}
 
 	// matikan atau nyalakan button prev/next sesuai kondisi
-	setPagingButton(self, groupProgramEdit)
+	setPagingButton(self, userLoginEdit)
 }
 
 
 async function listRows(self, criteria, offset, limit, sort) {
-	const url = `/${Context.moduleName}/program-list`
+	const url = `/${Context.moduleName}/login-list`
 	const evt = { url, limit }
 
-	// export function programList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'programList_dataLoad'
+	// export function loginList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'loginList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
 		fn_dataLoad(self, criteria, sort, evt)
@@ -268,7 +265,7 @@ async function listRows(self, criteria, offset, limit, sort) {
 
 
 async function deleteRows(self, data) {
-	const url = `/${Context.moduleName}/program-delete-rows`
+	const url = `/${Context.moduleName}/login-delete-rows`
 	try {
 		
 		const result = await Module.apiCall(url, { data }) 
@@ -302,8 +299,8 @@ async function tbl_sorting(self, evt) {
 async function tbl_cellclick(self, evt) {
 	const tr = evt.detail.tr
 
-	const groupProgramEdit = self.Modules.groupProgramEdit
-	groupProgramEdit.Section.show({}, (evt)=>{
+	const userLoginEdit = self.Modules.userLoginEdit
+	userLoginEdit.Section.show({}, (evt)=>{
 		openRow(self, tr)
 	})
 }
@@ -326,8 +323,8 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export function programList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'programList_tableDataLoaded'
+		// export function loginList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'loginList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
 			fn(self, tbl, result)

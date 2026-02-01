@@ -1,7 +1,15 @@
-import Context from './program-context.mjs'  
-import * as programHeaderList from './programHeaderList.mjs' 
-import * as programHeaderEdit from './programHeaderEdit.mjs' 
-import * as Extender from './program-ext.mjs'
+import Context from './user-context.mjs'  
+import * as userHeaderList from './userHeaderList.mjs' 
+import * as userHeaderEdit from './userHeaderEdit.mjs' 
+import * as userLoginList from './userLoginList.mjs' 
+import * as userLoginEdit from './userLoginEdit.mjs' 
+import * as userPropList from './userPropList.mjs' 
+import * as userPropEdit from './userPropEdit.mjs' 
+import * as userGroupList from './userGroupList.mjs' 
+import * as userGroupEdit from './userGroupEdit.mjs' 
+import * as userFavouriteList from './userFavouriteList.mjs' 
+import * as userFavouriteEdit from './userFavouriteEdit.mjs' 
+import * as Extender from './user-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -15,7 +23,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Program')
+		app.setTitle('User')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -27,8 +35,16 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			programHeaderList, 
-			programHeaderEdit, 
+			userHeaderList, 
+			userHeaderEdit, 
+			userLoginList, 
+			userLoginEdit, 
+			userPropList, 
+			userPropEdit, 
+			userGroupList, 
+			userGroupEdit, 
+			userFavouriteList, 
+			userFavouriteEdit, 
 		}
 
 		try {
@@ -49,8 +65,16 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				programHeaderList.init(self, args), 
-				programHeaderEdit.init(self, args), 
+				userHeaderList.init(self, args), 
+				userHeaderEdit.init(self, args), 
+				userLoginList.init(self, args), 
+				userLoginEdit.init(self, args), 
+				userPropList.init(self, args), 
+				userPropEdit.init(self, args), 
+				userGroupList.init(self, args), 
+				userGroupEdit.init(self, args), 
+				userFavouriteList.init(self, args), 
+				userFavouriteEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -62,7 +86,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['programHeaderEdit']
+			const modNameList = ['userHeaderEdit', 'userLoginEdit', 'userPropEdit', 'userGroupEdit', 'userFavouriteEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -93,7 +117,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/program/program.svg')
+		Crsl.setIconUrl('public/modules/user/user.svg')
 
 
 		// Set listener untuk section carousel
@@ -162,7 +186,7 @@ async function render(self) {
 		});
 
 		
-		// program-ext.mjs, export function extendPage(self) {} 
+		// user-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {

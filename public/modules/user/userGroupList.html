@@ -1,0 +1,28 @@
+<div id="userGroupList-head">
+	<div id="userGroupList-head-title" class="section-detil-title"></div>
+	<div id="userGroupList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="userGroupList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="usergroup_id">
+			<th rowselector></th>
+			<th data-name="group_name" binding="group_name" >Group</th>
+			<th data-name="usergroup_isdisabled" binding="usergroup_isdisabled" formatter="checkmark(value)" style='text-align:center'>Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="userGroupList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="userGroupList-btn_addrow" data-action="userGroup-addrow" data-sectionsource="userGroupList-section">Add Row</button>
+		<button id="userGroupList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

@@ -1,0 +1,71 @@
+<div id="userFavouriteEdit-head">
+	<div id="userFavouriteEdit-head-title" class="section-detil-title"></div>
+	<div id="userFavouriteEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="userFavouriteEdit-frm" class="module-form" locked="true" autoid="true" primarykey="userFavouriteEdit-obj_userfavouriteprogram_id">
+
+	<!-- Textbox: userfavouriteprogram_id-->	
+	<div id="userFavouriteEdit-obj_userfavouriteprogram_id-container" class="input-field" field="userFavouriteEdit-obj_userfavouriteprogram_id">
+		<label for="userFavouriteEdit-obj_userfavouriteprogram_id">ID</label>
+		<input id="userFavouriteEdit-obj_userfavouriteprogram_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="userfavouriteprogram_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: program_id-->	
+	<div id="userFavouriteEdit-obj_program_id-container" class="input-field" field="userFavouriteEdit-obj_program_id">
+		<label for="userFavouriteEdit-obj_program_id">Program</label>
+		<input id="userFavouriteEdit-obj_program_id"  fgta5-component="Combobox" placeholder="program" autocomplete="off" spellcheck="false" 
+			binding="program_id"
+			data-tabindex="2" 
+			data-display="program_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: user_id-->	
+	<div id="userFavouriteEdit-obj_user_id-container" class="input-field hidden hidden" field="userFavouriteEdit-obj_user_id">
+		<label for="userFavouriteEdit-obj_user_id">ID</label>
+		<input id="userFavouriteEdit-obj_user_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="user_id"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="userFavouriteEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="userFavourite-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="userFavourite-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="userFavouriteEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="userFavouriteEdit-btn_save">Save</button>
+		<button id="userFavouriteEdit-btn_edit">Edit</button>
+		<button id="userFavouriteEdit-btn_new" data-action="userFavourite-addrow">New</button>
+		<button id="userFavouriteEdit-btn_reset">Reset</button>
+		<button id="userFavouriteEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="userFavouriteEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

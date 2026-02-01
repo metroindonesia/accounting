@@ -2,5 +2,5 @@
   "watch": ["src"],
   "ext": "js",
   "exec": "node src/index.js",
-  "delay": 5000
+  "delay": 3000
 }
