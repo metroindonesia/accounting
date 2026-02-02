@@ -1,5 +1,5 @@
-import Context from './doc-context.mjs'
-import * as Ext from './doc-ext.mjs'
+import Context from './setting-context.mjs'
+import * as Ext from './setting-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,37 +7,34 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.docHeaderEdit
+const CurrentSectionId = Context.Sections.settingHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Document'
-const TitleWhenView = 'View Document'
-const TitleWhenEdit = 'Edit Document'
+const TitleWhenNew = 'New Setting'
+const TitleWhenView = 'View Setting'
+const TitleWhenEdit = 'Edit Setting'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('docHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('docHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('docHeaderEdit-btn_new', 'docHeader-new')
-const btn_del = new $fgta5.ActionButton('docHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('docHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('docHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('docHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('settingHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('settingHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('settingHeaderEdit-btn_new', 'settingHeader-new')
+const btn_del = new $fgta5.ActionButton('settingHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('settingHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('settingHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('settingHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('docHeader-btn_recordstatus')
-const btn_logs = document.getElementById('docHeader-btn_logs')
-const btn_about = document.getElementById('docHeader-btn_about')
+const btn_recordstatus = document.getElementById('settingHeader-btn_recordstatus')
+const btn_logs = document.getElementById('settingHeader-btn_logs')
+const btn_about = document.getElementById('settingHeader-btn_about')
 
-const frm = new $fgta5.Form('docHeaderEdit-frm');
-const obj_doc_id = frm.Inputs['docHeaderEdit-obj_doc_id']
-const obj_doc_prefix = frm.Inputs['docHeaderEdit-obj_doc_prefix']
-const obj_doc_name = frm.Inputs['docHeaderEdit-obj_doc_name']
-const obj_doc_descr = frm.Inputs['docHeaderEdit-obj_doc_descr']
-const obj_doc_seqclust = frm.Inputs['docHeaderEdit-obj_doc_seqclust']
-const obj_doc_seqnum = frm.Inputs['docHeaderEdit-obj_doc_seqnum']	
+const frm = new $fgta5.Form('settingHeaderEdit-frm');
+const obj_setting_id = frm.Inputs['settingHeaderEdit-obj_setting_id']
+const obj_setting_value = frm.Inputs['settingHeaderEdit-obj_setting_value']
+const obj_setting_descr = frm.Inputs['settingHeaderEdit-obj_setting_descr']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -48,7 +45,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing docHeaderEdit ...')
+	console.log('initializing settingHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -78,8 +75,8 @@ export async function init(self, args) {
 		edit: btn_edit,	
 	}
 	
-	// export async function docHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'docHeaderEdit_init'
+	// export async function settingHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'settingHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -105,8 +102,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function docHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'docHeaderEdit_isEditDisabled'
+		// export async function settingHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'settingHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -120,8 +117,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function docHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'docHeaderEdit_formOpened'
+		// export async function settingHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'settingHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -258,7 +255,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.docHeaderList
+		const listId =  Context.Sections.settingHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -280,8 +277,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function docHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'docHeaderEdit_formLocked'
+	// export function settingHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'settingHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -316,8 +313,8 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function docHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'docHeaderEdit_formUnlocked'
+	// export function settingHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'settingHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -358,8 +355,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const docHeaderList = self.Modules.docHeaderList
-	const listsecid = docHeaderList.Section.Id
+	const settingHeaderList = self.Modules.settingHeaderList
+	const listsecid = settingHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -389,17 +386,15 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
-			doc_seqclust: 0,
-			doc_seqnum: 0,
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'docHeaderEdit_newData'
+		const fn_newdata_name = 'settingHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function docHeaderEdit_newData(self, datainit, frm) {}
+			// export async function settingHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -421,7 +416,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.docHeaderList.Section.show()
+			self.Modules.settingHeaderList.Section.show()
 		}
 	}
 }
@@ -431,7 +426,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'docHeaderEdit_autofill'
+	const fn_autofill_name = 'settingHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -482,9 +477,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function docHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function settingHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'docHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'settingHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -534,10 +529,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'docHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'settingHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function docHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function settingHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -553,10 +548,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.docHeaderList.addNewRow(self, data)
+			self.Modules.settingHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.docHeaderList.updateCurrentRow(self, data)
+			self.Modules.settingHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -595,10 +590,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.docHeaderList.removeCurrentRow(self)
+		self.Modules.settingHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.docHeaderList.Section.show()
+		self.Modules.settingHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -643,12 +638,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.docHeaderList.selectPreviousRow(self)
+	self.Modules.settingHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.docHeaderList.selectNextRow(self)
+	self.Modules.settingHeaderList.selectNextRow(self)
 }
 
 
@@ -682,7 +677,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'docHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'settingHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -724,7 +719,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'core.doc',
+				table: 'core.setting',
 				id: id
 			}
 
@@ -754,7 +749,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Document'
+		AboutSection.Title = 'About Setting'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -762,7 +757,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = 'data document'
+			divDescr.innerHTML = 'setting'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}

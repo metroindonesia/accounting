@@ -1,0 +1,29 @@
+<div id="settingHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="settingHeaderList-pnl_search" class="search-parameters">
+		<input id="settingHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="settingHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="settingHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="setting_id">
+			<th data-name="setting_id" binding="setting_id" >ID</th>
+			<th data-name="setting_value" binding="setting_value" >Value</th>
+			<th data-name="setting_descr" binding="setting_descr" >Descr</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="settingHeaderList-btn_new" data-action="settingHeader-new" data-sectionsource="settingHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

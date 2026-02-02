@@ -8,8 +8,8 @@ export default class extends Module {
 	}
 
 	async main(args={}) {
-		console.log('initializing preference program')
-		app.setTitle('Preference')
+		console.log('initializing profile program')
+		app.setTitle('Profile')
 
 		app.finalize()
 	}

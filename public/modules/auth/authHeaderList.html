@@ -1,0 +1,28 @@
+<div id="authHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="authHeaderList-pnl_search" class="search-parameters">
+		<input id="authHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="authHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="authHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="auth_id">
+			<th data-name="auth_name" binding="auth_name" >Name</th>
+			<th data-name="user_fullname" binding="user_fullname" >User</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="authHeaderList-btn_new" data-action="authHeader-new" data-sectionsource="authHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

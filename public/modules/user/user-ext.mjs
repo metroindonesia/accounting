@@ -99,16 +99,16 @@ function frm_unlocked(self, evt) {
 
 
 export function userHeaderEdit_formOpened(self, frm, CurrentState) {
-	const obj = frm.Inputs[_user_name]
+	const obj = frm.Inputs['userHeaderEdit-obj_user_name']
 	obj.disabled = true
 }
 
 export async function userHeaderEdit_newData(self, datainit, frm) {
-	const obj = frm.Inputs[_user_name]
+	const obj = frm.Inputs['userHeaderEdit-obj_user_name']
 	obj.disabled = false
 }
 
 export async function userHeaderEdit_dataSaved(self, data, frm) {
-	const obj = frm.Inputs[_user_name]
+	const obj = frm.Inputs['userHeaderEdit-obj_user_name']
 	obj.disabled = true
 }

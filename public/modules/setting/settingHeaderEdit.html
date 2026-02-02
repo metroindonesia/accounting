@@ -1,0 +1,84 @@
+<form id="settingHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="settingHeaderEdit-obj_setting_id">
+
+	<!-- Textbox: setting_id-->	
+	<div id="settingHeaderEdit-obj_setting_id-container" class="input-field" field="settingHeaderEdit-obj_setting_id">
+		<label for="settingHeaderEdit-obj_setting_id">ID</label>
+		<input id="settingHeaderEdit-obj_setting_id"  fgta5-component="Textbox" placeholder="id setting" autocomplete="off" spellcheck="false" 
+			binding="setting_id"
+			data-tabindex="1" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="ID setting harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: setting_value-->	
+	<div id="settingHeaderEdit-obj_setting_value-container" class="input-field" field="settingHeaderEdit-obj_setting_value">
+		<label for="settingHeaderEdit-obj_setting_value">Value</label>
+		<input id="settingHeaderEdit-obj_setting_value"  fgta5-component="Textbox" placeholder="value" autocomplete="off" spellcheck="false" 
+			binding="setting_value"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Textbox: setting_descr-->	
+	<div id="settingHeaderEdit-obj_setting_descr-container" class="input-field" field="settingHeaderEdit-obj_setting_descr">
+		<label for="settingHeaderEdit-obj_setting_descr">Descr</label>
+		<input id="settingHeaderEdit-obj_setting_descr"  fgta5-component="Textbox" placeholder="deksripsi" autocomplete="off" spellcheck="false" 
+			binding="setting_descr"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="settingHeaderEdit-footer">
+</div>
+
+<div id="settingHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="settingHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="settingHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="settingHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="settingHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="settingHeaderEdit-btn_save">Save</button>
+		<button id="settingHeaderEdit-btn_edit">Edit</button>
+		<button id="settingHeaderEdit-btn_new" data-action="settingHeader-new">New</button>
+		<button id="settingHeaderEdit-btn_reset">Reset</button>
+		<button id="settingHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="settingHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

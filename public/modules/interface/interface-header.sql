@@ -97,6 +97,11 @@ comment on column core."interface"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."interface"
+	drop constraint uq$core$interface$interface_name;
+	
+
 -- Add unique index 
 alter table  core."interface"
 	add constraint uq$core$interface$interface_name unique (interface_name); 

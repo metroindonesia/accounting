@@ -1,0 +1,112 @@
+<form id="authHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="authHeaderEdit-obj_auth_id">
+
+	<!-- Textbox: auth_id-->	
+	<div id="authHeaderEdit-obj_auth_id-container" class="input-field hidden" field="authHeaderEdit-obj_auth_id">
+		<label for="authHeaderEdit-obj_auth_id">ID</label>
+		<input id="authHeaderEdit-obj_auth_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="auth_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: auth_name-->	
+	<div id="authHeaderEdit-obj_auth_name-container" class="input-field" field="authHeaderEdit-obj_auth_name">
+		<label for="authHeaderEdit-obj_auth_name">Name</label>
+		<input id="authHeaderEdit-obj_auth_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="auth_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama authorisasi harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: auth_label-->	
+	<div id="authHeaderEdit-obj_auth_label-container" class="input-field" field="authHeaderEdit-obj_auth_label">
+		<label for="authHeaderEdit-obj_auth_label">Label</label>
+		<input id="authHeaderEdit-obj_auth_label"  fgta5-component="Textbox" placeholder="label" autocomplete="off" spellcheck="false" 
+			binding="auth_label"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="label harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: auth_descr-->	
+	<div id="authHeaderEdit-obj_auth_descr-container" class="input-field" field="authHeaderEdit-obj_auth_descr">
+		<label for="authHeaderEdit-obj_auth_descr">Descr</label>
+		<input id="authHeaderEdit-obj_auth_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
+			binding="auth_descr"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: user_id-->	
+	<div id="authHeaderEdit-obj_user_id-container" class="input-field" field="authHeaderEdit-obj_user_id">
+		<label for="authHeaderEdit-obj_user_id">User</label>
+		<input id="authHeaderEdit-obj_user_id"  fgta5-component="Combobox" placeholder="user" autocomplete="off" spellcheck="false" 
+			binding="user_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="user harus diisi" 
+			data-display="user_fullname" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="authHeaderEdit-footer">
+</div>
+
+<div id="authHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="authHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="authHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="authHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="authHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="authHeaderEdit-btn_save">Save</button>
+		<button id="authHeaderEdit-btn_edit">Edit</button>
+		<button id="authHeaderEdit-btn_new" data-action="authHeader-new">New</button>
+		<button id="authHeaderEdit-btn_reset">Reset</button>
+		<button id="authHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="authHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

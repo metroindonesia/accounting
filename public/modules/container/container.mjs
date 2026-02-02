@@ -116,16 +116,21 @@ async function appmgr_removefavourite(self, evt) {
 
 async function appmgr_openprofile(self, evt) {
 	try {
+		
+		const currentUrl = new URL(window.location.href)
+
 		// buka program profile
 		const type = 'program'
 		const name = 'profile'
 		const title = 'Profile'
-		const url = 'profile'
+		const url = currentUrl.origin + '/profile'
+		const icon = '/public/modules/profile/profile.svg'
 		appmgr.openModule({
 			type,
 			name,
 			title,
-			url
+			url,
+			icon
 		})
 	} catch (err) {
 		console.log(err)

@@ -7,7 +7,7 @@
   "scripts": {
     "server": "node .",
     "debug": "nodemon .",
-    "clean": "kill -9 $(lsof -t -i :3001)"
+    "clean": "kill -9 $(lsof -t -i :3003)"
   },
   "author": "Agung Nugroho",
   "license": "GPL-3.0-or-later",
