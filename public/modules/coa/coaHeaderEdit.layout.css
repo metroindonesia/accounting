@@ -1,0 +1,66 @@
+@media screen and (min-width: 501px) {
+
+	#coaHeaderEdit-frm {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		grid-auto-rows: auto;
+		gap: 0;
+		width: 850px;
+	}
+
+	#coaHeaderEdit-frm > div {
+		padding: 5px;
+	}
+
+	
+	#coaHeaderEdit-obj_coa_id-container {
+		grid-row: 1;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#coaHeaderEdit-obj_coa_isdisabled-container {
+		grid-row: 1;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#coaHeaderEdit-obj_coa_name-container {
+		grid-row: 2;
+		grid-column: 1 / span 4;
+		
+	}
+	
+	#coaHeaderEdit-obj_curr_id-container {
+		grid-row: 2;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#coaHeaderEdit-obj_curr_descr-container {
+		grid-row: 3;
+		grid-column: 1 / span 6;
+		
+	}
+	
+	#coaHeaderEdit-obj_coagroup_id-container {
+		grid-row: 4;
+		grid-column: 1 / span 4;
+		
+	}
+	
+	#coaHeaderEdit-obj_coarpt_id-container {
+		grid-row: 5;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#coaHeaderEdit-obj_agingtype_id-container {
+		grid-row: 5;
+		grid-column: 3 / span 2;
+		
+	}
+		
+
+
+}

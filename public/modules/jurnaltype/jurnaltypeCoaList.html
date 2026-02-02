@@ -1,0 +1,30 @@
+<div id="jurnaltypeCoaList-head">
+	<div id="jurnaltypeCoaList-head-title" class="section-detil-title"></div>
+	<div id="jurnaltypeCoaList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="jurnaltypeCoaList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="jurnaltypecoa_id">
+			<th rowselector></th>
+			<th data-name="jurnaltypecoa_id" binding="jurnaltypecoa_id" >LineId</th>
+			<th data-name="coa_name" binding="coa_name" >Coa</th>
+			<th data-name="jurnaltypecoa_isdr" binding="jurnaltypecoa_isdr" formatter="checkmark(value)" style='text-align:center'>Debet</th>
+			<th data-name="jurnaltypecoa_iscr" binding="jurnaltypecoa_iscr" formatter="checkmark(value)" style='text-align:center'>Credit</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="jurnaltypeCoaList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="jurnaltypeCoaList-btn_addrow" data-action="jurnaltypeCoa-addrow" data-sectionsource="jurnaltypeCoaList-section">Add Row</button>
+		<button id="jurnaltypeCoaList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

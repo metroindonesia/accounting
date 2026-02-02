@@ -1,0 +1,95 @@
+<div id="jurnaltypeCoaEdit-head">
+	<div id="jurnaltypeCoaEdit-head-title" class="section-detil-title"></div>
+	<div id="jurnaltypeCoaEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="jurnaltypeCoaEdit-frm" class="module-form" locked="true" autoid="true" primarykey="jurnaltypeCoaEdit-obj_jurnaltypecoa_id">
+
+	<!-- Textbox: jurnaltypecoa_id-->	
+	<div id="jurnaltypeCoaEdit-obj_jurnaltypecoa_id-container" class="input-field" field="jurnaltypeCoaEdit-obj_jurnaltypecoa_id">
+		<label for="jurnaltypeCoaEdit-obj_jurnaltypecoa_id">LineId</label>
+		<input id="jurnaltypeCoaEdit-obj_jurnaltypecoa_id"  fgta5-component="Textbox" placeholder="line id" autocomplete="off" spellcheck="false" 
+			binding="jurnaltypecoa_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: coa_id-->	
+	<div id="jurnaltypeCoaEdit-obj_coa_id-container" class="input-field" field="jurnaltypeCoaEdit-obj_coa_id">
+		<label for="jurnaltypeCoaEdit-obj_coa_id">Coa</label>
+		<input id="jurnaltypeCoaEdit-obj_coa_id"  fgta5-component="Combobox" placeholder="account" autocomplete="off" spellcheck="false" 
+			binding="coa_id"
+			data-tabindex="2" 
+			data-display="coa_name" 
+		>
+	</div>
+
+
+	<!-- Checkbox: jurnaltypecoa_isdr-->	
+	<div id="jurnaltypeCoaEdit-obj_jurnaltypecoa_isdr-container" class="input-field" field="jurnaltypeCoaEdit-obj_jurnaltypecoa_isdr">
+		<label for="jurnaltypeCoaEdit-obj_jurnaltypecoa_isdr">Debet</label>
+		<input id="jurnaltypeCoaEdit-obj_jurnaltypecoa_isdr"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="jurnaltypecoa_isdr"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: jurnaltypecoa_iscr-->	
+	<div id="jurnaltypeCoaEdit-obj_jurnaltypecoa_iscr-container" class="input-field" field="jurnaltypeCoaEdit-obj_jurnaltypecoa_iscr">
+		<label for="jurnaltypeCoaEdit-obj_jurnaltypecoa_iscr">Credit</label>
+		<input id="jurnaltypeCoaEdit-obj_jurnaltypecoa_iscr"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="jurnaltypecoa_iscr"
+			data-tabindex="4" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaltype_id-->	
+	<div id="jurnaltypeCoaEdit-obj_jurnaltype_id-container" class="input-field hidden hidden" field="jurnaltypeCoaEdit-obj_jurnaltype_id">
+		<label for="jurnaltypeCoaEdit-obj_jurnaltype_id">ID</label>
+		<input id="jurnaltypeCoaEdit-obj_jurnaltype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="jurnaltype_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="ID type jurnal harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="jurnaltypeCoaEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="jurnaltypeCoa-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="jurnaltypeCoa-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="jurnaltypeCoaEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="jurnaltypeCoaEdit-btn_save">Save</button>
+		<button id="jurnaltypeCoaEdit-btn_edit">Edit</button>
+		<button id="jurnaltypeCoaEdit-btn_new" data-action="jurnaltypeCoa-addrow">New</button>
+		<button id="jurnaltypeCoaEdit-btn_reset">Reset</button>
+		<button id="jurnaltypeCoaEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="jurnaltypeCoaEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

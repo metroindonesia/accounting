@@ -1,0 +1,36 @@
+@media screen and (min-width: 501px) {
+
+	#currHeaderEdit-frm {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		grid-auto-rows: auto;
+		gap: 0;
+		width: 850px;
+	}
+
+	#currHeaderEdit-frm > div {
+		padding: 5px;
+	}
+
+	
+	#currHeaderEdit-obj_curr_id-container {
+		grid-row: auto;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#currHeaderEdit-obj_curr_name-container {
+		grid-row: 1;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#currHeaderEdit-obj_curr_descr-container {
+		grid-row: 1;
+		grid-column: 3 / span 4;
+		
+	}
+		
+
+
+}

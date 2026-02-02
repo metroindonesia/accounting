@@ -1,0 +1,31 @@
+<div id="coaHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="coaHeaderList-pnl_search" class="search-parameters">
+		<input id="coaHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="coaHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="coaHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="coa_id">
+			<th data-name="coa_id" binding="coa_id" >ID</th>
+			<th data-name="coa_name" binding="coa_name" >Name</th>
+			<th data-name="coarpt_name" binding="coarpt_name" >Report</th>
+			<th data-name="agingtype_name" binding="agingtype_name" >Aging</th>
+			<th data-name="coa_isdisabled" binding="coa_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="coaHeaderList-btn_new" data-action="coaHeader-new" data-sectionsource="coaHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

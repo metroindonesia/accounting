@@ -1,0 +1,29 @@
+<div id="jurnaltypeHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="jurnaltypeHeaderList-pnl_search" class="search-parameters">
+		<input id="jurnaltypeHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="jurnaltypeHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="jurnaltypeHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="jurnaltype_id">
+			<th data-name="jurnaltype_code" binding="jurnaltype_code" >Code</th>
+			<th data-name="jurnaltype_name" binding="jurnaltype_name" >Name</th>
+			<th data-name="jurnaltype_isallowselect" binding="jurnaltype_isallowselect" formatter="checkmark(value)" style="text-align:center">Allow Select</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="jurnaltypeHeaderList-btn_new" data-action="jurnaltypeHeader-new" data-sectionsource="jurnaltypeHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

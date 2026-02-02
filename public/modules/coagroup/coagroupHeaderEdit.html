@@ -1,0 +1,134 @@
+<form id="coagroupHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="coagroupHeaderEdit-obj_coagroup_id">
+
+	<!-- Textbox: coagroup_id-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_id-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_id">
+		<label for="coagroupHeaderEdit-obj_coagroup_id">ID</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="coagroup_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: coagroup_name-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_name-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_name">
+		<label for="coagroupHeaderEdit-obj_coagroup_name">Name</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="coagroup_name"
+			data-tabindex="2" 
+			required 
+			invalid-message-required="nama group coa harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: coagroup_descr-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_descr-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_descr">
+		<label for="coagroupHeaderEdit-obj_coagroup_descr">Descr</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="coagroup_descr"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Combobox: coagroup_parent-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_parent-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_parent">
+		<label for="coagroupHeaderEdit-obj_coagroup_parent">Parent</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_parent"  fgta5-component="Combobox" placeholder="parent" autocomplete="off" spellcheck="false" 
+			binding="coagroup_parent"
+			data-tabindex="4" 
+			data-display="coagroup_parent_name" 
+		>
+	</div>
+
+
+	<!-- Numberbox: coagroup_level-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_level-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_level">
+		<label for="coagroupHeaderEdit-obj_coagroup_level">Level</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_level"  fgta5-component="Numberbox" placeholder="level" autocomplete="off" spellcheck="false" 
+			binding="coagroup_level"
+			value="0" 
+			data-tabindex="5" 
+			maxlength="9" 
+			digitgrouping="false" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: coagroup_pathid-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_pathid-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_pathid">
+		<label for="coagroupHeaderEdit-obj_coagroup_pathid">PathId</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_pathid"  fgta5-component="Textbox" placeholder="pathid" autocomplete="off" spellcheck="false" 
+			binding="coagroup_pathid"
+			data-tabindex="6" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: coagroup_path-->	
+	<div id="coagroupHeaderEdit-obj_coagroup_path-container" class="input-field" field="coagroupHeaderEdit-obj_coagroup_path">
+		<label for="coagroupHeaderEdit-obj_coagroup_path">Path</label>
+		<input id="coagroupHeaderEdit-obj_coagroup_path"  fgta5-component="Textbox" placeholder="path" autocomplete="off" spellcheck="false" 
+			binding="coagroup_path"
+			data-tabindex="7" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+</form>
+
+
+<div id="coagroupHeaderEdit-footer">
+</div>
+
+<div id="coagroupHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="coagroupHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="coagroupHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="coagroupHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="coagroupHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="coagroupHeaderEdit-btn_save">Save</button>
+		<button id="coagroupHeaderEdit-btn_edit">Edit</button>
+		<button id="coagroupHeaderEdit-btn_new" data-action="coagroupHeader-new">New</button>
+		<button id="coagroupHeaderEdit-btn_reset">Reset</button>
+		<button id="coagroupHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="coagroupHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

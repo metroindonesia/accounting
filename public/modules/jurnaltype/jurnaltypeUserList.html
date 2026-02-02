@@ -1,0 +1,30 @@
+<div id="jurnaltypeUserList-head">
+	<div id="jurnaltypeUserList-head-title" class="section-detil-title"></div>
+	<div id="jurnaltypeUserList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="jurnaltypeUserList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="jurnaltypeuser_id">
+			<th rowselector></th>
+			<th data-name="jurnaltypeuser_id" binding="jurnaltypeuser_id" >Line ID</th>
+			<th data-name="user_fullname" binding="user_fullname" >User</th>
+			<th data-name="isallowposting" binding="isallowposting" formatter="checkmark(value)" style='text-align:center'>Posting</th>
+			<th data-name="isallowunposting" binding="isallowunposting" formatter="checkmark(value)" style='text-align:center'>UnPosting</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="jurnaltypeUserList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="jurnaltypeUserList-btn_addrow" data-action="jurnaltypeUser-addrow" data-sectionsource="jurnaltypeUserList-section">Add Row</button>
+		<button id="jurnaltypeUserList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

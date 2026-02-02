@@ -1,0 +1,97 @@
+<div id="jurnaltypeUserEdit-head">
+	<div id="jurnaltypeUserEdit-head-title" class="section-detil-title"></div>
+	<div id="jurnaltypeUserEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="jurnaltypeUserEdit-frm" class="module-form" locked="true" autoid="true" primarykey="jurnaltypeUserEdit-obj_jurnaltypeuser_id">
+
+	<!-- Textbox: jurnaltypeuser_id-->	
+	<div id="jurnaltypeUserEdit-obj_jurnaltypeuser_id-container" class="input-field" field="jurnaltypeUserEdit-obj_jurnaltypeuser_id">
+		<label for="jurnaltypeUserEdit-obj_jurnaltypeuser_id">Line ID</label>
+		<input id="jurnaltypeUserEdit-obj_jurnaltypeuser_id"  fgta5-component="Textbox" placeholder="line id" autocomplete="off" spellcheck="false" 
+			binding="jurnaltypeuser_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: user_id-->	
+	<div id="jurnaltypeUserEdit-obj_user_id-container" class="input-field" field="jurnaltypeUserEdit-obj_user_id">
+		<label for="jurnaltypeUserEdit-obj_user_id">User</label>
+		<input id="jurnaltypeUserEdit-obj_user_id"  fgta5-component="Combobox" placeholder="user" autocomplete="off" spellcheck="false" 
+			binding="user_id"
+			data-tabindex="2" 
+			required 
+			invalid-message-required="User harus diisi" 
+			data-display="user_fullname" 
+		>
+	</div>
+
+
+	<!-- Checkbox: isallowposting-->	
+	<div id="jurnaltypeUserEdit-obj_isallowposting-container" class="input-field" field="jurnaltypeUserEdit-obj_isallowposting">
+		<label for="jurnaltypeUserEdit-obj_isallowposting">Posting</label>
+		<input id="jurnaltypeUserEdit-obj_isallowposting"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="isallowposting"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: isallowunposting-->	
+	<div id="jurnaltypeUserEdit-obj_isallowunposting-container" class="input-field" field="jurnaltypeUserEdit-obj_isallowunposting">
+		<label for="jurnaltypeUserEdit-obj_isallowunposting">UnPosting</label>
+		<input id="jurnaltypeUserEdit-obj_isallowunposting"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="isallowunposting"
+			data-tabindex="4" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaltype_id-->	
+	<div id="jurnaltypeUserEdit-obj_jurnaltype_id-container" class="input-field hidden hidden" field="jurnaltypeUserEdit-obj_jurnaltype_id">
+		<label for="jurnaltypeUserEdit-obj_jurnaltype_id">ID</label>
+		<input id="jurnaltypeUserEdit-obj_jurnaltype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="jurnaltype_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="ID type jurnal harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="jurnaltypeUserEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="jurnaltypeUser-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="jurnaltypeUser-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="jurnaltypeUserEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="jurnaltypeUserEdit-btn_save">Save</button>
+		<button id="jurnaltypeUserEdit-btn_edit">Edit</button>
+		<button id="jurnaltypeUserEdit-btn_new" data-action="jurnaltypeUser-addrow">New</button>
+		<button id="jurnaltypeUserEdit-btn_reset">Reset</button>
+		<button id="jurnaltypeUserEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="jurnaltypeUserEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

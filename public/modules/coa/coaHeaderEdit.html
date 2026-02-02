@@ -1,0 +1,144 @@
+<form id="coaHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="coaHeaderEdit-obj_coa_id">
+
+	<!-- Textbox: coa_id-->	
+	<div id="coaHeaderEdit-obj_coa_id-container" class="input-field" field="coaHeaderEdit-obj_coa_id">
+		<label for="coaHeaderEdit-obj_coa_id">ID</label>
+		<input id="coaHeaderEdit-obj_coa_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="coa_id"
+			data-tabindex="1" 
+			required 
+			invalid-message-required="id coa harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="7" 
+			minlength="7" 
+			invalid-message-minlength="coa harus 7 digit" 
+		>
+	</div>
+
+
+	<!-- Checkbox: coa_isdisabled-->	
+	<div id="coaHeaderEdit-obj_coa_isdisabled-container" class="input-field" field="coaHeaderEdit-obj_coa_isdisabled">
+		<label for="coaHeaderEdit-obj_coa_isdisabled">Disabled</label>
+		<input id="coaHeaderEdit-obj_coa_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="coa_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: coa_name-->	
+	<div id="coaHeaderEdit-obj_coa_name-container" class="input-field" field="coaHeaderEdit-obj_coa_name">
+		<label for="coaHeaderEdit-obj_coa_name">Name</label>
+		<input id="coaHeaderEdit-obj_coa_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="coa_name"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="nama coa harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: curr_id-->	
+	<div id="coaHeaderEdit-obj_curr_id-container" class="input-field" field="coaHeaderEdit-obj_curr_id">
+		<label for="coaHeaderEdit-obj_curr_id">Curr</label>
+		<input id="coaHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="currency" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="4" 
+			data-display="curr_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: curr_descr-->	
+	<div id="coaHeaderEdit-obj_curr_descr-container" class="input-field" field="coaHeaderEdit-obj_curr_descr">
+		<label for="coaHeaderEdit-obj_curr_descr">Descr</label>
+		<input id="coaHeaderEdit-obj_curr_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
+			binding="curr_descr"
+			data-tabindex="5" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: coagroup_id-->	
+	<div id="coaHeaderEdit-obj_coagroup_id-container" class="input-field" field="coaHeaderEdit-obj_coagroup_id">
+		<label for="coaHeaderEdit-obj_coagroup_id">Group</label>
+		<input id="coaHeaderEdit-obj_coagroup_id"  fgta5-component="Combobox" placeholder="group" autocomplete="off" spellcheck="false" 
+			binding="coagroup_id"
+			data-tabindex="6" 
+			data-display="coagroup_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: coarpt_id-->	
+	<div id="coaHeaderEdit-obj_coarpt_id-container" class="input-field" field="coaHeaderEdit-obj_coarpt_id">
+		<label for="coaHeaderEdit-obj_coarpt_id">Report</label>
+		<input id="coaHeaderEdit-obj_coarpt_id"  fgta5-component="Combobox" placeholder="report" autocomplete="off" spellcheck="false" 
+			binding="coarpt_id"
+			data-tabindex="7" 
+			required 
+			invalid-message-required="report harus diisi" 
+			data-display="coarpt_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: agingtype_id-->	
+	<div id="coaHeaderEdit-obj_agingtype_id-container" class="input-field" field="coaHeaderEdit-obj_agingtype_id">
+		<label for="coaHeaderEdit-obj_agingtype_id">Aging</label>
+		<input id="coaHeaderEdit-obj_agingtype_id"  fgta5-component="Combobox" placeholder="non aging" autocomplete="off" spellcheck="false" 
+			binding="agingtype_id"
+			data-tabindex="8" 
+			data-display="agingtype_name" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="coaHeaderEdit-footer">
+</div>
+
+<div id="coaHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="coaHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="coaHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="coaHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="coaHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="coaHeaderEdit-btn_save">Save</button>
+		<button id="coaHeaderEdit-btn_edit">Edit</button>
+		<button id="coaHeaderEdit-btn_new" data-action="coaHeader-new">New</button>
+		<button id="coaHeaderEdit-btn_reset">Reset</button>
+		<button id="coaHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="coaHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

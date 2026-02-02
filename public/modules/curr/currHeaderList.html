@@ -1,0 +1,28 @@
+<div id="currHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="currHeaderList-pnl_search" class="search-parameters">
+		<input id="currHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="currHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="currHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="curr_id">
+			<th data-name="curr_name" binding="curr_name" >Name</th>
+			<th data-name="curr_descr" binding="curr_descr" >Descr</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="currHeaderList-btn_new" data-action="currHeader-new" data-sectionsource="currHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

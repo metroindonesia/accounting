@@ -1,0 +1,82 @@
+<form id="currHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="currHeaderEdit-obj_curr_id">
+
+	<!-- Textbox: curr_id-->	
+	<div id="currHeaderEdit-obj_curr_id-container" class="input-field hidden" field="currHeaderEdit-obj_curr_id">
+		<label for="currHeaderEdit-obj_curr_id">Curr_id</label>
+		<input id="currHeaderEdit-obj_curr_id"  fgta5-component="Textbox" placeholder="curr_id" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: curr_name-->	
+	<div id="currHeaderEdit-obj_curr_name-container" class="input-field" field="currHeaderEdit-obj_curr_name">
+		<label for="currHeaderEdit-obj_curr_name">Name</label>
+		<input id="currHeaderEdit-obj_curr_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="curr_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: curr_descr-->	
+	<div id="currHeaderEdit-obj_curr_descr-container" class="input-field" field="currHeaderEdit-obj_curr_descr">
+		<label for="currHeaderEdit-obj_curr_descr">Descr</label>
+		<input id="currHeaderEdit-obj_curr_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="curr_descr"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="currHeaderEdit-footer">
+</div>
+
+<div id="currHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="currHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="currHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="currHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="currHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="currHeaderEdit-btn_save">Save</button>
+		<button id="currHeaderEdit-btn_edit">Edit</button>
+		<button id="currHeaderEdit-btn_new" data-action="currHeader-new">New</button>
+		<button id="currHeaderEdit-btn_reset">Reset</button>
+		<button id="currHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="currHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>
