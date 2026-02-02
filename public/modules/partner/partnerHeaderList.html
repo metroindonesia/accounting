@@ -1,0 +1,30 @@
+<div id="partnerHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="partnerHeaderList-pnl_search" class="search-parameters">
+		<input id="partnerHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="partnerHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="partnerHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="partner_id">
+			<th data-name="partner_id" binding="partner_id" >ID</th>
+			<th data-name="partner_name" binding="partner_name" >Name</th>
+			<th data-name="partnertype_name" binding="partnertype_name" >Type</th>
+			<th data-name="partner_isdisabled" binding="partner_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="partnerHeaderList-btn_new" data-action="partnerHeader-new" data-sectionsource="partnerHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

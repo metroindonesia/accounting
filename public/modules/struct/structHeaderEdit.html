@@ -1,0 +1,183 @@
+<form id="structHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="structHeaderEdit-obj_struct_id">
+
+	<!-- Textbox: struct_id-->	
+	<div id="structHeaderEdit-obj_struct_id-container" class="input-field hidden" field="structHeaderEdit-obj_struct_id">
+		<label for="structHeaderEdit-obj_struct_id">ID</label>
+		<input id="structHeaderEdit-obj_struct_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="struct_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: struct_code-->	
+	<div id="structHeaderEdit-obj_struct_code-container" class="input-field" field="structHeaderEdit-obj_struct_code">
+		<label for="structHeaderEdit-obj_struct_code">Code</label>
+		<input id="structHeaderEdit-obj_struct_code"  fgta5-component="Textbox" placeholder="code" autocomplete="off" spellcheck="false" 
+			binding="struct_code"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="code structure harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="10" 
+		>
+	</div>
+
+
+	<!-- Checkbox: struct_isdisabled-->	
+	<div id="structHeaderEdit-obj_struct_isdisabled-container" class="input-field" field="structHeaderEdit-obj_struct_isdisabled">
+		<label for="structHeaderEdit-obj_struct_isdisabled">Disabled</label>
+		<input id="structHeaderEdit-obj_struct_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="struct_isdisabled"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: struct_isparent-->	
+	<div id="structHeaderEdit-obj_struct_isparent-container" class="input-field" field="structHeaderEdit-obj_struct_isparent">
+		<label for="structHeaderEdit-obj_struct_isparent">Parent</label>
+		<input id="structHeaderEdit-obj_struct_isparent"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="struct_isparent"
+			data-tabindex="4" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: struct_istransaction-->	
+	<div id="structHeaderEdit-obj_struct_istransaction-container" class="input-field" field="structHeaderEdit-obj_struct_istransaction">
+		<label for="structHeaderEdit-obj_struct_istransaction">Allow Transaction</label>
+		<input id="structHeaderEdit-obj_struct_istransaction"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="struct_istransaction"
+			data-tabindex="5" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: struct_name-->	
+	<div id="structHeaderEdit-obj_struct_name-container" class="input-field" field="structHeaderEdit-obj_struct_name">
+		<label for="structHeaderEdit-obj_struct_name">Name</label>
+		<input id="structHeaderEdit-obj_struct_name"  fgta5-component="Textbox" placeholder="nama structure" autocomplete="off" spellcheck="false" 
+			binding="struct_name"
+			data-tabindex="6" 
+			required 
+			invalid-message-required="nama struktur harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: structhrk_id-->	
+	<div id="structHeaderEdit-obj_structhrk_id-container" class="input-field" field="structHeaderEdit-obj_structhrk_id">
+		<label for="structHeaderEdit-obj_structhrk_id">Hierarcy</label>
+		<input id="structHeaderEdit-obj_structhrk_id"  fgta5-component="Combobox" placeholder="hierarcy" autocomplete="off" spellcheck="false" 
+			binding="structhrk_id"
+			data-tabindex="7" 
+			required 
+			invalid-message-required="hierarky structure harus diisi" 
+			data-display="structhrk_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: struct_parent-->	
+	<div id="structHeaderEdit-obj_struct_parent-container" class="input-field" field="structHeaderEdit-obj_struct_parent">
+		<label for="structHeaderEdit-obj_struct_parent">Parent</label>
+		<input id="structHeaderEdit-obj_struct_parent"  fgta5-component="Combobox" placeholder="struct_parent" autocomplete="off" spellcheck="false" 
+			binding="struct_parent"
+			data-tabindex="8" 
+			data-display="struct_parent_name" 
+		>
+	</div>
+
+
+	<!-- Numberbox: struct_level-->	
+	<div id="structHeaderEdit-obj_struct_level-container" class="input-field" field="structHeaderEdit-obj_struct_level">
+		<label for="structHeaderEdit-obj_struct_level">Level</label>
+		<input id="structHeaderEdit-obj_struct_level"  fgta5-component="Numberbox" placeholder="level" autocomplete="off" spellcheck="false" 
+			binding="struct_level"
+			value="0" 
+			data-tabindex="9" 
+			maxlength="9" 
+			digitgrouping="false" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: struct_pathid-->	
+	<div id="structHeaderEdit-obj_struct_pathid-container" class="input-field" field="structHeaderEdit-obj_struct_pathid">
+		<label for="structHeaderEdit-obj_struct_pathid">PathId</label>
+		<input id="structHeaderEdit-obj_struct_pathid"  fgta5-component="Textbox" placeholder="pathid" autocomplete="off" spellcheck="false" 
+			binding="struct_pathid"
+			data-tabindex="10" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: struct_path-->	
+	<div id="structHeaderEdit-obj_struct_path-container" class="input-field" field="structHeaderEdit-obj_struct_path">
+		<label for="structHeaderEdit-obj_struct_path">Path</label>
+		<input id="structHeaderEdit-obj_struct_path"  fgta5-component="Textbox" placeholder="path" autocomplete="off" spellcheck="false" 
+			binding="struct_path"
+			data-tabindex="11" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+</form>
+
+
+<div id="structHeaderEdit-footer">
+</div>
+
+<div id="structHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="structHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="structHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="structHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="structHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="structHeaderEdit-btn_save">Save</button>
+		<button id="structHeaderEdit-btn_edit">Edit</button>
+		<button id="structHeaderEdit-btn_new" data-action="structHeader-new">New</button>
+		<button id="structHeaderEdit-btn_reset">Reset</button>
+		<button id="structHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="structHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

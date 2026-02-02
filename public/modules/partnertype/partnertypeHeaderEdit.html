@@ -1,0 +1,83 @@
+<form id="partnertypeHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="partnertypeHeaderEdit-obj_partnertype_id">
+
+	<!-- Textbox: partnertype_id-->	
+	<div id="partnertypeHeaderEdit-obj_partnertype_id-container" class="input-field" field="partnertypeHeaderEdit-obj_partnertype_id">
+		<label for="partnertypeHeaderEdit-obj_partnertype_id">ID</label>
+		<input id="partnertypeHeaderEdit-obj_partnertype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="partnertype_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnertype_name-->	
+	<div id="partnertypeHeaderEdit-obj_partnertype_name-container" class="input-field" field="partnertypeHeaderEdit-obj_partnertype_name">
+		<label for="partnertypeHeaderEdit-obj_partnertype_name">Name</label>
+		<input id="partnertypeHeaderEdit-obj_partnertype_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="partnertype_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama tipe partner harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: partnertype_isemployee-->	
+	<div id="partnertypeHeaderEdit-obj_partnertype_isemployee-container" class="input-field" field="partnertypeHeaderEdit-obj_partnertype_isemployee">
+		<label for="partnertypeHeaderEdit-obj_partnertype_isemployee">Employee</label>
+		<input id="partnertypeHeaderEdit-obj_partnertype_isemployee"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="partnertype_isemployee"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="partnertypeHeaderEdit-footer">
+</div>
+
+<div id="partnertypeHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="partnertypeHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="partnertypeHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="partnertypeHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="partnertypeHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="partnertypeHeaderEdit-btn_save">Save</button>
+		<button id="partnertypeHeaderEdit-btn_edit">Edit</button>
+		<button id="partnertypeHeaderEdit-btn_new" data-action="partnertypeHeader-new">New</button>
+		<button id="partnertypeHeaderEdit-btn_reset">Reset</button>
+		<button id="partnertypeHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="partnertypeHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

@@ -1,0 +1,30 @@
+<div id="structHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="structHeaderList-pnl_search" class="search-parameters">
+		<input id="structHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="structHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="structHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="struct_id">
+			<th data-name="struct_code" binding="struct_code" >Code</th>
+			<th data-name="struct_name" binding="struct_name" >Name</th>
+			<th data-name="struct_parent_name" binding="struct_parent_name" >Parent</th>
+			<th data-name="struct_isdisabled" binding="struct_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="structHeaderList-btn_new" data-action="structHeader-new" data-sectionsource="structHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

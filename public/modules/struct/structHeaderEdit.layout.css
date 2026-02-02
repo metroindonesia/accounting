@@ -1,0 +1,84 @@
+@media screen and (min-width: 501px) {
+
+	#structHeaderEdit-frm {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		grid-auto-rows: auto;
+		gap: 0;
+		width: 850px;
+	}
+
+	#structHeaderEdit-frm > div {
+		padding: 5px;
+	}
+
+	
+	#structHeaderEdit-obj_struct_id-container {
+		grid-row: auto;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_code-container {
+		grid-row: 1;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_isdisabled-container {
+		grid-row: 1;
+		grid-column: 3 / span 1;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_isparent-container {
+		grid-row: 1;
+		grid-column: 4 / span 1;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_istransaction-container {
+		grid-row: 1;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_name-container {
+		grid-row: 2;
+		grid-column: 1 / span 3;
+		
+	}
+	
+	#structHeaderEdit-obj_structhrk_id-container {
+		grid-row: 2;
+		grid-column: 4 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_parent-container {
+		grid-row: 3;
+		grid-column: 1 / span 3;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_level-container {
+		grid-row: 3;
+		grid-column: 4 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_pathid-container {
+		grid-row: 4;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_path-container {
+		grid-row: 4;
+		grid-column: 3 / span 4;
+		
+	}
+		
+
+
+}
