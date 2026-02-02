@@ -1,0 +1,87 @@
+<form id="structhrkHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="structhrkHeaderEdit-obj_structhrk_id">
+
+	<!-- Textbox: structhrk_id-->	
+	<div id="structhrkHeaderEdit-obj_structhrk_id-container" class="input-field" field="structhrkHeaderEdit-obj_structhrk_id">
+		<label for="structhrkHeaderEdit-obj_structhrk_id">ID</label>
+		<input id="structhrkHeaderEdit-obj_structhrk_id"  fgta5-component="Textbox" placeholder="structhrk_id" autocomplete="off" spellcheck="false" 
+			binding="structhrk_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: structhrk_name-->	
+	<div id="structhrkHeaderEdit-obj_structhrk_name-container" class="input-field" field="structhrkHeaderEdit-obj_structhrk_name">
+		<label for="structhrkHeaderEdit-obj_structhrk_name">Name</label>
+		<input id="structhrkHeaderEdit-obj_structhrk_name"  fgta5-component="Textbox" placeholder="hierarcy name" autocomplete="off" spellcheck="false" 
+			binding="structhrk_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama hierarchy harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Numberbox: structhrk_level-->	
+	<div id="structhrkHeaderEdit-obj_structhrk_level-container" class="input-field" field="structhrkHeaderEdit-obj_structhrk_level">
+		<label for="structhrkHeaderEdit-obj_structhrk_level">Level</label>
+		<input id="structhrkHeaderEdit-obj_structhrk_level"  fgta5-component="Numberbox" placeholder="structhrk_level" autocomplete="off" spellcheck="false" 
+			binding="structhrk_level"
+			value="0" 
+			data-tabindex="3" 
+			maxlength="9" 
+			min="1" 
+			invalid-message-min="level hierarky harus diisi, minimal bernilai 1" 
+			digitgrouping="false" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="structhrkHeaderEdit-footer">
+</div>
+
+<div id="structhrkHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="structhrkHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="structhrkHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="structhrkHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="structhrkHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="structhrkHeaderEdit-btn_save">Save</button>
+		<button id="structhrkHeaderEdit-btn_edit">Edit</button>
+		<button id="structhrkHeaderEdit-btn_new" data-action="structhrkHeader-new">New</button>
+		<button id="structhrkHeaderEdit-btn_reset">Reset</button>
+		<button id="structhrkHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="structhrkHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

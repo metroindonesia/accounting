@@ -1,0 +1,127 @@
+<form id="siteHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="siteHeaderEdit-obj_site_id">
+
+	<!-- Textbox: site_id-->	
+	<div id="siteHeaderEdit-obj_site_id-container" class="input-field hidden" field="siteHeaderEdit-obj_site_id">
+		<label for="siteHeaderEdit-obj_site_id">ID</label>
+		<input id="siteHeaderEdit-obj_site_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="site_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: site_isdisabled-->	
+	<div id="siteHeaderEdit-obj_site_isdisabled-container" class="input-field" field="siteHeaderEdit-obj_site_isdisabled">
+		<label for="siteHeaderEdit-obj_site_isdisabled">Disabled</label>
+		<input id="siteHeaderEdit-obj_site_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="site_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: site_name-->	
+	<div id="siteHeaderEdit-obj_site_name-container" class="input-field" field="siteHeaderEdit-obj_site_name">
+		<label for="siteHeaderEdit-obj_site_name">Name</label>
+		<input id="siteHeaderEdit-obj_site_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="site_name"
+			data-tabindex="3" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama site harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: site_namereport-->	
+	<div id="siteHeaderEdit-obj_site_namereport-container" class="input-field" field="siteHeaderEdit-obj_site_namereport">
+		<label for="siteHeaderEdit-obj_site_namereport">Name Report</label>
+		<input id="siteHeaderEdit-obj_site_namereport"  fgta5-component="Textbox" placeholder="nama di report" autocomplete="off" spellcheck="false" 
+			binding="site_namereport"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="nama site untuk report harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="90" 
+		>
+	</div>
+
+
+	<!-- Textbox: site_location-->	
+	<div id="siteHeaderEdit-obj_site_location-container" class="input-field" field="siteHeaderEdit-obj_site_location">
+		<label for="siteHeaderEdit-obj_site_location">Location</label>
+		<input id="siteHeaderEdit-obj_site_location"  fgta5-component="Textbox" placeholder="location" autocomplete="off" spellcheck="false" 
+			binding="site_location"
+			data-tabindex="5" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="lokasi harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: site_city-->	
+	<div id="siteHeaderEdit-obj_site_city-container" class="input-field" field="siteHeaderEdit-obj_site_city">
+		<label for="siteHeaderEdit-obj_site_city">City</label>
+		<input id="siteHeaderEdit-obj_site_city"  fgta5-component="Textbox" placeholder="city" autocomplete="off" spellcheck="false" 
+			binding="site_city"
+			data-tabindex="6" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="city harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="siteHeaderEdit-footer">
+</div>
+
+<div id="siteHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="siteHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="siteHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="siteHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="siteHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="siteHeaderEdit-btn_save">Save</button>
+		<button id="siteHeaderEdit-btn_edit">Edit</button>
+		<button id="siteHeaderEdit-btn_new" data-action="siteHeader-new">New</button>
+		<button id="siteHeaderEdit-btn_reset">Reset</button>
+		<button id="siteHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="siteHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

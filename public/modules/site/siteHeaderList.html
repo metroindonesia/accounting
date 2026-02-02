@@ -1,0 +1,29 @@
+<div id="siteHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="siteHeaderList-pnl_search" class="search-parameters">
+		<input id="siteHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="siteHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="siteHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="site_id">
+			<th data-name="site_name" binding="site_name" >Name</th>
+			<th data-name="site_namereport" binding="site_namereport" >Name Report</th>
+			<th data-name="site_isdisabled" binding="site_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="siteHeaderList-btn_new" data-action="siteHeader-new" data-sectionsource="siteHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

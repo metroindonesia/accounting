@@ -1,0 +1,29 @@
+<div id="projectHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="projectHeaderList-pnl_search" class="search-parameters">
+		<input id="projectHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="projectHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="projectHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="project_id">
+			<th data-name="project_id" binding="project_id" >ID</th>
+			<th data-name="project_name" binding="project_name" >Name</th>
+			<th data-name="project_isdisabled" binding="project_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="projectHeaderList-btn_new" data-action="projectHeader-new" data-sectionsource="projectHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

@@ -1,0 +1,94 @@
+<form id="projectHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="projectHeaderEdit-obj_project_id">
+
+	<!-- Textbox: project_id-->	
+	<div id="projectHeaderEdit-obj_project_id-container" class="input-field" field="projectHeaderEdit-obj_project_id">
+		<label for="projectHeaderEdit-obj_project_id">ID</label>
+		<input id="projectHeaderEdit-obj_project_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="project_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: project_isdisabled-->	
+	<div id="projectHeaderEdit-obj_project_isdisabled-container" class="input-field" field="projectHeaderEdit-obj_project_isdisabled">
+		<label for="projectHeaderEdit-obj_project_isdisabled">Disabled</label>
+		<input id="projectHeaderEdit-obj_project_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="project_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: project_name-->	
+	<div id="projectHeaderEdit-obj_project_name-container" class="input-field" field="projectHeaderEdit-obj_project_name">
+		<label for="projectHeaderEdit-obj_project_name">Name</label>
+		<input id="projectHeaderEdit-obj_project_name"  fgta5-component="Textbox" placeholder="project name" autocomplete="off" spellcheck="false" 
+			binding="project_name"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="nama project harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: project_descr-->	
+	<div id="projectHeaderEdit-obj_project_descr-container" class="input-field" field="projectHeaderEdit-obj_project_descr">
+		<label for="projectHeaderEdit-obj_project_descr">Descr</label>
+		<input id="projectHeaderEdit-obj_project_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="project_descr"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="projectHeaderEdit-footer">
+</div>
+
+<div id="projectHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="projectHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="projectHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="projectHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="projectHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="projectHeaderEdit-btn_save">Save</button>
+		<button id="projectHeaderEdit-btn_edit">Edit</button>
+		<button id="projectHeaderEdit-btn_new" data-action="projectHeader-new">New</button>
+		<button id="projectHeaderEdit-btn_reset">Reset</button>
+		<button id="projectHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="projectHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

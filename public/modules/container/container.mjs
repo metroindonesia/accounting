@@ -148,11 +148,13 @@ async function appmgr_openpreference(self, evt) {
 		const name = 'preference'
 		const title = 'Preference'
 		const url = currentUrl.origin + '/preference'
+		const icon = '/public/modules/preference/preference.svg'
 		appmgr.openModule({
 			type,
 			name,
 			title,
-			url
+			url,
+			icon
 		})
 
 	} catch (err) {

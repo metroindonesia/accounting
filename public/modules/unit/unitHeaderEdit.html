@@ -1,0 +1,95 @@
+<form id="unitHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="unitHeaderEdit-obj_unit_id">
+
+	<!-- Textbox: unit_id-->	
+	<div id="unitHeaderEdit-obj_unit_id-container" class="input-field" field="unitHeaderEdit-obj_unit_id">
+		<label for="unitHeaderEdit-obj_unit_id">ID</label>
+		<input id="unitHeaderEdit-obj_unit_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="unit_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: unit_isdisabled-->	
+	<div id="unitHeaderEdit-obj_unit_isdisabled-container" class="input-field" field="unitHeaderEdit-obj_unit_isdisabled">
+		<label for="unitHeaderEdit-obj_unit_isdisabled">Disabled</label>
+		<input id="unitHeaderEdit-obj_unit_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="unit_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: unit_name-->	
+	<div id="unitHeaderEdit-obj_unit_name-container" class="input-field" field="unitHeaderEdit-obj_unit_name">
+		<label for="unitHeaderEdit-obj_unit_name">Name</label>
+		<input id="unitHeaderEdit-obj_unit_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="unit_name"
+			data-tabindex="3" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama unit harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: unit_descr-->	
+	<div id="unitHeaderEdit-obj_unit_descr-container" class="input-field" field="unitHeaderEdit-obj_unit_descr">
+		<label for="unitHeaderEdit-obj_unit_descr">Descr</label>
+		<input id="unitHeaderEdit-obj_unit_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="unit_descr"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="unitHeaderEdit-footer">
+</div>
+
+<div id="unitHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="unitHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="unitHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="unitHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="unitHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="unitHeaderEdit-btn_save">Save</button>
+		<button id="unitHeaderEdit-btn_edit">Edit</button>
+		<button id="unitHeaderEdit-btn_new" data-action="unitHeader-new">New</button>
+		<button id="unitHeaderEdit-btn_reset">Reset</button>
+		<button id="unitHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="unitHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>
