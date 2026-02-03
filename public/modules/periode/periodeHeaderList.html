@@ -1,0 +1,28 @@
+<div id="periodeHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="periodeHeaderList-pnl_search" class="search-parameters">
+		<input id="periodeHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="periodeHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="periodeHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="periode_id">
+			<th data-name="periode_name" binding="periode_name" >Name</th>
+			<th data-name="periode_isclosed" binding="periode_isclosed" formatter="checkmark(value)" style="text-align:center">Closed</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="periodeHeaderList-btn_new" data-action="periodeHeader-new" data-sectionsource="periodeHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

@@ -1,0 +1,60 @@
+<section id="periodeHeaderList-section" class="fgta5-carousell" data-title="Periode Buku">
+<%- include(`${moduleDir}/periodeHeaderList.html`) %>
+</section>
+
+<section id="periodeHeaderEdit-section" class="fgta5-carousell" data-title="Edit Periode Buku">
+<%- include(`${moduleDir}/periodeHeaderEdit.html`) %>
+</section>
+
+
+
+<section id="fRecord-section" class="fgta5-carousell" data-title="Record Status">
+
+	<div name="panel">
+		<div name="row">
+			<span name="caption">Id</span>
+			<span name="value" id="fRecord-section-id">-</span>
+		</div>
+	</div>	
+
+
+	<div name="panel">
+		<!-- LEFT: Standard Info -->
+		<div name="column">
+			<div name="row">
+				<span name="caption">Create By</span>
+				<span name="value" id="fRecord-section-createby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Create Date</span>
+				<span name="value" id="fRecord-section-createdate">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify By</span>
+				<span name="value" id="fRecord-section-modifyby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify Date</span>
+				<span name="value"id="fRecord-section-modifydate">-</span>
+			</div>
+
+		</div>
+
+
+		<!-- RIGHT: Extended Info -->
+		<div name="column" exteder>
+		<%- include(`${moduleDir}/periode-ext-record.html`) %>	
+		</div> 
+
+	</div>	
+</section>
+
+<section id="fLogs-section" class="fgta5-carousell" data-title="Logs">
+<%- include(`${moduleDir}/periode-logs.html`) %>	
+</section>
+
+<section id="fAbout-section" class="fgta5-carousell" data-title="About">
+<%- include(`${moduleDir}/periode-ext-about.html`) %>	
+</section>
+
+

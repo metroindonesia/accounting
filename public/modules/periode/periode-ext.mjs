@@ -1,9 +1,9 @@
-import Context from './jurnaltype-context.mjs'
+import Context from './periode-context.mjs'
 
 export async function init(self, args) {
-	console.log('initializing jurnaltypeExtender ...')
+	console.log('initializing periodeExtender ...')
 
-	// tambahkan extender inisiasi module jurnaltype
+	// tambahkan extender inisiasi module periode
 
 
 	/* // contoh menambahkan content dari template extender
@@ -35,6 +35,5 @@ export async function init(self, args) {
 
 
 }
-
 
 

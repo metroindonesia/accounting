@@ -38,8 +38,8 @@
 	}
 	
 	#jurnaltypeUserEdit-obj_jurnaltype_id-container {
-		grid-row: auto;
-		grid-column: 1 / span 2;
+		grid-row: 1;
+		grid-column: 5 / span 2;
 		
 	}
 		

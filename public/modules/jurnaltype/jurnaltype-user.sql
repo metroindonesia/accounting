@@ -136,11 +136,6 @@ comment on column public."jurnaltypeuser"._modifydate is 'waktu terakhir record 
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."jurnaltypeuser" DROP CONSTRAINT fk$public$jurnaltypeuser$user_id;
-ALTER TABLE public."jurnaltypeuser" DROP CONSTRAINT fk$public$jurnaltypeuser$jurnaltype_id;
-
-
 -- Add Foreign Key Constraint  
 ALTER TABLE public."jurnaltypeuser"
 	ADD CONSTRAINT fk$public$jurnaltypeuser$user_id

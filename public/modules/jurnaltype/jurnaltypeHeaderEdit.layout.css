@@ -14,26 +14,26 @@
 
 	
 	#jurnaltypeHeaderEdit-obj_jurnaltype_id-container {
-		grid-row: auto;
-		grid-column: 1 / span 2;
+		grid-row: 1;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_jurnaltype_name-container {
+		grid-row: 1;
+		grid-column: 1 / span 3;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_jurnaltype_code-container {
-		grid-row: auto;
-		grid-column: 1 / span 2;
+		grid-row: 1;
+		grid-column: 4;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_jurnaltype_isallowselect-container {
 		grid-row: 1;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_jurnaltype_name-container {
-		grid-row: 2;
-		grid-column: 1 / span 3;
+		grid-column: 6;
 		
 	}
 	
@@ -194,13 +194,13 @@
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowgetap-container {
-		grid-row: 4;
+		grid-row: 14;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowgetar-container {
-		grid-row: 5;
+		grid-row: 15;
 		grid-column: 5 / span 2;
 		
 	}

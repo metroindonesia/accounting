@@ -547,11 +547,6 @@ comment on column public."jurnaltype"._modifydate is 'waktu terakhir record dimo
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
--- Drop existing unique index 
-alter table public."jurnaltype"
-	drop constraint uq$public$jurnaltype$jurnaltype_name;
-	
-
 -- Add unique index 
 alter table  public."jurnaltype"
 	add constraint uq$public$jurnaltype$jurnaltype_name unique (jurnaltype_name); 

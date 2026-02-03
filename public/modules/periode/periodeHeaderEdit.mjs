@@ -1,5 +1,5 @@
-import Context from './jurnaltype-context.mjs'
-import * as Ext from './jurnaltype-ext.mjs'
+import Context from './periode-context.mjs'
+import * as Ext from './periode-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,63 +7,42 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.jurnaltypeHeaderEdit
+const CurrentSectionId = Context.Sections.periodeHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Jurnal Type'
-const TitleWhenView = 'View Jurnal Type'
-const TitleWhenEdit = 'Edit Jurnal Type'
+const TitleWhenNew = 'New Periode Buku'
+const TitleWhenView = 'View Periode Buku'
+const TitleWhenEdit = 'Edit Periode Buku'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_new', 'jurnaltypeHeader-new')
-const btn_del = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('periodeHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('periodeHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('periodeHeaderEdit-btn_new', 'periodeHeader-new')
+const btn_del = new $fgta5.ActionButton('periodeHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('periodeHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('periodeHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('periodeHeaderEdit-btn_next')
 
+const btn_actionClose = new $fgta5.ActionButton('periodeHeaderEdit-btn_actionClose')
+const btn_actionReopen = new $fgta5.ActionButton('periodeHeaderEdit-btn_actionReopen')
 
-const btn_recordstatus = document.getElementById('jurnaltypeHeader-btn_recordstatus')
-const btn_logs = document.getElementById('jurnaltypeHeader-btn_logs')
-const btn_about = document.getElementById('jurnaltypeHeader-btn_about')
+const btn_recordstatus = document.getElementById('periodeHeader-btn_recordstatus')
+const btn_logs = document.getElementById('periodeHeader-btn_logs')
+const btn_about = document.getElementById('periodeHeader-btn_about')
 
-const frm = new $fgta5.Form('jurnaltypeHeaderEdit-frm');
-const obj_jurnaltype_id = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_id']
-const obj_jurnaltype_name = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_name']
-const obj_jurnaltype_code = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_code']
-const obj_jurnaltype_isallowselect = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_isallowselect']
-const obj_jurnaltype_descr = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_descr']
-const obj_jurnaltype_headcopyto = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto']
-const obj_ishasduedate = frm.Inputs['jurnaltypeHeaderEdit-obj_ishasduedate']
-const obj_isheadhasvalue = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasvalue']
-const obj_isheadhascoa = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhascoa']
-const obj_isheadhasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasunit']
-const obj_isheadhassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhassite']
-const obj_isheadhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasstruct']
-const obj_isheadhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspartner']
-const obj_isheadhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasproject']
-const obj_isheadhaspaymtype = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymtype']
-const obj_isheadhaspaymreq = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymreq']
-const obj_isheadunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadunitmandatory']
-const obj_isheadsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadsitemandatory']
-const obj_isheadstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadstructmandatory']
-const obj_isheadprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadprojectmandatory']
-const obj_isdethasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethasunit']
-const obj_isdethassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethassite']
-const obj_isdetilhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasstruct']
-const obj_isdetilhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhaspartner']
-const obj_isdetilhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasproject']
-const obj_isdetilallowselectunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectunit']
-const obj_isdetilallowselectsite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectsite']
-const obj_isdetilallowselectstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectstruct']
-const obj_isdetilallowselectpartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectpartner']
-const obj_isdetilallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectproject']
-const obj_isdetilallowgetap = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetap']
-const obj_isdetilallowgetar = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetar']	
+const frm = new $fgta5.Form('periodeHeaderEdit-frm');
+const obj_periode_id = frm.Inputs['periodeHeaderEdit-obj_periode_id']
+const obj_periode_isclosed = frm.Inputs['periodeHeaderEdit-obj_periode_isclosed']
+const obj_periode_isactive = frm.Inputs['periodeHeaderEdit-obj_periode_isactive']
+const obj_periode_name = frm.Inputs['periodeHeaderEdit-obj_periode_name']
+const obj_periode_year = frm.Inputs['periodeHeaderEdit-obj_periode_year']
+const obj_periode_month = frm.Inputs['periodeHeaderEdit-obj_periode_month']
+const obj_periode_start = frm.Inputs['periodeHeaderEdit-obj_periode_start']
+const obj_periode_end = frm.Inputs['periodeHeaderEdit-obj_periode_end']
+const obj_previous_periode_id = frm.Inputs['periodeHeaderEdit-obj_previous_periode_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -74,7 +53,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing jurnaltypeHeaderEdit ...')
+	console.log('initializing periodeHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -101,18 +80,31 @@ export async function init(self, args) {
 	// set actions
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
+		edit: btn_edit,
+		close: btn_actionClose,
+		reopen: btn_actionReopen,	
 	}
 	
-	// export async function jurnaltypeHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'jurnaltypeHeaderEdit_init'
+	// export async function periodeHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'periodeHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
 	}
 
 
-	
+	// buat di Extender: export function setupActionButtonEvent(self, frm, CurrentState, buttons) { }
+	const fn_setupactionbuttonevent_name = 'setupActionButtonEvent'
+	const fn_setupactionbuttonevent = Extender[fn_setupactionbuttonevent_name]
+	if (typeof fn_setupactionbuttonevent === 'function') {
+		fn_setupactionbuttonevent(self, frm, CurrentState, {
+			btn_actionClose,
+			btn_actionReopen,
+		})
+	} else {
+		console.warn('Extender.setupActionButtonEvent is not implemented')
+		console.log('buat function di extender: export function setupActionButtonEvent(self, buttons)')
+	}
 
 		
 	
@@ -131,8 +123,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function jurnaltypeHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'jurnaltypeHeaderEdit_isEditDisabled'
+		// export async function periodeHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'periodeHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -146,8 +138,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function jurnaltypeHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'jurnaltypeHeaderEdit_formOpened'
+		// export async function periodeHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'periodeHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -284,7 +276,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.jurnaltypeHeaderList
+		const listId =  Context.Sections.periodeHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -303,11 +295,13 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
+	// Enable action: action hanya bisa dilakukan saat posisi edit off
+	btn_actionClose.disabled = false
+	btn_actionReopen.disabled = false
 	
 	// Extender untuk event locked
-	// export function jurnaltypeHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeHeaderEdit_formLocked'
+	// export function periodeHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'periodeHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -318,14 +312,6 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
-	
-	// trigger lock event di coa
-	self.Modules.jurnaltypeCoaList.headerLocked(self)
-	self.Modules.jurnaltypeCoaEdit.headerLocked(self)
-	
-	// trigger lock event di user
-	self.Modules.jurnaltypeUserList.headerLocked(self)
-	self.Modules.jurnaltypeUserEdit.headerLocked(self)
 		
 
 }
@@ -347,24 +333,18 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
+	// Disable action: action hanya bisa dilakukan saat posisi edit off
+	btn_actionClose.disabled = true
+	btn_actionReopen.disabled = true
 
 	// Extender untuk event Unlocked
-	// export function jurnaltypeHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeHeaderEdit_formUnlocked'
+	// export function periodeHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'periodeHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
 	}
 
-	
-	// trigger unlock event di coa
-	self.Modules.jurnaltypeCoaList.headerUnlocked(self)
-	self.Modules.jurnaltypeCoaEdit.headerUnlocked(self)	
-	
-	// trigger unlock event di user
-	self.Modules.jurnaltypeUserList.headerUnlocked(self)
-	self.Modules.jurnaltypeUserEdit.headerUnlocked(self)	
 		
 }
 
@@ -400,8 +380,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const jurnaltypeHeaderList = self.Modules.jurnaltypeHeaderList
-	const listsecid = jurnaltypeHeaderList.Section.Id
+	const periodeHeaderList = self.Modules.periodeHeaderList
+	const listsecid = periodeHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -431,15 +411,19 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
+			periode_year: 0,
+			periode_month: 0,
+			periode_start: new Date(),
+			periode_end: new Date(),
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'jurnaltypeHeaderEdit_newData'
+		const fn_newdata_name = 'periodeHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function jurnaltypeHeaderEdit_newData(self, datainit, frm) {}
+			// export async function periodeHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -461,7 +445,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.jurnaltypeHeaderList.Section.show()
+			self.Modules.periodeHeaderList.Section.show()
 		}
 	}
 }
@@ -471,7 +455,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'jurnaltypeHeaderEdit_autofill'
+	const fn_autofill_name = 'periodeHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -522,9 +506,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function jurnaltypeHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function periodeHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'jurnaltypeHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'periodeHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -574,10 +558,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'jurnaltypeHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'periodeHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function jurnaltypeHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function periodeHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -593,10 +577,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.jurnaltypeHeaderList.addNewRow(self, data)
+			self.Modules.periodeHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.jurnaltypeHeaderList.updateCurrentRow(self, data)
+			self.Modules.periodeHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -635,10 +619,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.jurnaltypeHeaderList.removeCurrentRow(self)
+		self.Modules.periodeHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.jurnaltypeHeaderList.Section.show()
+		self.Modules.periodeHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -683,12 +667,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.jurnaltypeHeaderList.selectPreviousRow(self)
+	self.Modules.periodeHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.jurnaltypeHeaderList.selectNextRow(self)
+	self.Modules.periodeHeaderList.selectNextRow(self)
 }
 
 
@@ -722,7 +706,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'jurnaltypeHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'periodeHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -764,7 +748,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.jurnaltype',
+				table: 'public.periode',
 				id: id
 			}
 
@@ -794,7 +778,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Jurnal Type'
+		AboutSection.Title = 'About Periode Buku'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -802,7 +786,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
+			divDescr.innerHTML = 'periode financial'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}
@@ -811,7 +795,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 3 Feb 2026 11:08'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 3 Feb 2026 10:47'
 			section.appendChild(divFooter)
 		}
 		

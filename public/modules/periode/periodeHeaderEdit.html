@@ -1,0 +1,174 @@
+<form id="periodeHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="periodeHeaderEdit-obj_periode_id">
+
+	<!-- Textbox: periode_id-->	
+	<div id="periodeHeaderEdit-obj_periode_id-container" class="input-field" field="periodeHeaderEdit-obj_periode_id">
+		<label for="periodeHeaderEdit-obj_periode_id">ID</label>
+		<input id="periodeHeaderEdit-obj_periode_id"  fgta5-component="Textbox" placeholder="[auto]" autocomplete="off" spellcheck="false" 
+			binding="periode_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: periode_isclosed-->	
+	<div id="periodeHeaderEdit-obj_periode_isclosed-container" class="input-field" field="periodeHeaderEdit-obj_periode_isclosed">
+		<label for="periodeHeaderEdit-obj_periode_isclosed">Closed</label>
+		<input id="periodeHeaderEdit-obj_periode_isclosed"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="periode_isclosed"
+			data-tabindex="2" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: periode_isactive-->	
+	<div id="periodeHeaderEdit-obj_periode_isactive-container" class="input-field" field="periodeHeaderEdit-obj_periode_isactive">
+		<label for="periodeHeaderEdit-obj_periode_isactive">Active</label>
+		<input id="periodeHeaderEdit-obj_periode_isactive"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="periode_isactive"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: periode_name-->	
+	<div id="periodeHeaderEdit-obj_periode_name-container" class="input-field" field="periodeHeaderEdit-obj_periode_name">
+		<label for="periodeHeaderEdit-obj_periode_name">Name</label>
+		<input id="periodeHeaderEdit-obj_periode_name"  fgta5-component="Textbox" placeholder="[auto]" autocomplete="off" spellcheck="false" 
+			binding="periode_name"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="nama periode harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Numberbox: periode_year-->	
+	<div id="periodeHeaderEdit-obj_periode_year-container" class="input-field" field="periodeHeaderEdit-obj_periode_year">
+		<label for="periodeHeaderEdit-obj_periode_year">Year</label>
+		<input id="periodeHeaderEdit-obj_periode_year"  fgta5-component="Numberbox" placeholder="year" autocomplete="off" spellcheck="false" 
+			binding="periode_year"
+			value="0" 
+			data-tabindex="5" 
+			style="width: 60px" 
+			maxlength="4" 
+			min="2020" 
+			invalid-message-min="isi dengan angka tahun yang benar" 
+			max="2060" 
+			invalid-message-max="isi dengan angka tahun yang benar" 
+			digitgrouping="false" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Numberbox: periode_month-->	
+	<div id="periodeHeaderEdit-obj_periode_month-container" class="input-field" field="periodeHeaderEdit-obj_periode_month">
+		<label for="periodeHeaderEdit-obj_periode_month">Month</label>
+		<input id="periodeHeaderEdit-obj_periode_month"  fgta5-component="Numberbox" placeholder="month" autocomplete="off" spellcheck="false" 
+			binding="periode_month"
+			value="0" 
+			data-tabindex="6" 
+			style="width: 40px" 
+			maxlength="2" 
+			min="1" 
+			invalid-message-min="isi dengan angka bulan yang benar" 
+			max="12" 
+			invalid-message-max="isi dengan angka bulan yang benar" 
+			digitgrouping="false" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Datepicker: periode_start-->	
+	<div id="periodeHeaderEdit-obj_periode_start-container" class="input-field" field="periodeHeaderEdit-obj_periode_start">
+		<label for="periodeHeaderEdit-obj_periode_start">Start</label>
+		<input id="periodeHeaderEdit-obj_periode_start"  fgta5-component="Datepicker" placeholder="start" autocomplete="off" spellcheck="false" 
+			binding="periode_start"
+			data-tabindex="7" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Datepicker: periode_end-->	
+	<div id="periodeHeaderEdit-obj_periode_end-container" class="input-field" field="periodeHeaderEdit-obj_periode_end">
+		<label for="periodeHeaderEdit-obj_periode_end">End</label>
+		<input id="periodeHeaderEdit-obj_periode_end"  fgta5-component="Datepicker" placeholder="periode_end" autocomplete="off" spellcheck="false" 
+			binding="periode_end"
+			data-tabindex="8" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: previous_periode_id-->	
+	<div id="periodeHeaderEdit-obj_previous_periode_id-container" class="input-field" field="periodeHeaderEdit-obj_previous_periode_id">
+		<label for="periodeHeaderEdit-obj_previous_periode_id">Previous</label>
+		<input id="periodeHeaderEdit-obj_previous_periode_id"  fgta5-component="Textbox" placeholder="previous periode" autocomplete="off" spellcheck="false" 
+			binding="previous_periode_id"
+			data-tabindex="9" 
+			required 
+			invalid-message-required="previous periode harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="4" 
+			disabled 
+		>
+	</div>
+	
+</form>
+
+
+<div id="periodeHeaderEdit-footer">
+</div>
+
+<div id="periodeHeaderEdit-panelaction" class="panel-action">
+	<button id="periodeHeaderEdit-btn_actionClose">Close</button>
+	<button id="periodeHeaderEdit-btn_actionReopen">re-Open</button>
+</div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="periodeHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="periodeHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="periodeHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="periodeHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="periodeHeaderEdit-btn_save">Save</button>
+		<button id="periodeHeaderEdit-btn_edit">Edit</button>
+		<button id="periodeHeaderEdit-btn_new" data-action="periodeHeader-new">New</button>
+		<button id="periodeHeaderEdit-btn_reset">Reset</button>
+		<button id="periodeHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="periodeHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>
