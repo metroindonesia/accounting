@@ -2,38 +2,33 @@ import Context from './struct-context.mjs'
 
 export async function init(self, args) {
 	console.log('initializing structExtender ...')
-
-	// tambahkan extender inisiasi module struct
-
-
-	/* // contoh menambahkan content dari template extender
-	{
-		const target = secRec.querySelector('#fRecord-section div[name="column"][exteder]')
-		const tpl = document.getElementById('tpl-record-panel')
-		if (tpl!=null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			target.prepend(clone)
-		}
-	}
-	*/	
-
-
-	
-	/* // contoh menambahkan custom validator
-	// pada html, tambahkan validator="cobaFunction:paramValue"
-	const frm = self.Modules.coaHeaderEdit.getHeaderForm()
-	const obj_coa_normal = frm.Inputs['coaHeaderEdit-obj_coa_normal']
-	$validators.addCustomValidator('cobaFunction', (v, param)=>{
-	 	console.log(v)
-	 	setTimeout(()=>{
-	 		obj_coa_normal.setError('ini error')
-	 	}, 500)
-	})	
-
-
-	*/
-
-
 }
 
 
+export function obj_struct_parent_selecting_criteria(self, obj_struct_parent, frm, criteria, sort, evt) {
+	// hanya yang parent akan dimunculkan
+
+	criteria.struct_isparent = true
+	criteria.exclude_self = frm.Inputs['structHeaderEdit-obj_struct_id'].value
+
+	console.log('criteria', criteria)
+}
+
+
+export function headerList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', async evt => { tbl_headerListRowRender(self, evt) })
+}
+
+function tbl_headerListRowRender(self, evt) {
+	const tr = evt.detail.tr
+	const td_level = tr.querySelector('td[data-name="struct_level"]')
+	const td_name = tr.querySelector('td[data-name="struct_name"]')
+
+	const level = Number(td_level.getAttribute('data-value'))
+	console.log(`${td_name.innerHTML} ${level}`)
+	if (level > 1) {
+		const paddingLeft = (level - 1) * 30
+		td_name.style.paddingLeft = `${paddingLeft}px`
+	}
+
+}
