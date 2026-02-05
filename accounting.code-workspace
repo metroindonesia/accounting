@@ -6,8 +6,25 @@
 		}
 	],
 	"settings": {
+		"keybindings": [
+			{
+				"key": "tab",
+				"command": "acceptSelectedSuggestion",
+				"when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+			},
+			{
+				"key": "enter",
+				"command": "-acceptSelectedSuggestion",
+				"when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
+			}
+		],
 		"editor.insertSpaces": false,
-		"codium.codeCompletion.enable": false
+		"[html]": {
+			"editor.formatOnSave": false
+		},
+		"[ejs]": {
+			"editor.formatOnSave": false
+		},
 	},
 	"launch": {
 		"version": "0.2.0",

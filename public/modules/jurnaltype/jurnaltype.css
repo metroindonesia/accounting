@@ -6,4 +6,27 @@
 	.chk-opt-detil {
 		margin-left: 77px;
 	}
+
+
+	.lbl-head-prop {
+		font-weight: bold;
+		text-align: right;
+		margin-right: 53px;
+		grid-row: 5 / span 2;
+		grid-column: 1;
+	}
+
+
+	.lbl-detil-prop {
+		font-weight: bold;
+		grid-row: 7;
+		grid-column: 3 / span 2;
+	}
+
+
+	.lbl-detil-allowselect {
+		font-weight: bold;
+		grid-row: 7;
+		grid-column: 5 / span 2;
+	}
 }
