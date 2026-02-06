@@ -41,6 +41,20 @@ body {
 	color: rgb(220, 222, 233);
 	outline: 0;
 	border: 2px solid rgb(30, 31, 33);
+}
 
+.password-container {
+	position: relative;
+	width: 100%;
+}
 
+.toggle-password {
+	position: absolute;
+	right: 15px;
+	top: 50%;
+	transform: translateY(-50%);
+	cursor: pointer;
+	user-select: none;
+	font-size: 16px;
+	z-index: 10;
 }

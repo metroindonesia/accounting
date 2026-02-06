@@ -2,6 +2,7 @@ const Context = {}
 const btn_login = document.getElementById('btn_login')
 const obj_username = document.getElementById('obj_username')
 const obj_password = document.getElementById('obj_password')
+const btn_show_password = document.getElementById('btn_show_password')
 
 // need test direct open
 // https://core-dev.transfashion.id/?nexturl=https://ent-dev.transfashion.id/sitetype&id=STO
@@ -21,6 +22,13 @@ export default class extends Module {
 		btn_login.addEventListener('click', (evt)=>{
 			btn_login_click(self, evt)
 		})
+
+		btn_show_password.addEventListener('click', () => {
+			const type = obj_password.getAttribute('type') === 'password' ? 'text' : 'password'
+			obj_password.setAttribute('type', type)
+			btn_show_password.textContent = type === 'password' ? '👁️' : '🙈'
+		})
+
 		
 		obj_username.addEventListener('keypress', evt=>{
 			const key = evt.key.toLowerCase()
