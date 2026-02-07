@@ -1,0 +1,32 @@
+<div id="paymreqHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="paymreqHeaderList-pnl_search" class="search-parameters">
+		<input id="paymreqHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="paymreqHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="paymreqHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="paymreq_id">
+			<th data-name="paymreq_doc" binding="paymreq_doc" >ID</th>
+			<th data-name="isapproved" binding="isapproved" formatter="checkmark(value)" style="text-align:center">Approved</th>
+			<th data-name="paymreq_descr" binding="paymreq_descr" >Descr</th>
+			<th data-name="paymreq_datedue" binding="paymreq_datedue" formatter="dateshort(v)">Due Date</th>
+			<th data-name="bc_descr" binding="bc_descr" >BC</th>
+			<th data-name="paymreq_value" binding="paymreq_value" formatter="decimal(v, 2)" style="text-align:right">Value</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="paymreqHeaderList-btn_new" data-action="paymreqHeader-new" data-sectionsource="paymreqHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

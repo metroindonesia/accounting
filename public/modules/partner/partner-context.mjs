@@ -10,9 +10,17 @@ export default {
 	Sections: { 
 		partnerHeaderList: 'partnerHeaderList-section', 
 		partnerHeaderEdit: 'partnerHeaderEdit-section', 
+		partnerBankList: 'partnerBankList-section', 
+		partnerBankEdit: 'partnerBankEdit-section', 
+		partnerContactList: 'partnerContactList-section', 
+		partnerContactEdit: 'partnerContactEdit-section', 
 	},
 	SectionMap: { 
 		'partnerHeaderList-section' : 'partnerHeaderList', 
 		'partnerHeaderEdit-section' : 'partnerHeaderEdit', 
+		'partnerBankList-section' : 'partnerBankList', 
+		'partnerBankEdit-section' : 'partnerBankEdit', 
+		'partnerContactList-section' : 'partnerContactList', 
+		'partnerContactEdit-section' : 'partnerContactEdit', 
 	}
 }

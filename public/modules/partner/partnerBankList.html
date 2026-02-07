@@ -1,0 +1,28 @@
+<div id="partnerBankList-head">
+	<div id="partnerBankList-head-title" class="section-detil-title"></div>
+	<div id="partnerBankList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="partnerBankList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="partnerbank_id">
+			<th rowselector></th>
+			<th data-name="partnerbank_name" binding="partnerbank_name" >Descr</th>
+			<th data-name="partnerbank_isdisabled" binding="partnerbank_isdisabled" formatter="checkmark(value)" style='text-align:center'>Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="partnerBankList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="partnerBankList-btn_addrow" data-action="partnerBank-addrow" data-sectionsource="partnerBankList-section">Add Row</button>
+		<button id="partnerBankList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

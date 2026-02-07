@@ -1,6 +1,10 @@
 import Context from './partner-context.mjs'  
 import * as partnerHeaderList from './partnerHeaderList.mjs' 
 import * as partnerHeaderEdit from './partnerHeaderEdit.mjs' 
+import * as partnerBankList from './partnerBankList.mjs' 
+import * as partnerBankEdit from './partnerBankEdit.mjs' 
+import * as partnerContactList from './partnerContactList.mjs' 
+import * as partnerContactEdit from './partnerContactEdit.mjs' 
 import * as Extender from './partner-ext.mjs'
 
 const app = Context.app
@@ -29,6 +33,10 @@ export default class extends Module {
 		self.Modules = { 
 			partnerHeaderList, 
 			partnerHeaderEdit, 
+			partnerBankList, 
+			partnerBankEdit, 
+			partnerContactList, 
+			partnerContactEdit, 
 		}
 
 		try {
@@ -51,6 +59,10 @@ export default class extends Module {
 			await Promise.all([ 
 				partnerHeaderList.init(self, args), 
 				partnerHeaderEdit.init(self, args), 
+				partnerBankList.init(self, args), 
+				partnerBankEdit.init(self, args), 
+				partnerContactList.init(self, args), 
+				partnerContactEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -62,7 +74,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['partnerHeaderEdit']
+			const modNameList = ['partnerHeaderEdit', 'partnerBankEdit', 'partnerContactEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

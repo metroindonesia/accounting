@@ -1,0 +1,29 @@
+<div id="bcHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="bcHeaderList-pnl_search" class="search-parameters">
+		<input id="bcHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="bcHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="bcHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="bc_id">
+			<th data-name="bc_id" binding="bc_id" >ID</th>
+			<th data-name="bc_doc" binding="bc_doc" >Doc</th>
+			<th data-name="bc_descr" binding="bc_descr" >Descr</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="bcHeaderList-btn_new" data-action="bcHeader-new" data-sectionsource="bcHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

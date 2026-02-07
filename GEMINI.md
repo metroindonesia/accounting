@@ -16,3 +16,11 @@ Dokumen ini adalah panduan konteks bagi asisten AI (Gemini) untuk memahami atura
 - **Data Credentials:** Untuk server side, dilarang keras menulis data sensitif di dalam kode. Gunakan `process.env` (file `.env`).
 - **Dokumentasi:** Gunakan komentar JSDoc dalam **Bahasa Indonesia**.
 - **Variabel:** Gunakan const untuk variabel yang tidak berubah dan let untuk variabel yang nilainya berubah; hindari penggunaan var.
+## Module Structure
+- lokasi source module client side ada di direktori public/modules/${modulename}/*.*
+- lokasi api module ada di direktori src/apis/${modulename}.api.js
+- file-file utama untuk client side pada module terdiri dari
+	- ${modulename}.html, sebagai template/view
+	- ${modulename}.css, sebagai style module
+	- ${modulename}.mjs, sebagai script berjalan di browser, sebagai view login module (SPA)
+	

@@ -1,0 +1,29 @@
+<div id="partnerContactList-head">
+	<div id="partnerContactList-head-title" class="section-detil-title"></div>
+	<div id="partnerContactList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="partnerContactList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="partnercontact_id">
+			<th rowselector></th>
+			<th data-name="partnercontact_name" binding="partnercontact_name" >Name</th>
+			<th data-name="partnercontact_hp" binding="partnercontact_hp" >HP</th>
+			<th data-name="partnercontact_isdisabled" binding="partnercontact_isdisabled" formatter="checkmark(value)" style='text-align:center'>Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="partnerContactList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="partnerContactList-btn_addrow" data-action="partnerContact-addrow" data-sectionsource="partnerContactList-section">Add Row</button>
+		<button id="partnerContactList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

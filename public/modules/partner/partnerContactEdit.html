@@ -1,0 +1,125 @@
+<div id="partnerContactEdit-head">
+	<div id="partnerContactEdit-head-title" class="section-detil-title"></div>
+	<div id="partnerContactEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="partnerContactEdit-frm" class="module-form" locked="true" autoid="true" primarykey="partnerContactEdit-obj_partnercontact_id">
+
+	<!-- Textbox: partnercontact_id-->	
+	<div id="partnerContactEdit-obj_partnercontact_id-container" class="input-field hidden" field="partnerContactEdit-obj_partnercontact_id">
+		<label for="partnerContactEdit-obj_partnercontact_id">LineId</label>
+		<input id="partnerContactEdit-obj_partnercontact_id"  fgta5-component="Textbox" placeholder="line" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnercontact_name-->	
+	<div id="partnerContactEdit-obj_partnercontact_name-container" class="input-field" field="partnerContactEdit-obj_partnercontact_name">
+		<label for="partnerContactEdit-obj_partnercontact_name">Name</label>
+		<input id="partnerContactEdit-obj_partnercontact_name"  fgta5-component="Textbox" placeholder="nama contact" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_name"
+			data-tabindex="2" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama contact harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: partnercontact_isdisabled-->	
+	<div id="partnerContactEdit-obj_partnercontact_isdisabled-container" class="input-field" field="partnerContactEdit-obj_partnercontact_isdisabled">
+		<label for="partnerContactEdit-obj_partnercontact_isdisabled">Disabled</label>
+		<input id="partnerContactEdit-obj_partnercontact_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_isdisabled"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnercontact_position-->	
+	<div id="partnerContactEdit-obj_partnercontact_position-container" class="input-field" field="partnerContactEdit-obj_partnercontact_position">
+		<label for="partnerContactEdit-obj_partnercontact_position">Position</label>
+		<input id="partnerContactEdit-obj_partnercontact_position"  fgta5-component="Textbox" placeholder="position" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_position"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnercontact_hp-->	
+	<div id="partnerContactEdit-obj_partnercontact_hp-container" class="input-field" field="partnerContactEdit-obj_partnercontact_hp">
+		<label for="partnerContactEdit-obj_partnercontact_hp">HP</label>
+		<input id="partnerContactEdit-obj_partnercontact_hp"  fgta5-component="Textbox" placeholder="mobile number" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_hp"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="nomor HP harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnercontact_email-->	
+	<div id="partnerContactEdit-obj_partnercontact_email-container" class="input-field" field="partnerContactEdit-obj_partnercontact_email">
+		<label for="partnerContactEdit-obj_partnercontact_email">email</label>
+		<input id="partnerContactEdit-obj_partnercontact_email"  fgta5-component="Textbox" placeholder="partnercontact_email" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_email"
+			data-tabindex="6" 
+			character-case="lowercase" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partner_id-->	
+	<div id="partnerContactEdit-obj_partner_id-container" class="input-field hidden" field="partnerContactEdit-obj_partner_id">
+		<label for="partnerContactEdit-obj_partner_id">ID</label>
+		<input id="partnerContactEdit-obj_partner_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="partner_id"
+			data-tabindex="7" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="partnerContactEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="partnerContact-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="partnerContact-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="partnerContactEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="partnerContactEdit-btn_save">Save</button>
+		<button id="partnerContactEdit-btn_edit">Edit</button>
+		<button id="partnerContactEdit-btn_new" data-action="partnerContact-addrow">New</button>
+		<button id="partnerContactEdit-btn_reset">Reset</button>
+		<button id="partnerContactEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="partnerContactEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

@@ -1,0 +1,129 @@
+<div id="partnerBankEdit-head">
+	<div id="partnerBankEdit-head-title" class="section-detil-title"></div>
+	<div id="partnerBankEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="partnerBankEdit-frm" class="module-form" locked="true" autoid="true" primarykey="partnerBankEdit-obj_partnerbank_id">
+
+	<!-- Textbox: partnerbank_id-->	
+	<div id="partnerBankEdit-obj_partnerbank_id-container" class="input-field" field="partnerBankEdit-obj_partnerbank_id">
+		<label for="partnerBankEdit-obj_partnerbank_id">LineId</label>
+		<input id="partnerBankEdit-obj_partnerbank_id"  fgta5-component="Textbox" placeholder="line" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_account-->	
+	<div id="partnerBankEdit-obj_partnerbank_account-container" class="input-field" field="partnerBankEdit-obj_partnerbank_account">
+		<label for="partnerBankEdit-obj_partnerbank_account">Account No</label>
+		<input id="partnerBankEdit-obj_partnerbank_account"  fgta5-component="Textbox" placeholder="nomor account bank" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_account"
+			data-tabindex="2" 
+			required 
+			invalid-message-required="nomor account bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: partnerbank_isdisabled-->	
+	<div id="partnerBankEdit-obj_partnerbank_isdisabled-container" class="input-field" field="partnerBankEdit-obj_partnerbank_isdisabled">
+		<label for="partnerBankEdit-obj_partnerbank_isdisabled">Disabled</label>
+		<input id="partnerBankEdit-obj_partnerbank_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_isdisabled"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_accountname-->	
+	<div id="partnerBankEdit-obj_partnerbank_accountname-container" class="input-field" field="partnerBankEdit-obj_partnerbank_accountname">
+		<label for="partnerBankEdit-obj_partnerbank_accountname">Name</label>
+		<input id="partnerBankEdit-obj_partnerbank_accountname"  fgta5-component="Textbox" placeholder="nama pemilik account" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_accountname"
+			data-tabindex="4" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama pemilik account harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_bankname-->	
+	<div id="partnerBankEdit-obj_partnerbank_bankname-container" class="input-field" field="partnerBankEdit-obj_partnerbank_bankname">
+		<label for="partnerBankEdit-obj_partnerbank_bankname">Bank Name</label>
+		<input id="partnerBankEdit-obj_partnerbank_bankname"  fgta5-component="Textbox" placeholder="nama bank" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_bankname"
+			data-tabindex="5" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_name-->	
+	<div id="partnerBankEdit-obj_partnerbank_name-container" class="input-field" field="partnerBankEdit-obj_partnerbank_name">
+		<label for="partnerBankEdit-obj_partnerbank_name">Descr</label>
+		<input id="partnerBankEdit-obj_partnerbank_name"  fgta5-component="Textbox" placeholder="partnerbank_name" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_name"
+			data-tabindex="6" 
+			required 
+			invalid-message-required="nama harus diisi untuk keperluan identifier" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partner_id-->	
+	<div id="partnerBankEdit-obj_partner_id-container" class="input-field hidden" field="partnerBankEdit-obj_partner_id">
+		<label for="partnerBankEdit-obj_partner_id">ID</label>
+		<input id="partnerBankEdit-obj_partner_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="partner_id"
+			data-tabindex="7" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="partnerBankEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="partnerBank-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="partnerBank-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="partnerBankEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="partnerBankEdit-btn_save">Save</button>
+		<button id="partnerBankEdit-btn_edit">Edit</button>
+		<button id="partnerBankEdit-btn_new" data-action="partnerBank-addrow">New</button>
+		<button id="partnerBankEdit-btn_reset">Reset</button>
+		<button id="partnerBankEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="partnerBankEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

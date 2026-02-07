@@ -1,0 +1,363 @@
+<form id="paymreqHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="paymreqHeaderEdit-obj_paymreq_id">
+
+	<!-- Textbox: paymreq_id-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_id-container" class="input-field hidden" field="paymreqHeaderEdit-obj_paymreq_id">
+		<label for="paymreqHeaderEdit-obj_paymreq_id">ID</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="paymreq_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreq_doc-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_doc-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_doc">
+		<label for="paymreqHeaderEdit-obj_paymreq_doc">ID</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_doc"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="paymreq_doc"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: iscommit-->	
+	<div id="paymreqHeaderEdit-obj_iscommit-container" class="input-field" field="paymreqHeaderEdit-obj_iscommit">
+		<label for="paymreqHeaderEdit-obj_iscommit">Commit</label>
+		<input id="paymreqHeaderEdit-obj_iscommit"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="iscommit"
+			data-tabindex="3" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: isapproved-->	
+	<div id="paymreqHeaderEdit-obj_isapproved-container" class="input-field" field="paymreqHeaderEdit-obj_isapproved">
+		<label for="paymreqHeaderEdit-obj_isapproved">Approved</label>
+		<input id="paymreqHeaderEdit-obj_isapproved"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="isapproved"
+			data-tabindex="4" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Combobox: paymreqtype_id-->	
+	<div id="paymreqHeaderEdit-obj_paymreqtype_id-container" class="input-field" field="paymreqHeaderEdit-obj_paymreqtype_id">
+		<label for="paymreqHeaderEdit-obj_paymreqtype_id">Req.Type</label>
+		<input id="paymreqHeaderEdit-obj_paymreqtype_id"  fgta5-component="Combobox" placeholder="type" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="Tipe payment request harus diisi" 
+			data-display="paymreqtype_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreq_invoice-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_invoice-container" class="input-field hidden" field="paymreqHeaderEdit-obj_paymreq_invoice">
+		<label for="paymreqHeaderEdit-obj_paymreq_invoice">InvoiceNo</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_invoice"  fgta5-component="Textbox" placeholder="nomor invoice" autocomplete="off" spellcheck="false" 
+			binding="paymreq_invoice"
+			data-tabindex="6" 
+			required 
+			invalid-message-required="nomor invoice harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Datepicker: paymreq_date-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_date-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_date">
+		<label for="paymreqHeaderEdit-obj_paymreq_date">Date</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_date"  fgta5-component="Datepicker" placeholder="date" autocomplete="off" spellcheck="false" 
+			binding="paymreq_date"
+			data-tabindex="7" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreq_descr-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_descr-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_descr">
+		<label for="paymreqHeaderEdit-obj_paymreq_descr">Descr</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
+			binding="paymreq_descr"
+			data-tabindex="8" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Datepicker: paymreq_datedue-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_datedue-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_datedue">
+		<label for="paymreqHeaderEdit-obj_paymreq_datedue">Due Date</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_datedue"  fgta5-component="Datepicker" placeholder="due date" autocomplete="off" spellcheck="false" 
+			binding="paymreq_datedue"
+			data-tabindex="9" 
+		>
+	</div>
+
+
+	<!-- Combobox: struct_id-->	
+	<div id="paymreqHeaderEdit-obj_struct_id-container" class="input-field" field="paymreqHeaderEdit-obj_struct_id">
+		<label for="paymreqHeaderEdit-obj_struct_id">Structure</label>
+		<input id="paymreqHeaderEdit-obj_struct_id"  fgta5-component="Combobox" placeholder="structure" autocomplete="off" spellcheck="false" 
+			binding="struct_id"
+			data-tabindex="10" 
+			required 
+			invalid-message-required="structure harus diisi" 
+			data-display="struct_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: project_id-->	
+	<div id="paymreqHeaderEdit-obj_project_id-container" class="input-field" field="paymreqHeaderEdit-obj_project_id">
+		<label for="paymreqHeaderEdit-obj_project_id">Project</label>
+		<input id="paymreqHeaderEdit-obj_project_id"  fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+			binding="project_id"
+			data-tabindex="11" 
+			data-display="project_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: site_id-->	
+	<div id="paymreqHeaderEdit-obj_site_id-container" class="input-field" field="paymreqHeaderEdit-obj_site_id">
+		<label for="paymreqHeaderEdit-obj_site_id">Site</label>
+		<input id="paymreqHeaderEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+			binding="site_id"
+			data-tabindex="12" 
+			data-display="site_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: unit_id-->	
+	<div id="paymreqHeaderEdit-obj_unit_id-container" class="input-field" field="paymreqHeaderEdit-obj_unit_id">
+		<label for="paymreqHeaderEdit-obj_unit_id">Unit</label>
+		<input id="paymreqHeaderEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+			binding="unit_id"
+			data-tabindex="13" 
+			data-display="unit_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: bc_id-->	
+	<div id="paymreqHeaderEdit-obj_bc_id-container" class="input-field" field="paymreqHeaderEdit-obj_bc_id">
+		<label for="paymreqHeaderEdit-obj_bc_id">BC</label>
+		<input id="paymreqHeaderEdit-obj_bc_id"  fgta5-component="Combobox" placeholder="business case" autocomplete="off" spellcheck="false" 
+			binding="bc_id"
+			data-tabindex="14" 
+			data-display="bc_descr" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Combobox: partner_id-->	
+	<div id="paymreqHeaderEdit-obj_partner_id-container" class="input-field" field="paymreqHeaderEdit-obj_partner_id">
+		<label for="paymreqHeaderEdit-obj_partner_id">Partner</label>
+		<input id="paymreqHeaderEdit-obj_partner_id"  fgta5-component="Combobox" placeholder="pilih partner" autocomplete="off" spellcheck="false" 
+			binding="partner_id"
+			data-tabindex="15" 
+			required 
+			invalid-message-required="partner harus diisi" 
+			data-display="partner_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: partnercontact_id-->	
+	<div id="paymreqHeaderEdit-obj_partnercontact_id-container" class="input-field" field="paymreqHeaderEdit-obj_partnercontact_id">
+		<label for="paymreqHeaderEdit-obj_partnercontact_id">Up</label>
+		<input id="paymreqHeaderEdit-obj_partnercontact_id"  fgta5-component="Combobox" placeholder="up" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_id"
+			data-tabindex="16" 
+			data-display="partnercontact_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: paymtype_id-->	
+	<div id="paymreqHeaderEdit-obj_paymtype_id-container" class="input-field" field="paymreqHeaderEdit-obj_paymtype_id">
+		<label for="paymreqHeaderEdit-obj_paymtype_id">Paym Type</label>
+		<input id="paymreqHeaderEdit-obj_paymtype_id"  fgta5-component="Combobox" placeholder="paymtype_id" autocomplete="off" spellcheck="false" 
+			binding="paymtype_id"
+			data-tabindex="17" 
+			required 
+			invalid-message-required="tipe pembayaran harus diisi" 
+			data-display="paymtype_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: payment_bgno-->	
+	<div id="paymreqHeaderEdit-obj_payment_bgno-container" class="input-field hidden" field="paymreqHeaderEdit-obj_payment_bgno">
+		<label for="paymreqHeaderEdit-obj_payment_bgno">No BG/Cheque</label>
+		<input id="paymreqHeaderEdit-obj_payment_bgno"  fgta5-component="Textbox" placeholder="no bilyet / cheque" autocomplete="off" spellcheck="false" 
+			binding="payment_bgno"
+			data-tabindex="18" 
+			required 
+			invalid-message-required="no bilyet/giro/cek harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: partnerbank_id-->	
+	<div id="paymreqHeaderEdit-obj_partnerbank_id-container" class="input-field hidden" field="paymreqHeaderEdit-obj_partnerbank_id">
+		<label for="paymreqHeaderEdit-obj_partnerbank_id">Partner Bank</label>
+		<input id="paymreqHeaderEdit-obj_partnerbank_id"  fgta5-component="Combobox" placeholder="bank" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_id"
+			data-tabindex="19" 
+			required 
+			invalid-message-required="partner bank harus diisi" 
+			data-display="partnerbank_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_account-->	
+	<div id="paymreqHeaderEdit-obj_partnerbank_account-container" class="input-field hidden" field="paymreqHeaderEdit-obj_partnerbank_account">
+		<label for="paymreqHeaderEdit-obj_partnerbank_account">Account</label>
+		<input id="paymreqHeaderEdit-obj_partnerbank_account"  fgta5-component="Textbox" placeholder="account" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_account"
+			data-tabindex="20" 
+			required 
+			invalid-message-required="acount bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_accountname-->	
+	<div id="paymreqHeaderEdit-obj_partnerbank_accountname-container" class="input-field hidden" field="paymreqHeaderEdit-obj_partnerbank_accountname">
+		<label for="paymreqHeaderEdit-obj_partnerbank_accountname">Account Name</label>
+		<input id="paymreqHeaderEdit-obj_partnerbank_accountname"  fgta5-component="Textbox" placeholder="accountname" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_accountname"
+			data-tabindex="21" 
+			required 
+			invalid-message-required="nama account bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_bankname-->	
+	<div id="paymreqHeaderEdit-obj_partnerbank_bankname-container" class="input-field hidden" field="paymreqHeaderEdit-obj_partnerbank_bankname">
+		<label for="paymreqHeaderEdit-obj_partnerbank_bankname">Bank Name</label>
+		<input id="paymreqHeaderEdit-obj_partnerbank_bankname"  fgta5-component="Textbox" placeholder="bankname" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_bankname"
+			data-tabindex="22" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Numberbox: paymreq_value-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_value-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_value">
+		<label for="paymreqHeaderEdit-obj_paymreq_value">Value</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
+			binding="paymreq_value"
+			value="0" 
+			data-tabindex="23" 
+			maxlength="13" 
+			min="1" 
+			invalid-message-min="request value harus diisi" 
+		>
+	</div>
+
+
+	<!-- Combobox: curr_id-->	
+	<div id="paymreqHeaderEdit-obj_curr_id-container" class="input-field" field="paymreqHeaderEdit-obj_curr_id">
+		<label for="paymreqHeaderEdit-obj_curr_id">Curr</label>
+		<input id="paymreqHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="curr" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="24" 
+			required 
+			invalid-message-required="currency harus diisi" 
+			data-display="curr_name" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="paymreqHeaderEdit-footer">
+</div>
+
+<div id="paymreqHeaderEdit-panelaction" class="panel-action">
+	<button id="paymreqHeaderEdit-btn_actionCommit">Commit</button>
+	<button id="paymreqHeaderEdit-btn_actionUncommit">UnCommit</button>
+	<button id="paymreqHeaderEdit-btn_actionApprove">Approve</button>
+	<button id="paymreqHeaderEdit-btn_actionUnapprove">UnApprove</button>
+	<button id="paymreqHeaderEdit-btn_actionPrint">Print</button>
+</div>
+
+
+<div id="panel-detil-selector" class="panel-detil ">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+		<div class="panel-detil-row" id="paymreqHeaderEdit-info-detil-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="paymreqDetilList" data-current-section="paymreqHeaderEdit">Detil</a></div>
+			<div data-info>&nbsp</div>
+		</div>
+		<div class="panel-detil-row" id="paymreqHeaderEdit-info-term-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="paymreqTermList" data-current-section="paymreqHeaderEdit">Term</a></div>
+			<div data-info>&nbsp</div>
+		</div>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" >
+	<div><a id="paymreqHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="paymreqHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="paymreqHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="paymreqHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="paymreqHeaderEdit-btn_save">Save</button>
+		<button id="paymreqHeaderEdit-btn_edit">Edit</button>
+		<button id="paymreqHeaderEdit-btn_new" data-action="paymreqHeader-new">New</button>
+		<button id="paymreqHeaderEdit-btn_reset">Reset</button>
+		<button id="paymreqHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="paymreqHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

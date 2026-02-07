@@ -1,0 +1,76 @@
+<section id="paymreqHeaderList-section" class="fgta5-carousell" data-title="Payment Request">
+<%- include(`${moduleDir}/paymreqHeaderList.html`) %>
+</section>
+
+<section id="paymreqHeaderEdit-section" class="fgta5-carousell" data-title="Edit Payment Request">
+<%- include(`${moduleDir}/paymreqHeaderEdit.html`) %>
+</section>
+
+<section id="paymreqDetilList-section" class="fgta5-carousell" data-title="List Detil">
+<%- include(`${moduleDir}/paymreqDetilList.html`) %>
+</section>
+
+<section id="paymreqDetilEdit-section" class="fgta5-carousell" data-title="Edit Detil">
+<%- include(`${moduleDir}/paymreqDetilEdit.html`) %>
+</section>
+
+<section id="paymreqTermList-section" class="fgta5-carousell" data-title="List Term">
+<%- include(`${moduleDir}/paymreqTermList.html`) %>
+</section>
+
+<section id="paymreqTermEdit-section" class="fgta5-carousell" data-title="Edit Term">
+<%- include(`${moduleDir}/paymreqTermEdit.html`) %>
+</section>
+
+
+
+<section id="fRecord-section" class="fgta5-carousell" data-title="Record Status">
+
+	<div name="panel">
+		<div name="row">
+			<span name="caption">Id</span>
+			<span name="value" id="fRecord-section-id">-</span>
+		</div>
+	</div>	
+
+
+	<div name="panel">
+		<!-- LEFT: Standard Info -->
+		<div name="column">
+			<div name="row">
+				<span name="caption">Create By</span>
+				<span name="value" id="fRecord-section-createby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Create Date</span>
+				<span name="value" id="fRecord-section-createdate">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify By</span>
+				<span name="value" id="fRecord-section-modifyby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify Date</span>
+				<span name="value"id="fRecord-section-modifydate">-</span>
+			</div>
+
+		</div>
+
+
+		<!-- RIGHT: Extended Info -->
+		<div name="column" exteder>
+		<%- include(`${moduleDir}/paymreq-ext-record.html`) %>	
+		</div> 
+
+	</div>	
+</section>
+
+<section id="fLogs-section" class="fgta5-carousell" data-title="Logs">
+<%- include(`${moduleDir}/paymreq-logs.html`) %>	
+</section>
+
+<section id="fAbout-section" class="fgta5-carousell" data-title="About">
+<%- include(`${moduleDir}/paymreq-ext-about.html`) %>	
+</section>
+
+

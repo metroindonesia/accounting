@@ -7,6 +7,7 @@
   "scripts": {
     "server": "node .",
     "debug": "nodemon .",
+    "generate": "node ./node_modules/@agung_dhewe/webapps/src/generator/trygenerate.js",
     "clean": "kill -9 $(lsof -t -i :3003)"
   },
   "author": "Agung Nugroho",

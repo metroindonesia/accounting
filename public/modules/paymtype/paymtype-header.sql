@@ -187,6 +187,11 @@ comment on column public."paymtype"._modifydate is 'waktu terakhir record dimodi
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."paymtype"
+	drop constraint uq$public$paymtype$paymtype_name;
+	
+
 -- Add unique index 
 alter table  public."paymtype"
 	add constraint uq$public$paymtype$paymtype_name unique (paymtype_name); 

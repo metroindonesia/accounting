@@ -1,0 +1,120 @@
+<form id="paymreqtypeHeaderEdit-frm" class="module-form" locked="true" autoid="false" primarykey="paymreqtypeHeaderEdit-obj_paymreqtype_id">
+
+	<!-- Textbox: paymreqtype_id-->	
+	<div id="paymreqtypeHeaderEdit-obj_paymreqtype_id-container" class="input-field" field="paymreqtypeHeaderEdit-obj_paymreqtype_id">
+		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_id">ID</label>
+		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreqtype_name-->	
+	<div id="paymreqtypeHeaderEdit-obj_paymreqtype_name-container" class="input-field" field="paymreqtypeHeaderEdit-obj_paymreqtype_name">
+		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_name">Name</label>
+		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_name"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: agingtype_id-->	
+	<div id="paymreqtypeHeaderEdit-obj_agingtype_id-container" class="input-field" field="paymreqtypeHeaderEdit-obj_agingtype_id">
+		<label for="paymreqtypeHeaderEdit-obj_agingtype_id">Agingtype</label>
+		<input id="paymreqtypeHeaderEdit-obj_agingtype_id"  fgta5-component="Combobox" placeholder="agingtype" autocomplete="off" spellcheck="false" 
+			binding="agingtype_id"
+			data-tabindex="3" 
+			data-display="agingtype_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreqtype_title-->	
+	<div id="paymreqtypeHeaderEdit-obj_paymreqtype_title-container" class="input-field" field="paymreqtypeHeaderEdit-obj_paymreqtype_title">
+		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_title">Title</label>
+		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_title"  fgta5-component="Textbox" placeholder="title" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_title"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="title request harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: paymreqtype_prog-->	
+	<div id="paymreqtypeHeaderEdit-obj_paymreqtype_prog-container" class="input-field" field="paymreqtypeHeaderEdit-obj_paymreqtype_prog">
+		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_prog">Prog</label>
+		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_prog"  fgta5-component="Textbox" placeholder="program" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_prog"
+			data-tabindex="5" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="program harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: hasinvoice-->	
+	<div id="paymreqtypeHeaderEdit-obj_hasinvoice-container" class="input-field" field="paymreqtypeHeaderEdit-obj_hasinvoice">
+		<label for="paymreqtypeHeaderEdit-obj_hasinvoice">Has Invoice Reference</label>
+		<input id="paymreqtypeHeaderEdit-obj_hasinvoice"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="hasinvoice"
+			data-tabindex="6" 
+			type="checkbox" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="paymreqtypeHeaderEdit-footer">
+</div>
+
+<div id="paymreqtypeHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="paymreqtypeHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="paymreqtypeHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="paymreqtypeHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="paymreqtypeHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="paymreqtypeHeaderEdit-btn_save">Save</button>
+		<button id="paymreqtypeHeaderEdit-btn_edit">Edit</button>
+		<button id="paymreqtypeHeaderEdit-btn_new" data-action="paymreqtypeHeader-new">New</button>
+		<button id="paymreqtypeHeaderEdit-btn_reset">Reset</button>
+		<button id="paymreqtypeHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="paymreqtypeHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

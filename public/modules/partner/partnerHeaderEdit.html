@@ -162,11 +162,19 @@
 <div id="partnerHeaderEdit-panelaction" class="panel-action"></div>
 
 
-<div id="panel-detil-selector" class="panel-detil hidden">
+<div id="panel-detil-selector" class="panel-detil ">
 	<div panel-title>
 		Information Detil
 	</div>
 	<div panel-content>
+		<div class="panel-detil-row" id="partnerHeaderEdit-info-bank-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="partnerBankList" data-current-section="partnerHeaderEdit">Bank</a></div>
+			<div data-info>&nbsp</div>
+		</div>
+		<div class="panel-detil-row" id="partnerHeaderEdit-info-contact-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="partnerContactList" data-current-section="partnerHeaderEdit">Contact</a></div>
+			<div data-info>&nbsp</div>
+		</div>
 
 		<div id="panel-detil-additionalinfo">
 			<!-- tambahkan additional info disini -->
@@ -175,7 +183,7 @@
 </div>
  
 
-<div class="panel-recordbar" data-view="nodetil">
+<div class="panel-recordbar" >
 	<div><a id="partnerHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
 	<div><a id="partnerHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
 	<div><a id="partnerHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
