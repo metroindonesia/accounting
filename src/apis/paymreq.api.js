@@ -164,6 +164,16 @@ async function paymreq_headerList(self, body) {
 				const { paymreqtype_name } = await sqlUtil.lookupdb(db, 'public.paymreqtype', 'paymreqtype_id', row.paymreqtype_id)
 				row.paymreqtype_name = paymreqtype_name
 			}
+			// lookup: po_descr dari field po_descr pada table public.po dimana (public.po.po_id = public.paymreq.ffl_id)
+			{
+				const { po_descr } = await sqlUtil.lookupdb(db, 'public.po', 'po_id', row.ffl_id)
+				row.po_descr = po_descr
+			}
+			// lookup: ffl_descr dari field ffl_descr pada table public.ffl dimana (public.ffl.ffl_id = public.paymreq.po_id)
+			{
+				const { ffl_descr } = await sqlUtil.lookupdb(db, 'public.ffl', 'ffl_id', row.po_id)
+				row.ffl_descr = ffl_descr
+			}
 			// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.paymreq.struct_id)
 			{
 				const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', row.struct_id)
@@ -204,15 +214,25 @@ async function paymreq_headerList(self, body) {
 				const { paymtype_name } = await sqlUtil.lookupdb(db, 'public.paymtype', 'paymtype_id', row.paymtype_id)
 				row.paymtype_name = paymtype_name
 			}
+			// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+			{
+				const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
+				row.curr_name = curr_name
+			}
 			// lookup: partnerbank_name dari field partnerbank_name pada table public.partnerbank dimana (public.partnerbank.partnerbank_id = public.paymreq.partnerbank_id)
 			{
 				const { partnerbank_name } = await sqlUtil.lookupdb(db, 'public.partnerbank', 'partnerbank_id', row.partnerbank_id)
 				row.partnerbank_name = partnerbank_name
 			}
-			// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+			// lookup: ppn_name dari field taxtype_name pada table public.taxtype dimana (public.taxtype.taxtype_id = public.paymreq.ppn_id)
 			{
-				const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
-				row.curr_name = curr_name
+				const { taxtype_name } = await sqlUtil.lookupdb(db, 'public.taxtype', 'taxtype_id', row.ppn_id)
+				row.ppn_name = taxtype_name
+			}
+			// lookup: pph_name dari field taxtype_name pada table public.taxtype dimana (public.taxtype.taxtype_id = public.paymreq.pph_id)
+			{
+				const { taxtype_name } = await sqlUtil.lookupdb(db, 'public.taxtype', 'taxtype_id', row.pph_id)
+				row.pph_name = taxtype_name
 			}
 			
 			// pasang extender di sini
@@ -268,6 +288,16 @@ async function paymreq_headerOpen(self, body) {
 			const { paymreqtype_name } = await sqlUtil.lookupdb(db, 'public.paymreqtype', 'paymreqtype_id', data.paymreqtype_id)
 			data.paymreqtype_name = paymreqtype_name
 		}
+		// lookup: po_descr dari field po_descr pada table public.po dimana (public.po.po_id = public.paymreq.ffl_id)
+		{
+			const { po_descr } = await sqlUtil.lookupdb(db, 'public.po', 'po_id', data.ffl_id)
+			data.po_descr = po_descr
+		}
+		// lookup: ffl_descr dari field ffl_descr pada table public.ffl dimana (public.ffl.ffl_id = public.paymreq.po_id)
+		{
+			const { ffl_descr } = await sqlUtil.lookupdb(db, 'public.ffl', 'ffl_id', data.po_id)
+			data.ffl_descr = ffl_descr
+		}
 		// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.paymreq.struct_id)
 		{
 			const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', data.struct_id)
@@ -308,15 +338,25 @@ async function paymreq_headerOpen(self, body) {
 			const { paymtype_name } = await sqlUtil.lookupdb(db, 'public.paymtype', 'paymtype_id', data.paymtype_id)
 			data.paymtype_name = paymtype_name
 		}
+		// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+		{
+			const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
+			data.curr_name = curr_name
+		}
 		// lookup: partnerbank_name dari field partnerbank_name pada table public.partnerbank dimana (public.partnerbank.partnerbank_id = public.paymreq.partnerbank_id)
 		{
 			const { partnerbank_name } = await sqlUtil.lookupdb(db, 'public.partnerbank', 'partnerbank_id', data.partnerbank_id)
 			data.partnerbank_name = partnerbank_name
 		}
-		// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+		// lookup: ppn_name dari field taxtype_name pada table public.taxtype dimana (public.taxtype.taxtype_id = public.paymreq.ppn_id)
 		{
-			const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
-			data.curr_name = curr_name
+			const { taxtype_name } = await sqlUtil.lookupdb(db, 'public.taxtype', 'taxtype_id', data.ppn_id)
+			data.ppn_name = taxtype_name
+		}
+		// lookup: pph_name dari field taxtype_name pada table public.taxtype dimana (public.taxtype.taxtype_id = public.paymreq.pph_id)
+		{
+			const { taxtype_name } = await sqlUtil.lookupdb(db, 'public.taxtype', 'taxtype_id', data.pph_id)
+			data.pph_name = taxtype_name
 		}
 		
 
@@ -366,11 +406,8 @@ async function paymreq_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'XX' }
+			const args = { section: 'header', doc_id:'XX' }
 
-			// set default document prefix
-			args.prefix = 'XX'	
-				
 			// buat sequencer document	
 			const sequencer = createSequencerDocument(tx, { 
 				COMPANY_CODE: req.app.locals.appConfig.COMPANY_CODE,
@@ -385,8 +422,8 @@ async function paymreq_headerCreate(self, body) {
 				await Extender.sequencerSetup(self, tx, sequencer, data, args)
 			}
 
-			// generate data sesuai prefix (default: XX) reset perbulan
-			const seqdata = await sequencer.monthly(args.prefix)	
+			// generate data sesuai prefix dari doc_id (default: XX) reset perbulan
+			const seqdata = await sequencer.monthly(args.doc_id)	
 			data.paymreq_id = seqdata.id
 
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

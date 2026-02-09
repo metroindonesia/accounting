@@ -44,6 +44,8 @@ const obj_isapproved = frm.Inputs['paymreqHeaderEdit-obj_isapproved']
 const obj_paymreqtype_id = frm.Inputs['paymreqHeaderEdit-obj_paymreqtype_id']
 const obj_paymreq_invoice = frm.Inputs['paymreqHeaderEdit-obj_paymreq_invoice']
 const obj_paymreq_date = frm.Inputs['paymreqHeaderEdit-obj_paymreq_date']
+const obj_ffl_id = frm.Inputs['paymreqHeaderEdit-obj_ffl_id']
+const obj_po_id = frm.Inputs['paymreqHeaderEdit-obj_po_id']
 const obj_paymreq_descr = frm.Inputs['paymreqHeaderEdit-obj_paymreq_descr']
 const obj_paymreq_datedue = frm.Inputs['paymreqHeaderEdit-obj_paymreq_datedue']
 const obj_struct_id = frm.Inputs['paymreqHeaderEdit-obj_struct_id']
@@ -54,13 +56,16 @@ const obj_bc_id = frm.Inputs['paymreqHeaderEdit-obj_bc_id']
 const obj_partner_id = frm.Inputs['paymreqHeaderEdit-obj_partner_id']
 const obj_partnercontact_id = frm.Inputs['paymreqHeaderEdit-obj_partnercontact_id']
 const obj_paymtype_id = frm.Inputs['paymreqHeaderEdit-obj_paymtype_id']
+const obj_curr_id = frm.Inputs['paymreqHeaderEdit-obj_curr_id']
 const obj_payment_bgno = frm.Inputs['paymreqHeaderEdit-obj_payment_bgno']
 const obj_partnerbank_id = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_id']
 const obj_partnerbank_account = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_account']
 const obj_partnerbank_accountname = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_accountname']
 const obj_partnerbank_bankname = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_bankname']
 const obj_paymreq_value = frm.Inputs['paymreqHeaderEdit-obj_paymreq_value']
-const obj_curr_id = frm.Inputs['paymreqHeaderEdit-obj_curr_id']	
+const obj_ppn_id = frm.Inputs['paymreqHeaderEdit-obj_ppn_id']
+const obj_pph_id = frm.Inputs['paymreqHeaderEdit-obj_pph_id']
+const obj_paymreq_total = frm.Inputs['paymreqHeaderEdit-obj_paymreq_total']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -189,6 +194,120 @@ export async function init(self, args) {
 
 				for (var row of result.data) {
 					evt.detail.addRow(row.paymreqtype_id, row.paymreqtype_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_ffl_id
+	obj_ffl_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_ffl_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_ffl_id_selecting(self, obj_ffl_id, frm, evt) {}
+			fn_selecting(self, obj_ffl_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'po/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_ffl_id_selecting_criteria(self, obj_ffl_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_ffl_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_ffl_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.po_id, row.po_descr, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_po_id
+	obj_po_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_po_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_po_id_selecting(self, obj_po_id, frm, evt) {}
+			fn_selecting(self, obj_po_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'ffl/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_po_id_selecting_criteria(self, obj_po_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_po_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_po_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.ffl_id, row.ffl_descr, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -489,6 +608,21 @@ export async function init(self, args) {
 	
 	
 	// Combobox: obj_partner_id
+	obj_partner_id.addEventListener('selected', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selected_name = 'obj_partner_id_selected'
+		const fn_selected = Extender[fn_selected_name]
+		if (typeof fn_selected === 'function') {
+			// create function di Extender:
+			// export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {}
+			fn_selected(self, obj_partner_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_partner_id_selected is not implemented')
+		}		
+	})
+	
 	obj_partner_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
@@ -674,6 +808,63 @@ export async function init(self, args) {
 	})
 	
 	
+	// Combobox: obj_curr_id
+	obj_curr_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_curr_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
+			fn_selecting(self, obj_curr_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'curr/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.curr_id, row.curr_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
 	// Combobox: obj_partnerbank_id
 	obj_partnerbank_id.addEventListener('selected', (evt)=>{
 		
@@ -746,23 +937,38 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_curr_id
-	obj_curr_id.addEventListener('selecting', async (evt)=>{
+	// Combobox: obj_ppn_id
+	obj_ppn_id.addEventListener('selected', (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_curr_id_selecting'
+		const fn_selected_name = 'obj_ppn_id_selected'
+		const fn_selected = Extender[fn_selected_name]
+		if (typeof fn_selected === 'function') {
+			// create function di Extender:
+			// export async function obj_ppn_id_selected(self, obj_ppn_id, frm, evt) {}
+			fn_selected(self, obj_ppn_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_ppn_id_selected is not implemented')
+		}		
+	})
+	
+	obj_ppn_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_ppn_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
-			fn_selecting(self, obj_curr_id, frm, evt)
+			// export async function obj_ppn_id_selecting(self, obj_ppn_id, frm, evt) {}
+			fn_selecting(self, obj_ppn_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'curr/header-list'
+			const url = 'taxtype/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -771,11 +977,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
+			// export function obj_ppn_id_selecting_criteria(self, obj_ppn_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_ppn_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_ppn_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -788,7 +994,64 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.curr_id, row.curr_name, row)
+					evt.detail.addRow(row.taxtype_id, row.taxtype_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_pph_id
+	obj_pph_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_pph_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_pph_id_selecting(self, obj_pph_id, frm, evt) {}
+			fn_selecting(self, obj_pph_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'taxtype/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_pph_id_selecting_criteria(self, obj_pph_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_pph_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_pph_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.taxtype_id, row.taxtype_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -812,6 +1075,8 @@ export async function openSelectedData(self, params) {
 	let mask = $fgta5.Modal.createMask()
 	try {
 		obj_paymreqtype_id.clear()
+		obj_ffl_id.clear()
+		obj_po_id.clear()
 		obj_struct_id.clear()
 		obj_project_id.clear()
 		obj_site_id.clear()
@@ -820,8 +1085,10 @@ export async function openSelectedData(self, params) {
 		obj_partner_id.clear()
 		obj_partnercontact_id.clear()
 		obj_paymtype_id.clear()
-		obj_partnerbank_id.clear()
 		obj_curr_id.clear()
+		obj_partnerbank_id.clear()
+		obj_ppn_id.clear()
+		obj_pph_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -1143,6 +1410,7 @@ async function btn_new_click(self, evt) {
 			paymreq_date: new Date(),
 			paymreq_datedue: new Date(),
 			paymreq_value: 0,
+			paymreq_total: 0,
 		}
 
 
@@ -1523,7 +1791,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 7 Feb 2026 13:16'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 9 Feb 2026 21:32'
 			section.appendChild(divFooter)
 		}
 		

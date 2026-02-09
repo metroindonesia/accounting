@@ -1,6 +1,9 @@
 {
-  "watch": ["src"],
+  "watch": [
+    "src"
+  ],
   "ext": "js",
-  "exec": "node src/index.js",
-  "delay": 3000
+  "exec": "npx kill-port 3003 && node src/index.js",
+  "signal": "SIGTERM",
+  "delay": "1000"
 }

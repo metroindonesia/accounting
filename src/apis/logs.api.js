@@ -5,7 +5,7 @@ import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import context from '@agung_dhewe/webapps/src/context.js'
 
-const tablename = 'datalog'
+const tablename = 'log."datalog"'
 
 
 // api: account

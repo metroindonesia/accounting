@@ -55,97 +55,73 @@
 		
 	}
 	
+	#paymreqHeaderEdit-obj_ffl_id-container {
+		grid-row: auto;
+		grid-column: 1 / span 4;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_po_id-container {
+		grid-row: auto;
+		grid-column: 1 / span 4;
+		
+	}
+	
 	#paymreqHeaderEdit-obj_paymreq_descr-container {
-		grid-row: 3;
+		grid-row: 5;
 		grid-column: 1 / span 4;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_paymreq_datedue-container {
-		grid-row: 3;
+		grid-row: 5;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_struct_id-container {
-		grid-row: 4;
+		grid-row: 6;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_project_id-container {
-		grid-row: 4;
+		grid-row: 6;
 		grid-column: 3 / span 4;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_site_id-container {
-		grid-row: 5;
+		grid-row: 7;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_unit_id-container {
-		grid-row: 5;
+		grid-row: 7;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_bc_id-container {
-		grid-row: 6;
+		grid-row: 8;
 		grid-column: 1 / span 3;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_partner_id-container {
-		grid-row: 7;
+		grid-row: 9;
 		grid-column: 1 / span 3;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_partnercontact_id-container {
-		grid-row: 7;
+		grid-row: 9;
 		grid-column: 4 / span 3;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_paymtype_id-container {
-		grid-row: 8;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_payment_bgno-container {
-		grid-row: 8;
-		grid-column: 3 / span 4;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_partnerbank_id-container {
-		grid-row: 8;
-		grid-column: 3 / span 4;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_partnerbank_account-container {
-		grid-row: 9;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_partnerbank_accountname-container {
-		grid-row: 9;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_partnerbank_bankname-container {
-		grid-row: 9;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#paymreqHeaderEdit-obj_paymreq_value-container {
 		grid-row: 10;
 		grid-column: 1 / span 2;
 		
@@ -153,8 +129,62 @@
 	
 	#paymreqHeaderEdit-obj_curr_id-container {
 		grid-row: 10;
+		grid-column: 3;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_payment_bgno-container {
+		grid-row: 10;
+		grid-column: 4 / span 3;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_partnerbank_id-container {
+		grid-row: 10;
+		grid-column: 4 / span 3;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_partnerbank_account-container {
+		grid-row: 11;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_partnerbank_accountname-container {
+		grid-row: 11;
 		grid-column: 3 / span 2;
 		
+	}
+	
+	#paymreqHeaderEdit-obj_partnerbank_bankname-container {
+		grid-row: 11;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_value-container {
+		grid-row: 12;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_ppn_id-container {
+		grid-row: 12;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_pph_id-container {
+		grid-row: 12;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_total-container {
+		grid-row: 13;
+		grid-column: 1 / span 2;
+		font-weight: bold; font-size: 1.1rem;
 	}
 		
 

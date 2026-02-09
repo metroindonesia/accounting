@@ -37,6 +37,7 @@
   "devDependencies": {
     "@agung_dhewe/webapps": "file:../../agungdhewe/webapps",
     "@rollup/plugin-terser": "0.4.4",
+    "kill-port": "^2.0.1",
     "rollup": "^4.46.2"
   }
 }

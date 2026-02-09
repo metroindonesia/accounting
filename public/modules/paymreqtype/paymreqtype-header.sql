@@ -12,6 +12,21 @@ comment on table public."paymreqtype" is '';
 
 
 -- =============================================
+-- FIELD: paymreqtype_isdisabled boolean
+-- =============================================
+-- ADD paymreqtype_isdisabled
+alter table public."paymreqtype" add paymreqtype_isdisabled boolean not null default false;
+comment on column public."paymreqtype".paymreqtype_isdisabled is '';
+
+-- MODIFY paymreqtype_isdisabled
+alter table public."paymreqtype"
+	alter column paymreqtype_isdisabled type boolean,
+	ALTER COLUMN paymreqtype_isdisabled SET DEFAULT false,
+	ALTER COLUMN paymreqtype_isdisabled SET NOT NULL;
+comment on column public."paymreqtype".paymreqtype_isdisabled is '';
+
+
+-- =============================================
 -- FIELD: paymreqtype_name text
 -- =============================================
 -- ADD paymreqtype_name
@@ -84,6 +99,96 @@ alter table public."paymreqtype"
 	ALTER COLUMN hasinvoice SET DEFAULT false,
 	ALTER COLUMN hasinvoice SET NOT NULL;
 comment on column public."paymreqtype".hasinvoice is '';
+
+
+-- =============================================
+-- FIELD: haspo boolean
+-- =============================================
+-- ADD haspo
+alter table public."paymreqtype" add haspo boolean not null default false;
+comment on column public."paymreqtype".haspo is '';
+
+-- MODIFY haspo
+alter table public."paymreqtype"
+	alter column haspo type boolean,
+	ALTER COLUMN haspo SET DEFAULT false,
+	ALTER COLUMN haspo SET NOT NULL;
+comment on column public."paymreqtype".haspo is '';
+
+
+-- =============================================
+-- FIELD: poismandatory boolean
+-- =============================================
+-- ADD poismandatory
+alter table public."paymreqtype" add poismandatory boolean not null default false;
+comment on column public."paymreqtype".poismandatory is '';
+
+-- MODIFY poismandatory
+alter table public."paymreqtype"
+	alter column poismandatory type boolean,
+	ALTER COLUMN poismandatory SET DEFAULT false,
+	ALTER COLUMN poismandatory SET NOT NULL;
+comment on column public."paymreqtype".poismandatory is '';
+
+
+-- =============================================
+-- FIELD: hasffl boolean
+-- =============================================
+-- ADD hasffl
+alter table public."paymreqtype" add hasffl boolean not null default false;
+comment on column public."paymreqtype".hasffl is '';
+
+-- MODIFY hasffl
+alter table public."paymreqtype"
+	alter column hasffl type boolean,
+	ALTER COLUMN hasffl SET DEFAULT false,
+	ALTER COLUMN hasffl SET NOT NULL;
+comment on column public."paymreqtype".hasffl is '';
+
+
+-- =============================================
+-- FIELD: fflismandatory boolean
+-- =============================================
+-- ADD fflismandatory
+alter table public."paymreqtype" add fflismandatory boolean not null default false;
+comment on column public."paymreqtype".fflismandatory is '';
+
+-- MODIFY fflismandatory
+alter table public."paymreqtype"
+	alter column fflismandatory type boolean,
+	ALTER COLUMN fflismandatory SET DEFAULT false,
+	ALTER COLUMN fflismandatory SET NOT NULL;
+comment on column public."paymreqtype".fflismandatory is '';
+
+
+-- =============================================
+-- FIELD: hasbc boolean
+-- =============================================
+-- ADD hasbc
+alter table public."paymreqtype" add hasbc boolean not null default false;
+comment on column public."paymreqtype".hasbc is '';
+
+-- MODIFY hasbc
+alter table public."paymreqtype"
+	alter column hasbc type boolean,
+	ALTER COLUMN hasbc SET DEFAULT false,
+	ALTER COLUMN hasbc SET NOT NULL;
+comment on column public."paymreqtype".hasbc is '';
+
+
+-- =============================================
+-- FIELD: bcismandatory boolean
+-- =============================================
+-- ADD bcismandatory
+alter table public."paymreqtype" add bcismandatory boolean not null default false;
+comment on column public."paymreqtype".bcismandatory is '';
+
+-- MODIFY bcismandatory
+alter table public."paymreqtype"
+	alter column bcismandatory type boolean,
+	ALTER COLUMN bcismandatory SET DEFAULT false,
+	ALTER COLUMN bcismandatory SET NOT NULL;
+comment on column public."paymreqtype".bcismandatory is '';
 
 
 -- =============================================

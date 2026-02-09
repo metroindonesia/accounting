@@ -1,0 +1,29 @@
+<div id="taxtypeHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="taxtypeHeaderList-pnl_search" class="search-parameters">
+		<input id="taxtypeHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="taxtypeHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="taxtypeHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="taxtype_id">
+			<th data-name="taxtype_name" binding="taxtype_name" >Name</th>
+			<th data-name="taxtype_value" binding="taxtype_value" formatter="decimal(v, 2)" style="text-align:right">Value</th>
+			<th data-name="taxtype_isdisabled" binding="taxtype_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="taxtypeHeaderList-btn_new" data-action="taxtypeHeader-new" data-sectionsource="taxtypeHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

@@ -19,6 +19,12 @@
 		
 	}
 	
+	#paymreqtypeHeaderEdit-obj_paymreqtype_isdisabled-container {
+		grid-row: 1;
+		grid-column: 3 / span 2;
+		
+	}
+	
 	#paymreqtypeHeaderEdit-obj_paymreqtype_name-container {
 		grid-row: 2;
 		grid-column: 1 / span 3;
@@ -47,6 +53,42 @@
 		grid-row: 4;
 		grid-column: 1 / span 4;
 		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_haspo-container {
+		grid-row: 5;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_poismandatory-container {
+		grid-row: 5;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqtypeHeaderEdit-obj_hasffl-container {
+		grid-row: 6;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_fflismandatory-container {
+		grid-row: 6;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqtypeHeaderEdit-obj_hasbc-container {
+		grid-row: 7;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_bcismandatory-container {
+		grid-row: 7;
+		grid-column: 3 / span 2;
+		
 	}
 		
 

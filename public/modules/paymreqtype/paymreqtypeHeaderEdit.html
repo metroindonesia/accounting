@@ -6,8 +6,21 @@
 		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
 			binding="paymreqtype_id"
 			data-tabindex="1" 
+			required 
+			invalid-message-required="ID harus diisi" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: paymreqtype_isdisabled-->	
+	<div id="paymreqtypeHeaderEdit-obj_paymreqtype_isdisabled-container" class="input-field" field="paymreqtypeHeaderEdit-obj_paymreqtype_isdisabled">
+		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_isdisabled">Disabled</label>
+		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="paymreqtype_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
 		>
 	</div>
 
@@ -17,7 +30,9 @@
 		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_name">Name</label>
 		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
 			binding="paymreqtype_name"
-			data-tabindex="2" 
+			data-tabindex="3" 
+			required 
+			invalid-message-required="nama tipe paymentrequest harus diisi" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 		>
@@ -29,7 +44,9 @@
 		<label for="paymreqtypeHeaderEdit-obj_agingtype_id">Agingtype</label>
 		<input id="paymreqtypeHeaderEdit-obj_agingtype_id"  fgta5-component="Combobox" placeholder="agingtype" autocomplete="off" spellcheck="false" 
 			binding="agingtype_id"
-			data-tabindex="3" 
+			data-tabindex="4" 
+			required 
+			invalid-message-required="tipe aging harus diisi" 
 			data-display="agingtype_name" 
 		>
 	</div>
@@ -40,7 +57,7 @@
 		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_title">Title</label>
 		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_title"  fgta5-component="Textbox" placeholder="title" autocomplete="off" spellcheck="false" 
 			binding="paymreqtype_title"
-			data-tabindex="4" 
+			data-tabindex="5" 
 			required 
 			invalid-message-required="title request harus diisi" 
 			autocomplete="off" spellcheck="false" 
@@ -54,7 +71,7 @@
 		<label for="paymreqtypeHeaderEdit-obj_paymreqtype_prog">Prog</label>
 		<input id="paymreqtypeHeaderEdit-obj_paymreqtype_prog"  fgta5-component="Textbox" placeholder="program" autocomplete="off" spellcheck="false" 
 			binding="paymreqtype_prog"
-			data-tabindex="5" 
+			data-tabindex="6" 
 			character-case="uppercase" 
 			required 
 			invalid-message-required="program harus diisi" 
@@ -69,7 +86,73 @@
 		<label for="paymreqtypeHeaderEdit-obj_hasinvoice">Has Invoice Reference</label>
 		<input id="paymreqtypeHeaderEdit-obj_hasinvoice"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
 			binding="hasinvoice"
-			data-tabindex="6" 
+			data-tabindex="7" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: haspo-->	
+	<div id="paymreqtypeHeaderEdit-obj_haspo-container" class="input-field" field="paymreqtypeHeaderEdit-obj_haspo">
+		<label for="paymreqtypeHeaderEdit-obj_haspo">Has Order Reference</label>
+		<input id="paymreqtypeHeaderEdit-obj_haspo"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="haspo"
+			data-tabindex="8" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: poismandatory-->	
+	<div id="paymreqtypeHeaderEdit-obj_poismandatory-container" class="input-field" field="paymreqtypeHeaderEdit-obj_poismandatory">
+		<label for="paymreqtypeHeaderEdit-obj_poismandatory">Order is Mandatory</label>
+		<input id="paymreqtypeHeaderEdit-obj_poismandatory"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="poismandatory"
+			data-tabindex="9" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: hasffl-->	
+	<div id="paymreqtypeHeaderEdit-obj_hasffl-container" class="input-field" field="paymreqtypeHeaderEdit-obj_hasffl">
+		<label for="paymreqtypeHeaderEdit-obj_hasffl">Has Fulfillment Reference</label>
+		<input id="paymreqtypeHeaderEdit-obj_hasffl"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="hasffl"
+			data-tabindex="10" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: fflismandatory-->	
+	<div id="paymreqtypeHeaderEdit-obj_fflismandatory-container" class="input-field" field="paymreqtypeHeaderEdit-obj_fflismandatory">
+		<label for="paymreqtypeHeaderEdit-obj_fflismandatory">Fulfillment is Mandatory</label>
+		<input id="paymreqtypeHeaderEdit-obj_fflismandatory"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="fflismandatory"
+			data-tabindex="11" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: hasbc-->	
+	<div id="paymreqtypeHeaderEdit-obj_hasbc-container" class="input-field" field="paymreqtypeHeaderEdit-obj_hasbc">
+		<label for="paymreqtypeHeaderEdit-obj_hasbc">Has BC</label>
+		<input id="paymreqtypeHeaderEdit-obj_hasbc"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="hasbc"
+			data-tabindex="12" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Checkbox: bcismandatory-->	
+	<div id="paymreqtypeHeaderEdit-obj_bcismandatory-container" class="input-field" field="paymreqtypeHeaderEdit-obj_bcismandatory">
+		<label for="paymreqtypeHeaderEdit-obj_bcismandatory">Bc is Mandatory</label>
+		<input id="paymreqtypeHeaderEdit-obj_bcismandatory"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="bcismandatory"
+			data-tabindex="13" 
 			type="checkbox" 
 		>
 	</div>

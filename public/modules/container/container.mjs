@@ -33,12 +33,21 @@ async function main(self, args) {
 			throw err
 		}
 
+		// ambil menuIcon
+		const preloadIcon = document.getElementById('main-menu-icon');
+		const iconMenuHref = preloadIcon.getAttribute('href')
+
+
 		// setup Application Manager
 		appmgr.setTitle(Context.title)
 		appmgr.setUser({ userid: Context.userId, displayname: Context.userFullname, profilepic: '' })
 		appmgr.setMenu(Context.programs)
-		appmgr.setMenuIcon('/public/icons/icon-logo-metro-32x32.svg')
 		appmgr.setFavourite(Context.favourites)
+
+		// set menu icon
+		if (iconMenuHref != null && iconMenuHref != '') {
+			appmgr.setMenuIcon(iconMenuHref)
+		}
 
 		appmgr.addEventListener('logout', (evt) => {
 			appmgr_logout(self, evt)
@@ -116,7 +125,7 @@ async function appmgr_removefavourite(self, evt) {
 
 async function appmgr_openprofile(self, evt) {
 	try {
-		
+
 		const currentUrl = new URL(window.location.href)
 
 		// buka program profile

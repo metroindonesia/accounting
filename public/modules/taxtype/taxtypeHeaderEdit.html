@@ -1,0 +1,115 @@
+<form id="taxtypeHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="taxtypeHeaderEdit-obj_taxtype_id">
+
+	<!-- Textbox: taxtype_id-->	
+	<div id="taxtypeHeaderEdit-obj_taxtype_id-container" class="input-field" field="taxtypeHeaderEdit-obj_taxtype_id">
+		<label for="taxtypeHeaderEdit-obj_taxtype_id">ID</label>
+		<input id="taxtypeHeaderEdit-obj_taxtype_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
+			binding="taxtype_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: taxtype_isdisabled-->	
+	<div id="taxtypeHeaderEdit-obj_taxtype_isdisabled-container" class="input-field" field="taxtypeHeaderEdit-obj_taxtype_isdisabled">
+		<label for="taxtypeHeaderEdit-obj_taxtype_isdisabled">Disabled</label>
+		<input id="taxtypeHeaderEdit-obj_taxtype_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="taxtype_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: taxtype_name-->	
+	<div id="taxtypeHeaderEdit-obj_taxtype_name-container" class="input-field" field="taxtypeHeaderEdit-obj_taxtype_name">
+		<label for="taxtypeHeaderEdit-obj_taxtype_name">Name</label>
+		<input id="taxtypeHeaderEdit-obj_taxtype_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="taxtype_name"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="nama tipe pajak harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: taxtype_model-->	
+	<div id="taxtypeHeaderEdit-obj_taxtype_model-container" class="input-field" field="taxtypeHeaderEdit-obj_taxtype_model">
+		<label for="taxtypeHeaderEdit-obj_taxtype_model">Model</label>
+		<input id="taxtypeHeaderEdit-obj_taxtype_model"  fgta5-component="Textbox" placeholder="PPN / PPH" autocomplete="off" spellcheck="false" 
+			binding="taxtype_model"
+			data-tabindex="4" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="model harus diisi dengan PPN atau PPH" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="3" 
+			validator="valueIs:['PPH', 'PPN']" 
+			invalid-message="model harus diisi dengan PPN atau PPH" 
+		>
+	</div>
+
+
+	<!-- Numberbox: taxtype_value-->	
+	<div id="taxtypeHeaderEdit-obj_taxtype_value-container" class="input-field" field="taxtypeHeaderEdit-obj_taxtype_value">
+		<label for="taxtypeHeaderEdit-obj_taxtype_value">Value</label>
+		<input id="taxtypeHeaderEdit-obj_taxtype_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
+			binding="taxtype_value"
+			value="0" 
+			data-tabindex="5" 
+			precision="2" 
+			maxlength="5" 
+			min="1" 
+			invalid-message-min="masukkan nilai antara 1 s.d 100" 
+			max="100" 
+			invalid-message-max="masukkan nilai antara 1 s.d 100" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="taxtypeHeaderEdit-footer">
+</div>
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+<div id="taxtypeHeaderEdit-panelaction" class="panel-action hidden"></div>
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="taxtypeHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="taxtypeHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="taxtypeHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="taxtypeHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="taxtypeHeaderEdit-btn_save">Save</button>
+		<button id="taxtypeHeaderEdit-btn_edit">Edit</button>
+		<button id="taxtypeHeaderEdit-btn_new" data-action="taxtypeHeader-new">New</button>
+		<button id="taxtypeHeaderEdit-btn_reset">Reset</button>
+		<button id="taxtypeHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="taxtypeHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

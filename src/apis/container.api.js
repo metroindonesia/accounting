@@ -37,7 +37,8 @@ async function container_init(self, body) {
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
 			programs: await getAllProgram(self, req.session.user.userId),
-			favourites: await getUserFavourites(self, req.session.user.userId)
+			favourites: await getUserFavourites(self, req.session.user.userId),
+			iconMenuUrl: req.app.locals.appConfig.iconMenuUrl,
 		}
 	} catch (err) {
 		throw err

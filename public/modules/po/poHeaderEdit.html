@@ -1,0 +1,81 @@
+<form id="poHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="poHeaderEdit-obj_po_id">
+
+	<!-- Textbox: po_id-->	
+	<div id="poHeaderEdit-obj_po_id-container" class="input-field" field="poHeaderEdit-obj_po_id">
+		<label for="poHeaderEdit-obj_po_id">ID</label>
+		<input id="poHeaderEdit-obj_po_id"  fgta5-component="Textbox" placeholder="po_id" autocomplete="off" spellcheck="false" 
+			binding="po_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: po_doc-->	
+	<div id="poHeaderEdit-ID-container" class="input-field" field="poHeaderEdit-ID">
+		<label for="poHeaderEdit-ID">ID</label>
+		<input id="poHeaderEdit-ID"  fgta5-component="Textbox" placeholder="order number" autocomplete="off" spellcheck="false" 
+			binding="po_doc"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: pos_descr-->	
+	<div id="poHeaderEdit-obj_pos_descr-container" class="input-field" field="poHeaderEdit-obj_pos_descr">
+		<label for="poHeaderEdit-obj_pos_descr">Descr</label>
+		<input id="poHeaderEdit-obj_pos_descr"  fgta5-component="Textbox" placeholder="pos_descr" autocomplete="off" spellcheck="false" 
+			binding="pos_descr"
+			data-tabindex="3" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="poHeaderEdit-footer">
+</div>
+
+<div id="poHeaderEdit-panelaction" class="panel-action"></div>
+
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="poHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="poHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="poHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="poHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="poHeaderEdit-btn_save">Save</button>
+		<button id="poHeaderEdit-btn_edit">Edit</button>
+		<button id="poHeaderEdit-btn_new" data-action="poHeader-new">New</button>
+		<button id="poHeaderEdit-btn_reset">Reset</button>
+		<button id="poHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="poHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

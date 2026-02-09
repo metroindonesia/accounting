@@ -38,12 +38,13 @@ async function containerPage(req, res) {
 		}
 
 
-
+		const iconMenuUrl = req.app.locals.appConfig.iconMenuUrl
 		const rootPath = context.getRootDirectory()
 		const variables = {
 			...helper.createDefaultEjsVariable(req),
 			...{
-				rootPath
+				rootPath,
+				iconMenuUrl
 			}
 		}
 

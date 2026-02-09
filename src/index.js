@@ -39,6 +39,8 @@ async function main() {
 	const fgta5jsVersion = process.env.FGTA5JS_VERSION || ''
 	const appDebugMode = process.env.DEBUG_MODE_APP === 'true'
 
+	const iconMenuUrl = process.env.ICON_MENU_URL || ''
+
 
 	const router = createRouter()
 
@@ -65,8 +67,11 @@ async function main() {
 			sessionMaxAge: sessionMaxAge * 60 * 1000,
 			sessionDomain,
 			sessionSecure: sessionSecure.toLowerCase() === 'true' ? true : false,
-			sessionHttpOnly: sessionHttpOnly.toLowerCase() === 'false' ? false : true
+			sessionHttpOnly: sessionHttpOnly.toLowerCase() === 'false' ? false : true,
 
+			iconMenuUrl,
+
+			defaultCurr: { id: 1, name: 'IDR' }
 		}
 	}
 

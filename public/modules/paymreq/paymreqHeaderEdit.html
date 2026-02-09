@@ -87,12 +87,38 @@
 	</div>
 
 
+	<!-- Combobox: ffl_id-->	
+	<div id="paymreqHeaderEdit-obj_ffl_id-container" class="input-field hidden" field="paymreqHeaderEdit-obj_ffl_id">
+		<label for="paymreqHeaderEdit-obj_ffl_id">Fulfillment</label>
+		<input id="paymreqHeaderEdit-obj_ffl_id"  fgta5-component="Combobox" placeholder="fulfillment" autocomplete="off" spellcheck="false" 
+			binding="ffl_id"
+			data-tabindex="8" 
+			required 
+			invalid-message-required="fulfillment reference harus diisi" 
+			data-display="po_descr" 
+		>
+	</div>
+
+
+	<!-- Combobox: po_id-->	
+	<div id="paymreqHeaderEdit-obj_po_id-container" class="input-field hidden" field="paymreqHeaderEdit-obj_po_id">
+		<label for="paymreqHeaderEdit-obj_po_id">Order</label>
+		<input id="paymreqHeaderEdit-obj_po_id"  fgta5-component="Combobox" placeholder="order" autocomplete="off" spellcheck="false" 
+			binding="po_id"
+			data-tabindex="9" 
+			required 
+			invalid-message-required="order reference harus diisi" 
+			data-display="ffl_descr" 
+		>
+	</div>
+
+
 	<!-- Textbox: paymreq_descr-->	
 	<div id="paymreqHeaderEdit-obj_paymreq_descr-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_descr">
 		<label for="paymreqHeaderEdit-obj_paymreq_descr">Descr</label>
 		<input id="paymreqHeaderEdit-obj_paymreq_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
 			binding="paymreq_descr"
-			data-tabindex="8" 
+			data-tabindex="10" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 		>
@@ -104,7 +130,7 @@
 		<label for="paymreqHeaderEdit-obj_paymreq_datedue">Due Date</label>
 		<input id="paymreqHeaderEdit-obj_paymreq_datedue"  fgta5-component="Datepicker" placeholder="due date" autocomplete="off" spellcheck="false" 
 			binding="paymreq_datedue"
-			data-tabindex="9" 
+			data-tabindex="11" 
 		>
 	</div>
 
@@ -114,7 +140,7 @@
 		<label for="paymreqHeaderEdit-obj_struct_id">Structure</label>
 		<input id="paymreqHeaderEdit-obj_struct_id"  fgta5-component="Combobox" placeholder="structure" autocomplete="off" spellcheck="false" 
 			binding="struct_id"
-			data-tabindex="10" 
+			data-tabindex="12" 
 			required 
 			invalid-message-required="structure harus diisi" 
 			data-display="struct_name" 
@@ -127,7 +153,7 @@
 		<label for="paymreqHeaderEdit-obj_project_id">Project</label>
 		<input id="paymreqHeaderEdit-obj_project_id"  fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
 			binding="project_id"
-			data-tabindex="11" 
+			data-tabindex="13" 
 			data-display="project_name" 
 		>
 	</div>
@@ -138,7 +164,7 @@
 		<label for="paymreqHeaderEdit-obj_site_id">Site</label>
 		<input id="paymreqHeaderEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
 			binding="site_id"
-			data-tabindex="12" 
+			data-tabindex="14" 
 			data-display="site_name" 
 		>
 	</div>
@@ -149,20 +175,21 @@
 		<label for="paymreqHeaderEdit-obj_unit_id">Unit</label>
 		<input id="paymreqHeaderEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
 			binding="unit_id"
-			data-tabindex="13" 
+			data-tabindex="15" 
 			data-display="unit_name" 
 		>
 	</div>
 
 
 	<!-- Combobox: bc_id-->	
-	<div id="paymreqHeaderEdit-obj_bc_id-container" class="input-field" field="paymreqHeaderEdit-obj_bc_id">
+	<div id="paymreqHeaderEdit-obj_bc_id-container" class="input-field hidden" field="paymreqHeaderEdit-obj_bc_id">
 		<label for="paymreqHeaderEdit-obj_bc_id">BC</label>
 		<input id="paymreqHeaderEdit-obj_bc_id"  fgta5-component="Combobox" placeholder="business case" autocomplete="off" spellcheck="false" 
 			binding="bc_id"
-			data-tabindex="14" 
+			data-tabindex="16" 
+			required 
+			invalid-message-required="bussiness case harus diisi" 
 			data-display="bc_descr" 
-			disabled 
 		>
 	</div>
 
@@ -172,7 +199,7 @@
 		<label for="paymreqHeaderEdit-obj_partner_id">Partner</label>
 		<input id="paymreqHeaderEdit-obj_partner_id"  fgta5-component="Combobox" placeholder="pilih partner" autocomplete="off" spellcheck="false" 
 			binding="partner_id"
-			data-tabindex="15" 
+			data-tabindex="17" 
 			required 
 			invalid-message-required="partner harus diisi" 
 			data-display="partner_name" 
@@ -185,7 +212,7 @@
 		<label for="paymreqHeaderEdit-obj_partnercontact_id">Up</label>
 		<input id="paymreqHeaderEdit-obj_partnercontact_id"  fgta5-component="Combobox" placeholder="up" autocomplete="off" spellcheck="false" 
 			binding="partnercontact_id"
-			data-tabindex="16" 
+			data-tabindex="18" 
 			data-display="partnercontact_name" 
 		>
 	</div>
@@ -196,10 +223,23 @@
 		<label for="paymreqHeaderEdit-obj_paymtype_id">Paym Type</label>
 		<input id="paymreqHeaderEdit-obj_paymtype_id"  fgta5-component="Combobox" placeholder="paymtype_id" autocomplete="off" spellcheck="false" 
 			binding="paymtype_id"
-			data-tabindex="17" 
+			data-tabindex="19" 
 			required 
 			invalid-message-required="tipe pembayaran harus diisi" 
 			data-display="paymtype_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: curr_id-->	
+	<div id="paymreqHeaderEdit-obj_curr_id-container" class="input-field" field="paymreqHeaderEdit-obj_curr_id">
+		<label for="paymreqHeaderEdit-obj_curr_id">Curr</label>
+		<input id="paymreqHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="curr" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="20" 
+			required 
+			invalid-message-required="currency harus diisi" 
+			data-display="curr_name" 
 		>
 	</div>
 
@@ -209,7 +249,7 @@
 		<label for="paymreqHeaderEdit-obj_payment_bgno">No BG/Cheque</label>
 		<input id="paymreqHeaderEdit-obj_payment_bgno"  fgta5-component="Textbox" placeholder="no bilyet / cheque" autocomplete="off" spellcheck="false" 
 			binding="payment_bgno"
-			data-tabindex="18" 
+			data-tabindex="21" 
 			required 
 			invalid-message-required="no bilyet/giro/cek harus diisi" 
 			autocomplete="off" spellcheck="false" 
@@ -223,7 +263,7 @@
 		<label for="paymreqHeaderEdit-obj_partnerbank_id">Partner Bank</label>
 		<input id="paymreqHeaderEdit-obj_partnerbank_id"  fgta5-component="Combobox" placeholder="bank" autocomplete="off" spellcheck="false" 
 			binding="partnerbank_id"
-			data-tabindex="19" 
+			data-tabindex="22" 
 			required 
 			invalid-message-required="partner bank harus diisi" 
 			data-display="partnerbank_name" 
@@ -236,7 +276,7 @@
 		<label for="paymreqHeaderEdit-obj_partnerbank_account">Account</label>
 		<input id="paymreqHeaderEdit-obj_partnerbank_account"  fgta5-component="Textbox" placeholder="account" autocomplete="off" spellcheck="false" 
 			binding="partnerbank_account"
-			data-tabindex="20" 
+			data-tabindex="23" 
 			required 
 			invalid-message-required="acount bank harus diisi" 
 			autocomplete="off" spellcheck="false" 
@@ -251,7 +291,7 @@
 		<label for="paymreqHeaderEdit-obj_partnerbank_accountname">Account Name</label>
 		<input id="paymreqHeaderEdit-obj_partnerbank_accountname"  fgta5-component="Textbox" placeholder="accountname" autocomplete="off" spellcheck="false" 
 			binding="partnerbank_accountname"
-			data-tabindex="21" 
+			data-tabindex="24" 
 			required 
 			invalid-message-required="nama account bank harus diisi" 
 			autocomplete="off" spellcheck="false" 
@@ -266,7 +306,7 @@
 		<label for="paymreqHeaderEdit-obj_partnerbank_bankname">Bank Name</label>
 		<input id="paymreqHeaderEdit-obj_partnerbank_bankname"  fgta5-component="Textbox" placeholder="bankname" autocomplete="off" spellcheck="false" 
 			binding="partnerbank_bankname"
-			data-tabindex="22" 
+			data-tabindex="25" 
 			character-case="uppercase" 
 			required 
 			invalid-message-required="nama bank harus diisi" 
@@ -283,23 +323,46 @@
 		<input id="paymreqHeaderEdit-obj_paymreq_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
 			binding="paymreq_value"
 			value="0" 
-			data-tabindex="23" 
-			maxlength="13" 
-			min="1" 
-			invalid-message-min="request value harus diisi" 
+			data-tabindex="26" 
+			precision="2" 
+			maxlength="14" 
+			disabled 
 		>
 	</div>
 
 
-	<!-- Combobox: curr_id-->	
-	<div id="paymreqHeaderEdit-obj_curr_id-container" class="input-field" field="paymreqHeaderEdit-obj_curr_id">
-		<label for="paymreqHeaderEdit-obj_curr_id">Curr</label>
-		<input id="paymreqHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="curr" autocomplete="off" spellcheck="false" 
-			binding="curr_id"
-			data-tabindex="24" 
-			required 
-			invalid-message-required="currency harus diisi" 
-			data-display="curr_name" 
+	<!-- Combobox: ppn_id-->	
+	<div id="paymreqHeaderEdit-obj_ppn_id-container" class="input-field" field="paymreqHeaderEdit-obj_ppn_id">
+		<label for="paymreqHeaderEdit-obj_ppn_id">PPN</label>
+		<input id="paymreqHeaderEdit-obj_ppn_id"  fgta5-component="Combobox" placeholder="ppn" autocomplete="off" spellcheck="false" 
+			binding="ppn_id"
+			data-tabindex="27" 
+			data-display="ppn_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: pph_id-->	
+	<div id="paymreqHeaderEdit-obj_pph_id-container" class="input-field" field="paymreqHeaderEdit-obj_pph_id">
+		<label for="paymreqHeaderEdit-obj_pph_id">PPh</label>
+		<input id="paymreqHeaderEdit-obj_pph_id"  fgta5-component="Combobox" placeholder="pph" autocomplete="off" spellcheck="false" 
+			binding="pph_id"
+			data-tabindex="28" 
+			data-display="pph_name" 
+		>
+	</div>
+
+
+	<!-- Numberbox: paymreq_total-->	
+	<div id="paymreqHeaderEdit-obj_paymreq_total-container" class="input-field" field="paymreqHeaderEdit-obj_paymreq_total">
+		<label for="paymreqHeaderEdit-obj_paymreq_total">Total</label>
+		<input id="paymreqHeaderEdit-obj_paymreq_total"  fgta5-component="Numberbox" placeholder="total" autocomplete="off" spellcheck="false" 
+			binding="paymreq_total"
+			value="0" 
+			data-tabindex="29" 
+			precision="2" 
+			maxlength="14" 
+			disabled 
 		>
 	</div>
 	
@@ -308,15 +371,6 @@
 
 <div id="paymreqHeaderEdit-footer">
 </div>
-
-<div id="paymreqHeaderEdit-panelaction" class="panel-action">
-	<button id="paymreqHeaderEdit-btn_actionCommit">Commit</button>
-	<button id="paymreqHeaderEdit-btn_actionUncommit">UnCommit</button>
-	<button id="paymreqHeaderEdit-btn_actionApprove">Approve</button>
-	<button id="paymreqHeaderEdit-btn_actionUnapprove">UnApprove</button>
-	<button id="paymreqHeaderEdit-btn_actionPrint">Print</button>
-</div>
-
 
 <div id="panel-detil-selector" class="panel-detil ">
 	<div panel-title>
@@ -338,6 +392,14 @@
 	</div>
 </div>
  
+<div id="paymreqHeaderEdit-panelaction" class="panel-action">
+	<button id="paymreqHeaderEdit-btn_actionCommit">Commit</button>
+	<button id="paymreqHeaderEdit-btn_actionUncommit">UnCommit</button>
+	<button id="paymreqHeaderEdit-btn_actionApprove">Approve</button>
+	<button id="paymreqHeaderEdit-btn_actionUnapprove">UnApprove</button>
+	<button id="paymreqHeaderEdit-btn_actionPrint">Print</button>
+</div>
+
 
 <div class="panel-recordbar" >
 	<div><a id="paymreqHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>

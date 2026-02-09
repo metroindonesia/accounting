@@ -63,7 +63,15 @@ export async function init(self, args) {
 function setDefaultHeadTitle(self, headerForm) {
 	const data = headerForm.getData()
 
+	const detilTitleElements = document.getElementsByClassName('section-detil-title')
+	for (let el of detilTitleElements) {
+		el.innerHTML = data.paymreq_doc
+	}
 	
+	const detilDescrElements = document.getElementsByClassName('section-detil-descr')
+	for (let el of detilDescrElements) {
+		el.innerHTML = data.paymreq_descr
+	}
 
 }
 

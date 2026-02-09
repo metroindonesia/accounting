@@ -102,6 +102,36 @@ comment on column public."paymreq".paymreq_date is '';
 
 
 -- =============================================
+-- FIELD: ffl_id bigint
+-- =============================================
+-- ADD ffl_id
+alter table public."paymreq" add ffl_id bigint  ;
+comment on column public."paymreq".ffl_id is '';
+
+-- MODIFY ffl_id
+alter table public."paymreq"
+	alter column ffl_id type bigint,
+	ALTER COLUMN ffl_id DROP DEFAULT,
+	ALTER COLUMN ffl_id DROP NOT NULL;
+comment on column public."paymreq".ffl_id is '';
+
+
+-- =============================================
+-- FIELD: po_id bigint
+-- =============================================
+-- ADD po_id
+alter table public."paymreq" add po_id bigint  ;
+comment on column public."paymreq".po_id is '';
+
+-- MODIFY po_id
+alter table public."paymreq"
+	alter column po_id type bigint,
+	ALTER COLUMN po_id DROP DEFAULT,
+	ALTER COLUMN po_id DROP NOT NULL;
+comment on column public."paymreq".po_id is '';
+
+
+-- =============================================
 -- FIELD: paymreq_descr text
 -- =============================================
 -- ADD paymreq_descr
@@ -252,6 +282,21 @@ comment on column public."paymreq".paymtype_id is '';
 
 
 -- =============================================
+-- FIELD: curr_id smallint
+-- =============================================
+-- ADD curr_id
+alter table public."paymreq" add curr_id smallint  ;
+comment on column public."paymreq".curr_id is '';
+
+-- MODIFY curr_id
+alter table public."paymreq"
+	alter column curr_id type smallint,
+	ALTER COLUMN curr_id DROP DEFAULT,
+	ALTER COLUMN curr_id DROP NOT NULL;
+comment on column public."paymreq".curr_id is '';
+
+
+-- =============================================
 -- FIELD: payment_bgno text
 -- =============================================
 -- ADD payment_bgno
@@ -342,18 +387,48 @@ comment on column public."paymreq".paymreq_value is '';
 
 
 -- =============================================
--- FIELD: curr_id smallint
+-- FIELD: ppn_id smallint
 -- =============================================
--- ADD curr_id
-alter table public."paymreq" add curr_id smallint  ;
-comment on column public."paymreq".curr_id is '';
+-- ADD ppn_id
+alter table public."paymreq" add ppn_id smallint  ;
+comment on column public."paymreq".ppn_id is '';
 
--- MODIFY curr_id
+-- MODIFY ppn_id
 alter table public."paymreq"
-	alter column curr_id type smallint,
-	ALTER COLUMN curr_id DROP DEFAULT,
-	ALTER COLUMN curr_id DROP NOT NULL;
-comment on column public."paymreq".curr_id is '';
+	alter column ppn_id type smallint,
+	ALTER COLUMN ppn_id DROP DEFAULT,
+	ALTER COLUMN ppn_id DROP NOT NULL;
+comment on column public."paymreq".ppn_id is '';
+
+
+-- =============================================
+-- FIELD: pph_id smallint
+-- =============================================
+-- ADD pph_id
+alter table public."paymreq" add pph_id smallint  ;
+comment on column public."paymreq".pph_id is '';
+
+-- MODIFY pph_id
+alter table public."paymreq"
+	alter column pph_id type smallint,
+	ALTER COLUMN pph_id DROP DEFAULT,
+	ALTER COLUMN pph_id DROP NOT NULL;
+comment on column public."paymreq".pph_id is '';
+
+
+-- =============================================
+-- FIELD: paymreq_total decimal(13, 2)
+-- =============================================
+-- ADD paymreq_total
+alter table public."paymreq" add paymreq_total decimal(13, 2) not null default 0;
+comment on column public."paymreq".paymreq_total is '';
+
+-- MODIFY paymreq_total
+alter table public."paymreq"
+	alter column paymreq_total type decimal(13, 2),
+	ALTER COLUMN paymreq_total SET DEFAULT 0,
+	ALTER COLUMN paymreq_total SET NOT NULL;
+comment on column public."paymreq".paymreq_total is '';
 
 
 -- =============================================
@@ -483,6 +558,8 @@ comment on column public."paymreq"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$paymreqtype_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$ffl_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$po_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$struct_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$project_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$site_id;
@@ -491,8 +568,10 @@ ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$bc_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partner_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnercontact_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$paymtype_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnerbank_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$curr_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnerbank_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$ppn_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$pph_id;
 
 
 -- Add Foreign Key Constraint  
@@ -505,6 +584,28 @@ ALTER TABLE public."paymreq"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$paymreq$paymreqtype_id;
 CREATE INDEX idx_fk$public$paymreq$paymreqtype_id ON public."paymreq"(paymreqtype_id);	
+
+
+ALTER TABLE public."paymreq"
+	ADD CONSTRAINT fk$public$paymreq$ffl_id
+	FOREIGN KEY (ffl_id)
+	REFERENCES public."po"(po_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreq$ffl_id;
+CREATE INDEX idx_fk$public$paymreq$ffl_id ON public."paymreq"(ffl_id);	
+
+
+ALTER TABLE public."paymreq"
+	ADD CONSTRAINT fk$public$paymreq$po_id
+	FOREIGN KEY (po_id)
+	REFERENCES public."ffl"(ffl_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreq$po_id;
+CREATE INDEX idx_fk$public$paymreq$po_id ON public."paymreq"(po_id);	
 
 
 ALTER TABLE public."paymreq"
@@ -596,6 +697,17 @@ CREATE INDEX idx_fk$public$paymreq$paymtype_id ON public."paymreq"(paymtype_id);
 
 
 ALTER TABLE public."paymreq"
+	ADD CONSTRAINT fk$public$paymreq$curr_id
+	FOREIGN KEY (curr_id)
+	REFERENCES public."curr"(curr_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreq$curr_id;
+CREATE INDEX idx_fk$public$paymreq$curr_id ON public."paymreq"(curr_id);	
+
+
+ALTER TABLE public."paymreq"
 	ADD CONSTRAINT fk$public$paymreq$partnerbank_id
 	FOREIGN KEY (partnerbank_id)
 	REFERENCES public."partnerbank"(partnerbank_id);
@@ -607,14 +719,25 @@ CREATE INDEX idx_fk$public$paymreq$partnerbank_id ON public."paymreq"(partnerban
 
 
 ALTER TABLE public."paymreq"
-	ADD CONSTRAINT fk$public$paymreq$curr_id
-	FOREIGN KEY (curr_id)
-	REFERENCES public."curr"(curr_id);
+	ADD CONSTRAINT fk$public$paymreq$ppn_id
+	FOREIGN KEY (ppn_id)
+	REFERENCES public."taxtype"(taxtype_id);
 
 
 -- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$paymreq$curr_id;
-CREATE INDEX idx_fk$public$paymreq$curr_id ON public."paymreq"(curr_id);	
+DROP INDEX IF EXISTS public.idx_fk$public$paymreq$ppn_id;
+CREATE INDEX idx_fk$public$paymreq$ppn_id ON public."paymreq"(ppn_id);	
+
+
+ALTER TABLE public."paymreq"
+	ADD CONSTRAINT fk$public$paymreq$pph_id
+	FOREIGN KEY (pph_id)
+	REFERENCES public."taxtype"(taxtype_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreq$pph_id;
+CREATE INDEX idx_fk$public$paymreq$pph_id ON public."paymreq"(pph_id);	
 
 	
 
