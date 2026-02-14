@@ -1,0 +1,296 @@
+<div id="jurnalDetilEdit-head">
+	<div id="jurnalDetilEdit-head-title" class="section-detil-title"></div>
+	<div id="jurnalDetilEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="jurnalDetilEdit-frm" class="module-form" locked="true" autoid="true" primarykey="jurnalDetilEdit-obj_jurnaldetil_id">
+
+	<!-- Textbox: jurnaldetil_id-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_id-container" class="input-field detil-el-entry-top" field="jurnalDetilEdit-obj_jurnaldetil_id">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_id">LineId</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_id"  fgta5-component="Textbox" placeholder="jurnaldetil_id" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: coa_id-->	
+	<div id="jurnalDetilEdit-obj_coa_id-container" class="input-field detil-el-entry-top" field="jurnalDetilEdit-obj_coa_id">
+		<label for="jurnalDetilEdit-obj_coa_id">COA</label>
+		<input id="jurnalDetilEdit-obj_coa_id"  fgta5-component="Combobox" placeholder="coa" autocomplete="off" spellcheck="false" 
+			binding="coa_id"
+			data-tabindex="2" 
+			required 
+			invalid-message-required="coa harus diisi" 
+			data-display="coa_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaldetil_descr-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_descr-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_descr">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_descr">Descr</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_descr"
+			data-tabindex="3" 
+			required 
+			invalid-message-required="desckripsi harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Combobox: partner_id-->	
+	<div id="jurnalDetilEdit-obj_partner_id-container" class="input-field" field="jurnalDetilEdit-obj_partner_id">
+		<label for="jurnalDetilEdit-obj_partner_id">Partner</label>
+		<input id="jurnalDetilEdit-obj_partner_id"  fgta5-component="Combobox" placeholder="partner" autocomplete="off" spellcheck="false" 
+			binding="partner_id"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="partner harus diisi" 
+			data-display="partner_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: dept_id-->	
+	<div id="jurnalDetilEdit-obj_dept_id-container" class="input-field" field="jurnalDetilEdit-obj_dept_id">
+		<label for="jurnalDetilEdit-obj_dept_id">Dept</label>
+		<input id="jurnalDetilEdit-obj_dept_id"  fgta5-component="Combobox" placeholder="dept" autocomplete="off" spellcheck="false" 
+			binding="dept_id"
+			data-tabindex="5" 
+			data-display="dept_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: site_id-->	
+	<div id="jurnalDetilEdit-obj_site_id-container" class="input-field" field="jurnalDetilEdit-obj_site_id">
+		<label for="jurnalDetilEdit-obj_site_id">Site</label>
+		<input id="jurnalDetilEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+			binding="site_id"
+			data-tabindex="6" 
+			data-display="site_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: unit_id-->	
+	<div id="jurnalDetilEdit-obj_unit_id-container" class="input-field" field="jurnalDetilEdit-obj_unit_id">
+		<label for="jurnalDetilEdit-obj_unit_id">Unit</label>
+		<input id="jurnalDetilEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+			binding="unit_id"
+			data-tabindex="7" 
+			data-display="unit_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: project_id-->	
+	<div id="jurnalDetilEdit-obj_project_id-container" class="input-field" field="jurnalDetilEdit-obj_project_id">
+		<label for="jurnalDetilEdit-obj_project_id">Project</label>
+		<input id="jurnalDetilEdit-obj_project_id"  fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+			binding="project_id"
+			data-tabindex="8" 
+			data-display="project_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: curr_id-->	
+	<div id="jurnalDetilEdit-obj_curr_id-container" class="input-field" field="jurnalDetilEdit-obj_curr_id">
+		<label for="jurnalDetilEdit-obj_curr_id">Curr</label>
+		<input id="jurnalDetilEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="curr" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="9" 
+			required 
+			invalid-message-required="currency harus diisi" 
+			data-display="curr_code" 
+		>
+	</div>
+
+
+	<!-- Numberbox: jurnaldetil_value-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_value-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_value">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_value">Value</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_value"  fgta5-component="Numberbox" placeholder="Value" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_value"
+			value="0" 
+			data-tabindex="10" 
+			maxlength="13" 
+		>
+	</div>
+
+
+	<!-- Numberbox: curr_rate-->	
+	<div id="jurnalDetilEdit-obj_curr_rate-container" class="input-field" field="jurnalDetilEdit-obj_curr_rate">
+		<label for="jurnalDetilEdit-obj_curr_rate">Rate</label>
+		<input id="jurnalDetilEdit-obj_curr_rate"  fgta5-component="Numberbox" placeholder="rate" autocomplete="off" spellcheck="false" 
+			binding="curr_rate"
+			value="1" 
+			data-tabindex="11" 
+			maxlength="5" 
+			min="1" 
+			invalid-message-min="miminum nilai rate adalah 1" 
+		>
+	</div>
+
+
+	<!-- Numberbox: jurnaldetil_idr-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_idr-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_idr">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_idr">IDR</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_idr"  fgta5-component="Numberbox" placeholder="IDR" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_idr"
+			value="0" 
+			data-tabindex="12" 
+			maxlength="18" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaltype_id-->	
+	<div id="jurnalDetilEdit-obj_jurnaltype_id-container" class="input-field detil-el-footer" field="jurnalDetilEdit-obj_jurnaltype_id">
+		<label for="jurnalDetilEdit-obj_jurnaltype_id">Jurnaltype</label>
+		<input id="jurnalDetilEdit-obj_jurnaltype_id"  fgta5-component="Textbox" placeholder="jurnaltype_id" autocomplete="off" spellcheck="false" 
+			binding="jurnaltype_id"
+			data-tabindex="13" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaldetil_id_ref-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_id_ref-container" class="input-field detil-el-footer" field="jurnalDetilEdit-obj_jurnaldetil_id_ref">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_id_ref">Ref</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_id_ref"  fgta5-component="Textbox" placeholder="reference" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_id_ref"
+			data-tabindex="14" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: coacurr-->	
+	<div id="jurnalDetilEdit-obj_coacurr-container" class="input-field detil-el-footer" field="jurnalDetilEdit-obj_coacurr">
+		<label for="jurnalDetilEdit-obj_coacurr">CoaC</label>
+		<input id="jurnalDetilEdit-obj_coacurr"  fgta5-component="Textbox" placeholder="coacurr" autocomplete="off" spellcheck="false" 
+			binding="coacurr"
+			data-tabindex="15" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: agingtype_id-->	
+	<div id="jurnalDetilEdit-obj_agingtype_id-container" class="input-field" field="jurnalDetilEdit-obj_agingtype_id">
+		<label for="jurnalDetilEdit-obj_agingtype_id">AgingType</label>
+		<input id="jurnalDetilEdit-obj_agingtype_id"  fgta5-component="Textbox" placeholder="agingtype" autocomplete="off" spellcheck="false" 
+			binding="agingtype_id"
+			data-tabindex="16" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: iscurradj-->	
+	<div id="jurnalDetilEdit-obj_iscurradj-container" class="input-field" field="jurnalDetilEdit-obj_iscurradj">
+		<label for="jurnalDetilEdit-obj_iscurradj">Curr Adjustment</label>
+		<input id="jurnalDetilEdit-obj_iscurradj"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="iscurradj"
+			data-tabindex="17" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: jurnaldetil_ishead-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_ishead-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_ishead">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_ishead">Head</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_ishead"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_ishead"
+			data-tabindex="18" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: isdebet-->	
+	<div id="jurnalDetilEdit-obj_isdebet-container" class="input-field" field="jurnalDetilEdit-obj_isdebet">
+		<label for="jurnalDetilEdit-obj_isdebet">Debet</label>
+		<input id="jurnalDetilEdit-obj_isdebet"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="isdebet"
+			data-tabindex="19" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: iskredit-->	
+	<div id="jurnalDetilEdit-obj_iskredit-container" class="input-field" field="jurnalDetilEdit-obj_iskredit">
+		<label for="jurnalDetilEdit-obj_iskredit">Kredit</label>
+		<input id="jurnalDetilEdit-obj_iskredit"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="iskredit"
+			data-tabindex="20" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnal_id-->	
+	<div id="jurnalDetilEdit-obj_jurnal_id-container" class="input-field hidden hidden" field="jurnalDetilEdit-obj_jurnal_id">
+		<label for="jurnalDetilEdit-obj_jurnal_id">Id</label>
+		<input id="jurnalDetilEdit-obj_jurnal_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="jurnal_id"
+			data-tabindex="29" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="jurnalDetilEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="jurnalDetil-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="jurnalDetil-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="jurnalDetilEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="jurnalDetilEdit-btn_save">Save</button>
+		<button id="jurnalDetilEdit-btn_edit">Edit</button>
+		<button id="jurnalDetilEdit-btn_new" data-action="jurnalDetil-addrow">New</button>
+		<button id="jurnalDetilEdit-btn_reset">Reset</button>
+		<button id="jurnalDetilEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="jurnalDetilEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

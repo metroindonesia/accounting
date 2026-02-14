@@ -1,0 +1,18 @@
+/* Mobile */
+@media screen and (max-width: 500px) {
+	#jurnalHeaderList-tbl [data-name="periode_name"] { display: none; }
+	#jurnalHeaderList-tbl [data-name="jurnal_date"] { display: none; }
+}
+
+
+
+/* Desktop */
+@media screen and (min-width: 501px) {
+	#jurnalHeaderList-tbl [data-name="jurnal_doc"] { width: 100px; }
+	#jurnalHeaderList-tbl [data-name="periode_name"] { width: 100px; }
+	#jurnalHeaderList-tbl [data-name="jurnal_date"] { width: 100px; }
+	#jurnalHeaderList-tbl [data-name="ispost"] { width: 80px; }
+	#jurnalHeaderList-tbl [data-name="jurnal_idr"] { width: 150px; }
+}
+
+

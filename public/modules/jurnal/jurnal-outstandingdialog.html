@@ -1,0 +1,99 @@
+<dialog id="dialog-outstanding">
+	<div>
+
+		<div class="dialog-outstanding-content">
+			
+			<div id="dialog-outstanding-filter">
+
+				<div style="width: 455px;">
+					<input id="dlg-obj_partner_id" fgta5-component="Combobox" placeholder="pilih partner" autocomplete="off" spellcheck="false" 
+						binding="partner_id"
+						data-display="partner_name" 
+						style="width: 100%;"
+					>
+				</div>
+
+
+				<div>
+					<div style="width: 300px;">
+						<input id="dlg-obj_coa_id" fgta5-component="Combobox" placeholder="pilih coa" autocomplete="off" spellcheck="false" 
+							binding="coa_id"
+							data-display="coa_name" 
+							style="width: 100%;"
+						>
+					</div>
+		
+					<div style="width: 150px;">
+						<input id="dlg-obj_curr_id" fgta5-component="Combobox" placeholder="pilih currency" autocomplete="off" spellcheck="false" 
+							binding="curr_id"
+							data-display="cirr_code" 
+							style="width: 100%;"
+						>
+					</div>
+
+					
+				</div>
+				
+				<div>
+					<div style="width: 455px;">
+						<input id="dlg-obj_searchtext"  fgta5-component="Textbox" placeholder="searchtext" autocomplete="off" spellcheck="false" 
+							binding="jurnal_descr"
+							maxlength="255" 
+						>
+					</div>	
+
+					<button id="dialog-outstanding-btnLoad">Load</button>
+				</div>
+			</div>
+
+
+
+
+			<table id="dialog-outstanding-table" cellspacing="0" id="dialog-outstanding-table" style="width: 100%;">
+				<thead>
+					<tr>
+						<th data-name="ref_jurnal_doc">ID</th>
+						<th data-name="ref_jurnal_date">Date</th>
+						<th data-name="ref_jurnal_due">Due</th>
+						<th data-name="coa_name">COA</th>
+						<th data-name="ref_jurnaldetil_descr">Descr</th>
+						<th data-name="outstanding_value" style="text-align: right;">Outstd.Value</th>
+						<th data-name="curr_code">Curr</th>
+						<th data-name="outstanding_idr" style="text-align: right;">Outstd.IDR</th>
+					</tr>
+				</thead>
+				<tbody id="dialog-outstanding-tablebody">
+					<tr data-value="{{ref_jurnaldetil_id}}">
+						<td data-name="ref_jurnal_doc">{{ref_jurnal_doc}}</td>
+						<td data-name="ref_jurnal_date" data-format="date">{{ref_jurnal_date}}</td>
+						<td data-name="ref_jurnal_due" style="text-align: center;">{{ref_jurnal_due}}</td>
+						<td data-name="coa_name">{{coa_name}}</td>
+						<td data-name="ref_jurnaldetil_descr">{{ref_jurnaldetil_descr}}</td>
+						<td data-name="outstanding_value" style="text-align: right;" data-format="decimal">{{outstanding_value}}</td>
+						<td data-name="curr_code" style="text-align: center;">{{curr_code}}</td>
+						<td data-name="outstanding_idr" style="text-align: right;" data-format="decimal">{{outstanding_idr}}</td>
+					</tr>							
+				</tbody>
+			</table>
+
+
+
+		</div>
+
+		<div id="dialog-outstanding-headerbar" class="fgta5-combobox-dialog-head">
+			<span id="dialog-outstanding-title"></span>
+			<button type="button" id="dialog-outstanding-closebutton">
+				<!--?xml version="1.0" encoding="UTF-8"?-->
+				<svg transform="translate(0 3)" width="12" height="12" stroke="currentColor" stroke-linecap="round" version="1.1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+					<path d="m3.5642 20.295 16.853-16.833" fill="none" stroke-width="4"></path>
+					<path d="m3.5741 3.4523 16.833 16.853" fill="none" stroke-width="4"></path>
+				</svg>
+			</button>
+		</div>
+
+	</div>
+
+
+
+		
+</dialog>

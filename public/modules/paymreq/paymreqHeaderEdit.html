@@ -119,6 +119,8 @@
 		<input id="paymreqHeaderEdit-obj_paymreq_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
 			binding="paymreq_descr"
 			data-tabindex="10" 
+			required 
+			invalid-message-required="deskripsi payment request harus diisi" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 		>
@@ -165,6 +167,8 @@
 		<input id="paymreqHeaderEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
 			binding="site_id"
 			data-tabindex="14" 
+			required 
+			invalid-message-required="site harus diisi" 
 			data-display="site_name" 
 		>
 	</div>
@@ -176,6 +180,8 @@
 		<input id="paymreqHeaderEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
 			binding="unit_id"
 			data-tabindex="15" 
+			required 
+			invalid-message-required="unit harus diisi" 
 			data-display="unit_name" 
 		>
 	</div>
@@ -434,7 +440,7 @@
 	<button id="paymreqHeaderEdit-btn_actionCommit">Commit</button>
 	<button id="paymreqHeaderEdit-btn_actionUncommit">UnCommit</button>
 	<button id="paymreqHeaderEdit-btn_actionApprove">Approve</button>
-	<button id="paymreqHeaderEdit-btn_actionUnapprove">UnApprove</button>
+	<button id="paymreqHeaderEdit-btn_actionReject">Reject</button>
 	<button id="paymreqHeaderEdit-btn_actionPrint">Print</button>
 </div>
 

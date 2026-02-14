@@ -1,0 +1,32 @@
+<div id="jurnalHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="jurnalHeaderList-pnl_search" class="search-parameters">
+		<input id="jurnalHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="jurnalHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="jurnalHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="jurnal_id">
+			<th data-name="jurnal_doc" binding="jurnal_doc" >Doc Id</th>
+			<th data-name="periode_name" binding="periode_name" >Periode</th>
+			<th data-name="jurnal_date" binding="jurnal_date" formatter="dateshort(v)">Book Date</th>
+			<th data-name="ispost" binding="ispost" formatter="checkmark(value)" style="text-align:center">Posted</th>
+			<th data-name="jurnal_descr" binding="jurnal_descr" >Descr</th>
+			<th data-name="jurnal_idr" binding="jurnal_idr" formatter="decimal(v, 0)" style="text-align:right">IDR</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="jurnalHeaderList-btn_new" data-action="jurnalHeader-new" data-sectionsource="jurnalHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

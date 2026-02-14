@@ -1,0 +1,203 @@
+/* Desktop */
+@media screen and (min-width: 501px) {
+	#jurnalHeaderEdit-frm {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+		grid-auto-rows: auto;
+		gap: 0;
+		width: 850px;
+	}
+
+	#jurnalHeaderEdit-frm > * {
+		padding: 5px;
+	}
+	
+	#jurnalHeaderEdit-obj_jurnal_doc-container {
+		grid-row: 1;
+		grid-column: 1 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_ispost-container {
+		grid-row: 1;
+		grid-column: 3 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_jurnal_source-container {
+		grid-row: 1;
+		grid-column: 5 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_jurnaltype_id-container {
+		grid-row: 2;
+		grid-column: 1 / span 3;
+	}	
+
+	#jurnalHeaderEdit-obj_paymreqterm_id-container {
+		grid-row: 2;
+		grid-column: 4 / span 3;
+	}
+
+	#jurnalHeaderEdit-obj_periode_id-container {
+		grid-row: 3;
+		grid-column: 1 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_jurnal_date-container {
+		grid-row: 3;
+		grid-column: 3 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_jurnal_datedue-container {
+		grid-row: 3;
+		grid-column: 5 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_jurnal_descr-container {
+		grid-row: 4;
+		grid-column: 1 / span 6;
+	}
+
+	#jurnalHeaderEdit-obj_partner_id-container {
+		grid-row: 5;
+		grid-column: 1 / span 3;
+	}
+
+	#jurnalHeaderEdit-obj_paymtype_id-container {
+		grid-row: 6;
+		grid-column: 1 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_partnerbank_id-container {
+		grid-row: 6;
+		grid-column: 3 / span 3;
+	}
+
+	#jurnalHeaderEdit-obj_payment_bgno-container {	
+		grid-row: 6;
+		grid-column: 3 / span 3;
+	}
+
+	#jurnalHeaderEdit-obj_partnerbank_account-container {
+		grid-row: 7;
+		grid-column: 1 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_partnerbank_bankname-container {
+		grid-row: 7;
+		grid-column: 3 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_partnerbank_accountname-container {
+		grid-row: 7;
+		grid-column: 5 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_partnercontact_id-container {
+		grid-row: 8;
+		grid-column: 1 / span 2;
+	}
+
+
+	#jurnalHeaderEdit-obj_coa_id-container {
+		grid-row: 9;
+		grid-column: 1 / span 4;
+	}
+
+	#jurnalHeaderEdit-obj_dept_id-container {
+		grid-row: 9;
+		grid-column: 5 / span 2;
+	}
+
+
+	#jurnalHeaderEdit-obj_site_id-container {
+		grid-row: 10;
+		grid-column: 1 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_unit_id-container {
+		grid-row: 10;
+		grid-column: 3 / span 2;
+	}
+
+	#jurnalHeaderEdit-obj_project_id-container {
+		grid-row: 10;
+		grid-column: 5 / span 2;
+	}
+
+
+
+
+	#jurnalHeaderEdit-obj_curr_id-container {
+		grid-row: 11;
+		grid-column: 1 / span 2;
+
+		margin-top: 5px;
+	}
+
+
+	#jurnalHeaderEdit-obj_jurnal_value-container {
+		grid-row: 11;
+		grid-column: 3 / span 2;
+		
+		margin-top: 5px;
+	}
+
+
+	#jurnalHeaderEdit-obj_curr_rate-container {
+		grid-row: 11;
+		grid-column: 5 / span 2;
+	
+		margin-top: 5px;
+	}
+
+
+
+
+	#jurnalHeaderEdit-obj_jurnal_idr-container {
+		grid-row: 12;
+		grid-column: 3 / span 2;
+	}
+
+
+	#jurnalHeaderEdit-obj_coacurr-container {
+		grid-row: 12;
+		grid-column: 5;
+	}
+
+	#jurnalHeaderEdit-obj_copyto-container {
+		grid-row: 12;
+		grid-column: 6;
+	}
+
+
+
+
+	#jurnalHeaderEdit-obj_jurnal_id-container {
+		grid-row: 13;
+		grid-column: 4 / span 3;
+	}
+
+
+
+	#jurnalHeaderEdit-div_value {
+		background-color:beige;
+		grid-row: 11 / span 2;
+		grid-column: 1 / span 6;
+		z-index: -1;
+		margin-top: 5px;
+	}
+
+
+
+}
+
+
+#jurnalHeaderEdit-info-detil-row [data-label] {
+	display: flex;
+	column-gap: 10px;
+}
+
+
+.outstanding-button {
+	margin: 5px;
+}

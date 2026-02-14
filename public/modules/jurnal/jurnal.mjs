@@ -1,9 +1,9 @@
-import Context from './paymreq-context.mjs'  
-import * as paymreqHeaderList from './paymreqHeaderList.mjs' 
-import * as paymreqHeaderEdit from './paymreqHeaderEdit.mjs' 
-import * as paymreqDetilList from './paymreqDetilList.mjs' 
-import * as paymreqDetilEdit from './paymreqDetilEdit.mjs' 
-import * as Extender from './paymreq-ext.mjs'
+import Context from './jurnal-context.mjs'  
+import * as jurnalHeaderList from './jurnalHeaderList.mjs' 
+import * as jurnalHeaderEdit from './jurnalHeaderEdit.mjs' 
+import * as jurnalDetilList from './jurnalDetilList.mjs' 
+import * as jurnalDetilEdit from './jurnalDetilEdit.mjs' 
+import * as Extender from './jurnal-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -17,7 +17,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Payment Request')
+		app.setTitle('Jurnal')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -25,29 +25,14 @@ export default class extends Module {
 		const self = this
 		Context.program = self
 
-		// ambil metadata variance dan id
-		const variance = document.querySelector('meta[name="variance"]').getAttribute('content');
-		const id = document.querySelector('meta[name="id"]').getAttribute('content');
-		Context.variance = variance
-		Context.id = id
-
-
-		// configureModule
-		// gunakan untuk setup context atau args
-		const fn_configureModule_name = 'configureModule'
-		const fn_configureModule = Extender[fn_configureModule_name]
-		if (typeof fn_configureModule === 'function') {
-			fn_configureModule(self, args)
-		}
-
 		// module-module yang di load perlu di pack dulu ke dalam variable
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			paymreqHeaderList, 
-			paymreqHeaderEdit, 
-			paymreqDetilList, 
-			paymreqDetilEdit, 
+			jurnalHeaderList, 
+			jurnalHeaderEdit, 
+			jurnalDetilList, 
+			jurnalDetilEdit, 
 		}
 
 		try {
@@ -60,7 +45,6 @@ export default class extends Module {
 				Context.userId = result.userId
 				Context.userFullname = result.userFullname
 				Context.sid = result.sid
-				Context.appName = result.appName
 				Context.appsUrls = result.appsUrls
 				Context.setting = result.setting
 			} catch (err) {
@@ -68,10 +52,10 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				paymreqHeaderList.init(self, args), 
-				paymreqHeaderEdit.init(self, args), 
-				paymreqDetilList.init(self, args), 
-				paymreqDetilEdit.init(self, args), 
+				jurnalHeaderList.init(self, args), 
+				jurnalHeaderEdit.init(self, args), 
+				jurnalDetilList.init(self, args), 
+				jurnalDetilEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -83,7 +67,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['paymreqHeaderEdit', 'paymreqDetilEdit']
+			const modNameList = ['jurnalHeaderEdit', 'jurnalDetilEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -100,7 +84,7 @@ export default class extends Module {
 				}
 			};
 
-			app.finalize()
+
 		} catch (err) {
 			throw err
 		}
@@ -114,7 +98,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/paymreq/paymreq.svg')
+		Crsl.setIconUrl('public/modules/jurnal/jurnal.svg')
 
 
 		// Set listener untuk section carousel
@@ -183,7 +167,7 @@ async function render(self) {
 		});
 
 		
-		// paymreq-ext.mjs, export function extendPage(self) {} 
+		// jurnal-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {
@@ -205,17 +189,10 @@ function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	const sectionId = Context.Sections[sectionTargetName]
 	const section = Crsl.Items[sectionId]
 
-	const moduleHeaderEdit = self.Modules[sectionCurrentName]
-	const frm = moduleHeaderEdit.getForm()
-
-	if (frm.isChanged()) {
-		$fgta5.MessageBox.warning(`simpan data dulu sebelum ke <b>${section.Title}</b>`)
-		return
-	}
-
 	section.setSectionReturn(sectionCurrent)
 	section.show({}, ()=>{
 		const moduleTarget = self.Modules[sectionTargetName]
+		const moduleHeaderEdit = self.Modules[sectionCurrentName]
 		moduleTarget.openList(self, {
 			moduleHeaderEdit
 		})

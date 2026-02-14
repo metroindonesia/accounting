@@ -25,6 +25,9 @@
 		"[ejs]": {
 			"editor.formatOnSave": false
 		},
+		"files.watcherExclude": {
+			"**/node_modules": true
+		},
 	},
 	"launch": {
 		"version": "0.2.0",

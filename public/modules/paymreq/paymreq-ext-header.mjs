@@ -8,6 +8,7 @@ const _ffl_id = 'paymreqHeaderEdit-obj_ffl_id'
 const _po_id = 'paymreqHeaderEdit-obj_po_id'
 const _bc_id = 'paymreqHeaderEdit-obj_bc_id'
 const _payment_bgno = 'paymreqHeaderEdit-obj_payment_bgno'
+const _partner_id = 'paymreqHeaderEdit-obj_partner_id'
 const _partnerbank_id = 'paymreqHeaderEdit-obj_partnerbank_id'
 const _partnercontact_id = 'paymreqHeaderEdit-obj_partnercontact_id'
 const _partnerbank_account = 'paymreqHeaderEdit-obj_partnerbank_account'
@@ -46,14 +47,10 @@ export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) 
 	paymtype_changed(paymtype, frm)
 }
 
-export async function obj_partnerbank_id_selected(self, obj_partnerbank_id, frm, evt) {
-	if (!obj_partnerbank_id.isSelectedChanged()) {
-		return
-	}
-
-	const partnerbank = evt.detail.data
-	partnerbank_changed(partnerbank, frm)
+export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {
+	criteria.partner_isdisabled = false
 }
+
 
 export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 	if (!obj_partner_id.isSelectedChanged()) {
@@ -64,30 +61,28 @@ export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 	partner_changed(partner, frm)
 }
 
-export function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = true
 
-	const { paymtype, paymreqtype } = frm.getOriginalData()
-	paymreqtype_changed(paymreqtype, frm)
-	paymtype_changed(paymtype, frm)
+export function obj_partnerbank_id_selecting_criteria(self, obj_partnerbank_id, frm, criteria, sort, evt) {
+	const partner_id = frm.Inputs[_partner_id].value
+	criteria.partner_id = partner_id
+	criteria.partnerbank_isdisabled = false
 }
 
-export async function paymreqHeaderEdit_newData(self, datainit, frm) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = false
+export async function obj_partnerbank_id_selected(self, obj_partnerbank_id, frm, evt) {
+	if (!obj_partnerbank_id.isSelectedChanged()) {
+		return
+	}
 
-	// console.log(Context.setting)
-	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
-
-
+	const partnerbank = evt.detail.data
+	partnerbank_changed(partnerbank, frm)
 }
 
-export async function paymreqHeaderEdit_dataSaved(self, data, frm) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = true
+export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt) {
+	console.log('SELECTING PARTNERCONTACT')
+	const partner_id = frm.Inputs[_partner_id].value
+	criteria.partner_id = partner_id
+	criteria.partnercontact_isdisabled = false
 }
-
 
 export function obj_ppn_id_selecting_criteria(self, obj_ppn_id, frm, criteria, sort, evt) {
 	criteria.taxtype_model = 'PPN'
@@ -104,9 +99,47 @@ export async function obj_ppn_id_selected(self, obj_ppn_id, frm, evt) {
 		return
 	}
 
-	const taxtype = evt.detail.data
-	ppn_changed(taxtype, frm)
+	const ppn = evt.detail.data
+	ppn_changed(ppn, frm)
 }
+
+
+export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {
+	if (!obj_pph_id.isSelectedChanged()) {
+		return
+	}
+
+	const pph = evt.detail.data
+	pph_changed(pph, frm)
+}
+
+
+
+export function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
+	const obj = frm.Inputs[_paymreqtype_id]
+	obj.disabled = true
+
+	const { paymtype, paymreqtype } = frm.getOriginalData()
+	paymreqtype_changed(paymreqtype, frm)
+	paymtype_changed(paymtype, frm)
+}
+
+
+
+export async function paymreqHeaderEdit_newData(self, datainit, frm) {
+	const obj = frm.Inputs[_paymreqtype_id]
+	obj.disabled = false
+
+	// console.log(Context.setting)
+	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
+}
+
+export async function paymreqHeaderEdit_dataSaved(self, data, frm) {
+	const obj = frm.Inputs[_paymreqtype_id]
+	obj.disabled = true
+}
+
+
 
 export async function updateValues(self, data) {
 	const moduleHeader = self.Modules.paymreqHeaderEdit
@@ -119,6 +152,45 @@ export async function updateValues(self, data) {
 	frm.Inputs[_paymreq_total].value = data.paymreq_total
 
 	frm.acceptChanges()
+}
+
+export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
+	console.log(CurrentState.Actions)
+	if (Context.variance == 'approval') {
+		CurrentState.Actions.commit.suspend(true)
+		CurrentState.Actions.uncommit.suspend(true)
+		CurrentState.Actions.approve.suspend(false)
+		CurrentState.Actions.reject.suspend(true)
+		CurrentState.Actions.edit.suspend(true)
+		CurrentState.Actions.newdata.suspend(true)
+
+		CurrentState.Actions.commit.hide(true)
+		CurrentState.Actions.uncommit.hide(true)
+		CurrentState.Actions.reject.hide(true)
+
+	} else if (Context.variance == 'reject') {
+		CurrentState.Actions.commit.suspend(true)
+		CurrentState.Actions.uncommit.suspend(true)
+		CurrentState.Actions.approve.suspend(true)
+		CurrentState.Actions.reject.suspend(false)
+		CurrentState.Actions.edit.suspend(true)
+		CurrentState.Actions.newdata.suspend(true)
+
+		CurrentState.Actions.commit.hide(true)
+		CurrentState.Actions.uncommit.hide(true)
+		CurrentState.Actions.approve.hide(true)
+
+	} else {
+		CurrentState.Actions.commit.suspend(false)
+		CurrentState.Actions.uncommit.suspend(false)
+		CurrentState.Actions.approve.suspend(true)
+		CurrentState.Actions.reject.suspend(true)
+		CurrentState.Actions.edit.suspend(false)
+		CurrentState.Actions.newdata.suspend(false)
+
+		CurrentState.Actions.approve.hide(true)
+		CurrentState.Actions.reject.hide(true)
+	}
 }
 
 
@@ -167,16 +239,51 @@ function partner_changed(partner, frm) {
 }
 
 
-function ppn_changed(taxtype, frm) {
-	const taxtype_value = taxtype.taxtype_value ?? 0
+function ppn_changed(ppn, frm) {
+	const taxtype_value = ppn.taxtype_value ?? 0
 	const obj_paymreq_value = frm.Inputs[_paymreq_value]
+	const obj_paymreq_ppn = frm.Inputs[_paymreq_ppn]
+
+	const value = Number(obj_paymreq_value.value)
+	const ppnPercent = Number(taxtype_value)
+	const ppnValue = (ppnPercent / 100) * value
+
+	obj_paymreq_ppn.value = ppnValue
+
+	tax_changed(frm)
+}
+
+
+function pph_changed(pph, frm) {
+	const taxtype_value = pph.taxtype_value ?? 0
+	const obj_paymreq_value = frm.Inputs[_paymreq_value]
+	const obj_paymreq_pph = frm.Inputs[_paymreq_pph]
+
+	const value = Number(obj_paymreq_value.value)
+	const pphPercent = Number(taxtype_value)
+	const pphValue = (pphPercent / 100) * value
+
+	obj_paymreq_pph.value = pphValue
+
+	tax_changed(frm)
+
+}
+
+function tax_changed(frm) {
+	const obj_paymreq_value = frm.Inputs[_paymreq_value]
+	const obj_paymreq_ppn = frm.Inputs[_paymreq_ppn]
+	const obj_paymreq_pph = frm.Inputs[_paymreq_pph]
+	const obj_paymreq_bill = frm.Inputs[_paymreq_bill]
 	const obj_paymreq_total = frm.Inputs[_paymreq_total]
 
-	const tax = Number(taxtype_value)
 	const value = Number(obj_paymreq_value.value)
-	const total = ((tax + 100) / 100) * value
-	obj_paymreq_total.value = total
+	const ppn = Number(obj_paymreq_ppn.value)
+	const pph = Number(obj_paymreq_pph.value)
 
-	console.log(total)
+	const bill = value + ppn
+	const total = bill - pph
+
+	obj_paymreq_bill.value = bill
+	obj_paymreq_total.value = total
 
 }

@@ -66,14 +66,22 @@ async function updateHeaderValue(self, tx, paymreq_id) {
 		const pph_id = rowHead.pph_id
 
 		// cek PPN
-		const sqlPPN = 'select taxtype_value from public.taxtype where taxtype_id=${taxtype_id}'
-		const rowPPN = await tx.one(sqlPPN, { taxtype_id: ppn_id })
-		const ppnPercent = rowPPN.taxtype_value
+		let ppnPercent = 0
+		if (ppn_id != null) {
+			const sqlPPN = 'select taxtype_value from public.taxtype where taxtype_id=${taxtype_id}'
+			const rowPPN = await tx.one(sqlPPN, { taxtype_id: ppn_id })
+			ppnPercent = rowPPN.taxtype_value
+
+		}
 
 		// cek PPh
-		const sqlPPh = 'select taxtype_value from public.taxtype where taxtype_id=${taxtype_id}'
-		const rowPPh = await tx.one(sqlPPh, { taxtype_id: pph_id })
-		const pphPercent = rowPPh.taxtype_value
+		let pphPercent = 0
+		if (pph_id != null) {
+			const sqlPPh = 'select taxtype_value from public.taxtype where taxtype_id=${taxtype_id}'
+			const rowPPh = await tx.one(sqlPPh, { taxtype_id: pph_id })
+			pphPercent = rowPPh.taxtype_value
+		}
+
 
 		// hitung 
 		const ppnValue = (ppnPercent / 100) * value

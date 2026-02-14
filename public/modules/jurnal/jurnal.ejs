@@ -1,0 +1,68 @@
+<section id="jurnalHeaderList-section" class="fgta5-carousell" data-title="Jurnal">
+<%- include(`${moduleDir}/jurnalHeaderList.html`) %>
+</section>
+
+<section id="jurnalHeaderEdit-section" class="fgta5-carousell" data-title="Edit Jurnal">
+<%- include(`${moduleDir}/jurnalHeaderEdit.html`) %>
+</section>
+
+<section id="jurnalDetilList-section" class="fgta5-carousell" data-title="List Detil">
+<%- include(`${moduleDir}/jurnalDetilList.html`) %>
+</section>
+
+<section id="jurnalDetilEdit-section" class="fgta5-carousell" data-title="Edit Detil">
+<%- include(`${moduleDir}/jurnalDetilEdit.html`) %>
+</section>
+
+
+
+<section id="fRecord-section" class="fgta5-carousell" data-title="Record Status">
+
+	<div name="panel">
+		<div name="row">
+			<span name="caption">Id</span>
+			<span name="value" id="fRecord-section-id">-</span>
+		</div>
+	</div>	
+
+
+	<div name="panel">
+		<!-- LEFT: Standard Info -->
+		<div name="column">
+			<div name="row">
+				<span name="caption">Create By</span>
+				<span name="value" id="fRecord-section-createby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Create Date</span>
+				<span name="value" id="fRecord-section-createdate">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify By</span>
+				<span name="value" id="fRecord-section-modifyby">-</span>
+			</div>
+			<div name="row">
+				<span name="caption">Modify Date</span>
+				<span name="value"id="fRecord-section-modifydate">-</span>
+			</div>
+
+		</div>
+
+
+		<!-- RIGHT: Extended Info -->
+		<div name="column" exteder>
+		<%- include(`${moduleDir}/jurnal-ext-record.html`) %>	
+		</div> 
+
+	</div>	
+</section>
+
+<section id="fLogs-section" class="fgta5-carousell" data-title="Logs">
+<%- include(`${moduleDir}/jurnal-logs.html`) %>	
+</section>
+
+<section id="fAbout-section" class="fgta5-carousell" data-title="About">
+<%- include(`${moduleDir}/jurnal-ext-about.html`) %>	
+</section>
+
+

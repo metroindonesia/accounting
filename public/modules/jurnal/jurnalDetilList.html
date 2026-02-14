@@ -1,0 +1,31 @@
+<div id="jurnalDetilList-head">
+	<div id="jurnalDetilList-head-title" class="section-detil-title"></div>
+	<div id="jurnalDetilList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="jurnalDetilList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="jurnaldetil_id">
+			<th rowselector></th>
+			<th data-name="coa_name" binding="coa_name" >COA</th>
+			<th data-name="jurnaldetil_descr" binding="jurnaldetil_descr" >Descr</th>
+			<th data-name="jurnaldetil_value" binding="jurnaldetil_value" formatter="decimal(v, 2)" style='text-align:right'>Value</th>
+			<th data-name="curr_code" binding="curr_code" >Curr</th>
+			<th data-name="jurnaldetil_idr" binding="jurnaldetil_idr" formatter="decimal(v, 0)" style='text-align:right'>IDR</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="jurnalDetilList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="jurnalDetilList-btn_addrow" data-action="jurnalDetil-addrow" data-sectionsource="jurnalDetilList-section">Add Row</button>
+		<button id="jurnalDetilList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

@@ -1,0 +1,420 @@
+<form id="jurnalHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="jurnalHeaderEdit-obj_jurnal_id">
+
+	<!-- Textbox: jurnal_id-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_id-container" class="input-field hidden" field="jurnalHeaderEdit-obj_jurnal_id">
+		<label for="jurnalHeaderEdit-obj_jurnal_id">Id</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
+			binding="jurnal_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnal_doc-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_doc-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_doc">
+		<label for="jurnalHeaderEdit-obj_jurnal_doc">Doc Id</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_doc"  fgta5-component="Textbox" placeholder="Document Id" autocomplete="off" spellcheck="false" 
+			binding="jurnal_doc"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Checkbox: ispost-->	
+	<div id="jurnalHeaderEdit-obj_ispost-container" class="input-field" field="jurnalHeaderEdit-obj_ispost">
+		<label for="jurnalHeaderEdit-obj_ispost">Posted</label>
+		<input id="jurnalHeaderEdit-obj_ispost"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="ispost"
+			data-tabindex="3" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnal_source-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_source-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_source">
+		<label for="jurnalHeaderEdit-obj_jurnal_source">Source</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_source"  fgta5-component="Textbox" placeholder="source" autocomplete="off" spellcheck="false" 
+			binding="jurnal_source"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Combobox: jurnaltype_id-->	
+	<div id="jurnalHeaderEdit-obj_jurnaltype_id-container" class="input-field" field="jurnalHeaderEdit-obj_jurnaltype_id">
+		<label for="jurnalHeaderEdit-obj_jurnaltype_id">Type</label>
+		<input id="jurnalHeaderEdit-obj_jurnaltype_id"  fgta5-component="Combobox" placeholder="type" autocomplete="off" spellcheck="false" 
+			binding="jurnaltype_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="Tipe jurnal harus diisi" 
+			data-display="jurnaltype_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: paymreqterm_id-->	
+	<div id="jurnalHeaderEdit-obj_paymreqterm_id-container" class="input-field" field="jurnalHeaderEdit-obj_paymreqterm_id">
+		<label for="jurnalHeaderEdit-obj_paymreqterm_id">PR</label>
+		<input id="jurnalHeaderEdit-obj_paymreqterm_id"  fgta5-component="Combobox" placeholder="Paym Request" autocomplete="off" spellcheck="false" 
+			binding="paymreqterm_id"
+			data-tabindex="6" 
+			data-display="paymreq_doc" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Combobox: periode_id-->	
+	<div id="jurnalHeaderEdit-obj_periode_id-container" class="input-field" field="jurnalHeaderEdit-obj_periode_id">
+		<label for="jurnalHeaderEdit-obj_periode_id">Periode</label>
+		<input id="jurnalHeaderEdit-obj_periode_id"  fgta5-component="Combobox" placeholder="periode" autocomplete="off" spellcheck="false" 
+			binding="periode_id"
+			data-tabindex="7" 
+			required 
+			invalid-message-required="periode harus diisi" 
+			data-display="periode_name" 
+		>
+	</div>
+
+
+	<!-- Datepicker: jurnal_date-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_date-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_date">
+		<label for="jurnalHeaderEdit-obj_jurnal_date">Book Date</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_date"  fgta5-component="Datepicker" placeholder="bookdate" autocomplete="off" spellcheck="false" 
+			binding="jurnal_date"
+			data-tabindex="8" 
+		>
+	</div>
+
+
+	<!-- Datepicker: jurnal_datedue-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_datedue-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_datedue">
+		<label for="jurnalHeaderEdit-obj_jurnal_datedue">Due Date</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_datedue"  fgta5-component="Datepicker" placeholder="due date" autocomplete="off" spellcheck="false" 
+			binding="jurnal_datedue"
+			data-tabindex="9" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnal_descr-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_descr-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_descr">
+		<label for="jurnalHeaderEdit-obj_jurnal_descr">Descr</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="jurnal_descr"
+			data-tabindex="10" 
+			required 
+			invalid-message-required="deskripsi jurnal harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Combobox: partner_id-->	
+	<div id="jurnalHeaderEdit-obj_partner_id-container" class="input-field" field="jurnalHeaderEdit-obj_partner_id">
+		<label for="jurnalHeaderEdit-obj_partner_id">Partner</label>
+		<input id="jurnalHeaderEdit-obj_partner_id"  fgta5-component="Combobox" placeholder="partner" autocomplete="off" spellcheck="false" 
+			binding="partner_id"
+			data-tabindex="11" 
+			required 
+			invalid-message-required="partner harus diisi" 
+			data-display="partner_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: paymtype_id-->	
+	<div id="jurnalHeaderEdit-obj_paymtype_id-container" class="input-field" field="jurnalHeaderEdit-obj_paymtype_id">
+		<label for="jurnalHeaderEdit-obj_paymtype_id">PaymType</label>
+		<input id="jurnalHeaderEdit-obj_paymtype_id"  fgta5-component="Combobox" placeholder="payment type" autocomplete="off" spellcheck="false" 
+			binding="paymtype_id"
+			data-tabindex="12" 
+			required 
+			invalid-message-required="payment type harus diisi" 
+			data-display="paymtype_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: partnerbank_id-->	
+	<div id="jurnalHeaderEdit-obj_partnerbank_id-container" class="input-field" field="jurnalHeaderEdit-obj_partnerbank_id">
+		<label for="jurnalHeaderEdit-obj_partnerbank_id">Partner Bank</label>
+		<input id="jurnalHeaderEdit-obj_partnerbank_id"  fgta5-component="Combobox" placeholder="partner bank" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_id"
+			data-tabindex="13" 
+			required 
+			invalid-message-required="partner bank harus diisi" 
+			data-display="partnerbank_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: payment_bgno-->	
+	<div id="jurnalHeaderEdit-obj_payment_bgno-container" class="input-field" field="jurnalHeaderEdit-obj_payment_bgno">
+		<label for="jurnalHeaderEdit-obj_payment_bgno">No BG/Cheque</label>
+		<input id="jurnalHeaderEdit-obj_payment_bgno"  fgta5-component="Textbox" placeholder="no bilyet / cheque" autocomplete="off" spellcheck="false" 
+			binding="payment_bgno"
+			data-tabindex="14" 
+			required 
+			invalid-message-required="no bilyet/giro/cek harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_account-->	
+	<div id="jurnalHeaderEdit-obj_partnerbank_account-container" class="input-field" field="jurnalHeaderEdit-obj_partnerbank_account">
+		<label for="jurnalHeaderEdit-obj_partnerbank_account">Account</label>
+		<input id="jurnalHeaderEdit-obj_partnerbank_account"  fgta5-component="Textbox" placeholder="account" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_account"
+			data-tabindex="15" 
+			required 
+			invalid-message-required="acount bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_bankname-->	
+	<div id="jurnalHeaderEdit-obj_partnerbank_bankname-container" class="input-field" field="jurnalHeaderEdit-obj_partnerbank_bankname">
+		<label for="jurnalHeaderEdit-obj_partnerbank_bankname">Bank Name</label>
+		<input id="jurnalHeaderEdit-obj_partnerbank_bankname"  fgta5-component="Textbox" placeholder="bankname" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_bankname"
+			data-tabindex="16" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: partnerbank_accountname-->	
+	<div id="jurnalHeaderEdit-obj_partnerbank_accountname-container" class="input-field" field="jurnalHeaderEdit-obj_partnerbank_accountname">
+		<label for="jurnalHeaderEdit-obj_partnerbank_accountname">Account Name</label>
+		<input id="jurnalHeaderEdit-obj_partnerbank_accountname"  fgta5-component="Textbox" placeholder="accountname" autocomplete="off" spellcheck="false" 
+			binding="partnerbank_accountname"
+			data-tabindex="17" 
+			required 
+			invalid-message-required="nama account bank harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Combobox: partnercontact_id-->	
+	<div id="jurnalHeaderEdit-obj_partnercontact_id-container" class="input-field" field="jurnalHeaderEdit-obj_partnercontact_id">
+		<label for="jurnalHeaderEdit-obj_partnercontact_id">Up</label>
+		<input id="jurnalHeaderEdit-obj_partnercontact_id"  fgta5-component="Combobox" placeholder="up" autocomplete="off" spellcheck="false" 
+			binding="partnercontact_id"
+			data-tabindex="18" 
+			data-display="partnercontact_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: coa_id-->	
+	<div id="jurnalHeaderEdit-obj_coa_id-container" class="input-field" field="jurnalHeaderEdit-obj_coa_id">
+		<label for="jurnalHeaderEdit-obj_coa_id">Coa</label>
+		<input id="jurnalHeaderEdit-obj_coa_id"  fgta5-component="Combobox" placeholder="coa" autocomplete="off" spellcheck="false" 
+			binding="coa_id"
+			data-tabindex="19" 
+			required 
+			invalid-message-required="COA harus diisi" 
+			data-display="coa_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: dept_id-->	
+	<div id="jurnalHeaderEdit-obj_dept_id-container" class="input-field" field="jurnalHeaderEdit-obj_dept_id">
+		<label for="jurnalHeaderEdit-obj_dept_id">Dept</label>
+		<input id="jurnalHeaderEdit-obj_dept_id"  fgta5-component="Combobox" placeholder="dept" autocomplete="off" spellcheck="false" 
+			binding="dept_id"
+			data-tabindex="20" 
+			data-display="dept_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: site_id-->	
+	<div id="jurnalHeaderEdit-obj_site_id-container" class="input-field" field="jurnalHeaderEdit-obj_site_id">
+		<label for="jurnalHeaderEdit-obj_site_id">Site</label>
+		<input id="jurnalHeaderEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+			binding="site_id"
+			data-tabindex="21" 
+			data-display="site_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: unit_id-->	
+	<div id="jurnalHeaderEdit-obj_unit_id-container" class="input-field" field="jurnalHeaderEdit-obj_unit_id">
+		<label for="jurnalHeaderEdit-obj_unit_id">Unit</label>
+		<input id="jurnalHeaderEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+			binding="unit_id"
+			data-tabindex="22" 
+			data-display="unit_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: project_id-->	
+	<div id="jurnalHeaderEdit-obj_project_id-container" class="input-field" field="jurnalHeaderEdit-obj_project_id">
+		<label for="jurnalHeaderEdit-obj_project_id">Project</label>
+		<input id="jurnalHeaderEdit-obj_project_id"  fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+			binding="project_id"
+			data-tabindex="23" 
+			data-display="project_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: curr_id-->	
+	<div id="jurnalHeaderEdit-obj_curr_id-container" class="input-field" field="jurnalHeaderEdit-obj_curr_id">
+		<label for="jurnalHeaderEdit-obj_curr_id">Currency</label>
+		<input id="jurnalHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="currency" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="24" 
+			required 
+			invalid-message-required="currency harus diisi" 
+			data-display="curr_code" 
+		>
+	</div>
+
+
+	<!-- Numberbox: jurnal_value-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_value-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_value">
+		<label for="jurnalHeaderEdit-obj_jurnal_value">Value</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_value"  fgta5-component="Numberbox" placeholder="Value" autocomplete="off" spellcheck="false" 
+			binding="jurnal_value"
+			value="0" 
+			data-tabindex="25" 
+			maxlength="13" 
+		>
+	</div>
+
+
+	<!-- Numberbox: curr_rate-->	
+	<div id="jurnalHeaderEdit-obj_curr_rate-container" class="input-field" field="jurnalHeaderEdit-obj_curr_rate">
+		<label for="jurnalHeaderEdit-obj_curr_rate">Rate</label>
+		<input id="jurnalHeaderEdit-obj_curr_rate"  fgta5-component="Numberbox" placeholder="rate" autocomplete="off" spellcheck="false" 
+			binding="curr_rate"
+			value="1" 
+			data-tabindex="26" 
+			maxlength="5" 
+			min="1" 
+			invalid-message-min="rate currency minimal bernilai 1" 
+		>
+	</div>
+
+
+	<!-- Numberbox: jurnal_idr-->	
+	<div id="jurnalHeaderEdit-obj_jurnal_idr-container" class="input-field" field="jurnalHeaderEdit-obj_jurnal_idr">
+		<label for="jurnalHeaderEdit-obj_jurnal_idr">IDR</label>
+		<input id="jurnalHeaderEdit-obj_jurnal_idr"  fgta5-component="Numberbox" placeholder="IDR" autocomplete="off" spellcheck="false" 
+			binding="jurnal_idr"
+			value="0" 
+			data-tabindex="27" 
+			maxlength="18" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: copyto-->	
+	<div id="jurnalHeaderEdit-obj_copyto-container" class="input-field hidden" field="jurnalHeaderEdit-obj_copyto">
+		<label for="jurnalHeaderEdit-obj_copyto">Copyto</label>
+		<input id="jurnalHeaderEdit-obj_copyto"  fgta5-component="Textbox" placeholder="copyto" autocomplete="off" spellcheck="false" 
+			binding="copyto"
+			data-tabindex="30" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="1" 
+			disabled 
+		>
+	</div>
+
+
+	<!-- Textbox: coacurr-->	
+	<div id="jurnalHeaderEdit-obj_coacurr-container" class="input-field hidden" field="jurnalHeaderEdit-obj_coacurr">
+		<label for="jurnalHeaderEdit-obj_coacurr">CoaC</label>
+		<input id="jurnalHeaderEdit-obj_coacurr"  fgta5-component="Textbox" placeholder="coacurr" autocomplete="off" spellcheck="false" 
+			binding="coacurr"
+			data-tabindex="31" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+</form>
+
+
+<div id="jurnalHeaderEdit-footer">
+</div>
+
+<div id="jurnalHeaderEdit-panelaction" class="panel-action">
+	<button id="jurnalHeaderEdit-btn_actionPost">Post</button>
+	<button id="jurnalHeaderEdit-btn_actionUnpost">UnPost</button>
+	<button id="jurnalHeaderEdit-btn_actionPrint">Print</button>
+</div>
+
+
+<div id="panel-detil-selector" class="panel-detil ">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+		<div class="panel-detil-row" id="jurnalHeaderEdit-info-detil-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="jurnalDetilList" data-current-section="jurnalHeaderEdit">Detil</a></div>
+			<div data-info>&nbsp</div>
+		</div>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+
+<div class="panel-recordbar" >
+	<div><a id="jurnalHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="jurnalHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="jurnalHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="jurnalHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="jurnalHeaderEdit-btn_save">Save</button>
+		<button id="jurnalHeaderEdit-btn_edit">Edit</button>
+		<button id="jurnalHeaderEdit-btn_new" data-action="jurnalHeader-new">New</button>
+		<button id="jurnalHeaderEdit-btn_reset">Reset</button>
+		<button id="jurnalHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="jurnalHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

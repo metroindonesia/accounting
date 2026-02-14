@@ -1,0 +1,43 @@
+<!-- Additional Search Parameter-->
+<template id="tpl-custom-search-panel">
+	<input id="search-obj_periode_id" fgta5-component="Combobox" placeholder="periode" autocomplete="off" spellcheck="false" 
+		binding="periode_id"
+		data-display="periode_name" 
+	>
+	<input id="search-obj_jurnaltype_id" fgta5-component="Combobox" placeholder="jurnal type" autocomplete="off" spellcheck="false" 
+		binding="jurnaltype_id"
+		data-display="jurnaltype_name" 
+	>	
+	<input id="search-obj_postedstatus" fgta5-component="Combobox" placeholder="status" autocomplete="off" spellcheck="false" 
+		binding="postedstatus_id"
+		data-display="postedstatus_name" 
+	>
+
+</template>
+
+
+
+<template id="tpl-dialog-outstanding">
+	<%- include(`${moduleDir}/jurnal-outstandingdialog.html`) %>	
+</template>
+
+
+<template id="tpl-detil-tfoot">
+	<tfoot>
+		<tr>
+			<td colspan="3">&nbsp;</td>
+			<td data-name="jurnaldetil_value">&nbsp;</td>
+			<td>&nbsp;</td>
+			<td data-name="jurnaldetil_idr">0</td>
+		</tr>
+	</tfoot>
+</template>
+
+
+<template id="tpl-detil-balance">
+	<div style="display: flex; justify-content: right; column-gap: 10px;">
+		<div style="font-weight: bold;">Current Balance</div>
+		<div id="jurnalDetilEdit-balance_idr" style="font-weight: bold; width: 100px; text-align: right;">0</div>
+	</div>
+</template>
+

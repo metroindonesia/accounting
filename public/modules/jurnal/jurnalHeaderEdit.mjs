@@ -1,5 +1,5 @@
-import Context from './paymreq-context.mjs'
-import * as Ext from './paymreq-ext.mjs'
+import Context from './jurnal-context.mjs'
+import * as Ext from './jurnal-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,68 +7,63 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.paymreqHeaderEdit
+const CurrentSectionId = Context.Sections.jurnalHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Payment Request'
-const TitleWhenView = 'View Payment Request'
-const TitleWhenEdit = 'Edit Payment Request'
+const TitleWhenNew = 'New Jurnal'
+const TitleWhenView = 'View Jurnal'
+const TitleWhenEdit = 'Edit Jurnal'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('paymreqHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('paymreqHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('paymreqHeaderEdit-btn_new', 'paymreqHeader-new')
-const btn_del = new $fgta5.ActionButton('paymreqHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('paymreqHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('paymreqHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('paymreqHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('jurnalHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('jurnalHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('jurnalHeaderEdit-btn_new', 'jurnalHeader-new')
+const btn_del = new $fgta5.ActionButton('jurnalHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('jurnalHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('jurnalHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('jurnalHeaderEdit-btn_next')
 
-const btn_actionCommit = new $fgta5.ActionButton('paymreqHeaderEdit-btn_actionCommit')
-const btn_actionUncommit = new $fgta5.ActionButton('paymreqHeaderEdit-btn_actionUncommit')
-const btn_actionApprove = new $fgta5.ActionButton('paymreqHeaderEdit-btn_actionApprove')
-const btn_actionReject = new $fgta5.ActionButton('paymreqHeaderEdit-btn_actionReject')
-const btn_actionPrint = new $fgta5.ActionButton('paymreqHeaderEdit-btn_actionPrint')
+const btn_actionPost = new $fgta5.ActionButton('jurnalHeaderEdit-btn_actionPost')
+const btn_actionUnpost = new $fgta5.ActionButton('jurnalHeaderEdit-btn_actionUnpost')
+const btn_actionPrint = new $fgta5.ActionButton('jurnalHeaderEdit-btn_actionPrint')
 
-const btn_recordstatus = document.getElementById('paymreqHeader-btn_recordstatus')
-const btn_logs = document.getElementById('paymreqHeader-btn_logs')
-const btn_about = document.getElementById('paymreqHeader-btn_about')
+const btn_recordstatus = document.getElementById('jurnalHeader-btn_recordstatus')
+const btn_logs = document.getElementById('jurnalHeader-btn_logs')
+const btn_about = document.getElementById('jurnalHeader-btn_about')
 
-const frm = new $fgta5.Form('paymreqHeaderEdit-frm');
-const obj_paymreq_id = frm.Inputs['paymreqHeaderEdit-obj_paymreq_id']
-const obj_paymreq_doc = frm.Inputs['paymreqHeaderEdit-obj_paymreq_doc']
-const obj_iscommit = frm.Inputs['paymreqHeaderEdit-obj_iscommit']
-const obj_isapproved = frm.Inputs['paymreqHeaderEdit-obj_isapproved']
-const obj_paymreqtype_id = frm.Inputs['paymreqHeaderEdit-obj_paymreqtype_id']
-const obj_paymreq_invoice = frm.Inputs['paymreqHeaderEdit-obj_paymreq_invoice']
-const obj_paymreq_date = frm.Inputs['paymreqHeaderEdit-obj_paymreq_date']
-const obj_ffl_id = frm.Inputs['paymreqHeaderEdit-obj_ffl_id']
-const obj_po_id = frm.Inputs['paymreqHeaderEdit-obj_po_id']
-const obj_paymreq_descr = frm.Inputs['paymreqHeaderEdit-obj_paymreq_descr']
-const obj_paymreq_datedue = frm.Inputs['paymreqHeaderEdit-obj_paymreq_datedue']
-const obj_struct_id = frm.Inputs['paymreqHeaderEdit-obj_struct_id']
-const obj_project_id = frm.Inputs['paymreqHeaderEdit-obj_project_id']
-const obj_site_id = frm.Inputs['paymreqHeaderEdit-obj_site_id']
-const obj_unit_id = frm.Inputs['paymreqHeaderEdit-obj_unit_id']
-const obj_bc_id = frm.Inputs['paymreqHeaderEdit-obj_bc_id']
-const obj_partner_id = frm.Inputs['paymreqHeaderEdit-obj_partner_id']
-const obj_partnercontact_id = frm.Inputs['paymreqHeaderEdit-obj_partnercontact_id']
-const obj_paymtype_id = frm.Inputs['paymreqHeaderEdit-obj_paymtype_id']
-const obj_curr_id = frm.Inputs['paymreqHeaderEdit-obj_curr_id']
-const obj_payment_bgno = frm.Inputs['paymreqHeaderEdit-obj_payment_bgno']
-const obj_partnerbank_id = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_id']
-const obj_partnerbank_account = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_account']
-const obj_partnerbank_accountname = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_accountname']
-const obj_partnerbank_bankname = frm.Inputs['paymreqHeaderEdit-obj_partnerbank_bankname']
-const obj_ppn_id = frm.Inputs['paymreqHeaderEdit-obj_ppn_id']
-const obj_pph_id = frm.Inputs['paymreqHeaderEdit-obj_pph_id']
-const obj_paymreq_value = frm.Inputs['paymreqHeaderEdit-obj_paymreq_value']
-const obj_paymreq_ppn = frm.Inputs['paymreqHeaderEdit-obj_paymreq_ppn']
-const obj_paymreq_pph = frm.Inputs['paymreqHeaderEdit-obj_paymreq_pph']
-const obj_paymreq_bill = frm.Inputs['paymreqHeaderEdit-obj_paymreq_bill']
-const obj_paymreq_total = frm.Inputs['paymreqHeaderEdit-obj_paymreq_total']	
+const frm = new $fgta5.Form('jurnalHeaderEdit-frm');
+const obj_jurnal_id = frm.Inputs['jurnalHeaderEdit-obj_jurnal_id']
+const obj_jurnal_doc = frm.Inputs['jurnalHeaderEdit-obj_jurnal_doc']
+const obj_ispost = frm.Inputs['jurnalHeaderEdit-obj_ispost']
+const obj_jurnal_source = frm.Inputs['jurnalHeaderEdit-obj_jurnal_source']
+const obj_jurnaltype_id = frm.Inputs['jurnalHeaderEdit-obj_jurnaltype_id']
+const obj_paymreqterm_id = frm.Inputs['jurnalHeaderEdit-obj_paymreqterm_id']
+const obj_periode_id = frm.Inputs['jurnalHeaderEdit-obj_periode_id']
+const obj_jurnal_date = frm.Inputs['jurnalHeaderEdit-obj_jurnal_date']
+const obj_jurnal_datedue = frm.Inputs['jurnalHeaderEdit-obj_jurnal_datedue']
+const obj_jurnal_descr = frm.Inputs['jurnalHeaderEdit-obj_jurnal_descr']
+const obj_partner_id = frm.Inputs['jurnalHeaderEdit-obj_partner_id']
+const obj_paymtype_id = frm.Inputs['jurnalHeaderEdit-obj_paymtype_id']
+const obj_partnerbank_id = frm.Inputs['jurnalHeaderEdit-obj_partnerbank_id']
+const obj_payment_bgno = frm.Inputs['jurnalHeaderEdit-obj_payment_bgno']
+const obj_partnerbank_account = frm.Inputs['jurnalHeaderEdit-obj_partnerbank_account']
+const obj_partnerbank_bankname = frm.Inputs['jurnalHeaderEdit-obj_partnerbank_bankname']
+const obj_partnerbank_accountname = frm.Inputs['jurnalHeaderEdit-obj_partnerbank_accountname']
+const obj_partnercontact_id = frm.Inputs['jurnalHeaderEdit-obj_partnercontact_id']
+const obj_coa_id = frm.Inputs['jurnalHeaderEdit-obj_coa_id']
+const obj_dept_id = frm.Inputs['jurnalHeaderEdit-obj_dept_id']
+const obj_site_id = frm.Inputs['jurnalHeaderEdit-obj_site_id']
+const obj_unit_id = frm.Inputs['jurnalHeaderEdit-obj_unit_id']
+const obj_project_id = frm.Inputs['jurnalHeaderEdit-obj_project_id']
+const obj_curr_id = frm.Inputs['jurnalHeaderEdit-obj_curr_id']
+const obj_jurnal_value = frm.Inputs['jurnalHeaderEdit-obj_jurnal_value']
+const obj_curr_rate = frm.Inputs['jurnalHeaderEdit-obj_curr_rate']
+const obj_jurnal_idr = frm.Inputs['jurnalHeaderEdit-obj_jurnal_idr']
+const obj_copyto = frm.Inputs['jurnalHeaderEdit-obj_copyto']
+const obj_coacurr = frm.Inputs['jurnalHeaderEdit-obj_coacurr']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -79,7 +74,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing paymreqHeaderEdit ...')
+	console.log('initializing jurnalHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -107,15 +102,13 @@ export async function init(self, args) {
 	CurrentState.Actions = {
 		newdata: btn_new,
 		edit: btn_edit,
-		commit: btn_actionCommit,
-		uncommit: btn_actionUncommit,
-		approve: btn_actionApprove,
-		reject: btn_actionReject,
+		post: btn_actionPost,
+		unpost: btn_actionUnpost,
 		print: btn_actionPrint,	
 	}
 	
-	// export async function paymreqHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'paymreqHeaderEdit_init'
+	// export async function jurnalHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'jurnalHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -127,10 +120,8 @@ export async function init(self, args) {
 	const fn_setupactionbuttonevent = Extender[fn_setupactionbuttonevent_name]
 	if (typeof fn_setupactionbuttonevent === 'function') {
 		fn_setupactionbuttonevent(self, frm, CurrentState, {
-			btn_actionCommit,
-			btn_actionUncommit,
-			btn_actionApprove,
-			btn_actionReject,
+			btn_actionPost,
+			btn_actionUnpost,
 			btn_actionPrint,
 		})
 	} else {
@@ -139,38 +130,38 @@ export async function init(self, args) {
 	}
 
 	
-	// Combobox: obj_paymreqtype_id
-	obj_paymreqtype_id.addEventListener('selected', (evt)=>{
+	// Combobox: obj_jurnaltype_id
+	obj_jurnaltype_id.addEventListener('selected', (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selected_name = 'obj_paymreqtype_id_selected'
+		const fn_selected_name = 'obj_jurnaltype_id_selected'
 		const fn_selected = Extender[fn_selected_name]
 		if (typeof fn_selected === 'function') {
 			// create function di Extender:
-			// export async function obj_paymreqtype_id_selected(self, obj_paymreqtype_id, frm, evt) {}
-			fn_selected(self, obj_paymreqtype_id, frm, evt)
+			// export async function obj_jurnaltype_id_selected(self, obj_jurnaltype_id, frm, evt) {}
+			fn_selected(self, obj_jurnaltype_id, frm, evt)
 		} else {	
-			console.warn('Extender.obj_paymreqtype_id_selected is not implemented')
+			console.warn('Extender.obj_jurnaltype_id_selected is not implemented')
 		}		
 	})
 	
-	obj_paymreqtype_id.addEventListener('selecting', async (evt)=>{
+	obj_jurnaltype_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_paymreqtype_id_selecting'
+		const fn_selecting_name = 'obj_jurnaltype_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_paymreqtype_id_selecting(self, obj_paymreqtype_id, frm, evt) {}
-			fn_selecting(self, obj_paymreqtype_id, frm, evt)
+			// export async function obj_jurnaltype_id_selecting(self, obj_jurnaltype_id, frm, evt) {}
+			fn_selecting(self, obj_jurnaltype_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'paymreqtype/header-list'
+			const url = 'jurnaltype/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -179,11 +170,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_paymreqtype_id_selecting_criteria(self, obj_paymreqtype_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_paymreqtype_id_selecting_criteria'
+			// export function obj_jurnaltype_id_selecting_criteria(self, obj_jurnaltype_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_jurnaltype_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_paymreqtype_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_jurnaltype_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -196,7 +187,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.paymreqtype_id, row.paymreqtype_name, row)
+					evt.detail.addRow(row.jurnaltype_id, row.jurnaltype_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -211,23 +202,23 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_ffl_id
-	obj_ffl_id.addEventListener('selecting', async (evt)=>{
+	// Combobox: obj_paymreqterm_id
+	obj_paymreqterm_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_ffl_id_selecting'
+		const fn_selecting_name = 'obj_paymreqterm_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_ffl_id_selecting(self, obj_ffl_id, frm, evt) {}
-			fn_selecting(self, obj_ffl_id, frm, evt)
+			// export async function obj_paymreqterm_id_selecting(self, obj_paymreqterm_id, frm, evt) {}
+			fn_selecting(self, obj_paymreqterm_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'po/header-list'
+			const url = 'paymreq/paymreqterm-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -236,11 +227,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_ffl_id_selecting_criteria(self, obj_ffl_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_ffl_id_selecting_criteria'
+			// export function obj_paymreqterm_id_selecting_criteria(self, obj_paymreqterm_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_paymreqterm_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_ffl_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_paymreqterm_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -253,7 +244,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.po_id, row.po_descr, row)
+					evt.detail.addRow(row.paymreqterm_id, row.paymreq_doc, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -268,23 +259,23 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_po_id
-	obj_po_id.addEventListener('selecting', async (evt)=>{
+	// Combobox: obj_periode_id
+	obj_periode_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_po_id_selecting'
+		const fn_selecting_name = 'obj_periode_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_po_id_selecting(self, obj_po_id, frm, evt) {}
-			fn_selecting(self, obj_po_id, frm, evt)
+			// export async function obj_periode_id_selecting(self, obj_periode_id, frm, evt) {}
+			fn_selecting(self, obj_periode_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'ffl/header-list'
+			const url = 'periode/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -293,11 +284,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_po_id_selecting_criteria(self, obj_po_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_po_id_selecting_criteria'
+			// export function obj_periode_id_selecting_criteria(self, obj_periode_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_periode_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_po_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_periode_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -310,292 +301,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.ffl_id, row.ffl_descr, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_struct_id
-	obj_struct_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_struct_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_struct_id_selecting(self, obj_struct_id, frm, evt) {}
-			fn_selecting(self, obj_struct_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'struct/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_struct_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.struct_id, row.struct_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_project_id
-	obj_project_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_project_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_project_id_selecting(self, obj_project_id, frm, evt) {}
-			fn_selecting(self, obj_project_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'project/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_project_id_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_project_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.project_id, row.project_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_site_id
-	obj_site_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_site_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_site_id_selecting(self, obj_site_id, frm, evt) {}
-			fn_selecting(self, obj_site_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'site/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_site_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.site_id, row.site_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_unit_id
-	obj_unit_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_unit_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_unit_id_selecting(self, obj_unit_id, frm, evt) {}
-			fn_selecting(self, obj_unit_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'unit/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_unit_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.unit_id, row.unit_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_bc_id
-	obj_bc_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_bc_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_bc_id_selecting(self, obj_bc_id, frm, evt) {}
-			fn_selecting(self, obj_bc_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'bc/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_bc_id_selecting_criteria(self, obj_bc_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_bc_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_bc_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.bc_id, row.bc_descr, row)
+					evt.detail.addRow(row.periode_id, row.periode_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -641,7 +347,7 @@ export async function init(self, args) {
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'partner/header-list'
+			const url = `${Context.appsUrls.ent.url}/partner/header-list`
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -668,63 +374,6 @@ export async function init(self, args) {
 
 				for (var row of result.data) {
 					evt.detail.addRow(row.partner_id, row.partner_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_partnercontact_id
-	obj_partnercontact_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_partnercontact_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_partnercontact_id_selecting(self, obj_partnercontact_id, frm, evt) {}
-			fn_selecting(self, obj_partnercontact_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'partner/contact-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_partnercontact_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.partnercontact_id, row.partnercontact_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -811,63 +460,6 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_curr_id
-	obj_curr_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_curr_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
-			fn_selecting(self, obj_curr_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'curr/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.curr_id, row.curr_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
 	// Combobox: obj_partnerbank_id
 	obj_partnerbank_id.addEventListener('selected', (evt)=>{
 		
@@ -899,7 +491,7 @@ export async function init(self, args) {
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'partner/bank-list'
+			const url = `${Context.appsUrls.ent.url}/partner/bank-list`
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -940,38 +532,23 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_ppn_id
-	obj_ppn_id.addEventListener('selected', (evt)=>{
+	// Combobox: obj_partnercontact_id
+	obj_partnercontact_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selected_name = 'obj_ppn_id_selected'
-		const fn_selected = Extender[fn_selected_name]
-		if (typeof fn_selected === 'function') {
-			// create function di Extender:
-			// export async function obj_ppn_id_selected(self, obj_ppn_id, frm, evt) {}
-			fn_selected(self, obj_ppn_id, frm, evt)
-		} else {	
-			console.warn('Extender.obj_ppn_id_selected is not implemented')
-		}		
-	})
-	
-	obj_ppn_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_ppn_id_selecting'
+		const fn_selecting_name = 'obj_partnercontact_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_ppn_id_selecting(self, obj_ppn_id, frm, evt) {}
-			fn_selecting(self, obj_ppn_id, frm, evt)
+			// export async function obj_partnercontact_id_selecting(self, obj_partnercontact_id, frm, evt) {}
+			fn_selecting(self, obj_partnercontact_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'taxtype/header-list'
+			const url = `${Context.appsUrls.ent.url}/partner/contact-list`
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -980,11 +557,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_ppn_id_selecting_criteria(self, obj_ppn_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_ppn_id_selecting_criteria'
+			// export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_partnercontact_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_ppn_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -997,7 +574,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.taxtype_id, row.taxtype_name, row)
+					evt.detail.addRow(row.partnercontact_id, row.partnercontact_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -1012,38 +589,38 @@ export async function init(self, args) {
 	})
 	
 	
-	// Combobox: obj_pph_id
-	obj_pph_id.addEventListener('selected', (evt)=>{
+	// Combobox: obj_coa_id
+	obj_coa_id.addEventListener('selected', (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selected_name = 'obj_pph_id_selected'
+		const fn_selected_name = 'obj_coa_id_selected'
 		const fn_selected = Extender[fn_selected_name]
 		if (typeof fn_selected === 'function') {
 			// create function di Extender:
-			// export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {}
-			fn_selected(self, obj_pph_id, frm, evt)
+			// export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {}
+			fn_selected(self, obj_coa_id, frm, evt)
 		} else {	
-			console.warn('Extender.obj_pph_id_selected is not implemented')
+			console.warn('Extender.obj_coa_id_selected is not implemented')
 		}		
 	})
 	
-	obj_pph_id.addEventListener('selecting', async (evt)=>{
+	obj_coa_id.addEventListener('selecting', async (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_pph_id_selecting'
+		const fn_selecting_name = 'obj_coa_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_pph_id_selecting(self, obj_pph_id, frm, evt) {}
-			fn_selecting(self, obj_pph_id, frm, evt)
+			// export async function obj_coa_id_selecting(self, obj_coa_id, frm, evt) {}
+			fn_selecting(self, obj_coa_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'taxtype/header-list'
+			const url = 'coa/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
@@ -1052,11 +629,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_pph_id_selecting_criteria(self, obj_pph_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_pph_id_selecting_criteria'
+			// export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_coa_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_pph_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -1069,7 +646,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.taxtype_id, row.taxtype_name, row)
+					evt.detail.addRow(row.coa_id, row.coa_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -1080,6 +657,355 @@ export async function init(self, args) {
 			}
 
 			
+		}		
+	})
+	
+	
+	// Combobox: obj_dept_id
+	obj_dept_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_dept_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_dept_id_selecting(self, obj_dept_id, frm, evt) {}
+			fn_selecting(self, obj_dept_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = `${Context.appsUrls.ent.url}/dept/header-list`
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_dept_id_selecting_criteria(self, obj_dept_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_dept_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_dept_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.dept_id, row.dept_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_site_id
+	obj_site_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_site_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_site_id_selecting(self, obj_site_id, frm, evt) {}
+			fn_selecting(self, obj_site_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = `${Context.appsUrls.ent.url}/site/header-list`
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_site_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.site_id, row.site_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_unit_id
+	obj_unit_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_unit_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_unit_id_selecting(self, obj_unit_id, frm, evt) {}
+			fn_selecting(self, obj_unit_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = `${Context.appsUrls.ent.url}/unit/header-list`
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_unit_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.unit_id, row.unit_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_project_id
+	obj_project_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_project_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_project_id_selecting(self, obj_project_id, frm, evt) {}
+			fn_selecting(self, obj_project_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = `${Context.appsUrls.prj.url}/project/header-list`
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_project_id_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_project_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.project_id, row.project_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	
+	// Combobox: obj_curr_id
+	obj_curr_id.addEventListener('selected', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selected_name = 'obj_curr_id_selected'
+		const fn_selected = Extender[fn_selected_name]
+		if (typeof fn_selected === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_id_selected(self, obj_curr_id, frm, evt) {}
+			fn_selected(self, obj_curr_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_id_selected is not implemented')
+		}		
+	})
+	
+	obj_curr_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_curr_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
+			fn_selecting(self, obj_curr_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = `${Context.appsUrls.ent.url}/curr/header-list`
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.curr_id, row.curr_code, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	obj_curr_id.addEventListener('populating', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_populating_name = 'obj_curr_id_populating'
+		const fn_populating = Extender[fn_populating_name]
+		if (typeof fn_populating === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_id_populating(self, obj_curr_id, frm, evt) {}
+			fn_populating(self, obj_curr_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_id_populating is not implemented')
+		}		
+	})
+	
+	
+	// Numberbox: obj_jurnal_value
+	obj_jurnal_value.addEventListener('changed', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_changed_name = 'obj_jurnal_value_changed'
+		const fn_changed = Extender[fn_changed_name]
+		if (typeof fn_changed === 'function') {
+			// create function di Extender:
+			// export async function obj_jurnal_value_changed(self, obj_jurnal_value, frm, evt) {}
+			fn_changed(self, obj_jurnal_value, frm, evt)
+		} else {	
+			console.warn('Extender.obj_jurnal_value_changed is not implemented')
+		}		
+	})
+	
+	
+	// Numberbox: obj_curr_rate
+	obj_curr_rate.addEventListener('changed', (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_changed_name = 'obj_curr_rate_changed'
+		const fn_changed = Extender[fn_changed_name]
+		if (typeof fn_changed === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_rate_changed(self, obj_curr_rate, frm, evt) {}
+			fn_changed(self, obj_curr_rate, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_rate_changed is not implemented')
 		}		
 	})
 	
@@ -1092,21 +1018,19 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_paymreqtype_id.clear()
-		obj_ffl_id.clear()
-		obj_po_id.clear()
-		obj_struct_id.clear()
-		obj_project_id.clear()
+		obj_jurnaltype_id.clear()
+		obj_paymreqterm_id.clear()
+		obj_periode_id.clear()
+		obj_partner_id.clear()
+		obj_paymtype_id.clear()
+		obj_partnerbank_id.clear()
+		obj_partnercontact_id.clear()
+		obj_coa_id.clear()
+		obj_dept_id.clear()
 		obj_site_id.clear()
 		obj_unit_id.clear()
-		obj_bc_id.clear()
-		obj_partner_id.clear()
-		obj_partnercontact_id.clear()
-		obj_paymtype_id.clear()
+		obj_project_id.clear()
 		obj_curr_id.clear()
-		obj_partnerbank_id.clear()
-		obj_ppn_id.clear()
-		obj_pph_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -1115,8 +1039,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function paymreqHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'paymreqHeaderEdit_isEditDisabled'
+		// export async function jurnalHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'jurnalHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -1130,8 +1054,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'paymreqHeaderEdit_formOpened'
+		// export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'jurnalHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -1268,7 +1192,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.paymreqHeaderList
+		const listId =  Context.Sections.jurnalHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -1288,15 +1212,13 @@ async function  frm_locked(self, evt) {
 	btn_next.disabled = false
 
 	// Enable action: action hanya bisa dilakukan saat posisi edit off
-	btn_actionCommit.disabled = false
-	btn_actionUncommit.disabled = false
-	btn_actionApprove.disabled = false
-	btn_actionReject.disabled = false
+	btn_actionPost.disabled = false
+	btn_actionUnpost.disabled = false
 	btn_actionPrint.disabled = false
 	
 	// Extender untuk event locked
-	// export function paymreqHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'paymreqHeaderEdit_formLocked'
+	// export function jurnalHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnalHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -1309,8 +1231,8 @@ async function  frm_locked(self, evt) {
 
 	
 	// trigger lock event di detil
-	self.Modules.paymreqDetilList.headerLocked(self)
-	self.Modules.paymreqDetilEdit.headerLocked(self)
+	self.Modules.jurnalDetilList.headerLocked(self)
+	self.Modules.jurnalDetilEdit.headerLocked(self)
 		
 
 }
@@ -1333,15 +1255,13 @@ async function  frm_unlocked(self, evt) {
 	btn_next.disabled = true
 
 	// Disable action: action hanya bisa dilakukan saat posisi edit off
-	btn_actionCommit.disabled = true
-	btn_actionUncommit.disabled = true
-	btn_actionApprove.disabled = true
-	btn_actionReject.disabled = true
+	btn_actionPost.disabled = true
+	btn_actionUnpost.disabled = true
 	btn_actionPrint.disabled = true
 
 	// Extender untuk event Unlocked
-	// export function paymreqHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'paymreqHeaderEdit_formUnlocked'
+	// export function jurnalHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnalHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -1349,8 +1269,8 @@ async function  frm_unlocked(self, evt) {
 
 	
 	// trigger unlock event di detil
-	self.Modules.paymreqDetilList.headerUnlocked(self)
-	self.Modules.paymreqDetilEdit.headerUnlocked(self)	
+	self.Modules.jurnalDetilList.headerUnlocked(self)
+	self.Modules.jurnalDetilEdit.headerUnlocked(self)	
 		
 }
 
@@ -1386,8 +1306,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const paymreqHeaderList = self.Modules.paymreqHeaderList
-	const listsecid = paymreqHeaderList.Section.Id
+	const jurnalHeaderList = self.Modules.jurnalHeaderList
+	const listsecid = jurnalHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -1417,22 +1337,20 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
-			paymreq_date: new Date(),
-			paymreq_datedue: new Date(),
-			paymreq_value: 0,
-			paymreq_ppn: 0,
-			paymreq_pph: 0,
-			paymreq_bill: 0,
-			paymreq_total: 0,
+			jurnal_date: new Date(),
+			jurnal_datedue: new Date(),
+			jurnal_value: 0,
+			curr_rate: 1,
+			jurnal_idr: 0,
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'paymreqHeaderEdit_newData'
+		const fn_newdata_name = 'jurnalHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function paymreqHeaderEdit_newData(self, datainit, frm) {}
+			// export async function jurnalHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -1454,7 +1372,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.paymreqHeaderList.Section.show()
+			self.Modules.jurnalHeaderList.Section.show()
 		}
 	}
 }
@@ -1464,7 +1382,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'paymreqHeaderEdit_autofill'
+	const fn_autofill_name = 'jurnalHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -1515,9 +1433,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function paymreqHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'paymreqHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'jurnalHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -1567,10 +1485,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'paymreqHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'jurnalHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function paymreqHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function jurnalHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -1586,10 +1504,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.paymreqHeaderList.addNewRow(self, data)
+			self.Modules.jurnalHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.paymreqHeaderList.updateCurrentRow(self, data)
+			self.Modules.jurnalHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -1628,10 +1546,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.paymreqHeaderList.removeCurrentRow(self)
+		self.Modules.jurnalHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.paymreqHeaderList.Section.show()
+		self.Modules.jurnalHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -1676,12 +1594,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.paymreqHeaderList.selectPreviousRow(self)
+	self.Modules.jurnalHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.paymreqHeaderList.selectNextRow(self)
+	self.Modules.jurnalHeaderList.selectNextRow(self)
 }
 
 
@@ -1715,7 +1633,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'paymreqHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'jurnalHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -1753,11 +1671,10 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
-			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
-			const url = `${logApp.url}/logs/list`
+			const url = `${Context.appsUrls.core.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.paymreq',
+				table: 'act.jurnal',
 				id: id
 			}
 
@@ -1787,7 +1704,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Payment Request'
+		AboutSection.Title = 'About Jurnal'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -1804,7 +1721,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 15 Feb 2026 01:37'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 22 Dec 2025 11:00'
 			section.appendChild(divFooter)
 		}
 		
