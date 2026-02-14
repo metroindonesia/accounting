@@ -14,13 +14,25 @@
 
 	
 	#paymreqDetilEdit-obj_paymreqdetil_id-container {
-		grid-row: auto;
+		grid-row: 1;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#paymreqDetilEdit-obj_itemclass_id-container {
+		grid-row: 2;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#paymreqDetilEdit-obj_paymreqdetil_descr-container {
-		grid-row: auto;
+		grid-row: 2;
+		grid-column: 3 / span 4;
+		
+	}
+	
+	#paymreqDetilEdit-obj_paymreqdetil_value-container {
+		grid-row: 3;
 		grid-column: 1 / span 2;
 		
 	}

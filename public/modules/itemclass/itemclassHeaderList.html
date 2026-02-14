@@ -1,0 +1,29 @@
+<div id="itemclassHeaderList-header">
+</div>
+
+<div class="search-container">
+	<div id="itemclassHeaderList-pnl_search" class="search-parameters">
+		<input id="itemclassHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+	</div>
+	<button id="itemclassHeaderList-btn_gridload">Load</button>
+</div>
+
+<table id="itemclassHeaderList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="itemclass_id">
+			<th data-name="itemclass_name" binding="itemclass_name" >Name</th>
+			<th data-name="struct_name" binding="struct_name" >Owner</th>
+			<th data-name="itemclass_isdisabled" binding="itemclass_isdisabled" formatter="checkmark(value)" style="text-align:center">Disabled</th>
+		</tr>
+	</thead>
+</table>
+
+
+
+<div class="footer-buttons-container">
+	<div></div>
+	<div>
+		<button id="itemclassHeaderList-btn_new" data-action="itemclassHeader-new" data-sectionsource="itemclassHeaderList-section">New</button>
+	</div>
+	<div></div>
+</div>

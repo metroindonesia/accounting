@@ -37,44 +37,50 @@
 		
 	}
 	
-	#structHeaderEdit-obj_struct_istransaction-container {
-		grid-row: 1;
-		grid-column: 5 / span 2;
-		
-	}
-	
 	#structHeaderEdit-obj_struct_name-container {
 		grid-row: 2;
 		grid-column: 1 / span 3;
 		
 	}
 	
-	#structHeaderEdit-obj_structhrk_id-container {
+	#structHeaderEdit-obj_isitemowner-container {
 		grid-row: 2;
-		grid-column: 4 / span 2;
+		grid-column: 4 / span 1;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_istransaction-container {
+		grid-row: 2;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#structHeaderEdit-obj_structhrk_id-container {
+		grid-row: 3;
+		grid-column: 1 / span 2;
 		
 	}
 	
 	#structHeaderEdit-obj_struct_parent-container {
-		grid-row: 3;
+		grid-row: 4;
 		grid-column: 1 / span 3;
 		
 	}
 	
 	#structHeaderEdit-obj_struct_level-container {
-		grid-row: 3;
+		grid-row: 4;
 		grid-column: 4;
 		
 	}
 	
 	#structHeaderEdit-obj_struct_pathid-container {
-		grid-row: 4;
+		grid-row: 5;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#structHeaderEdit-obj_struct_path-container {
-		grid-row: 4;
+		grid-row: 5;
 		grid-column: 3 / span 4;
 		
 	}

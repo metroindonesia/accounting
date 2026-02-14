@@ -13,8 +13,7 @@ import * as Extender from './extenders/paymreq.apiext.js'
 const moduleName = 'paymreq'
 const headerSectionName = 'header'
 const headerTableName = 'public.paymreq' 
-const detilTableName = 'public.paymreqdetil'  
-const termTableName = 'public.paymreqterm'  	
+const detilTableName = 'public.paymreqdetil'  	
 
 // api: account
 export default class extends Api {
@@ -29,13 +28,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await paymreq_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await paymreq_headerList(this, body) }
 	async headerOpen(body) { return await paymreq_headerOpen(this, body) }
 	async headerUpdate(body) { return await paymreq_headerUpdate(this, body)}
 	async headerCreate(body) { return await paymreq_headerCreate(this, body)}
 	async headerDelete(body) { return await paymreq_headerDelete(this, body) }
-	
+
 	
 	// detil	
 	async detilList(body) { return await paymreq_detilList(this, body) }
@@ -44,14 +46,6 @@ export default class extends Api {
 	async detilCreate(body) { return await paymreq_detilCreate(this, body) }
 	async detilDelete(body) { return await paymreq_detilDelete(this, body) }
 	async detilDeleteRows(body) { return await paymreq_detilDeleteRows(this, body) }
-	
-	// term	
-	async termList(body) { return await paymreq_termList(this, body) }
-	async termOpen(body) { return await paymreq_termOpen(this, body) }
-	async termUpdate(body) { return await paymreq_termUpdate(this, body)}
-	async termCreate(body) { return await paymreq_termCreate(this, body) }
-	async termDelete(body) { return await paymreq_termDelete(this, body) }
-	async termDeleteRows(body) { return await paymreq_termDeleteRows(this, body) }
 			
 }	
 
@@ -99,6 +93,24 @@ async function paymreq_init(self, body) {
 }
 
 
+// execute extender function
+async function paymreq_execute(self, body) {
+	const { fnName, fnParams } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, [fnParams]) {}
+		return await Extender[fnName](self, db, fnParams)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function paymreq_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -114,6 +126,8 @@ async function paymreq_log(self, body, startTime, tablename, id, action, data={}
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -560,34 +574,6 @@ async function paymreq_headerDelete(self, body) {
 				}	
 			}
 
-			// hapus data term
-			{
-				const sql = `select * from ${termTableName} where paymreq_id=\${paymreq_id}`
-				const rows = await tx.any(sql, dataToRemove)
-				for (let rowterm of rows) {
-					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
-					if (typeof Extender.termDeleting === 'function') {
-						// export async function termDeleting(self, tx, rowterm, logMetadata) {}
-						await Extender.termDeleting(self, tx, rowterm, logMetadata)
-					}
-
-					const param = {paymreqterm_id: rowterm.paymreqterm_id}
-					const cmd = sqlUtil.createDeleteCommand(termTableName, ['paymreqterm_id'])
-					const deletedRow = await cmd.execute(param)
-
-					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
-					if (typeof Extender.termDeleted === 'function') {
-						// export async function termDeleted(self, tx, deletedRow, logMetadata) {}
-						await Extender.termDeleted(self, tx, deletedRow, logMetadata)
-					}					
-
-					paymreq_log(self, body, startTime, termTableName, rowterm.paymreqterm_id, 'DELETE', {rowdata: deletedRow})
-					paymreq_log(self, body, startTime, headerTableName, rowterm.paymreq_id, 'DELETE ROW TERM', {paymreqterm_id: rowterm.paymreqterm_id, tablename: termTableName}, `removed: ${rowterm.paymreqterm_id}`)
-
-
-				}	
-			}
-
 			
 			
 
@@ -662,6 +648,11 @@ async function paymreq_detilList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
+			// lookup: itemclass_name dari field itemclass_name pada table public.itemclass dimana (public.itemclass.itemclass_id = public.paymreq.itemclass_id)
+			{
+				const { itemclass_name } = await sqlUtil.lookupdb(db, 'public.itemclass', 'itemclass_id', row.itemclass_id)
+				row.itemclass_name = itemclass_name
+			}
 			
 
 			// pasang extender di sini
@@ -713,6 +704,11 @@ async function paymreq_detilOpen(self, body) {
 		}	
 
 
+		// lookup: itemclass_name dari field itemclass_name pada table public.itemclass dimana (public.itemclass.itemclass_id = public.paymreq.itemclass_id)
+		{
+			const { itemclass_name } = await sqlUtil.lookupdb(db, 'public.itemclass', 'itemclass_id', data.itemclass_id)
+			data.itemclass_name = itemclass_name
+		}
 		
 
 		// lookup data createby
@@ -874,6 +870,7 @@ async function paymreq_detilDelete(self, body) {
 			const sql = `select * from ${detilTableName} where paymreqdetil_id=\${paymreqdetil_id}`
 			const rowdetil = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.detilDeleting === 'function') {
@@ -913,6 +910,8 @@ async function paymreq_detilDeleteRows(self, body) {
 
 
 	try {
+
+		let paymreq_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -920,7 +919,11 @@ async function paymreq_detilDeleteRows(self, body) {
 				const dataToRemove = {paymreqdetil_id: id}
 				const sql = `select * from ${detilTableName} where paymreqdetil_id=\${paymreqdetil_id}`
 				const rowdetil = await tx.oneOrNone(sql, dataToRemove)
+				paymreq_id = rowdetil.paymreq_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.detilDeleting === 'function') {
 					// async function detilDeleting(self, tx, rowdetil, logMetadata) {}
@@ -944,341 +947,7 @@ async function paymreq_detilDeleteRows(self, body) {
 
 		const res = {
 			deleted: true,
-			message: ''
-		}
-		return res
-	} catch (err) {
-		throw err
-	}	
-}
-
-
-// term	
-
-async function paymreq_termList(self, body) {
-	const tablename = termTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
-	const searchMap = {
-		paymreq_id: `paymreq_id=try_cast_bigint(\${paymreq_id}, 0)`,
-	};
-
-
-	if (Object.keys(sort).length === 0) {
-		sort.paymreqterm_id = 'asc'
-	}
-
-
-	try {
-	
-		// hilangkan criteria '' atau null
-		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
-				delete criteria[cname]
-			}
-		}
-
-		const args = { db, criteria }
-
-		// apabila ada keperluan untuk recompose criteria
-		if (typeof Extender.termListCriteria === 'function') {
-			// export async function termListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
-			await Extender.termListCriteria(self, db, searchMap, criteria, sort, columns, args)
-		}
-
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
-		const rows = await db.any(sql, queryParams);
-
-		
-		var i = 0
-		const data = []
-		for (var row of rows) {
-			i++
-			if (i>max_rows) { break }
-
-			
-
-			// pasang extender di sini
-			if (typeof Extender.detilListRow === 'function') {
-				// export async function detilListRow(self, row, args) {}
-				await Extender.detilListRow(self, row, args)
-			}
-
-			data.push(row)
-		}
-
-		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
-		}
-
-		return {
-			criteria: criteria,
-			limit:  max_rows,
-			nextoffset: nextoffset,
-			data: data
-		}
-
-	} catch (err) {
-		throw err
-	}
-}
-
-async function paymreq_termOpen(self, body) {
-	const tablename = termTableName
-
-	try {
-		const { id } = body 
-		const criteria = { paymreqterm_id: id }
-		const searchMap = { paymreqterm_id: `paymreqterm_id = \${paymreqterm_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
-			queryParams
-		})
-		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
-
-
-		
-
-		// lookup data createby
-		{
-			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
-			data._createby = user_fullname ?? ''
-		}
-
-		// lookup data modifyby
-		{
-			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
-			data._modifyby = user_fullname ?? ''
-		}	
-
-
-		// pasang extender untuk olah data
-		// export async function termOpen(self, db, data) {}
-		if (typeof Extender.termOpen === 'function') {
-			// export async function termOpen(self, db, data) {}
-			await Extender.termOpen(self, db, data)
-		}
-
-		return data
-	} catch (err) {
-		throw err
-	}
-}
-
-async function paymreq_termCreate(self, body) {
-	const { source='paymreq', data={} } = body
-	const req = self.req
-	const user_id = req.session.user.userId
-	const startTime = process.hrtime.bigint();
-	const tablename = termTableName
-
-	try {
-
-		// parse uploaded data
-		const files = Api.parseUploadData(data, req.files)
-
-
-		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
-
-		const result = await db.tx(async tx=>{
-			sqlUtil.connect(tx)
-
-
-			const args = { 
-				section: 'term', 
-				prefix: 'XX'	
-			}
-
-			const sequencer = createSequencerLine(tx, {})
-
-
-			if (typeof Extender.sequencerSetup === 'function') {
-				// jika ada keperluan menambahkan code block/cluster di sequencer
-				// dapat diimplementasikan di exterder sequencerSetup 
-				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
-				await Extender.sequencerSetup(self, tx, sequencer, data, args)
-			}
-
-
-			const seqdata = await sequencer.increment(args.prefix)
-			data.paymreqterm_id = seqdata.id
-
-			// apabila ada keperluan pengolahan data SEBELUM disimpan
-			if (typeof Extender.termCreating === 'function') {
-				// export async function termCreating(self, tx, data, seqdata, args) {}
-				await Extender.termCreating(self, tx, data, seqdata, args)
-			}
-
-			const cmd = sqlUtil.createInsertCommand(tablename, data)
-			const ret = await cmd.execute(data)
-			
-			const logMetadata = {}
-
-			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
-			if (typeof Extender.termCreated === 'function') {
-				// export async function termCreated(self, tx, ret, data, logMetadata, args) {}
-				await Extender.termCreated(self, tx, ret, data, logMetadata, args)
-			}
-
-			// record log
-			paymreq_log(self, body, startTime, tablename, ret.paymreqterm_id, 'CREATE', logMetadata)
-
-			return ret
-		})
-
-		return result
-	} catch (err) {
-		throw err
-	}
-}
-
-async function paymreq_termUpdate(self, body) {
-	const { source='paymreq', data={} } = body
-	const req = self.req
-	const user_id = req.session.user.userId
-	const startTime = process.hrtime.bigint()
-	const tablename = termTableName
-
-	try {
-
-		// parse uploaded data
-		const files = Api.parseUploadData(data, req.files)
-
-
-		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
-
-		const result = await db.tx(async tx=>{
-			sqlUtil.connect(tx)
-
-
-			// apabila ada keperluan pengolahan data SEBELUM disimpan
-			if (typeof Extender.termUpdating === 'function') {
-				// export async function termUpdating(self, tx, data) {}
-				await Extender.termUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['paymreqterm_id'])
-			const ret = await cmd.execute(data)
-			
-			const logMetadata = {}
-
-			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
-			if (typeof Extender.termUpdated === 'function') {
-				// export async function termUpdated(self, tx, ret, data, logMetadata) {}
-				await Extender.termUpdated(self, tx, ret, data, logMetadata)
-			}
-
-			// record log
-			paymreq_log(self, body, startTime, tablename, data.paymreqterm_id, 'UPDATE', logMetadata)
-
-			return ret
-		})
-	
-		return result
-	} catch (err) {
-		throw err
-	}
-}
-
-async function paymreq_termDelete(self, body) {
-	const { source, id } = body 
-	const req = self.req
-	const user_id = req.session.user.userId
-	const startTime = process.hrtime.bigint()
-	const tablename = termTableName
-
-	try {
-
-		const deletedRow = await db.tx(async tx=>{
-			sqlUtil.connect(tx)
-
-			const dataToRemove = {paymreqterm_id: id}
-			const sql = `select * from ${termTableName} where paymreqterm_id=\${paymreqterm_id}`
-			const rowterm = await tx.oneOrNone(sql, dataToRemove)
-
-
-			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
-			if (typeof Extender.termDeleting === 'function') {
-				// export async function termDeleting(self, tx, rowterm, logMetadata) {}
-				await Extender.termDeleting(self, tx, rowterm, logMetadata)
-			}
-
-			const param = {paymreqterm_id: rowterm.paymreqterm_id}
-			const cmd = sqlUtil.createDeleteCommand(termTableName, ['paymreqterm_id'])
-			const deletedRow = await cmd.execute(param)
-
-			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
-			if (typeof Extender.termDeleted === 'function') {
-				// export async function termDeleted(self, tx, deletedRow, logMetadata) {}
-				await Extender.termDeleted(self, tx, deletedRow, logMetadata)
-			}					
-
-			paymreq_log(self, body, startTime, termTableName, rowterm.paymreqterm_id, 'DELETE', {rowdata: deletedRow})
-			paymreq_log(self, body, startTime, headerTableName, rowterm.paymreq_id, 'DELETE ROW TERM', {paymreqterm_id: rowterm.paymreqterm_id, tablename: termTableName}, `removed: ${rowterm.paymreqterm_id}`)
-
-			return deletedRow
-		})
-	
-
-		return deletedRow
-	} catch (err) {
-		throw err
-	}
-}
-
-async function paymreq_termDeleteRows(self, body) {
-	const { data } = body 
-	const req = self.req
-	const user_id = req.session.user.userId
-	const startTime = process.hrtime.bigint();
-	const tablename = termTableName
-
-
-	try {
-		const result = await db.tx(async tx=>{
-			sqlUtil.connect(tx)
-
-			for (let id of data) {
-				const dataToRemove = {paymreqterm_id: id}
-				const sql = `select * from ${termTableName} where paymreqterm_id=\${paymreqterm_id}`
-				const rowterm = await tx.oneOrNone(sql, dataToRemove)
-
-				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
-				if (typeof Extender.termDeleting === 'function') {
-					// async function termDeleting(self, tx, rowterm, logMetadata) {}
-					await Extender.termDeleting(self, tx, rowterm, logMetadata)
-				}
-
-				const param = {paymreqterm_id: rowterm.paymreqterm_id}
-				const cmd = sqlUtil.createDeleteCommand(termTableName, ['paymreqterm_id'])
-				const deletedRow = await cmd.execute(param)
-
-				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
-				if (typeof Extender.termDeleted === 'function') {
-					// export async function termDeleted(self, tx, deletedRow, logMetadata) {}
-					await Extender.termDeleted(self, tx, deletedRow, logMetadata)
-				}					
-
-				paymreq_log(self, body, startTime, termTableName, rowterm.paymreqterm_id, 'DELETE', {rowdata: deletedRow})
-				paymreq_log(self, body, startTime, headerTableName, rowterm.paymreq_id, 'DELETE ROW TERM', {paymreqterm_id: rowterm.paymreqterm_id, tablename: termTableName}, `removed: ${rowterm.paymreqterm_id}`)
-			}
-		})
-
-		const res = {
-			deleted: true,
+			paymreq_id: paymreq_id,
 			message: ''
 		}
 		return res

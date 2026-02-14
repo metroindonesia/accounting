@@ -372,21 +372,6 @@ comment on column public."paymreq".partnerbank_bankname is '';
 
 
 -- =============================================
--- FIELD: paymreq_value decimal(13, 2)
--- =============================================
--- ADD paymreq_value
-alter table public."paymreq" add paymreq_value decimal(13, 2) not null default 0;
-comment on column public."paymreq".paymreq_value is '';
-
--- MODIFY paymreq_value
-alter table public."paymreq"
-	alter column paymreq_value type decimal(13, 2),
-	ALTER COLUMN paymreq_value SET DEFAULT 0,
-	ALTER COLUMN paymreq_value SET NOT NULL;
-comment on column public."paymreq".paymreq_value is '';
-
-
--- =============================================
 -- FIELD: ppn_id smallint
 -- =============================================
 -- ADD ppn_id
@@ -417,15 +402,75 @@ comment on column public."paymreq".pph_id is '';
 
 
 -- =============================================
--- FIELD: paymreq_total decimal(13, 2)
+-- FIELD: paymreq_value decimal(15, 2)
+-- =============================================
+-- ADD paymreq_value
+alter table public."paymreq" add paymreq_value decimal(15, 2) not null default 0;
+comment on column public."paymreq".paymreq_value is '';
+
+-- MODIFY paymreq_value
+alter table public."paymreq"
+	alter column paymreq_value type decimal(15, 2),
+	ALTER COLUMN paymreq_value SET DEFAULT 0,
+	ALTER COLUMN paymreq_value SET NOT NULL;
+comment on column public."paymreq".paymreq_value is '';
+
+
+-- =============================================
+-- FIELD: paymreq_ppn decimal(15, 2)
+-- =============================================
+-- ADD paymreq_ppn
+alter table public."paymreq" add paymreq_ppn decimal(15, 2) not null default 0;
+comment on column public."paymreq".paymreq_ppn is '';
+
+-- MODIFY paymreq_ppn
+alter table public."paymreq"
+	alter column paymreq_ppn type decimal(15, 2),
+	ALTER COLUMN paymreq_ppn SET DEFAULT 0,
+	ALTER COLUMN paymreq_ppn SET NOT NULL;
+comment on column public."paymreq".paymreq_ppn is '';
+
+
+-- =============================================
+-- FIELD: paymreq_pph decimal(15, 2)
+-- =============================================
+-- ADD paymreq_pph
+alter table public."paymreq" add paymreq_pph decimal(15, 2) not null default 0;
+comment on column public."paymreq".paymreq_pph is '';
+
+-- MODIFY paymreq_pph
+alter table public."paymreq"
+	alter column paymreq_pph type decimal(15, 2),
+	ALTER COLUMN paymreq_pph SET DEFAULT 0,
+	ALTER COLUMN paymreq_pph SET NOT NULL;
+comment on column public."paymreq".paymreq_pph is '';
+
+
+-- =============================================
+-- FIELD: paymreq_bill decimal(15, 2)
+-- =============================================
+-- ADD paymreq_bill
+alter table public."paymreq" add paymreq_bill decimal(15, 2) not null default 0;
+comment on column public."paymreq".paymreq_bill is '';
+
+-- MODIFY paymreq_bill
+alter table public."paymreq"
+	alter column paymreq_bill type decimal(15, 2),
+	ALTER COLUMN paymreq_bill SET DEFAULT 0,
+	ALTER COLUMN paymreq_bill SET NOT NULL;
+comment on column public."paymreq".paymreq_bill is '';
+
+
+-- =============================================
+-- FIELD: paymreq_total decimal(15, 2)
 -- =============================================
 -- ADD paymreq_total
-alter table public."paymreq" add paymreq_total decimal(13, 2) not null default 0;
+alter table public."paymreq" add paymreq_total decimal(15, 2) not null default 0;
 comment on column public."paymreq".paymreq_total is '';
 
 -- MODIFY paymreq_total
 alter table public."paymreq"
-	alter column paymreq_total type decimal(13, 2),
+	alter column paymreq_total type decimal(15, 2),
 	ALTER COLUMN paymreq_total SET DEFAULT 0,
 	ALTER COLUMN paymreq_total SET NOT NULL;
 comment on column public."paymreq".paymreq_total is '';

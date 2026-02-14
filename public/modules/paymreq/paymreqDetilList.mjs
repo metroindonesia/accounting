@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function detilList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'detilList_addTableEvents'
+	// export function paymreqDetilList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'paymreqDetilList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -244,11 +244,11 @@ async function listRows(self, criteria, offset, limit, sort) {
 	const url = `/${Context.moduleName}/detil-list`
 	const evt = { url, limit }
 
-	// export function detilList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'detilList_dataLoad'
+	// export async function paymreqDetilList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'paymreqDetilList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
-		fn_dataLoad(self, criteria, sort, evt)
+		await fn_dataLoad(self, criteria, sort, evt)
 	}
 
 	try {
@@ -273,6 +273,14 @@ async function deleteRows(self, data) {
 		
 		const result = await Module.apiCall(url, { data }) 
 		if (result.deleted) {
+
+			// export async function paymreqDetilList_rowsDeleted(self, data) {}
+			const fn_name = 'paymreqDetilList_rowsDeleted'
+			const fn = Extender[fn_name]
+			if (typeof fn === 'function') {
+				await fn(self, result)
+			}
+
 			return true
 		} else {
 			throw new Error(result.message)
@@ -326,11 +334,11 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export function detilList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'detilList_tableDataLoaded'
+		// export async function paymreqDetilList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'paymreqDetilList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
-			fn(self, tbl, result)
+			await fn(self, tbl, result)
 		}
 
 

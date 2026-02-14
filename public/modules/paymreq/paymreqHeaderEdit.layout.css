@@ -163,27 +163,45 @@
 		
 	}
 	
-	#paymreqHeaderEdit-obj_paymreq_value-container {
-		grid-row: 12;
-		grid-column: 1 / span 2;
-		
-	}
-	
 	#paymreqHeaderEdit-obj_ppn_id-container {
 		grid-row: 12;
-		grid-column: 3 / span 2;
+		grid-column: 1 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_pph_id-container {
 		grid-row: 12;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_value-container {
+		grid-row: 12;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_ppn-container {
+		grid-row: 13;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_pph-container {
+		grid-row: 13;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqHeaderEdit-obj_paymreq_bill-container {
+		grid-row: 13;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#paymreqHeaderEdit-obj_paymreq_total-container {
-		grid-row: 13;
-		grid-column: 1 / span 2;
+		grid-row: 14;
+		grid-column: 5 / span 2;
 		font-weight: bold; font-size: 1.1rem;
 	}
 		

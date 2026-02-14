@@ -12,6 +12,21 @@ comment on table public."paymreqdetil" is '';
 
 
 -- =============================================
+-- FIELD: itemclass_id int
+-- =============================================
+-- ADD itemclass_id
+alter table public."paymreqdetil" add itemclass_id int  ;
+comment on column public."paymreqdetil".itemclass_id is '';
+
+-- MODIFY itemclass_id
+alter table public."paymreqdetil"
+	alter column itemclass_id type int,
+	ALTER COLUMN itemclass_id DROP DEFAULT,
+	ALTER COLUMN itemclass_id DROP NOT NULL;
+comment on column public."paymreqdetil".itemclass_id is '';
+
+
+-- =============================================
 -- FIELD: paymreqdetil_descr text
 -- =============================================
 -- ADD paymreqdetil_descr
@@ -24,6 +39,21 @@ alter table public."paymreqdetil"
 	ALTER COLUMN paymreqdetil_descr DROP DEFAULT,
 	ALTER COLUMN paymreqdetil_descr DROP NOT NULL;
 comment on column public."paymreqdetil".paymreqdetil_descr is '';
+
+
+-- =============================================
+-- FIELD: paymreqdetil_value decimal(15, 2)
+-- =============================================
+-- ADD paymreqdetil_value
+alter table public."paymreqdetil" add paymreqdetil_value decimal(15, 2) not null default 0;
+comment on column public."paymreqdetil".paymreqdetil_value is '';
+
+-- MODIFY paymreqdetil_value
+alter table public."paymreqdetil"
+	alter column paymreqdetil_value type decimal(15, 2),
+	ALTER COLUMN paymreqdetil_value SET DEFAULT 0,
+	ALTER COLUMN paymreqdetil_value SET NOT NULL;
+comment on column public."paymreqdetil".paymreqdetil_value is '';
 
 
 -- =============================================
@@ -107,10 +137,22 @@ comment on column public."paymreqdetil"._modifydate is 'waktu terakhir record di
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$itemclass_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
 
 
 -- Add Foreign Key Constraint  
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$itemclass_id
+	FOREIGN KEY (itemclass_id)
+	REFERENCES public."itemclass"(itemclass_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$itemclass_id;
+CREATE INDEX idx_fk$public$paymreqdetil$itemclass_id ON public."paymreqdetil"(itemclass_id);	
+
+
 ALTER TABLE public."paymreqdetil"
 	ADD CONSTRAINT fk$public$paymreqdetil$paymreq_id
 	FOREIGN KEY (paymreq_id)

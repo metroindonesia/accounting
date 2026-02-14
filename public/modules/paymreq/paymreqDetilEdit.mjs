@@ -32,7 +32,9 @@ const btn_logs = document.getElementById('paymreqDetil-btn_logs')
 
 const frm = new $fgta5.Form('paymreqDetilEdit-frm');
 const obj_paymreqdetil_id = frm.Inputs['paymreqDetilEdit-obj_paymreqdetil_id']
+const obj_itemclass_id = frm.Inputs['paymreqDetilEdit-obj_itemclass_id']
 const obj_paymreqdetil_descr = frm.Inputs['paymreqDetilEdit-obj_paymreqdetil_descr']
+const obj_paymreqdetil_value = frm.Inputs['paymreqDetilEdit-obj_paymreqdetil_value']
 const obj_paymreq_id = frm.Inputs['paymreqDetilEdit-obj_paymreq_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -80,6 +82,60 @@ export async function init(self, args) {
 	}
 
 
+	
+	// Combobox: obj_itemclass_id
+	obj_itemclass_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_itemclass_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_itemclass_id_selecting(self, obj_itemclass_id, frm, evt) {}
+			fn_selecting(self, obj_itemclass_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'itemclass/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_itemclass_id_selecting_criteria(self, obj_itemclass_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_itemclass_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_itemclass_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.itemclass_id, row.itemclass_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
 		
 }
 
@@ -89,6 +145,7 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
+		obj_itemclass_id.clear()
 		
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -423,6 +480,7 @@ async function btn_new_click(self, evt) {
 		// inisiasi data baru
 		const datainit = {
 			paymreq_id,
+			paymreqdetil_value: 0,
 		}
 
 
@@ -621,11 +679,38 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function paymreqDetilEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'paymreqDetilEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
+		
+
+		// Extender Delete
+		// export async function paymreqDetilEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'paymreqDetilEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
 		// hapus current row yang dipilih di list
 		self.Modules.paymreqDetilList.removeCurrentRow(self)
-		
+
 		// kembali ke list
 		self.Modules.paymreqDetilList.Section.show()
 

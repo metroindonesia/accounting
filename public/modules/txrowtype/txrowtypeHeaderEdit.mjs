@@ -1,5 +1,5 @@
-import Context from './struct-context.mjs'
-import * as Ext from './struct-ext.mjs'
+import Context from './txrowtype-context.mjs'
+import * as Ext from './txrowtype-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
@@ -7,43 +7,33 @@ const Extender = Ext.extenderHeader ?? Ext
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.structHeaderEdit
+const CurrentSectionId = Context.Sections.txrowtypeHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
 
-const TitleWhenNew = 'New Structure'
-const TitleWhenView = 'View Structure'
-const TitleWhenEdit = 'Edit Structure'
+const TitleWhenNew = 'New Transaction Row Type'
+const TitleWhenView = 'View Transaction Row Type'
+const TitleWhenEdit = 'Edit Transaction Row Type'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('structHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('structHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('structHeaderEdit-btn_new', 'structHeader-new')
-const btn_del = new $fgta5.ActionButton('structHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('structHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('structHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('structHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_new', 'txrowtypeHeader-new')
+const btn_del = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('txrowtypeHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('structHeader-btn_recordstatus')
-const btn_logs = document.getElementById('structHeader-btn_logs')
-const btn_about = document.getElementById('structHeader-btn_about')
+const btn_recordstatus = document.getElementById('txrowtypeHeader-btn_recordstatus')
+const btn_logs = document.getElementById('txrowtypeHeader-btn_logs')
+const btn_about = document.getElementById('txrowtypeHeader-btn_about')
 
-const frm = new $fgta5.Form('structHeaderEdit-frm');
-const obj_struct_id = frm.Inputs['structHeaderEdit-obj_struct_id']
-const obj_struct_code = frm.Inputs['structHeaderEdit-obj_struct_code']
-const obj_struct_isdisabled = frm.Inputs['structHeaderEdit-obj_struct_isdisabled']
-const obj_struct_isparent = frm.Inputs['structHeaderEdit-obj_struct_isparent']
-const obj_struct_name = frm.Inputs['structHeaderEdit-obj_struct_name']
-const obj_isitemowner = frm.Inputs['structHeaderEdit-obj_isitemowner']
-const obj_struct_istransaction = frm.Inputs['structHeaderEdit-obj_struct_istransaction']
-const obj_structhrk_id = frm.Inputs['structHeaderEdit-obj_structhrk_id']
-const obj_struct_parent = frm.Inputs['structHeaderEdit-obj_struct_parent']
-const obj_struct_level = frm.Inputs['structHeaderEdit-obj_struct_level']
-const obj_struct_pathid = frm.Inputs['structHeaderEdit-obj_struct_pathid']
-const obj_struct_path = frm.Inputs['structHeaderEdit-obj_struct_path']	
+const frm = new $fgta5.Form('txrowtypeHeaderEdit-frm');
+const obj_txrowtype_id = frm.Inputs['txrowtypeHeaderEdit-obj_txrowtype_id']
+const obj_txrowtype_name = frm.Inputs['txrowtypeHeaderEdit-obj_txrowtype_name']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -54,7 +44,7 @@ const rec_id = document.getElementById('fRecord-section-id')
 export const Section = CurrentSection
 
 export async function init(self, args) {
-	console.log('initializing structHeaderEdit ...')
+	console.log('initializing txrowtypeHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -84,8 +74,8 @@ export async function init(self, args) {
 		edit: btn_edit,	
 	}
 	
-	// export async function structHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'structHeaderEdit_init'
+	// export async function txrowtypeHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'txrowtypeHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -94,120 +84,6 @@ export async function init(self, args) {
 
 	
 
-	
-	// Combobox: obj_structhrk_id
-	obj_structhrk_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_structhrk_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_structhrk_id_selecting(self, obj_structhrk_id, frm, evt) {}
-			fn_selecting(self, obj_structhrk_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'structhrk/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_structhrk_id_selecting_criteria(self, obj_structhrk_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_structhrk_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_structhrk_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.structhrk_id, row.structhrk_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_struct_parent
-	obj_struct_parent.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_struct_parent_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_struct_parent_selecting(self, obj_struct_parent, frm, evt) {}
-			fn_selecting(self, obj_struct_parent, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'struct/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_struct_parent_selecting_criteria(self, obj_struct_parent, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_struct_parent_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_struct_parent, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.struct_id, row.struct_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
 		
 	
 }
@@ -217,8 +93,6 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_structhrk_id.clear()
-		obj_struct_parent.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -227,8 +101,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function structHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'structHeaderEdit_isEditDisabled'
+		// export async function txrowtypeHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'txrowtypeHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -242,8 +116,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function structHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'structHeaderEdit_formOpened'
+		// export async function txrowtypeHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'txrowtypeHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -380,7 +254,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.structHeaderList
+		const listId =  Context.Sections.txrowtypeHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -402,8 +276,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function structHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'structHeaderEdit_formLocked'
+	// export function txrowtypeHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'txrowtypeHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -438,8 +312,8 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function structHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'structHeaderEdit_formUnlocked'
+	// export function txrowtypeHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'txrowtypeHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -480,8 +354,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const structHeaderList = self.Modules.structHeaderList
-	const listsecid = structHeaderList.Section.Id
+	const txrowtypeHeaderList = self.Modules.txrowtypeHeaderList
+	const listsecid = txrowtypeHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -511,16 +385,15 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
-			struct_level: 0,
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'structHeaderEdit_newData'
+		const fn_newdata_name = 'txrowtypeHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function structHeaderEdit_newData(self, datainit, frm) {}
+			// export async function txrowtypeHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -542,7 +415,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.structHeaderList.Section.show()
+			self.Modules.txrowtypeHeaderList.Section.show()
 		}
 	}
 }
@@ -552,7 +425,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'structHeaderEdit_autofill'
+	const fn_autofill_name = 'txrowtypeHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -603,9 +476,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function structHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function txrowtypeHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'structHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'txrowtypeHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -655,10 +528,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'structHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'txrowtypeHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function structHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function txrowtypeHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -674,10 +547,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.structHeaderList.addNewRow(self, data)
+			self.Modules.txrowtypeHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.structHeaderList.updateCurrentRow(self, data)
+			self.Modules.txrowtypeHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -716,10 +589,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.structHeaderList.removeCurrentRow(self)
+		self.Modules.txrowtypeHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.structHeaderList.Section.show()
+		self.Modules.txrowtypeHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -764,12 +637,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.structHeaderList.selectPreviousRow(self)
+	self.Modules.txrowtypeHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.structHeaderList.selectNextRow(self)
+	self.Modules.txrowtypeHeaderList.selectNextRow(self)
 }
 
 
@@ -803,7 +676,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'structHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'txrowtypeHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -845,7 +718,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.struct',
+				table: 'public.txrowtype',
 				id: id
 			}
 
@@ -875,7 +748,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Structure'
+		AboutSection.Title = 'About Transaction Row Type'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -892,7 +765,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 13 Feb 2026 10:02'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 13 Feb 2026 10:32'
 			section.appendChild(divFooter)
 		}
 		

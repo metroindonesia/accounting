@@ -1,9 +1,7 @@
-import Context from './paymreq-context.mjs'  
-import * as paymreqHeaderList from './paymreqHeaderList.mjs' 
-import * as paymreqHeaderEdit from './paymreqHeaderEdit.mjs' 
-import * as paymreqDetilList from './paymreqDetilList.mjs' 
-import * as paymreqDetilEdit from './paymreqDetilEdit.mjs' 
-import * as Extender from './paymreq-ext.mjs'
+import Context from './txrowtype-context.mjs'  
+import * as txrowtypeHeaderList from './txrowtypeHeaderList.mjs' 
+import * as txrowtypeHeaderEdit from './txrowtypeHeaderEdit.mjs' 
+import * as Extender from './txrowtype-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -17,7 +15,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Payment Request')
+		app.setTitle('Transaction Row Type')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -29,10 +27,8 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			paymreqHeaderList, 
-			paymreqHeaderEdit, 
-			paymreqDetilList, 
-			paymreqDetilEdit, 
+			txrowtypeHeaderList, 
+			txrowtypeHeaderEdit, 
 		}
 
 		try {
@@ -53,10 +49,8 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				paymreqHeaderList.init(self, args), 
-				paymreqHeaderEdit.init(self, args), 
-				paymreqDetilList.init(self, args), 
-				paymreqDetilEdit.init(self, args), 
+				txrowtypeHeaderList.init(self, args), 
+				txrowtypeHeaderEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -68,7 +62,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['paymreqHeaderEdit', 'paymreqDetilEdit']
+			const modNameList = ['txrowtypeHeaderEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -99,7 +93,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/paymreq/paymreq.svg')
+		Crsl.setIconUrl('')
 
 
 		// Set listener untuk section carousel
@@ -168,7 +162,7 @@ async function render(self) {
 		});
 
 		
-		// paymreq-ext.mjs, export function extendPage(self) {} 
+		// txrowtype-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {
@@ -190,17 +184,10 @@ function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	const sectionId = Context.Sections[sectionTargetName]
 	const section = Crsl.Items[sectionId]
 
-	const moduleHeaderEdit = self.Modules[sectionCurrentName]
-	const frm = moduleHeaderEdit.getForm()
-
-	if (frm.isChanged()) {
-		$fgta5.MessageBox.warning(`simpan data dulu sebelum ke <b>${section.Title}</b>`)
-		return
-	}
-
 	section.setSectionReturn(sectionCurrent)
 	section.show({}, ()=>{
 		const moduleTarget = self.Modules[sectionTargetName]
+		const moduleHeaderEdit = self.Modules[sectionCurrentName]
 		moduleTarget.openList(self, {
 			moduleHeaderEdit
 		})

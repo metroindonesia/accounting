@@ -1,0 +1,107 @@
+<form id="itemclassHeaderEdit-frm" class="module-form" locked="true" autoid="true" primarykey="itemclassHeaderEdit-obj_itemclass_id">
+
+	<!-- Textbox: itemclass_id-->	
+	<div id="itemclassHeaderEdit-obj_itemclass_id-container" class="input-field" field="itemclassHeaderEdit-obj_itemclass_id">
+		<label for="itemclassHeaderEdit-obj_itemclass_id">ID</label>
+		<input id="itemclassHeaderEdit-obj_itemclass_id"  fgta5-component="Textbox" placeholder="itemclass_id" autocomplete="off" spellcheck="false" 
+			binding="itemclass_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Checkbox: itemclass_isdisabled-->	
+	<div id="itemclassHeaderEdit-obj_itemclass_isdisabled-container" class="input-field" field="itemclassHeaderEdit-obj_itemclass_isdisabled">
+		<label for="itemclassHeaderEdit-obj_itemclass_isdisabled">Disabled</label>
+		<input id="itemclassHeaderEdit-obj_itemclass_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="itemclass_isdisabled"
+			data-tabindex="2" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: itemclass_name-->	
+	<div id="itemclassHeaderEdit-obj_itemclass_name-container" class="input-field" field="itemclassHeaderEdit-obj_itemclass_name">
+		<label for="itemclassHeaderEdit-obj_itemclass_name">Name</label>
+		<input id="itemclassHeaderEdit-obj_itemclass_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
+			binding="itemclass_name"
+			data-tabindex="3" 
+			character-case="uppercase" 
+			required 
+			invalid-message-required="nama classifikasi item harus diisi" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Textbox: itemclass_descr-->	
+	<div id="itemclassHeaderEdit-obj_itemclass_descr-container" class="input-field" field="itemclassHeaderEdit-obj_itemclass_descr">
+		<label for="itemclassHeaderEdit-obj_itemclass_descr">Descr</label>
+		<input id="itemclassHeaderEdit-obj_itemclass_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
+			binding="itemclass_descr"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: owner_struct_id-->	
+	<div id="itemclassHeaderEdit-obj_owner_struct_id-container" class="input-field" field="itemclassHeaderEdit-obj_owner_struct_id">
+		<label for="itemclassHeaderEdit-obj_owner_struct_id">Owner</label>
+		<input id="itemclassHeaderEdit-obj_owner_struct_id"  fgta5-component="Combobox" placeholder="owner" autocomplete="off" spellcheck="false" 
+			binding="owner_struct_id"
+			data-tabindex="5" 
+			required 
+			invalid-message-required="owner harus diisi" 
+			data-display="struct_name" 
+		>
+	</div>
+	
+</form>
+
+
+<div id="itemclassHeaderEdit-footer">
+</div>
+
+<div id="panel-detil-selector" class="panel-detil hidden">
+	<div panel-title>
+		Information Detil
+	</div>
+	<div panel-content>
+
+		<div id="panel-detil-additionalinfo">
+			<!-- tambahkan additional info disini -->
+		</div>
+	</div>
+</div>
+ 
+<div id="itemclassHeaderEdit-panelaction" class="panel-action hidden"></div>
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="itemclassHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="itemclassHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+	<div><a id="itemclassHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="itemclassHeaderEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="itemclassHeaderEdit-btn_save">Save</button>
+		<button id="itemclassHeaderEdit-btn_edit">Edit</button>
+		<button id="itemclassHeaderEdit-btn_new" data-action="itemclassHeader-new">New</button>
+		<button id="itemclassHeaderEdit-btn_reset">Reset</button>
+		<button id="itemclassHeaderEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="itemclassHeaderEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

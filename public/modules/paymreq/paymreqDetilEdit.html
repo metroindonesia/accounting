@@ -17,14 +17,38 @@
 	</div>
 
 
+	<!-- Combobox: itemclass_id-->	
+	<div id="paymreqDetilEdit-obj_itemclass_id-container" class="input-field" field="paymreqDetilEdit-obj_itemclass_id">
+		<label for="paymreqDetilEdit-obj_itemclass_id">ItemClass</label>
+		<input id="paymreqDetilEdit-obj_itemclass_id"  fgta5-component="Combobox" placeholder="itemclass" autocomplete="off" spellcheck="false" 
+			binding="itemclass_id"
+			data-tabindex="2" 
+			data-display="itemclass_name" 
+		>
+	</div>
+
+
 	<!-- Textbox: paymreqdetil_descr-->	
 	<div id="paymreqDetilEdit-obj_paymreqdetil_descr-container" class="input-field" field="paymreqDetilEdit-obj_paymreqdetil_descr">
-		<label for="paymreqDetilEdit-obj_paymreqdetil_descr">Paymreqdetil_descr</label>
-		<input id="paymreqDetilEdit-obj_paymreqdetil_descr"  fgta5-component="Textbox" placeholder="paymreqdetil_descr" autocomplete="off" spellcheck="false" 
+		<label for="paymreqDetilEdit-obj_paymreqdetil_descr">Descr</label>
+		<input id="paymreqDetilEdit-obj_paymreqdetil_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
 			binding="paymreqdetil_descr"
-			data-tabindex="2" 
+			data-tabindex="3" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Numberbox: paymreqdetil_value-->	
+	<div id="paymreqDetilEdit-obj_paymreqdetil_value-container" class="input-field" field="paymreqDetilEdit-obj_paymreqdetil_value">
+		<label for="paymreqDetilEdit-obj_paymreqdetil_value">Value</label>
+		<input id="paymreqDetilEdit-obj_paymreqdetil_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
+			binding="paymreqdetil_value"
+			value="0" 
+			data-tabindex="4" 
+			precision="2" 
+			maxlength="16" 
 		>
 	</div>
 
@@ -34,7 +58,7 @@
 		<label for="paymreqDetilEdit-obj_paymreq_id">ID</label>
 		<input id="paymreqDetilEdit-obj_paymreq_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
 			binding="paymreq_id"
-			data-tabindex="3" 
+			data-tabindex="5" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 

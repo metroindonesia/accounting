@@ -57,21 +57,6 @@ comment on column public."struct".struct_isparent is '';
 
 
 -- =============================================
--- FIELD: struct_istransaction boolean
--- =============================================
--- ADD struct_istransaction
-alter table public."struct" add struct_istransaction boolean not null default false;
-comment on column public."struct".struct_istransaction is '';
-
--- MODIFY struct_istransaction
-alter table public."struct"
-	alter column struct_istransaction type boolean,
-	ALTER COLUMN struct_istransaction SET DEFAULT false,
-	ALTER COLUMN struct_istransaction SET NOT NULL;
-comment on column public."struct".struct_istransaction is '';
-
-
--- =============================================
 -- FIELD: struct_name text
 -- =============================================
 -- ADD struct_name
@@ -84,6 +69,36 @@ alter table public."struct"
 	ALTER COLUMN struct_name DROP DEFAULT,
 	ALTER COLUMN struct_name DROP NOT NULL;
 comment on column public."struct".struct_name is '';
+
+
+-- =============================================
+-- FIELD: isitemowner boolean
+-- =============================================
+-- ADD isitemowner
+alter table public."struct" add isitemowner boolean not null default false;
+comment on column public."struct".isitemowner is '';
+
+-- MODIFY isitemowner
+alter table public."struct"
+	alter column isitemowner type boolean,
+	ALTER COLUMN isitemowner SET DEFAULT false,
+	ALTER COLUMN isitemowner SET NOT NULL;
+comment on column public."struct".isitemowner is '';
+
+
+-- =============================================
+-- FIELD: struct_istransaction boolean
+-- =============================================
+-- ADD struct_istransaction
+alter table public."struct" add struct_istransaction boolean not null default false;
+comment on column public."struct".struct_istransaction is '';
+
+-- MODIFY struct_istransaction
+alter table public."struct"
+	alter column struct_istransaction type boolean,
+	ALTER COLUMN struct_istransaction SET DEFAULT false,
+	ALTER COLUMN struct_istransaction SET NOT NULL;
+comment on column public."struct".struct_istransaction is '';
 
 
 -- =============================================
@@ -226,6 +241,11 @@ comment on column public."struct"._modifydate is 'waktu terakhir record dimodifi
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$structhrk_id;
+ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$struct_parent;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE public."struct"
 	ADD CONSTRAINT fk$public$struct$structhrk_id
@@ -254,6 +274,14 @@ CREATE INDEX idx_fk$public$struct$struct_parent ON public."struct"(struct_parent
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."struct"
+	drop constraint uq$public$struct$struct_code;
+
+alter table public."struct"
+	drop constraint uq$public$struct$struct_name;
+	
+
 -- Add unique index 
 alter table  public."struct"
 	add constraint uq$public$struct$struct_code unique (struct_code); 

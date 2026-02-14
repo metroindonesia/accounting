@@ -15,6 +15,10 @@ const _partnerbank_accountname = 'paymreqHeaderEdit-obj_partnerbank_accountname'
 const _partnerbank_bankname = 'paymreqHeaderEdit-obj_partnerbank_bankname'
 const _paymreq_value = 'paymreqHeaderEdit-obj_paymreq_value'
 const _paymreq_total = 'paymreqHeaderEdit-obj_paymreq_total'
+const _paymreq_ppn = 'paymreqHeaderEdit-obj_paymreq_ppn'
+const _paymreq_pph = 'paymreqHeaderEdit-obj_paymreq_pph'
+const _paymreq_bill = 'paymreqHeaderEdit-obj_paymreq_bill'
+
 
 export function init_header(self, args) {
 }
@@ -103,6 +107,20 @@ export async function obj_ppn_id_selected(self, obj_ppn_id, frm, evt) {
 	const taxtype = evt.detail.data
 	ppn_changed(taxtype, frm)
 }
+
+export async function updateValues(self, data) {
+	const moduleHeader = self.Modules.paymreqHeaderEdit
+	const frm = moduleHeader.getForm()
+
+	frm.Inputs[_paymreq_value].value = data.paymreq_value
+	frm.Inputs[_paymreq_bill].value = data.paymreq_bill
+	frm.Inputs[_paymreq_pph].value = data.paymreq_pph
+	frm.Inputs[_paymreq_ppn].value = data.paymreq_ppn
+	frm.Inputs[_paymreq_total].value = data.paymreq_total
+
+	frm.acceptChanges()
+}
+
 
 function paymreqtype_changed(paymreqtype, frm) {
 	pageHelper.setVisibility(`${_paymreq_invoice}-container`, paymreqtype.hasinvoice)

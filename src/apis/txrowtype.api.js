@@ -5,13 +5,12 @@ import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import context from '@agung_dhewe/webapps/src/context.js'  
 import logger from '@agung_dhewe/webapps/src/logger.js'
-import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
 
-import * as Extender from './extenders/struct.apiext.js'
+import * as Extender from './extenders/txrowtype.apiext.js'
 
-const moduleName = 'struct'
+const moduleName = 'txrowtype'
 const headerSectionName = 'header'
-const headerTableName = 'public.struct' 	
+const headerTableName = 'public.txrowtype' 	
 
 // api: account
 export default class extends Api {
@@ -24,20 +23,20 @@ export default class extends Api {
 	// dipanggil dengan model snake syntax
 	// contoh: header-list
 	//         header-open-data
-	async init(body) { return await struct_init(this, body) }
+	async init(body) { return await txrowtype_init(this, body) }
 
 	// header
-	async headerList(body) { return await struct_headerList(this, body) }
-	async headerOpen(body) { return await struct_headerOpen(this, body) }
-	async headerUpdate(body) { return await struct_headerUpdate(this, body)}
-	async headerCreate(body) { return await struct_headerCreate(this, body)}
-	async headerDelete(body) { return await struct_headerDelete(this, body) }
+	async headerList(body) { return await txrowtype_headerList(this, body) }
+	async headerOpen(body) { return await txrowtype_headerOpen(this, body) }
+	async headerUpdate(body) { return await txrowtype_headerUpdate(this, body)}
+	async headerCreate(body) { return await txrowtype_headerCreate(this, body)}
+	async headerDelete(body) { return await txrowtype_headerDelete(this, body) }
 	
 			
 }	
 
 // init module
-async function struct_init(self, body) {
+async function txrowtype_init(self, body) {
 	const req = self.req
 
 	// set sid untuk session ini, diperlukan ini agar session aktif
@@ -67,9 +66,9 @@ async function struct_init(self, body) {
 			setting: {}
 		}
 		
-		if (typeof Extender.struct_init === 'function') {
-			// export async function struct_init(self, initialData) {}
-			await Extender.struct_init(self, initialData)
+		if (typeof Extender.txrowtype_init === 'function') {
+			// export async function txrowtype_init(self, initialData) {}
+			await Extender.txrowtype_init(self, initialData)
 		}
 
 		return initialData
@@ -81,7 +80,7 @@ async function struct_init(self, body) {
 
 
 // data logging
-async function struct_log(self, body, startTime, tablename, id, action, data={}, remark='') {
+async function txrowtype_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -98,11 +97,11 @@ async function struct_log(self, body, startTime, tablename, id, action, data={},
 
 
 
-async function struct_headerList(self, body) {
+async function txrowtype_headerList(self, body) {
 	const tablename = headerTableName
 	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
-		searchtext: `struct_code ILIKE '%' || \${searchtext} || '%' OR struct_name ILIKE '%' || \${searchtext} || '%'`,
+		searchtext: `txrowtype_name ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
@@ -140,16 +139,6 @@ async function struct_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			// lookup: structhrk_name dari field structhrk_name pada table public.structhrk dimana (public.structhrk.structhrk_id = public.struct.structhrk_id)
-			{
-				const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', row.structhrk_id)
-				row.structhrk_name = structhrk_name
-			}
-			// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
-			{
-				const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', row.struct_parent)
-				row.struct_parent_name = struct_name
-			}
 			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
@@ -177,13 +166,13 @@ async function struct_headerList(self, body) {
 	}
 }
 
-async function struct_headerOpen(self, body) {
+async function txrowtype_headerOpen(self, body) {
 	const tablename = headerTableName
 
 	try {
 		const { id } = body 
-		const criteria = { struct_id: id }
-		const searchMap = { struct_id: `struct_id = \${struct_id}`}
+		const criteria = { txrowtype_id: id }
+		const searchMap = { txrowtype_id: `txrowtype_id = \${txrowtype_id}`}
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
 		const sql = sqlUtil.createSqlSelect({
 			tablename: tablename, 
@@ -199,16 +188,6 @@ async function struct_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
-		// lookup: structhrk_name dari field structhrk_name pada table public.structhrk dimana (public.structhrk.structhrk_id = public.struct.structhrk_id)
-		{
-			const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', data.structhrk_id)
-			data.structhrk_name = structhrk_name
-		}
-		// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
-		{
-			const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', data.struct_parent)
-			data.struct_parent_name = struct_name
-		}
 		
 
 		// lookup data createby
@@ -237,8 +216,8 @@ async function struct_headerOpen(self, body) {
 }
 
 
-async function struct_headerCreate(self, body) {
-	const { source='struct', data={} } = body
+async function txrowtype_headerCreate(self, body) {
+	const { source='txrowtype', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -257,30 +236,14 @@ async function struct_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', doc_id:'STRU' }
+			const args = { section: 'header', doc_id:'' }
 
-			
-			// buat short sequencer	
-			const sequencer = createSequencerLine(tx, {})
-
-			if (typeof Extender.sequencerSetup === 'function') {
-				// jika ada keperluan menambahkan code block/cluster di sequencer
-				// dapat diimplementasikan di exterder sequencerSetup 
-				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
-				await Extender.sequencerSetup(self, tx, sequencer, data, args)
-			}
-
-			// generate short id sesuai prefix (default: STRU) reset pertahun
-			const seqdata = await sequencer.yearlyshort(args.prefix)
-			data.struct_id = seqdata.id
-
+				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
 			if (typeof Extender.headerCreating === 'function') {
 				// export async function headerCreating(self, tx, data, seqdata, args) {}
-				await Extender.headerCreating(self, tx, data, seqdata, args)
+				await Extender.headerCreating(self, tx, data, null, args)
 			}
-
-			
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
@@ -295,7 +258,7 @@ async function struct_headerCreate(self, body) {
 			}
 
 			// record log
-			struct_log(self, body, startTime, tablename, ret.struct_id, 'CREATE', logMetadata)
+			txrowtype_log(self, body, startTime, tablename, ret.txrowtype_id, 'CREATE', logMetadata)
 
 			return ret
 		})
@@ -306,8 +269,8 @@ async function struct_headerCreate(self, body) {
 	}
 }
 
-async function struct_headerUpdate(self, body) {
-	const { source='struct', data={} } = body
+async function txrowtype_headerUpdate(self, body) {
+	const { source='txrowtype', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -333,7 +296,7 @@ async function struct_headerUpdate(self, body) {
 			}
 
 			// eksekusi update
-			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['struct_id'])
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['txrowtype_id'])
 			const ret = await cmd.execute(data)
 
 			
@@ -346,7 +309,7 @@ async function struct_headerUpdate(self, body) {
 			}			
 
 			// record log
-			struct_log(self, body, startTime, tablename, data.struct_id, 'UPDATE')
+			txrowtype_log(self, body, startTime, tablename, data.txrowtype_id, 'UPDATE')
 
 			return ret
 		})
@@ -359,7 +322,7 @@ async function struct_headerUpdate(self, body) {
 }
 
 
-async function struct_headerDelete(self, body) {
+async function txrowtype_headerDelete(self, body) {
 	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -371,7 +334,7 @@ async function struct_headerDelete(self, body) {
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {struct_id: id}
+			const dataToRemove = {txrowtype_id: id}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender headerDeleting
 			if (typeof Extender.headerDeleting === 'function') {
@@ -382,7 +345,7 @@ async function struct_headerDelete(self, body) {
 			
 
 			// hapus data header
-			const cmd = sqlUtil.createDeleteCommand(tablename, ['struct_id'])
+			const cmd = sqlUtil.createDeleteCommand(tablename, ['txrowtype_id'])
 			const deletedRow = await cmd.execute(dataToRemove)
 
 			const logMetadata = {}
@@ -394,7 +357,7 @@ async function struct_headerDelete(self, body) {
 			}
 
 			// record log
-			struct_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
+			txrowtype_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
 
 			return deletedRow
 		})

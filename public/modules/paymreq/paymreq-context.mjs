@@ -12,15 +12,11 @@ export default {
 		paymreqHeaderEdit: 'paymreqHeaderEdit-section', 
 		paymreqDetilList: 'paymreqDetilList-section', 
 		paymreqDetilEdit: 'paymreqDetilEdit-section', 
-		paymreqTermList: 'paymreqTermList-section', 
-		paymreqTermEdit: 'paymreqTermEdit-section', 
 	},
 	SectionMap: { 
 		'paymreqHeaderList-section' : 'paymreqHeaderList', 
 		'paymreqHeaderEdit-section' : 'paymreqHeaderEdit', 
 		'paymreqDetilList-section' : 'paymreqDetilList', 
 		'paymreqDetilEdit-section' : 'paymreqDetilEdit', 
-		'paymreqTermList-section' : 'paymreqTermList', 
-		'paymreqTermEdit-section' : 'paymreqTermEdit', 
 	}
 }
