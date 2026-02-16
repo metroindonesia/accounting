@@ -72,6 +72,51 @@ comment on column core."auth".user_id is '';
 
 
 -- =============================================
+-- FIELD: delegate_user_id int
+-- =============================================
+-- ADD delegate_user_id
+alter table core."auth" add delegate_user_id int  ;
+comment on column core."auth".delegate_user_id is '';
+
+-- MODIFY delegate_user_id
+alter table core."auth"
+	alter column delegate_user_id type int,
+	ALTER COLUMN delegate_user_id DROP DEFAULT,
+	ALTER COLUMN delegate_user_id DROP NOT NULL;
+comment on column core."auth".delegate_user_id is '';
+
+
+-- =============================================
+-- FIELD: delegate_start date
+-- =============================================
+-- ADD delegate_start
+alter table core."auth" add delegate_start date  default now();
+comment on column core."auth".delegate_start is '';
+
+-- MODIFY delegate_start
+alter table core."auth"
+	alter column delegate_start type date,
+	ALTER COLUMN delegate_start SET DEFAULT now(),
+	ALTER COLUMN delegate_start DROP NOT NULL;
+comment on column core."auth".delegate_start is '';
+
+
+-- =============================================
+-- FIELD: delegate_end date
+-- =============================================
+-- ADD delegate_end
+alter table core."auth" add delegate_end date  default now();
+comment on column core."auth".delegate_end is '';
+
+-- MODIFY delegate_end
+alter table core."auth"
+	alter column delegate_end type date,
+	ALTER COLUMN delegate_end SET DEFAULT now(),
+	ALTER COLUMN delegate_end DROP NOT NULL;
+comment on column core."auth".delegate_end is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby
@@ -138,6 +183,7 @@ comment on column core."auth"._modifydate is 'waktu terakhir record dimodifikasi
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."auth" DROP CONSTRAINT fk$core$auth$user_id;
+ALTER TABLE core."auth" DROP CONSTRAINT fk$core$auth$delegate_user_id;
 
 
 -- Add Foreign Key Constraint  
@@ -151,18 +197,27 @@ ALTER TABLE core."auth"
 DROP INDEX IF EXISTS core.idx_fk$core$auth$user_id;
 CREATE INDEX idx_fk$core$auth$user_id ON core."auth"(user_id);	
 
+
+ALTER TABLE core."auth"
+	ADD CONSTRAINT fk$core$auth$delegate_user_id
+	FOREIGN KEY (delegate_user_id)
+	REFERENCES core."user"(user_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS core.idx_fk$core$auth$delegate_user_id;
+CREATE INDEX idx_fk$core$auth$delegate_user_id ON core."auth"(delegate_user_id);	
+
 	
 
 
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
--- Drop existing unique index 
-alter table core."auth"
-	drop constraint uq$core$auth$auth_name;
-	
-
 -- Add unique index 
 alter table  core."auth"
 	add constraint uq$core$auth$auth_name unique (auth_name); 
+
+alter table  core."auth"
+	add constraint uq$core$auth$auth_label unique (auth_label); 
 

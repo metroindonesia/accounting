@@ -27,6 +27,21 @@ comment on column public."paymreq".paymreq_doc is '';
 
 
 -- =============================================
+-- FIELD: paymreq_version smallint
+-- =============================================
+-- ADD paymreq_version
+alter table public."paymreq" add paymreq_version smallint not null default 0;
+comment on column public."paymreq".paymreq_version is '';
+
+-- MODIFY paymreq_version
+alter table public."paymreq"
+	alter column paymreq_version type smallint,
+	ALTER COLUMN paymreq_version SET DEFAULT 0,
+	ALTER COLUMN paymreq_version SET NOT NULL;
+comment on column public."paymreq".paymreq_version is '';
+
+
+-- =============================================
 -- FIELD: iscommit boolean
 -- =============================================
 -- ADD iscommit

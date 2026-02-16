@@ -117,6 +117,21 @@ comment on column public."struct".structhrk_id is '';
 
 
 -- =============================================
+-- FIELD: auth_id int
+-- =============================================
+-- ADD auth_id
+alter table public."struct" add auth_id int  ;
+comment on column public."struct".auth_id is '';
+
+-- MODIFY auth_id
+alter table public."struct"
+	alter column auth_id type int,
+	ALTER COLUMN auth_id DROP DEFAULT,
+	ALTER COLUMN auth_id DROP NOT NULL;
+comment on column public."struct".auth_id is '';
+
+
+-- =============================================
 -- FIELD: struct_parent int
 -- =============================================
 -- ADD struct_parent
@@ -243,6 +258,7 @@ comment on column public."struct"._modifydate is 'waktu terakhir record dimodifi
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$structhrk_id;
+ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$auth_id;
 ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$struct_parent;
 
 
@@ -256,6 +272,17 @@ ALTER TABLE public."struct"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$struct$structhrk_id;
 CREATE INDEX idx_fk$public$struct$structhrk_id ON public."struct"(structhrk_id);	
+
+
+ALTER TABLE public."struct"
+	ADD CONSTRAINT fk$public$struct$auth_id
+	FOREIGN KEY (auth_id)
+	REFERENCES core."auth"(auth_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$struct$auth_id;
+CREATE INDEX idx_fk$public$struct$auth_id ON public."struct"(auth_id);	
 
 
 ALTER TABLE public."struct"

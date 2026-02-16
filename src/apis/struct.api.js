@@ -11,7 +11,8 @@ import * as Extender from './extenders/struct.apiext.js'
 
 const moduleName = 'struct'
 const headerSectionName = 'header'
-const headerTableName = 'public.struct' 	
+const headerTableName = 'public.struct' 
+const memberTableName = 'public.structmember'  	
 
 // api: account
 export default class extends Api {
@@ -26,13 +27,24 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await struct_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await struct_headerList(this, body) }
 	async headerOpen(body) { return await struct_headerOpen(this, body) }
 	async headerUpdate(body) { return await struct_headerUpdate(this, body)}
 	async headerCreate(body) { return await struct_headerCreate(this, body)}
 	async headerDelete(body) { return await struct_headerDelete(this, body) }
+
 	
+	// member	
+	async memberList(body) { return await struct_memberList(this, body) }
+	async memberOpen(body) { return await struct_memberOpen(this, body) }
+	async memberUpdate(body) { return await struct_memberUpdate(this, body)}
+	async memberCreate(body) { return await struct_memberCreate(this, body) }
+	async memberDelete(body) { return await struct_memberDelete(this, body) }
+	async memberDeleteRows(body) { return await struct_memberDeleteRows(this, body) }
 			
 }	
 
@@ -80,6 +92,24 @@ async function struct_init(self, body) {
 }
 
 
+// execute extender function
+async function struct_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, struct_log) {}
+		return await Extender[fnName](self, db, body, struct_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function struct_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -95,6 +125,8 @@ async function struct_log(self, body, startTime, tablename, id, action, data={},
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -144,6 +176,11 @@ async function struct_headerList(self, body) {
 			{
 				const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', row.structhrk_id)
 				row.structhrk_name = structhrk_name
+			}
+			// lookup: auth_name dari field auth_name pada table core.auth dimana (core.auth.auth_id = public.struct.auth_id)
+			{
+				const { auth_name } = await sqlUtil.lookupdb(db, 'core.auth', 'auth_id', row.auth_id)
+				row.auth_name = auth_name
 			}
 			// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
 			{
@@ -203,6 +240,11 @@ async function struct_headerOpen(self, body) {
 		{
 			const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', data.structhrk_id)
 			data.structhrk_name = structhrk_name
+		}
+		// lookup: auth_name dari field auth_name pada table core.auth dimana (core.auth.auth_id = public.struct.auth_id)
+		{
+			const { auth_name } = await sqlUtil.lookupdb(db, 'core.auth', 'auth_id', data.auth_id)
+			data.auth_name = auth_name
 		}
 		// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
 		{
@@ -380,6 +422,36 @@ async function struct_headerDelete(self, body) {
 			}
 
 			
+			// hapus data member
+			{
+				const sql = `select * from ${memberTableName} where struct_id=\${struct_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowmember of rows) {
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.memberDeleting === 'function') {
+						// export async function memberDeleting(self, tx, rowmember, logMetadata) {}
+						await Extender.memberDeleting(self, tx, rowmember, logMetadata)
+					}
+
+					const param = {structmember_id: rowmember.structmember_id}
+					const cmd = sqlUtil.createDeleteCommand(memberTableName, ['structmember_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.memberDeleted === 'function') {
+						// export async function memberDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.memberDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					struct_log(self, body, startTime, memberTableName, rowmember.structmember_id, 'DELETE', {rowdata: deletedRow})
+					struct_log(self, body, startTime, headerTableName, rowmember.struct_id, 'DELETE ROW MEMBER', {structmember_id: rowmember.structmember_id, tablename: memberTableName}, `removed: ${rowmember.structmember_id}`)
+
+
+				}	
+			}
+
+			
+			
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['struct_id'])
@@ -406,5 +478,358 @@ async function struct_headerDelete(self, body) {
 	}
 }
 
+
+
+// member	
+
+async function struct_memberList(self, body) {
+	const tablename = memberTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		struct_id: `struct_id=try_cast_bigint(\${struct_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.structmember_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.memberListCriteria === 'function') {
+			// export async function memberListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.memberListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			// lookup: user_fullname dari field user_fullname pada table core.user dimana (core.user.user_id = public.struct.user_id)
+			{
+				const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', row.user_id)
+				row.user_fullname = user_fullname
+			}
+			
+
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+		return {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_memberOpen(self, body) {
+	const tablename = memberTableName
+
+	try {
+		const { id } = body 
+		const criteria = { structmember_id: id }
+		const searchMap = { structmember_id: `structmember_id = \${structmember_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		// lookup: user_fullname dari field user_fullname pada table core.user dimana (core.user.user_id = public.struct.user_id)
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data.user_id)
+			data.user_fullname = user_fullname
+		}
+		
+
+		// lookup data createby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function memberOpen(self, db, data) {}
+		if (typeof Extender.memberOpen === 'function') {
+			// export async function memberOpen(self, db, data) {}
+			await Extender.memberOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_memberCreate(self, body) {
+	const { source='struct', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = memberTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._createby = user_id
+		data._createdate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'member', 
+				prefix: 'STRU'	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.prefix)
+			data.structmember_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.memberCreating === 'function') {
+				// export async function memberCreating(self, tx, data, seqdata, args) {}
+				await Extender.memberCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.memberCreated === 'function') {
+				// export async function memberCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.memberCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			struct_log(self, body, startTime, tablename, ret.structmember_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_memberUpdate(self, body) {
+	const { source='struct', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = memberTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._modifyby = user_id
+		data._modifydate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.memberUpdating === 'function') {
+				// export async function memberUpdating(self, tx, data) {}
+				await Extender.memberUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['structmember_id'])
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.memberUpdated === 'function') {
+				// export async function memberUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.memberUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			struct_log(self, body, startTime, tablename, data.structmember_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_memberDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = memberTableName
+
+	try {
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {structmember_id: id}
+			const sql = `select * from ${memberTableName} where structmember_id=\${structmember_id}`
+			const rowmember = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.memberDeleting === 'function') {
+				// export async function memberDeleting(self, tx, rowmember, logMetadata) {}
+				await Extender.memberDeleting(self, tx, rowmember, logMetadata)
+			}
+
+			const param = {structmember_id: rowmember.structmember_id}
+			const cmd = sqlUtil.createDeleteCommand(memberTableName, ['structmember_id'])
+			const deletedRow = await cmd.execute(param)
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.memberDeleted === 'function') {
+				// export async function memberDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.memberDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			struct_log(self, body, startTime, memberTableName, rowmember.structmember_id, 'DELETE', {rowdata: deletedRow})
+			struct_log(self, body, startTime, headerTableName, rowmember.struct_id, 'DELETE ROW MEMBER', {structmember_id: rowmember.structmember_id, tablename: memberTableName}, `removed: ${rowmember.structmember_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_memberDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = memberTableName
+
+
+	try {
+
+		let struct_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {structmember_id: id}
+				const sql = `select * from ${memberTableName} where structmember_id=\${structmember_id}`
+				const rowmember = await tx.oneOrNone(sql, dataToRemove)
+				struct_id = rowmember.struct_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.memberDeleting === 'function') {
+					// async function memberDeleting(self, tx, rowmember, logMetadata) {}
+					await Extender.memberDeleting(self, tx, rowmember, logMetadata)
+				}
+
+				const param = {structmember_id: rowmember.structmember_id}
+				const cmd = sqlUtil.createDeleteCommand(memberTableName, ['structmember_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.memberDeleted === 'function') {
+					// export async function memberDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.memberDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				struct_log(self, body, startTime, memberTableName, rowmember.structmember_id, 'DELETE', {rowdata: deletedRow})
+				struct_log(self, body, startTime, headerTableName, rowmember.struct_id, 'DELETE ROW MEMBER', {structmember_id: rowmember.structmember_id, tablename: memberTableName}, `removed: ${rowmember.structmember_id}`)
+			}
+		})
+
+		const res = {
+			deleted: true,
+			struct_id: struct_id,
+			message: ''
+		}
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
 
 	

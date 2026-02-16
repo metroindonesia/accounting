@@ -98,12 +98,25 @@
 	</div>
 
 
+	<!-- Combobox: auth_id-->	
+	<div id="structHeaderEdit-obj_auth_id-container" class="input-field" field="structHeaderEdit-obj_auth_id">
+		<label for="structHeaderEdit-obj_auth_id">Auth By</label>
+		<input id="structHeaderEdit-obj_auth_id"  fgta5-component="Combobox" placeholder="authenticator" autocomplete="off" spellcheck="false" 
+			binding="auth_id"
+			data-tabindex="9" 
+			required 
+			invalid-message-required="authenticator harus diisi" 
+			data-display="auth_name" 
+		>
+	</div>
+
+
 	<!-- Combobox: struct_parent-->	
 	<div id="structHeaderEdit-obj_struct_parent-container" class="input-field" field="structHeaderEdit-obj_struct_parent">
 		<label for="structHeaderEdit-obj_struct_parent">Parent</label>
 		<input id="structHeaderEdit-obj_struct_parent"  fgta5-component="Combobox" placeholder="struct_parent" autocomplete="off" spellcheck="false" 
 			binding="struct_parent"
-			data-tabindex="9" 
+			data-tabindex="10" 
 			data-display="struct_parent_name" 
 		>
 	</div>
@@ -115,7 +128,7 @@
 		<input id="structHeaderEdit-obj_struct_level"  fgta5-component="Numberbox" placeholder="level" autocomplete="off" spellcheck="false" 
 			binding="struct_level"
 			value="0" 
-			data-tabindex="10" 
+			data-tabindex="11" 
 			maxlength="9" 
 			digitgrouping="false" 
 			disabled 
@@ -128,7 +141,7 @@
 		<label for="structHeaderEdit-obj_struct_pathid">PathId</label>
 		<input id="structHeaderEdit-obj_struct_pathid"  fgta5-component="Textbox" placeholder="pathid" autocomplete="off" spellcheck="false" 
 			binding="struct_pathid"
-			data-tabindex="11" 
+			data-tabindex="12" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 
@@ -141,7 +154,7 @@
 		<label for="structHeaderEdit-obj_struct_path">Path</label>
 		<input id="structHeaderEdit-obj_struct_path"  fgta5-component="Textbox" placeholder="path" autocomplete="off" spellcheck="false" 
 			binding="struct_path"
-			data-tabindex="12" 
+			data-tabindex="13" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 
@@ -154,11 +167,15 @@
 <div id="structHeaderEdit-footer">
 </div>
 
-<div id="panel-detil-selector" class="panel-detil hidden">
+<div id="panel-detil-selector" class="panel-detil ">
 	<div panel-title>
 		Information Detil
 	</div>
 	<div panel-content>
+		<div class="panel-detil-row" id="structHeaderEdit-info-member-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="structMemberList" data-current-section="structHeaderEdit">Members</a></div>
+			<div data-info>&nbsp</div>
+		</div>
 
 		<div id="panel-detil-additionalinfo">
 			<!-- tambahkan additional info disini -->
@@ -169,7 +186,7 @@
 <div id="structHeaderEdit-panelaction" class="panel-action hidden"></div>
 
 
-<div class="panel-recordbar" data-view="nodetil">
+<div class="panel-recordbar" >
 	<div><a id="structHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
 	<div><a id="structHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
 	<div><a id="structHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>

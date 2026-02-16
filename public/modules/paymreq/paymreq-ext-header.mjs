@@ -2,6 +2,21 @@ import Context from './paymreq-context.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 
+const VAR_APPROVAL = 'approval'
+const VAR_REJECTION = 'reject'
+const VAR_VIEW = 'view'
+
+
+/* untuk keperluan debug & testing */
+const ALWAYS_SHOW_ACTIONBUTTON = false   // false: tampilkan sesuai kondisi data
+const ALWAYS_ENABLE_ACTIONBUTTON = false  // false: enable/disabled sesuai kondisi data
+const DISABLE_FILTER_LIST = false  // false: filter sesuai kewenangan user
+
+const _paymreq_id = 'paymreqHeaderEdit-obj_paymreq_id'
+const _paymreq_version = 'paymreqHeaderEdit-obj_paymreq_version'
+const _paymreq_doc = 'paymreqHeaderEdit-obj_paymreq_doc'
+const _iscommit = 'paymreqHeaderEdit-obj_iscommit'
+const _isapproved = 'paymreqHeaderEdit-obj_isapproved'
 const _paymreqtype_id = 'paymreqHeaderEdit-obj_paymreqtype_id'
 const _paymreq_invoice = 'paymreqHeaderEdit-obj_paymreq_invoice'
 const _ffl_id = 'paymreqHeaderEdit-obj_ffl_id'
@@ -24,6 +39,37 @@ const _paymreq_bill = 'paymreqHeaderEdit-obj_paymreq_bill'
 export function init_header(self, args) {
 }
 
+export function headerList_dataLoad(self, criteria, sort, evt) {
+	if (DISABLE_FILTER_LIST) {
+		return
+	}
+
+
+	if (Context.variance == VAR_APPROVAL) {
+		criteria.iscommit = true
+		criteria.isapproved = false
+		criteria.user_id = Context.userId
+
+		sort.isapproved = 'ASC'
+		sort.paymreq_date = 'DESC'
+
+	} else if (Context.variance == VAR_REJECTION) {
+		criteria.iscommit = true
+		criteria.isapproved = true
+
+		sort.isapproved = 'DESC'
+		sort.paymreq_date = 'DESC'
+
+	} else if (Context.variance == VAR_VIEW) {
+		sort.paymreq_date = 'DESC'
+
+	} else {
+		criteria.user_id = Context.userId
+		sort.paymreq_date = 'DESC'
+
+	}
+
+}
 
 export function obj_paymreqtype_id_selecting_criteria(self, obj_paymreqtype_id, frm, criteria, sort, evt) {
 	criteria.paymreqtype_isdisabled = false
@@ -115,13 +161,46 @@ export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {
 
 
 
-export function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = true
+export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
+	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
+	obj_paymreqtype_id.disabled = true
 
 	const { paymtype, paymreqtype } = frm.getOriginalData()
 	paymreqtype_changed(paymreqtype, frm)
 	paymtype_changed(paymtype, frm)
+
+
+
+
+	if (ALWAYS_ENABLE_ACTIONBUTTON === true) {
+		CurrentState.Actions.newdata.suspend(false)
+		CurrentState.Actions.edit.suspend(false)
+		CurrentState.Actions.approve.suspend(false)
+		CurrentState.Actions.reject.suspend(false)
+		CurrentState.Actions.commit.suspend(false)
+		CurrentState.Actions.uncommit.suspend(false)
+		CurrentState.Actions.print.suspend(false)
+		return
+	}
+
+	const iscommit = frm.Inputs[_iscommit].value
+	const isapproved = frm.Inputs[_isapproved].value
+
+	const onApproval = Context.variance == VAR_APPROVAL
+	const onRejection = Context.variance == VAR_REJECTION
+	const onView = Context.variance == VAR_VIEW
+	const onEntry = Context.variance == ''
+
+
+
+	CurrentState.Actions.newdata.suspend(onView || onApproval || onRejection)
+	CurrentState.Actions.edit.suspend(onView || onApproval || onRejection || iscommit || isapproved)
+	CurrentState.Actions.approve.suspend(onView || onEntry || onRejection || !iscommit || isapproved)
+	CurrentState.Actions.reject.suspend(onView || onEntry || onApproval || !iscommit || !isapproved)
+	CurrentState.Actions.commit.suspend(onView || onApproval || onRejection || iscommit || isapproved)
+	CurrentState.Actions.uncommit.suspend(onView || onApproval || onRejection || !iscommit || isapproved)
+	CurrentState.Actions.print.suspend(!iscommit)
+
 }
 
 
@@ -152,47 +231,225 @@ export async function updateValues(self, data) {
 	frm.Inputs[_paymreq_total].value = data.paymreq_total
 
 	frm.acceptChanges()
+	self.Modules.paymreqHeaderList.updateCurrentRow(self, { paymreq_bill: data.paymreq_bill })
+
 }
 
 export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
-	console.log(CurrentState.Actions)
-	if (Context.variance == 'approval') {
-		CurrentState.Actions.commit.suspend(true)
-		CurrentState.Actions.uncommit.suspend(true)
-		CurrentState.Actions.approve.suspend(false)
-		CurrentState.Actions.reject.suspend(true)
+	CurrentState.Actions.commit.addEventListener('click', (evt) => { btn_actionCommit_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.uncommit.addEventListener('click', (evt) => { btn_actionUncommit_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.approve.addEventListener('click', (evt) => { btn_actionApprove_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.reject.addEventListener('click', (evt) => { btn_actionReject_click(self, frm, CurrentState, evt) })
+
+
+	const onApproval = Context.variance == VAR_APPROVAL
+	const onRejection = Context.variance == VAR_REJECTION
+	const onView = Context.variance == VAR_VIEW
+	const onEntry = Context.variance == ''
+
+	CurrentState.Actions.newdata.suspend(onApproval || onRejection | onView)
+
+	if (ALWAYS_SHOW_ACTIONBUTTON === true) {
+		return
+	}
+
+	CurrentState.Actions.newdata.hide(onApproval || onRejection || onView)
+	CurrentState.Actions.commit.hide(onApproval || onRejection || onView)
+	CurrentState.Actions.uncommit.hide(onApproval || onRejection || onView)
+	CurrentState.Actions.approve.hide(onRejection || onView || onEntry)
+	CurrentState.Actions.reject.hide(onApproval || onView || onEntry)
+}
+
+
+async function btn_actionCommit_click(self, frm, CurrentState, evt) {
+	const paymreq_id = frm.Inputs[_paymreq_id].value
+	const paymreq_doc = frm.Inputs[_paymreq_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <b>Commit</b> request '${paymreq_doc}'.<br>Lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
+
+
+	const obj_iscommit = frm.Inputs[_iscommit]
+	try {
+		const url = 'paymreq/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'commit',
+			paymreq_id: paymreq_id
+		})
+
+		if (result.iscommit == false) {
+			throw new Error('<b>Gagal</b> saat proses commit')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already commited. Data unchanged')
+			return
+		}
+
+		// check commit status
+		obj_iscommit.value = result.iscommit
+		frm.acceptChanges()
+
+		self.Modules.paymreqHeaderList.updateCurrentRow(self, { iscommit: result.iscommit })
+
 		CurrentState.Actions.edit.suspend(true)
-		CurrentState.Actions.newdata.suspend(true)
-
-		CurrentState.Actions.commit.hide(true)
-		CurrentState.Actions.uncommit.hide(true)
-		CurrentState.Actions.reject.hide(true)
-
-	} else if (Context.variance == 'reject') {
 		CurrentState.Actions.commit.suspend(true)
-		CurrentState.Actions.uncommit.suspend(true)
-		CurrentState.Actions.approve.suspend(true)
-		CurrentState.Actions.reject.suspend(false)
-		CurrentState.Actions.edit.suspend(true)
-		CurrentState.Actions.newdata.suspend(true)
-
-		CurrentState.Actions.commit.hide(true)
-		CurrentState.Actions.uncommit.hide(true)
-		CurrentState.Actions.approve.hide(true)
-
-	} else {
-		CurrentState.Actions.commit.suspend(false)
 		CurrentState.Actions.uncommit.suspend(false)
-		CurrentState.Actions.approve.suspend(true)
-		CurrentState.Actions.reject.suspend(true)
-		CurrentState.Actions.edit.suspend(false)
-		CurrentState.Actions.newdata.suspend(false)
+		CurrentState.Actions.print.suspend(false)
 
-		CurrentState.Actions.approve.hide(true)
-		CurrentState.Actions.reject.hide(true)
+		$fgta5.MessageBox.info(`request '${paymreq_doc}' berhasil di commit`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
 	}
 }
 
+async function btn_actionUncommit_click(self, frm, CurrentState, evt) {
+	const paymreq_id = frm.Inputs[_paymreq_id].value
+	const paymreq_doc = frm.Inputs[_paymreq_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <span style="font-weight:bold; color:red">un-Commit</span> request '${paymreq_doc}'.<br>Lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
+
+
+	const obj_paymreq_version = frm.Inputs[_paymreq_version]
+	const obj_iscommit = frm.Inputs[_iscommit]
+	try {
+		const url = 'paymreq/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'uncommit',
+			paymreq_id: paymreq_id
+		})
+
+		if (result.iscommit == true) {
+			throw new Error('<b>Gagal</b> saat proses un-commit')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('still draft. Data unchanged')
+			return
+		}
+
+		// uncheck commit status
+		obj_iscommit.value = result.iscommit
+
+		// update version
+		obj_paymreq_version.value = result.version
+
+
+		frm.acceptChanges()
+		self.Modules.paymreqHeaderList.updateCurrentRow(self, { iscommit: result.iscommit })
+
+
+		CurrentState.Actions.edit.suspend(false)
+		CurrentState.Actions.commit.suspend(false)
+		CurrentState.Actions.uncommit.suspend(true)
+		CurrentState.Actions.print.suspend(true)
+
+		$fgta5.MessageBox.info(`request '${paymreq_doc}' berhasil di un-commit`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+
+}
+
+async function btn_actionApprove_click(self, frm, CurrentState, evt) {
+	const paymreq_id = frm.Inputs[_paymreq_id].value
+	const paymreq_doc = frm.Inputs[_paymreq_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <b>Approve</b> request '${paymreq_doc}'. lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
+
+	const obj_isapproved = frm.Inputs[_isapproved]
+	try {
+		const url = 'paymreq/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'approve',
+			paymreq_id: paymreq_id
+		})
+
+		if (result.isapproved == false) {
+			throw new Error('<b>Gagal</b> saat proses approved')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already approved. Data unchanged')
+			return
+		}
+
+		obj_isapproved.value = result.isapproved
+		frm.acceptChanges()
+
+		self.Modules.paymreqHeaderList.updateCurrentRow(self, { isapproved: result.isapproved })
+
+
+		CurrentState.Actions.approve.suspend(true)
+		CurrentState.Actions.reject.suspend(false)
+
+		$fgta5.MessageBox.info(`request '${paymreq_doc}' berhasil di approved`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
+
+async function btn_actionReject_click(self, frm, CurrentState, evt) {
+	const paymreq_id = frm.Inputs[_paymreq_id].value
+	const paymreq_doc = frm.Inputs[_paymreq_doc].value
+
+	// konfirmasi kommit
+	const rejectMessage = await $fgta5.MessageBox.ask(`<div class="fgta5-messagebox-questdiv">anda mau <span style="font-weight:bold; color:red">Reject</span> request '${paymreq_doc}'</div>Alasan reject?`)
+	if (rejectMessage == null) {
+		return;
+	}
+
+
+	const obj_isapproved = frm.Inputs[_isapproved]
+	try {
+		const url = 'paymreq/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'reject',
+			paymreq_id: paymreq_id,
+			rejectMessage: rejectMessage
+		})
+
+		if (result.isapproved == true) {
+			throw new Error('<b>Gagal</b> saat proses reject')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already in un-approved status. Data unchanged')
+			return
+		}
+
+		obj_isapproved.value = result.isapproved
+		frm.acceptChanges()
+
+		self.Modules.paymreqHeaderList.updateCurrentRow(self, { isapproved: result.isapproved })
+
+		CurrentState.Actions.approve.suspend(false)
+		CurrentState.Actions.reject.suspend(true)
+
+		$fgta5.MessageBox.info(`request '${paymreq_doc}' berhasil di reject`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
 
 function paymreqtype_changed(paymreqtype, frm) {
 	pageHelper.setVisibility(`${_paymreq_invoice}-container`, paymreqtype.hasinvoice)

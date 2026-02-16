@@ -12,11 +12,11 @@
 	<thead>
 		<tr data-header key="paymreq_id">
 			<th data-name="paymreq_doc" binding="paymreq_doc" >ID</th>
+			<th data-name="iscommit" binding="iscommit" formatter="checkmark(value)" style="text-align:center">Commit</th>
 			<th data-name="isapproved" binding="isapproved" formatter="checkmark(value)" style="text-align:center">Approved</th>
 			<th data-name="paymreq_descr" binding="paymreq_descr" >Descr</th>
 			<th data-name="paymreq_datedue" binding="paymreq_datedue" formatter="dateshort(v)">Due Date</th>
-			<th data-name="paymreq_pph" binding="paymreq_pph" formatter="decimal(v, 2)" style="text-align:right">PPh</th>
-			<th data-name="paymreq_total" binding="paymreq_total" formatter="decimal(v, 2)" style="text-align:right">Total</th>
+			<th data-name="paymreq_bill" binding="paymreq_bill" formatter="decimal(v, 2)" style="text-align:right">Bill</th>
 		</tr>
 	</thead>
 </table>

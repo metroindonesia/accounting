@@ -25,13 +25,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await auth_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await auth_headerList(this, body) }
 	async headerOpen(body) { return await auth_headerOpen(this, body) }
 	async headerUpdate(body) { return await auth_headerUpdate(this, body)}
 	async headerCreate(body) { return await auth_headerCreate(this, body)}
 	async headerDelete(body) { return await auth_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -79,6 +82,24 @@ async function auth_init(self, body) {
 }
 
 
+// execute extender function
+async function auth_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, auth_log) {}
+		return await Extender[fnName](self, db, body, auth_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function auth_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -94,6 +115,8 @@ async function auth_log(self, body, startTime, tablename, id, action, data={}, r
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -143,6 +166,11 @@ async function auth_headerList(self, body) {
 			{
 				const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', row.user_id)
 				row.user_fullname = user_fullname
+			}
+			// lookup: delegate_user_name dari field user_fullname pada table core.user dimana (core.user.user_id = core.auth.delegate_user_id)
+			{
+				const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', row.delegate_user_id)
+				row.delegate_user_name = user_fullname
 			}
 			
 			// pasang extender di sini
@@ -198,6 +226,11 @@ async function auth_headerOpen(self, body) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data.user_id)
 			data.user_fullname = user_fullname
 		}
+		// lookup: delegate_user_name dari field user_fullname pada table core.user dimana (core.user.user_id = core.auth.delegate_user_id)
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data.delegate_user_id)
+			data.delegate_user_name = user_fullname
+		}
 		
 
 		// lookup data createby
@@ -246,7 +279,7 @@ async function auth_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', doc_id:'' }
 
 				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

@@ -61,6 +61,12 @@
 		
 	}
 	
+	#structHeaderEdit-obj_auth_id-container {
+		grid-row: 3;
+		grid-column: 3 / span 2;
+		
+	}
+	
 	#structHeaderEdit-obj_struct_parent-container {
 		grid-row: 4;
 		grid-column: 1 / span 3;

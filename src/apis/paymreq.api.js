@@ -95,15 +95,15 @@ async function paymreq_init(self, body) {
 
 // execute extender function
 async function paymreq_execute(self, body) {
-	const { fnName, fnParams } = body
+	const { fnName } = body
 
 	if (fnName==null || fnName=='') {
 		throw new Error('fnName belum didefinisikan di api call') 
 	}
 
 	if (typeof Extender[fnName] === 'function') {
-		// export async function [fnName](self, db, [fnParams]) {}
-		return await Extender[fnName](self, db, fnParams)
+		// export async function [fnName](self, db, body, paymreq_log) {}
+		return await Extender[fnName](self, db, body, paymreq_log)
 	} else {
 		// api function extender tidak ditemukan
 		throw new Error(`${fnName} tidak ditmukan di extender`)

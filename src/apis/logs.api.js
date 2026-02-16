@@ -35,7 +35,11 @@ async function logs_list(self, body) {
 		}
 
 
-		const columns = ['log_time', 'log_user_name', 'log_action', 'log_ipaddress', 'log_remark']
+		sort.log_time = 'DESC'
+		const columns = [
+			`to_char(log_time AT TIME ZONE 'Asia/Jakarta', 'YYYY-MM-DD HH24:MI:SS') log_time`,
+			'log_user_name', 'log_action', 'log_ipaddress', 'log_remark']
+
 
 
 		var max_rows = limit == 0 ? 60 : limit

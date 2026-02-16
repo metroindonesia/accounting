@@ -1,0 +1,28 @@
+<div id="structMemberList-head">
+	<div id="structMemberList-head-title" class="section-detil-title"></div>
+	<div id="structMemberList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="structMemberList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="structmember_id">
+			<th rowselector></th>
+			<th data-name="user_fullname" binding="user_fullname" >User</th>
+			<th data-name="issuspend" binding="issuspend" formatter="checkmark(value)" style='text-align:center'>Suspend</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="structMemberList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="structMemberList-btn_addrow" data-action="structMember-addrow" data-sectionsource="structMemberList-section">Add Row</button>
+		<button id="structMemberList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

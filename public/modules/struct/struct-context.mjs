@@ -10,9 +10,13 @@ export default {
 	Sections: { 
 		structHeaderList: 'structHeaderList-section', 
 		structHeaderEdit: 'structHeaderEdit-section', 
+		structMemberList: 'structMemberList-section', 
+		structMemberEdit: 'structMemberEdit-section', 
 	},
 	SectionMap: { 
 		'structHeaderList-section' : 'structHeaderList', 
 		'structHeaderEdit-section' : 'structHeaderEdit', 
+		'structMemberList-section' : 'structMemberList', 
+		'structMemberEdit-section' : 'structMemberEdit', 
 	}
 }

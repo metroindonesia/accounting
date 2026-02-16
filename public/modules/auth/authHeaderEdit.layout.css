@@ -39,7 +39,25 @@
 	
 	#authHeaderEdit-obj_user_id-container {
 		grid-row: 3;
-		grid-column: 1 / span 3;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#authHeaderEdit-obj_delegate_user_id-container {
+		grid-row: 4;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#authHeaderEdit-obj_delegate_start-container {
+		grid-row: 4;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#authHeaderEdit-obj_delegate_end-container {
+		grid-row: 4;
+		grid-column: 5 / span 2;
 		
 	}
 		

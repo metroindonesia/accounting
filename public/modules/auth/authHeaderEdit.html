@@ -65,15 +65,43 @@
 			data-display="user_fullname" 
 		>
 	</div>
+
+
+	<!-- Combobox: delegate_user_id-->	
+	<div id="authHeaderEdit-obj_delegate_user_id-container" class="input-field" field="authHeaderEdit-obj_delegate_user_id">
+		<label for="authHeaderEdit-obj_delegate_user_id">Delegate to</label>
+		<input id="authHeaderEdit-obj_delegate_user_id"  fgta5-component="Combobox" placeholder="delegation" autocomplete="off" spellcheck="false" 
+			binding="delegate_user_id"
+			data-tabindex="6" 
+			data-display="delegate_user_name" 
+		>
+	</div>
+
+
+	<!-- Datepicker: delegate_start-->	
+	<div id="authHeaderEdit-obj_delegate_start-container" class="input-field" field="authHeaderEdit-obj_delegate_start">
+		<label for="authHeaderEdit-obj_delegate_start">Start</label>
+		<input id="authHeaderEdit-obj_delegate_start"  fgta5-component="Datepicker" placeholder="delegate_start" autocomplete="off" spellcheck="false" 
+			binding="delegate_start"
+			data-tabindex="7" 
+		>
+	</div>
+
+
+	<!-- Datepicker: delegate_end-->	
+	<div id="authHeaderEdit-obj_delegate_end-container" class="input-field" field="authHeaderEdit-obj_delegate_end">
+		<label for="authHeaderEdit-obj_delegate_end">End</label>
+		<input id="authHeaderEdit-obj_delegate_end"  fgta5-component="Datepicker" placeholder="delegate_end" autocomplete="off" spellcheck="false" 
+			binding="delegate_end"
+			data-tabindex="8" 
+		>
+	</div>
 	
 </form>
 
 
 <div id="authHeaderEdit-footer">
 </div>
-
-<div id="authHeaderEdit-panelaction" class="panel-action"></div>
-
 
 <div id="panel-detil-selector" class="panel-detil hidden">
 	<div panel-title>
@@ -87,6 +115,8 @@
 	</div>
 </div>
  
+<div id="authHeaderEdit-panelaction" class="panel-action hidden"></div>
+
 
 <div class="panel-recordbar" data-view="nodetil">
 	<div><a id="authHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
