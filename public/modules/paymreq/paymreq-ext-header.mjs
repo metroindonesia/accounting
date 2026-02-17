@@ -1,4 +1,5 @@
 import Context from './paymreq-context.mjs'
+import { printDocument } from './paymreq-print.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 
@@ -15,6 +16,7 @@ const DISABLE_FILTER_LIST = false  // false: filter sesuai kewenangan user
 const _paymreq_id = 'paymreqHeaderEdit-obj_paymreq_id'
 const _paymreq_version = 'paymreqHeaderEdit-obj_paymreq_version'
 const _paymreq_doc = 'paymreqHeaderEdit-obj_paymreq_doc'
+const _paymreq_descr = 'paymreqHeaderEdit-obj_paymreq_descr'
 const _iscommit = 'paymreqHeaderEdit-obj_iscommit'
 const _isapproved = 'paymreqHeaderEdit-obj_isapproved'
 const _paymreqtype_id = 'paymreqHeaderEdit-obj_paymreqtype_id'
@@ -37,6 +39,62 @@ const _paymreq_bill = 'paymreqHeaderEdit-obj_paymreq_bill'
 
 
 export function init_header(self, args) {
+	// untuk keperluan cetak halaman
+
+	const printContainer = document.getElementById('print-media-container')
+	const origintalTitle = document.title
+
+	window.addEventListener('beforeprint', (event) => {
+		printContainer.classList.remove('hidden')
+	});
+
+	window.addEventListener('afterprint', (event) => {
+		document.title = origintalTitle
+		printContainer.classList.add('hidden')
+	})
+}
+
+
+export function headerList_initSearchParams(self, SearchParams) {
+
+	const onApproval = Context.variance == VAR_APPROVAL
+	const onRejection = Context.variance == VAR_REJECTION
+	const onView = Context.variance == VAR_VIEW
+	const onEntry = Context.variance == ''
+
+	// Structure
+	SearchParams['struct_id'].addEventListener('selecting', async (evt) => {
+		const cbo = evt.detail.sender
+		const dialog = evt.detail.dialog
+		const url = 'struct/header-list'
+		const sort = { struct_name: 'desc' }
+		const criteria = {}
+
+		if (onApproval || onEntry) {
+			criteria.user_id = Context.userId
+		}
+
+		cbo.wait()
+		try {
+			const result = await Module.apiCall(url, {
+				sort,
+				criteria,
+				offset: evt.detail.offset,
+				limit: evt.detail.limit,
+			})
+
+			for (var row of result.data) {
+				evt.detail.addRow(row.struct_id, row.struct_name, row)
+			}
+
+			dialog.setNext(result.nextoffset, result.limit)
+		} catch (err) {
+			$fgta5.MessageBox.error(err.message)
+		} finally {
+			cbo.wait(false)
+		}
+
+	})
 }
 
 export function headerList_dataLoad(self, criteria, sort, evt) {
@@ -240,6 +298,7 @@ export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 	CurrentState.Actions.uncommit.addEventListener('click', (evt) => { btn_actionUncommit_click(self, frm, CurrentState, evt) })
 	CurrentState.Actions.approve.addEventListener('click', (evt) => { btn_actionApprove_click(self, frm, CurrentState, evt) })
 	CurrentState.Actions.reject.addEventListener('click', (evt) => { btn_actionReject_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.print.addEventListener('click', (evt) => { btn_actionPrint_click(self, frm, CurrentState, evt) })
 
 
 	const onApproval = Context.variance == VAR_APPROVAL
@@ -448,6 +507,24 @@ async function btn_actionReject_click(self, frm, CurrentState, evt) {
 	} catch (err) {
 		$fgta5.MessageBox.error(err.message)
 		throw err
+	}
+}
+
+
+async function btn_actionPrint_click(self, frm, CurrentState, evt) {
+	evt.preventDefault();
+	evt.stopPropagation();
+
+	const printArea = document.getElementById('print-area')
+	const paymreq_id = frm.Inputs[_paymreq_id].value
+	const paymreq_doc = frm.Inputs[_paymreq_doc].value
+	const iscommit = frm.Inputs[_iscommit].value
+
+	if (iscommit) {
+		await printDocument(self, printArea, paymreq_id)
+		window.print();
+	} else {
+		printArea.innerHTML = `document ${paymreq_doc} belum di-commit`
 	}
 }
 

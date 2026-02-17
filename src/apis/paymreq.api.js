@@ -653,6 +653,26 @@ async function paymreq_detilList(self, body) {
 				const { itemclass_name } = await sqlUtil.lookupdb(db, 'public.itemclass', 'itemclass_id', row.itemclass_id)
 				row.itemclass_name = itemclass_name
 			}
+			// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.paymreq.struct_id)
+			{
+				const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', row.struct_id)
+				row.struct_name = struct_name
+			}
+			// lookup: project_name dari field project_name pada table public.project dimana (public.project.project_id = public.paymreq.project_id)
+			{
+				const { project_name } = await sqlUtil.lookupdb(db, 'public.project', 'project_id', row.project_id)
+				row.project_name = project_name
+			}
+			// lookup: site_name dari field site_name pada table public.site dimana (public.site.site_id = public.paymreq.site_id)
+			{
+				const { site_name } = await sqlUtil.lookupdb(db, 'public.site', 'site_id', row.site_id)
+				row.site_name = site_name
+			}
+			// lookup: unit_name dari field unit_name pada table public.unit dimana (public.unit.unit_id = public.paymreq.unit_id)
+			{
+				const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', row.unit_id)
+				row.unit_name = unit_name
+			}
 			
 
 			// pasang extender di sini
@@ -708,6 +728,26 @@ async function paymreq_detilOpen(self, body) {
 		{
 			const { itemclass_name } = await sqlUtil.lookupdb(db, 'public.itemclass', 'itemclass_id', data.itemclass_id)
 			data.itemclass_name = itemclass_name
+		}
+		// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.paymreq.struct_id)
+		{
+			const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', data.struct_id)
+			data.struct_name = struct_name
+		}
+		// lookup: project_name dari field project_name pada table public.project dimana (public.project.project_id = public.paymreq.project_id)
+		{
+			const { project_name } = await sqlUtil.lookupdb(db, 'public.project', 'project_id', data.project_id)
+			data.project_name = project_name
+		}
+		// lookup: site_name dari field site_name pada table public.site dimana (public.site.site_id = public.paymreq.site_id)
+		{
+			const { site_name } = await sqlUtil.lookupdb(db, 'public.site', 'site_id', data.site_id)
+			data.site_name = site_name
+		}
+		// lookup: unit_name dari field unit_name pada table public.unit dimana (public.unit.unit_id = public.paymreq.unit_id)
+		{
+			const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', data.unit_id)
+			data.unit_name = unit_name
 		}
 		
 

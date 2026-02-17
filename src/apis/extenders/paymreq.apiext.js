@@ -1,16 +1,31 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
+import db from '@agung_dhewe/webapps/src/db.js'
+
 
 const TABLE = {
 	paymreq: 'public.paymreq',
-	paymreqdetil: 'public.paymreq',
+	paymreqdetil: 'public.paymreqdetil',
 	paymreqtype: 'public.paymreqtype',
 	paymtype: 'public.paymtype',
-	taxtype: 'public.taxtype'
+	taxtype: 'public.taxtype',
+	struct: 'public.struct',
+	partner: 'public.partner',
+	partnerbank: 'public.partnerbank',
+	partnercontact: 'public.partnercontact',
+	site: 'public.site',
+	unit: 'public.unit',
+	project: 'public.project',
+	user: 'core.user',
+	auth: 'core.auth'
+
 }
 
 export async function paymreq_init(self, initialData) {
 	const req = self.req
 	initialData.setting.defaultCurr = req.app.locals.appConfig.defaultCurr
+	initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
+
+
 }
 
 
@@ -96,7 +111,7 @@ async function updateHeaderValue(self, tx, paymreq_id) {
 		// cek PPh
 		let pphPercent = 0
 		if (pph_id != null) {
-			const sqlPPh = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=${taxtype_id}`
+			const sqlPPh = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=\${taxtype_id}`
 			const rowPPh = await tx.one(sqlPPh, { taxtype_id: pph_id })
 			pphPercent = rowPPh.taxtype_value
 		}
@@ -127,9 +142,8 @@ async function updateHeaderValue(self, tx, paymreq_id) {
 }
 
 
-export async function getTotalValue(self, db, fnParams) {
-
-	const paymreq_id = fnParams.paymreq_id
+export async function getTotalValue(self, db, body) {
+	const { paymreq_id } = body
 
 	sqlUtil.connect(db)
 
@@ -404,5 +418,127 @@ export async function reject(self, db, body, paymreq_log) {
 	} catch (err) {
 		throw err
 
+	}
+}
+
+
+export async function getPrintData(self, db, body) {
+	const { paymreq_id } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+
+	sqlUtil.connect(db)
+
+	const sekarang = new Date();
+	const offset = sekarang.getTimezoneOffset() * 60000; // konversi ke milidetik
+	const waktuLokalISO = new Date(sekarang - offset).toISOString().slice(0, -1);
+
+	try {
+		const header = await sqlUtil.lookupdb(db, TABLE.paymreq, 'paymreq_id', paymreq_id)
+		const struct = await sqlUtil.lookupdb(db, TABLE.struct, 'struct_id', header.struct_id)
+		const site = await sqlUtil.lookupdb(db, TABLE.site, 'site_id', header.site_id)
+		const unit = await sqlUtil.lookupdb(db, TABLE.unit, 'unit_id', header.unit_id)
+		const partner = await sqlUtil.lookupdb(db, TABLE.partner, 'partner_id', header.partner_id)
+		const partnercontact = await sqlUtil.lookupdb(db, TABLE.partnercontact, 'partnercontact_id', header.partnercontact_id)
+		const project = await sqlUtil.lookupdb(db, TABLE.project, 'project_id', header.project_id)
+		const user = await sqlUtil.lookupdb(db, TABLE.user, 'user_id', header._createby)
+		const auth = await sqlUtil.lookupdb(db, TABLE.auth, 'auth_id', struct.auth_id)
+		const authuser = await sqlUtil.lookupdb(db, TABLE.user, 'user_id', auth.user_id)
+		const paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', header.paymtype_id)
+
+
+		const data = {
+			title: 'Advance Request',
+			header: {
+				printdate: sqlUtil.formatISODate(waktuLokalISO, 'dd/mm/yyyy'),
+
+				paymreq_doc: header.paymreq_doc,
+				paymreq_version: header.paymreq_version,
+				paymreq_date: sqlUtil.formatISODate(header.paymreq_date, 'dd/mm/yyyy'),
+				paymreq_duedate: sqlUtil.formatISODate(header.paymreq_datedue, 'dd/mm/yyyy'),
+				paymreq_descr: header.paymreq_descr,
+				struct_name: struct.struct_name,
+				project_name: project.project_name ?? '-',
+				site_name: site.site_name,
+				unit_name: unit.unit_name,
+				total_value: sqlUtil.formatDecimal(header.paymreq_total, 0),
+
+				partner_name: partner.partner_name,
+				partner_bank: '',
+				partner_contact: '',
+
+				dibuat_nama: user.user_fullname,
+
+				menyetujui_caption_1: 'Menyetujui',
+				menyetujui_title_1: auth.auth_label,
+				menyetujui_nama_1: authuser.user_fullname,
+
+				menyetujui_caption_2: 'Menyetujui',
+				menyetujui_title_2: 'Direktur',
+				menyetujui_nama_2: '',
+
+				menyetujui_caption_3: 'Menyetujui',
+				menyetujui_title_3: 'Direktur',
+				menyetujui_nama_3: '',
+			},
+
+			detil: [
+				// { "no": 2, "paymreqdetil_descr": "Biaya Transportasi Tim", "paymreqdetil_value": 75000 },
+			]
+		}
+
+
+		// partnerbank
+		if (header.partnerbank_id == null) {
+			data.header.partner_bank = paymtype.paymtype_name
+		} else {
+			let partner_bank = '<u>' + paymtype.paymtype_name + '</u><br>'
+			partner_bank += header.partnerbank_bankname + '<br>'
+			partner_bank += '<b>' + header.partnerbank_account + '</b><br>'
+			partner_bank += header.partnerbank_accountname + '<br>'
+			data.header.partner_bank = partner_bank
+		}
+
+
+		// partner contact
+
+
+		// detil
+		const sql = `select * from ${TABLE.paymreqdetil} where paymreq_id = \${paymreq_id}`
+		const rows = await db.any(sql, { paymreq_id: paymreq_id })
+		let i = 0
+		for (let row of rows) {
+			i++
+			data.detil.push({
+				no: i,
+				paymreqdetil_descr: row.paymreqdetil_descr,
+				paymreqdetil_value: sqlUtil.formatDecimal(row.paymreqdetil_value, 0),
+			})
+		}
+
+		if (header.ppn_id != null) {
+			const paymtype = await sqlUtil.lookupdb(db, TABLE.taxtype, 'taxtype_id', header.ppn_id)
+			data.detil.push({
+				no: ++i,
+				paymreqdetil_descr: `<b>PPN</b>`,
+				paymreqdetil_value: sqlUtil.formatDecimal(header.paymreq_ppn, 0),
+			})
+		}
+
+
+		if (header.pph_id != null) {
+			const paymtype = await sqlUtil.lookupdb(db, TABLE.taxtype, 'taxtype_id', header.pph_id)
+			data.detil.push({
+				no: ++i,
+				paymreqdetil_descr: `<b>PPh</b>`,
+				paymreqdetil_value: '(' + sqlUtil.formatDecimal(header.paymreq_pph, 0) + ')',
+			})
+		}
+
+
+		return data
+	} catch (err) {
+		throw err
 	}
 }

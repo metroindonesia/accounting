@@ -13,6 +13,8 @@ export async function init(self, args) {
 	ExtDetil.init_detil(self, args)
 
 
+
+
 	const doctitle = document.getElementById('application-title')
 	const variance = Context.variance
 

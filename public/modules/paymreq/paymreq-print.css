@@ -1,0 +1,300 @@
+:root {
+	--borderColor: #999
+}
+
+
+@media print {
+
+	@page {
+		size: A4 potrait;
+		margin-top: 1.5cm;
+		margin-left: 0;
+		margin-right: 0;
+		/* Berikan margin bawah minimal (sekitar 12-15mm) agar footer muncul */
+		margin-bottom: 1cm;
+	}
+
+	body {
+		margin: 0;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+
+	}
+
+	@page :first {
+		margin-top: 0;
+	}
+
+	#print-media-container {
+		/* Ukuran A4 standar adalah 21cm x 29.7cm */
+		width: 100%;
+		min-height: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 12pt;
+		display: flex;
+		flex-direction: column;
+		/* background-color: rgb(248, 248, 248); */
+
+	}
+
+
+	#print-area {
+		background-color: white !important;
+		margin: 5mm 10mm 0 10mm;
+		flex-grow: 1;
+	}
+
+	#doc-title {
+		font-size: 1.6rem;
+		font-weight: bold;
+	}
+
+	#doc-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 15mm;
+		width: 60mm;
+	}
+
+	#doc-boundary {
+		border-radius: 15px;
+		border: 1px solid var(--borderColor);
+		margin-top: 5mm;
+	}
+
+	#doc-header {
+		display: grid;
+		grid-template-columns: repeat(3, 18mm auto);
+		grid-auto-rows: auto;
+		row-gap: 2mm;
+		column-gap: 2mm;
+		margin: 5mm 5mm 5mm 5mm;
+		padding: 0;
+	}
+
+	.prn-tbl-label {
+		font-size: 10pt;
+		font-weight: bold;
+		text-align: right;
+	}
+
+	.prn-tbl-value {
+		font-size: 10pt;
+		text-align: left;
+
+		white-space: nowrap;
+		/* Mencegah teks turun ke baris baru */
+		overflow: hidden;
+		/* Menyembunyikan teks yang keluar dari div */
+		text-overflow: ellipsis;
+		/* Menambahkan simbol ... */
+		border-bottom: 1px #ccc dotted;
+	}
+
+
+	.tableitem {
+		margin: 0 3mm 0 3mm;
+	}
+
+	.tableitem [name="no"] {
+		width: 1cm;
+		text-align: center;
+		padding: 1mm 1mm 1mm 2mm;
+	}
+
+	.tableitem [name="descr"] {
+		width: 15.5cm;
+		text-align: left;
+		padding: 1mm 2mm 1mm 2mm;
+	}
+
+	.tableitem [name="value"] {
+		width: 3.5cm;
+		text-align: right;
+		padding: 1mm 2mm 1mm 1mm;
+	}
+
+
+
+
+
+	#doc-detil {
+		min-height: 8cm;
+	}
+
+	#doc-detil-header th {
+		background-color: #dcdcdc;
+		font-weight: bold;
+		font-size: 10pt;
+		height: 8mm;
+		vertical-align: center !important;
+	}
+
+
+
+	#doc-detil-body td {
+		vertical-align: top;
+		font-size: 10pt;
+	}
+
+	#doc-detil-body td:last-child {
+		background-color: #eee;
+	}
+
+	#doc-detil-body tr:last-child {
+		height: 100% !important;
+	}
+
+	/* 
+	#doc-detil-footer {
+		display: table-row-group;
+		break-inside: avoid;
+		height: 1cm !important;
+	}
+
+
+	#doc-detil-footer td {
+		border-top: 2px solid #aeaeae;
+		background-color: #e8e8e8;
+		font-weight: bold;
+		text-align: right;
+	}
+
+	#doc-detil-footer td:last-child {
+		border-top: 2px solid #000;
+		background-color: #b4b4b4;
+	} */
+
+	#doc-detil-sum {
+		margin-bottom: 3mm;
+		height: 1cm !important;
+	}
+
+	#doc-detil-sum td {
+		border-top: 2px solid #aeaeae;
+		background-color: #e8e8e8;
+		font-weight: bold;
+		text-align: right;
+	}
+
+	#doc-detil-sum td:last-child {
+		border-top: 2px solid #000;
+		background-color: #b4b4b4;
+	}
+
+
+
+
+
+
+	#doc-footer {
+
+		padding-top: 0;
+		padding-bottom: 1cm;
+
+		/* Mencegah elemen terpotong ke halaman berikutnya */
+		break-inside: avoid;
+		-webkit-column-break-inside: avoid;
+		/* Untuk dukungan Chrome/Safari lama */
+
+		/* Tambahan agar lebih aman */
+		page-break-inside: avoid;
+	}
+
+
+	.notebox {
+		margin-bottom: 10mm;
+		min-height: 30mm;
+		padding: 2mm 0 0 3mm;
+		font-size: 10pt;
+		font-style: italic;
+		margin-bottom: 2mm;
+		display: grid;
+		grid-template-columns: 2fr 3fr;
+		column-gap: 5mm;
+	}
+
+	.notebox-paym {
+		background-color: #e5e5e5;
+		padding: 3mm;
+		border-radius: 2mm;
+	}
+
+	.notebox-row {
+		border-bottom: 1px dotted #ddd;
+		min-height: 5mm;
+		margin-right: 5mm;
+	}
+
+	.notebook-docdate {
+		text-align: right;
+		font-size: 10pt;
+		margin-top: 5mm;
+		border: 0 !important;
+	}
+
+
+
+	#doc-sign {
+		display: flex;
+		margin-top: 1cm;
+		margin-left: 5mm;
+		margin-right: 5mm;
+
+	}
+
+	#doc-sign .signbox {
+		min-width: 35mm;
+		/* border: 1px solid #000 */
+	}
+
+	#doc-sign .signbox-caption {
+		height: 5mm;
+		text-align: center;
+		font-size: 10pt;
+
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	#doc-sign .signbox-title {
+		height: 5mm;
+		font-weight: bold;
+		text-align: center;
+		font-size: 10pt;
+
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	#doc-sign .signbox-sign {
+		min-height: 20mm;
+		text-align: center;
+	}
+
+	#doc-sign .signbox-name {
+		text-align: center;
+		height: 5mm;
+		margin-left: 3mm;
+		margin-right: 3mm;
+		margin-bottom: 3mm;
+		border-bottom: 1px dotted #999;
+		font-size: 10pt;
+
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+
+
+
+
+
+
+
+}

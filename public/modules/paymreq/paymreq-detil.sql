@@ -42,6 +42,66 @@ comment on column public."paymreqdetil".paymreqdetil_descr is '';
 
 
 -- =============================================
+-- FIELD: struct_id int
+-- =============================================
+-- ADD struct_id
+alter table public."paymreqdetil" add struct_id int  ;
+comment on column public."paymreqdetil".struct_id is '';
+
+-- MODIFY struct_id
+alter table public."paymreqdetil"
+	alter column struct_id type int,
+	ALTER COLUMN struct_id DROP DEFAULT,
+	ALTER COLUMN struct_id DROP NOT NULL;
+comment on column public."paymreqdetil".struct_id is '';
+
+
+-- =============================================
+-- FIELD: project_id int
+-- =============================================
+-- ADD project_id
+alter table public."paymreqdetil" add project_id int  ;
+comment on column public."paymreqdetil".project_id is '';
+
+-- MODIFY project_id
+alter table public."paymreqdetil"
+	alter column project_id type int,
+	ALTER COLUMN project_id DROP DEFAULT,
+	ALTER COLUMN project_id DROP NOT NULL;
+comment on column public."paymreqdetil".project_id is '';
+
+
+-- =============================================
+-- FIELD: site_id int
+-- =============================================
+-- ADD site_id
+alter table public."paymreqdetil" add site_id int  ;
+comment on column public."paymreqdetil".site_id is '';
+
+-- MODIFY site_id
+alter table public."paymreqdetil"
+	alter column site_id type int,
+	ALTER COLUMN site_id DROP DEFAULT,
+	ALTER COLUMN site_id DROP NOT NULL;
+comment on column public."paymreqdetil".site_id is '';
+
+
+-- =============================================
+-- FIELD: unit_id int
+-- =============================================
+-- ADD unit_id
+alter table public."paymreqdetil" add unit_id int  ;
+comment on column public."paymreqdetil".unit_id is '';
+
+-- MODIFY unit_id
+alter table public."paymreqdetil"
+	alter column unit_id type int,
+	ALTER COLUMN unit_id DROP DEFAULT,
+	ALTER COLUMN unit_id DROP NOT NULL;
+comment on column public."paymreqdetil".unit_id is '';
+
+
+-- =============================================
 -- FIELD: paymreqdetil_value decimal(15, 2)
 -- =============================================
 -- ADD paymreqdetil_value
@@ -138,6 +198,10 @@ comment on column public."paymreqdetil"._modifydate is 'waktu terakhir record di
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$itemclass_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$struct_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$project_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$site_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$unit_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
 
 
@@ -151,6 +215,50 @@ ALTER TABLE public."paymreqdetil"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$itemclass_id;
 CREATE INDEX idx_fk$public$paymreqdetil$itemclass_id ON public."paymreqdetil"(itemclass_id);	
+
+
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$struct_id
+	FOREIGN KEY (struct_id)
+	REFERENCES public."struct"(struct_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$struct_id;
+CREATE INDEX idx_fk$public$paymreqdetil$struct_id ON public."paymreqdetil"(struct_id);	
+
+
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$project_id
+	FOREIGN KEY (project_id)
+	REFERENCES public."project"(project_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$project_id;
+CREATE INDEX idx_fk$public$paymreqdetil$project_id ON public."paymreqdetil"(project_id);	
+
+
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$site_id
+	FOREIGN KEY (site_id)
+	REFERENCES public."site"(site_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$site_id;
+CREATE INDEX idx_fk$public$paymreqdetil$site_id ON public."paymreqdetil"(site_id);	
+
+
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$unit_id
+	FOREIGN KEY (unit_id)
+	REFERENCES public."unit"(unit_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$unit_id;
+CREATE INDEX idx_fk$public$paymreqdetil$unit_id ON public."paymreqdetil"(unit_id);	
 
 
 ALTER TABLE public."paymreqdetil"

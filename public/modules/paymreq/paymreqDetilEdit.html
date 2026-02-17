@@ -23,6 +23,8 @@
 		<input id="paymreqDetilEdit-obj_itemclass_id"  fgta5-component="Combobox" placeholder="itemclass" autocomplete="off" spellcheck="false" 
 			binding="itemclass_id"
 			data-tabindex="2" 
+			required 
+			invalid-message-required="itemclass harus diisi" 
 			data-display="itemclass_name" 
 		>
 	</div>
@@ -34,8 +36,60 @@
 		<input id="paymreqDetilEdit-obj_paymreqdetil_descr"  fgta5-component="Textbox" placeholder="description" autocomplete="off" spellcheck="false" 
 			binding="paymreqdetil_descr"
 			data-tabindex="3" 
+			required 
+			invalid-message-required="deskripsi harus diisi" 
 			autocomplete="off" spellcheck="false" 
-			maxlength="30" 
+			maxlength="255" 
+		>
+	</div>
+
+
+	<!-- Combobox: struct_id-->	
+	<div id="paymreqDetilEdit-obj_struct_id-container" class="input-field" field="paymreqDetilEdit-obj_struct_id">
+		<label for="paymreqDetilEdit-obj_struct_id">Structure</label>
+		<input id="paymreqDetilEdit-obj_struct_id"  fgta5-component="Combobox" placeholder="struct" autocomplete="off" spellcheck="false" 
+			binding="struct_id"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="structure harus diisi" 
+			data-display="struct_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: project_id-->	
+	<div id="paymreqDetilEdit-obj_project_id-container" class="input-field" field="paymreqDetilEdit-obj_project_id">
+		<label for="paymreqDetilEdit-obj_project_id">Project</label>
+		<input id="paymreqDetilEdit-obj_project_id"  fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+			binding="project_id"
+			data-tabindex="5" 
+			data-display="project_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: site_id-->	
+	<div id="paymreqDetilEdit-obj_site_id-container" class="input-field" field="paymreqDetilEdit-obj_site_id">
+		<label for="paymreqDetilEdit-obj_site_id">Site</label>
+		<input id="paymreqDetilEdit-obj_site_id"  fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+			binding="site_id"
+			data-tabindex="6" 
+			required 
+			invalid-message-required="site harus diisi" 
+			data-display="site_name" 
+		>
+	</div>
+
+
+	<!-- Combobox: unit_id-->	
+	<div id="paymreqDetilEdit-obj_unit_id-container" class="input-field" field="paymreqDetilEdit-obj_unit_id">
+		<label for="paymreqDetilEdit-obj_unit_id">Unit</label>
+		<input id="paymreqDetilEdit-obj_unit_id"  fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+			binding="unit_id"
+			data-tabindex="7" 
+			required 
+			invalid-message-required="unit harus diisi" 
+			data-display="unit_name" 
 		>
 	</div>
 
@@ -46,7 +100,7 @@
 		<input id="paymreqDetilEdit-obj_paymreqdetil_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
 			binding="paymreqdetil_value"
 			value="0" 
-			data-tabindex="4" 
+			data-tabindex="8" 
 			precision="2" 
 			maxlength="16" 
 		>
@@ -58,7 +112,7 @@
 		<label for="paymreqDetilEdit-obj_paymreq_id">ID</label>
 		<input id="paymreqDetilEdit-obj_paymreq_id"  fgta5-component="Textbox" placeholder="id" autocomplete="off" spellcheck="false" 
 			binding="paymreq_id"
-			data-tabindex="5" 
+			data-tabindex="9" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 

@@ -1,0 +1,120 @@
+<div style="display: flex; justify-content: space-between;">
+	<div id="doc-logo"></div>
+	<div id="doc-title">AP Voucher</div>
+</div>
+
+
+<div id="doc-boundary">
+
+	<div id="doc-header">
+		
+		<div class="prn-tbl-label" style="grid-row: 1; grid-column: 1">ID</div>
+		<div class="prn-tbl-value" style="grid-row: 1; grid-column: 2 / span 2">{{paymreq_doc}}</div>
+		<div class="prn-tbl-value" style="grid-row: 1; grid-column: 4; border-bottom: 0">/ {{paymreq_version}}</div>
+		<div class="prn-tbl-label" style="grid-row: 1; grid-column: 5">Due Date</div>
+		<div class="prn-tbl-value" style="grid-row: 1; grid-column: 6">{{paymreq_duedate}}</div>
+		
+		<div class="prn-tbl-label" style="grid-row: 2; grid-column: 1">Descr</div>
+		<div class="prn-tbl-value" style="grid-row: 2; grid-column: 2 / span 5">{{paymreq_descr}}</div>
+
+		<div class="prn-tbl-label" style="grid-row: 3; grid-column: 1">Struc</div>
+		<div class="prn-tbl-value" style="grid-row: 3; grid-column: 2">{{struct_name}}</div>
+		<div class="prn-tbl-label" style="grid-row: 3; grid-column: 3">Project</div>
+		<div class="prn-tbl-value" style="grid-row: 3; grid-column: 4 / span 3">{{project_name}}</div>
+
+		<div class="prn-tbl-label" style="grid-row: 4; grid-column: 1">Site</div>
+		<div class="prn-tbl-value" style="grid-row: 4; grid-column: 2">{{site_name}}</div>
+		<div class="prn-tbl-label" style="grid-row: 4; grid-column: 3">Unit</div>
+		<div class="prn-tbl-value" style="grid-row: 4; grid-column: 4">{{unit_name}}</div>
+
+	</div>
+
+
+	<table id="doc-detil" class="tableitem" cellpadding="0" cellspacing="0">
+		<thead id="doc-detil-header">
+			<tr>
+				<th name="no" class="rowheader">No</td>
+				<th name="descr" class="rowheader">Descr</td>
+				<th name="value" class="rowheader">Value</td>
+			</tr>
+		</thead>
+
+		<tbody id="doc-detil-body">
+			<tr>
+				<td name="no">{{no}}</td>
+				<td name="descr">{{paymreqdetil_descr}}</td>
+				<td name="value">{{paymreqdetil_value}}</td>
+			</tr>
+		</tbody>
+	</table>
+
+
+	<div id="doc-footer">
+
+		<table id="doc-detil-sum" class="tableitem" cellpadding="0" cellspacing="0">
+			<tr>
+				<td name="no"></td>
+				<td name="descr" style="text-align: right; padding-right: 5mm;">Total</td>
+				<td name="value">{{total_value}}</td>
+			</tr>
+		</table>
+
+
+		<div class="notebox">
+			<div class="notebox-paym">
+				<div>Dibayarkan Kepada:</div>
+				<div style="margin-bottom: 2mm; margin-top: 2mm;">{{partner_name}}</div>
+				<div style="margin-bottom: 2mm; margin-top: 2mm;">{{partner_bank}}</div>
+				<div style="margin-bottom: 2mm; margin-top: 2mm;">{{partner_contact}}</div>
+			</div>
+			<div>
+				<div>Catatan</div>
+				<div class="notebox-row"></div>
+				<div class="notebox-row"></div>
+				<div class="notebox-row"></div>
+				<div class="notebox-row"></div>
+				<div class="notebox-row notebook-docdate" >. . . . . . . . . . . . . .. . . . . . . . . . . . . . , {{printdate}}</div>
+			</div>
+			
+		</div>
+
+
+		
+
+		<div id="doc-sign">
+			<div class="signbox">
+				<div class="signbox-caption">Dibuat Oleh</div>
+				<div class="signbox-title"></div>
+				<div class="signbox-sign"></div>
+				<div class="signbox-name">{{dibuat_nama}}</div>
+			</div>
+			<div class="signbox"  style="flex-grow: 1;">
+				<div class="signbox-caption">Structure Terkait</div>
+				<div class="signbox-title"></div>
+				<div class="signbox-sign"></div>
+				<div class="signbox-name"></div>
+			</div>
+
+			<div class="signbox">
+				<div class="signbox-caption">{{menyetujui_caption_1}}</div>
+				<div class="signbox-title">{{menyetujui_title_1}}</div>
+				<div class="signbox-sign"></div>
+				<div class="signbox-name">{{menyetujui_nama_1}}</div>
+			</div>
+			<div class="signbox">
+				<div class="signbox-caption">{{menyetujui_caption_2}}</div>
+				<div class="signbox-title">{{menyetujui_title_2}}</div>
+				<div class="signbox-sign"></div>
+				<div class="signbox-name">{{menyetujui_nama_2}}</div>
+			</div>
+			<div class="signbox">
+				<div class="signbox-caption">{{menyetujui_caption_2}}</div>
+				<div class="signbox-title">{{menyetujui_title_3}}</div>
+				<div class="signbox-sign"></div>
+				<div class="signbox-name">{{menyetujui_nama_3}}</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>

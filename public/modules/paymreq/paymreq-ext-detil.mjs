@@ -29,9 +29,8 @@ async function updateHeaderValues(self, paymreq_id) {
 		const url = 'paymreq/execute'
 		const result = await Module.apiCall(url, {
 			fnName: 'getTotalValue',
-			fnParams: {
-				paymreq_id
-			}
+			paymreq_id: paymreq_id
+
 		})
 
 		// update ke headerEdit
