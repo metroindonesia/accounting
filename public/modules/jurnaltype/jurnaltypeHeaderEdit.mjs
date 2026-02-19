@@ -34,36 +34,47 @@ const btn_about = document.getElementById('jurnaltypeHeader-btn_about')
 const frm = new $fgta5.Form('jurnaltypeHeaderEdit-frm');
 const obj_jurnaltype_id = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_id']
 const obj_jurnaltype_name = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_name']
-const obj_jurnaltype_code = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_code']
+const obj_doc_id = frm.Inputs['jurnaltypeHeaderEdit-obj_doc_id']
 const obj_jurnaltype_isallowselect = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_isallowselect']
 const obj_jurnaltype_descr = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_descr']
 const obj_jurnaltype_headcopyto = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto']
 const obj_ishasduedate = frm.Inputs['jurnaltypeHeaderEdit-obj_ishasduedate']
-const obj_isheadhasvalue = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasvalue']
-const obj_isheadhascoa = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhascoa']
-const obj_isheadhasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasunit']
-const obj_isheadhassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhassite']
-const obj_isheadhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasstruct']
-const obj_isheadhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspartner']
-const obj_isheadhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasproject']
-const obj_isheadhaspaymtype = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymtype']
 const obj_isheadhaspaymreq = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymreq']
-const obj_isheadunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadunitmandatory']
-const obj_isheadsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadsitemandatory']
-const obj_isheadstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadstructmandatory']
-const obj_isheadprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadprojectmandatory']
-const obj_isdethasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethasunit']
-const obj_isdethassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethassite']
-const obj_isdetilhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasstruct']
-const obj_isdetilhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhaspartner']
-const obj_isdetilhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasproject']
-const obj_isdetilallowselectunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectunit']
-const obj_isdetilallowselectsite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectsite']
-const obj_isdetilallowselectstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectstruct']
-const obj_isdetilallowselectpartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectpartner']
-const obj_isdetilallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectproject']
+const obj_isheadhaspaymtype = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymtype']
+const obj_isheadhascoa = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhascoa']
+const obj_isheadhasvalue = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasvalue']
 const obj_isdetilallowgetap = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetap']
-const obj_isdetilallowgetar = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetar']	
+const obj_isdetilallowgetar = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetar']
+const obj_isheadhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspartner']
+const obj_isheadpartnermandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadpartnermandatory']
+const obj_ispartnerdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_ispartnerdisabled']
+const obj_isheadhasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasunit']
+const obj_isheadunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadunitmandatory']
+const obj_isunitdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_isunitdisabled']
+const obj_isheadhassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhassite']
+const obj_isheadsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadsitemandatory']
+const obj_issitedisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_issitedisabled']
+const obj_isheadhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasstruct']
+const obj_isheadstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadstructmandatory']
+const obj_isstructdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_isstructdisabled']
+const obj_isheadhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasproject']
+const obj_isheadprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadprojectmandatory']
+const obj_isheadallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadallowselectproject']
+const obj_isdetilhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhaspartner']
+const obj_isdetilpartnermandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilpartnermandatory']
+const obj_isdetilallowselectpartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectpartner']
+const obj_isdethasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethasunit']
+const obj_isdetilunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilunitmandatory']
+const obj_isdetilallowselectunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectunit']
+const obj_isdethassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethassite']
+const obj_isdetilsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilsitemandatory']
+const obj_isdetilallowselectsite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectsite']
+const obj_isdetilhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasstruct']
+const obj_isdetilstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilstructmandatory']
+const obj_isdetilallowselectstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectstruct']
+const obj_isdetilhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasproject']
+const obj_isdetilprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilprojectmandatory']
+const obj_isdetilallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectproject']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -114,6 +125,63 @@ export async function init(self, args) {
 
 	
 
+	
+	// Combobox: obj_doc_id
+	obj_doc_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_doc_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_doc_id_selecting(self, obj_doc_id, frm, evt) {}
+			fn_selecting(self, obj_doc_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'doc/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_doc_id_selecting_criteria(self, obj_doc_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_doc_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_doc_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.doc_id, row.doc_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
 		
 	
 }
@@ -123,6 +191,7 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
+		obj_doc_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -811,7 +880,7 @@ async function btn_about_click(self, evt) {
 			const divFooter = document.createElement('div')
 			divFooter.setAttribute('id', 'fAbout-section-footer')
 			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 4 Feb 2026 20:45'
+			divFooter.innerHTML = 'This module is generated by fgta5 generator at 19 Feb 2026 14:42'
 			section.appendChild(divFooter)
 		}
 		

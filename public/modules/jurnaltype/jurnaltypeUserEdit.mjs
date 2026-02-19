@@ -678,11 +678,38 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function jurnaltypeUserEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'jurnaltypeUserEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
+		
+
+		// Extender Delete
+		// export async function jurnaltypeUserEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'jurnaltypeUserEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
 		// hapus current row yang dipilih di list
 		self.Modules.jurnaltypeUserList.removeCurrentRow(self)
-		
+
 		// kembali ke list
 		self.Modules.jurnaltypeUserList.Section.show()
 

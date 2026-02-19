@@ -25,9 +25,9 @@
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_jurnaltype_code-container {
+	#jurnaltypeHeaderEdit-obj_doc_id-container {
 		grid-row: 1;
-		grid-column: 4;
+		grid-column: 4 / span 2;
 		
 	}
 	
@@ -55,33 +55,39 @@
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhasvalue-container {
+	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
 		grid-row: 6;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhascoa-container {
+	#jurnaltypeHeaderEdit-obj_isheadhaspaymtype-container {
 		grid-row: 7;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhasunit-container {
+	#jurnaltypeHeaderEdit-obj_isheadhascoa-container {
 		grid-row: 8;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhassite-container {
+	#jurnaltypeHeaderEdit-obj_isheadhasvalue-container {
 		grid-row: 9;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhasstruct-container {
-		grid-row: 10;
-		grid-column: 1 / span 2;
+	#jurnaltypeHeaderEdit-obj_isdetilallowgetap-container {
+		grid-row: 5;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowgetar-container {
+		grid-row: 6;
+		grid-column: 5 / span 2;
 		
 	}
 	
@@ -91,116 +97,176 @@
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhasproject-container {
+	#jurnaltypeHeaderEdit-obj_isheadpartnermandatory-container {
+		grid-row: 11;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_ispartnerdisabled-container {
+		grid-row: 11;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhasunit-container {
 		grid-row: 12;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadhaspaymtype-container {
-		grid-row: 13;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
-		grid-row: 14;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadunitmandatory-container {
-		grid-row: 15;
+		grid-row: 12;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isunitdisabled-container {
+		grid-row: 12;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhassite-container {
+		grid-row: 13;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadsitemandatory-container {
-		grid-row: 16;
+		grid-row: 13;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_issitedisabled-container {
+		grid-row: 13;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhasstruct-container {
+		grid-row: 14;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadstructmandatory-container {
-		grid-row: 17;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadprojectmandatory-container {
-		grid-row: 18;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdethasunit-container {
-		grid-row: 8;
+		grid-row: 14;
 		grid-column: 3 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isdethassite-container {
-		grid-row: 9;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilhasstruct-container {
-		grid-row: 10;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilhaspartner-container {
-		grid-row: 11;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilhasproject-container {
-		grid-row: 12;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowselectunit-container {
-		grid-row: 8;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowselectsite-container {
-		grid-row: 9;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowselectstruct-container {
-		grid-row: 10;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowselectpartner-container {
-		grid-row: 11;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowselectproject-container {
-		grid-row: 12;
-		grid-column: 5 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isdetilallowgetap-container {
+	#jurnaltypeHeaderEdit-obj_isstructdisabled-container {
 		grid-row: 14;
 		grid-column: 5 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isdetilallowgetar-container {
+	#jurnaltypeHeaderEdit-obj_isheadhasproject-container {
 		grid-row: 15;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadprojectmandatory-container {
+		grid-row: 15;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadallowselectproject-container {
+		grid-row: 15;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilhaspartner-container {
+		grid-row: 17;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilpartnermandatory-container {
+		grid-row: 17;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowselectpartner-container {
+		grid-row: 17;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdethasunit-container {
+		grid-row: 18;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilunitmandatory-container {
+		grid-row: 18;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowselectunit-container {
+		grid-row: 18;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdethassite-container {
+		grid-row: 19;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilsitemandatory-container {
+		grid-row: 19;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowselectsite-container {
+		grid-row: 19;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilhasstruct-container {
+		grid-row: 20;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilstructmandatory-container {
+		grid-row: 20;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowselectstruct-container {
+		grid-row: 20;
+		grid-column: 5 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilhasproject-container {
+		grid-row: 21;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilprojectmandatory-container {
+		grid-row: 21;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isdetilallowselectproject-container {
+		grid-row: 21;
 		grid-column: 5 / span 2;
 		
 	}

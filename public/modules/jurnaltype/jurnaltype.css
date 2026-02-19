@@ -8,25 +8,36 @@
 	}
 
 
-	.lbl-head-prop {
-		font-weight: bold;
-		text-align: right;
-		margin-right: 53px;
-		grid-row: 5 / span 2;
+	#spcHead {
+		grid-row: 10;
 		grid-column: 1;
 	}
 
+	#lblHead {
+		grid-row: 11;
+		grid-column: 1;
+	}
 
-	.lbl-detil-prop {
-		font-weight: bold;
-		grid-row: 7;
-		grid-column: 3 / span 2;
+	#spcDetil {
+		grid-row: 16;
+		grid-column: 1;
+	}
+
+	#lblDetil {
+		grid-row: 17;
+		grid-column: 1;
+
+	}
+
+	.row-gap {
+		min-height: 30px;
 	}
 
 
-	.lbl-detil-allowselect {
+	.row-label {
+		margin-right: 52px;
+		text-align: right;
 		font-weight: bold;
-		grid-row: 7;
-		grid-column: 5 / span 2;
 	}
+
 }

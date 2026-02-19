@@ -28,13 +28,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await jurnaltype_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await jurnaltype_headerList(this, body) }
 	async headerOpen(body) { return await jurnaltype_headerOpen(this, body) }
 	async headerUpdate(body) { return await jurnaltype_headerUpdate(this, body)}
 	async headerCreate(body) { return await jurnaltype_headerCreate(this, body)}
 	async headerDelete(body) { return await jurnaltype_headerDelete(this, body) }
-	
+
 	
 	// coa	
 	async coaList(body) { return await jurnaltype_coaList(this, body) }
@@ -98,6 +101,24 @@ async function jurnaltype_init(self, body) {
 }
 
 
+// execute extender function
+async function jurnaltype_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, jurnaltype_log) {}
+		return await Extender[fnName](self, db, body, jurnaltype_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function jurnaltype_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -113,6 +134,8 @@ async function jurnaltype_log(self, body, startTime, tablename, id, action, data
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -158,6 +181,11 @@ async function jurnaltype_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
+			// lookup: doc_name dari field doc_name pada table core.doc dimana (core.doc.doc_id = public.jurnaltype.doc_id)
+			{
+				const { doc_name } = await sqlUtil.lookupdb(db, 'core.doc', 'doc_id', row.doc_id)
+				row.doc_name = doc_name
+			}
 			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
@@ -207,6 +235,11 @@ async function jurnaltype_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
+		// lookup: doc_name dari field doc_name pada table core.doc dimana (core.doc.doc_id = public.jurnaltype.doc_id)
+		{
+			const { doc_name } = await sqlUtil.lookupdb(db, 'core.doc', 'doc_id', data.doc_id)
+			data.doc_name = doc_name
+		}
 		
 
 		// lookup data createby
@@ -255,7 +288,7 @@ async function jurnaltype_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', doc_id:'' }
 
 				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
@@ -714,6 +747,7 @@ async function jurnaltype_coaDelete(self, body) {
 			const sql = `select * from ${coaTableName} where jurnaltypecoa_id=\${jurnaltypecoa_id}`
 			const rowcoa = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.coaDeleting === 'function') {
@@ -753,6 +787,8 @@ async function jurnaltype_coaDeleteRows(self, body) {
 
 
 	try {
+
+		let jurnaltype_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -760,7 +796,11 @@ async function jurnaltype_coaDeleteRows(self, body) {
 				const dataToRemove = {jurnaltypecoa_id: id}
 				const sql = `select * from ${coaTableName} where jurnaltypecoa_id=\${jurnaltypecoa_id}`
 				const rowcoa = await tx.oneOrNone(sql, dataToRemove)
+				jurnaltype_id = rowcoa.jurnaltype_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.coaDeleting === 'function') {
 					// async function coaDeleting(self, tx, rowcoa, logMetadata) {}
@@ -784,6 +824,7 @@ async function jurnaltype_coaDeleteRows(self, body) {
 
 		const res = {
 			deleted: true,
+			jurnaltype_id: jurnaltype_id,
 			message: ''
 		}
 		return res
@@ -1059,6 +1100,7 @@ async function jurnaltype_userDelete(self, body) {
 			const sql = `select * from ${userTableName} where jurnaltypeuser_id=\${jurnaltypeuser_id}`
 			const rowuser = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.userDeleting === 'function') {
@@ -1098,6 +1140,8 @@ async function jurnaltype_userDeleteRows(self, body) {
 
 
 	try {
+
+		let jurnaltype_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1105,7 +1149,11 @@ async function jurnaltype_userDeleteRows(self, body) {
 				const dataToRemove = {jurnaltypeuser_id: id}
 				const sql = `select * from ${userTableName} where jurnaltypeuser_id=\${jurnaltypeuser_id}`
 				const rowuser = await tx.oneOrNone(sql, dataToRemove)
+				jurnaltype_id = rowuser.jurnaltype_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.userDeleting === 'function') {
 					// async function userDeleting(self, tx, rowuser, logMetadata) {}
@@ -1129,6 +1177,7 @@ async function jurnaltype_userDeleteRows(self, body) {
 
 		const res = {
 			deleted: true,
+			jurnaltype_id: jurnaltype_id,
 			message: ''
 		}
 		return res

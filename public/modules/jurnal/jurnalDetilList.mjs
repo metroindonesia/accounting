@@ -1,17 +1,17 @@
-import Context from './jurnaltype-context.mjs'
-import * as Ext from './jurnaltype-ext.mjs'
+import Context from './jurnal-context.mjs'
+import * as Ext from './jurnal-ext.mjs'
 
-const Extender = Ext.extenderCoa ?? Ext
+const Extender = Ext.extenderDetil ?? Ext
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.jurnaltypeCoaList
+const CurrentSectionId = Context.Sections.jurnalDetilList
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const CurrentState = {}
 
-const tbl =  new $fgta5.Gridview('jurnaltypeCoaList-tbl')
+const tbl =  new $fgta5.Gridview('jurnalDetilList-tbl')
 
-const btn_addrow = document.getElementById('jurnaltypeCoaList-btn_addrow') // tidak perlu pakai action, karna action didefine di edit
-const btn_delrow = new $fgta5.ActionButton('jurnaltypeCoaList-btn_delrow')
+const btn_addrow = document.getElementById('jurnalDetilList-btn_addrow') // tidak perlu pakai action, karna action didefine di edit
+const btn_delrow = new $fgta5.ActionButton('jurnalDetilList-btn_delrow')
 
 let headerForm
 
@@ -22,7 +22,7 @@ export async function init(self, args) {
 
 	// Back
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
-		const sectionId =  Context.Sections.jurnaltypeHeaderEdit
+		const sectionId =  Context.Sections.jurnalHeaderEdit
 		const section = Crsl.Items[sectionId]
 		section.show({direction: 1})
 	})
@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function jurnaltypeCoaList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'jurnaltypeCoaList_addTableEvents'
+	// export function jurnalDetilList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'jurnalDetilList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -50,11 +50,11 @@ export async function init(self, args) {
 	btn_delrow.addEventListener('click', (evt)=>{ btn_delrow_click(self, evt) })
 	
 	// Extend list detil
-	// export function jurnaltypeCoaList_init(self) {}
-	const fn_name = 'jurnaltypeCoaList_init'
-	const fn_jurnaltypeCoaList_init = Extender[fn_name]
-	if (typeof fn_jurnaltypeCoaList_init === 'function') {
-		fn_jurnaltypeCoaList_init(self)
+	// export function jurnalDetilList_init(self) {}
+	const fn_name = 'jurnalDetilList_init'
+	const fn_jurnalDetilList_init = Extender[fn_name]
+	if (typeof fn_jurnalDetilList_init === 'function') {
+		fn_jurnalDetilList_init(self)
 	}
 
 	CurrentState.headerFormLocked = true 
@@ -65,12 +65,12 @@ function setDefaultHeadTitle(self, headerForm) {
 
 	const detilTitleElements = document.getElementsByClassName('section-detil-title')
 	for (let el of detilTitleElements) {
-		el.innerHTML = data.jurnaltype_name
+		el.innerHTML = data.jurnal_doc
 	}
 	
 	const detilDescrElements = document.getElementsByClassName('section-detil-descr')
 	for (let el of detilDescrElements) {
-		el.innerHTML = data.jurnaltype_descr
+		el.innerHTML = data.jurnal_descr
 	}
 
 }
@@ -88,25 +88,25 @@ export async function openList(self, params) {
 
 	// apabila mau menambahkan informasi saat detil list dibuka,
 	// misalnya menambahkan informasi beberapa data dari formHeader
-	// bisa di set pada Extender.jurnaltypeCoaList_openList :  bisa menggunakan template untuk di embed ke header pada detil list
-	// export function jurnaltypeCoaList_openList(self, headerForm) {}
-	const fn_name = 'jurnaltypeCoaList_openList'
-	const fn_jurnaltypeCoaList_openList = Extender[fn_name]
-	if (typeof fn_jurnaltypeCoaList_openList === 'function') {
-		fn_jurnaltypeCoaList_openList(self, headerForm)
+	// bisa di set pada Extender.jurnalDetilList_openList :  bisa menggunakan template untuk di embed ke header pada detil list
+	// export function jurnalDetilList_openList(self, headerForm) {}
+	const fn_name = 'jurnalDetilList_openList'
+	const fn_jurnalDetilList_openList = Extender[fn_name]
+	if (typeof fn_jurnalDetilList_openList === 'function') {
+		fn_jurnalDetilList_openList(self, headerForm)
 	}
 	
 	const criteria={
-		jurnaltype_id: id
+		jurnal_id: id
 	}
 	const sort = tbl.getSort()
 
 	tbl.clear()
 	tbl_loadData(self, {criteria, sort})
 
-	const jurnaltypeCoaEdit = self.Modules.jurnaltypeCoaEdit
-	const btn_addrow = jurnaltypeCoaEdit.getCurrentState().Actions.newdata
-	const btn_edit = jurnaltypeCoaEdit.getCurrentState().Actions.edit
+	const jurnalDetilEdit = self.Modules.jurnalDetilEdit
+	const btn_addrow = jurnalDetilEdit.getCurrentState().Actions.newdata
+	const btn_edit = jurnalDetilEdit.getCurrentState().Actions.edit
 	
 	if (CurrentState.headerFormLocked) {
  		btn_addrow.disabled = true
@@ -195,9 +195,9 @@ export function keyboardAction(self, actionName) {
 	} else if (actionName=='down') {
 		tbl.nextRecord()
 	} else if (actionName=='enter') {
-		const jurnaltypeCoaEdit = self.Modules.jurnaltypeCoaEdit
+		const jurnalDetilEdit = self.Modules.jurnalDetilEdit
 		if (tbl.CurrentRow!=null) {
-			jurnaltypeCoaEdit.Section.show({}, (evt)=>{
+			jurnalDetilEdit.Section.show({}, (evt)=>{
 				openRow(self, tbl.CurrentRow)
 			})
 		}
@@ -219,14 +219,14 @@ async function openRow(self, tr) {
 	const keyvalue = tr.getAttribute('keyvalue')
 	const key = tr.getAttribute('key')
 
-	const jurnaltypeCoaEdit = self.Modules.jurnaltypeCoaEdit
-	jurnaltypeCoaEdit.clearForm(self, 'loading...')
+	const jurnalDetilEdit = self.Modules.jurnalDetilEdit
+	jurnalDetilEdit.clearForm(self, 'loading...')
 
 	try {
 		setCurrentRow(self, tr)
 		CurrentState.SelectedRow.keyValue = keyvalue
 		CurrentState.SelectedRow.key = key
-		await jurnaltypeCoaEdit.openSelectedData(self, {key:key, keyvalue:keyvalue})
+		await jurnalDetilEdit.openSelectedData(self, {key:key, keyvalue:keyvalue})
 	} catch (err) {
 		console.error(err)
 		await $fgta5.MessageBox.error(err.message)
@@ -236,16 +236,16 @@ async function openRow(self, tr) {
 	}
 
 	// matikan atau nyalakan button prev/next sesuai kondisi
-	setPagingButton(self, jurnaltypeCoaEdit)
+	setPagingButton(self, jurnalDetilEdit)
 }
 
 
 async function listRows(self, criteria, offset, limit, sort) {
-	const url = `/${Context.moduleName}/coa-list`
+	const url = `/${Context.moduleName}/detil-list`
 	const evt = { url, limit }
 
-	// export async function jurnaltypeCoaList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'jurnaltypeCoaList_dataLoad'
+	// export async function jurnalDetilList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'jurnalDetilList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
 		await fn_dataLoad(self, criteria, sort, evt)
@@ -268,14 +268,14 @@ async function listRows(self, criteria, offset, limit, sort) {
 
 
 async function deleteRows(self, data) {
-	const url = `/${Context.moduleName}/coa-delete-rows`
+	const url = `/${Context.moduleName}/detil-delete-rows`
 	try {
 		
 		const result = await Module.apiCall(url, { data }) 
 		if (result.deleted) {
 
-			// export async function jurnaltypeCoaList_rowsDeleted(self, data) {}
-			const fn_name = 'jurnaltypeCoaList_rowsDeleted'
+			// export async function jurnalDetilList_rowsDeleted(self, data) {}
+			const fn_name = 'jurnalDetilList_rowsDeleted'
 			const fn = Extender[fn_name]
 			if (typeof fn === 'function') {
 				await fn(self, result)
@@ -310,8 +310,8 @@ async function tbl_sorting(self, evt) {
 async function tbl_cellclick(self, evt) {
 	const tr = evt.detail.tr
 
-	const jurnaltypeCoaEdit = self.Modules.jurnaltypeCoaEdit
-	jurnaltypeCoaEdit.Section.show({}, (evt)=>{
+	const jurnalDetilEdit = self.Modules.jurnalDetilEdit
+	jurnalDetilEdit.Section.show({}, (evt)=>{
 		openRow(self, tr)
 	})
 }
@@ -334,8 +334,8 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export async function jurnaltypeCoaList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'jurnaltypeCoaList_tableDataLoaded'
+		// export async function jurnalDetilList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'jurnalDetilList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
 			await fn(self, tbl, result)

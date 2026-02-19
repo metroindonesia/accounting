@@ -23,9 +23,11 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 }
 
 export function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
+	searchMap.struct_isdisabled = 'struct_isdisabled=${struct_isdisabled}'
 	searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
 	searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
 	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
+
 
 	sort[`${entityname}_path`] = 'asc'
 }

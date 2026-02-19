@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function userList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'userList_addTableEvents'
+	// export function jurnaltypeUserList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'jurnaltypeUserList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -244,11 +244,11 @@ async function listRows(self, criteria, offset, limit, sort) {
 	const url = `/${Context.moduleName}/user-list`
 	const evt = { url, limit }
 
-	// export function userList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'userList_dataLoad'
+	// export async function jurnaltypeUserList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'jurnaltypeUserList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
-		fn_dataLoad(self, criteria, sort, evt)
+		await fn_dataLoad(self, criteria, sort, evt)
 	}
 
 	try {
@@ -273,6 +273,14 @@ async function deleteRows(self, data) {
 		
 		const result = await Module.apiCall(url, { data }) 
 		if (result.deleted) {
+
+			// export async function jurnaltypeUserList_rowsDeleted(self, data) {}
+			const fn_name = 'jurnaltypeUserList_rowsDeleted'
+			const fn = Extender[fn_name]
+			if (typeof fn === 'function') {
+				await fn(self, result)
+			}
+
 			return true
 		} else {
 			throw new Error(result.message)
@@ -326,11 +334,11 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export function userList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'userList_tableDataLoaded'
+		// export async function jurnaltypeUserList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'jurnaltypeUserList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
-			fn(self, tbl, result)
+			await fn(self, tbl, result)
 		}
 
 

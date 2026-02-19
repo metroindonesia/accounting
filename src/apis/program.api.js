@@ -26,13 +26,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await program_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await program_headerList(this, body) }
 	async headerOpen(body) { return await program_headerOpen(this, body) }
 	async headerUpdate(body) { return await program_headerUpdate(this, body)}
 	async headerCreate(body) { return await program_headerCreate(this, body)}
 	async headerDelete(body) { return await program_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -80,6 +83,24 @@ async function program_init(self, body) {
 }
 
 
+// execute extender function
+async function program_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, program_log) {}
+		return await Extender[fnName](self, db, body, program_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function program_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -95,6 +116,8 @@ async function program_log(self, body, startTime, tablename, id, action, data={}
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -257,7 +280,7 @@ async function program_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'PROG' }
+			const args = { section: 'header', doc_id:'PROG' }
 
 			
 			// buat short sequencer	

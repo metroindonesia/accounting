@@ -12,18 +12,33 @@ comment on table public."jurnaltype" is '';
 
 
 -- =============================================
--- FIELD: jurnaltype_code text
+-- FIELD: jurnaltype_name text
 -- =============================================
--- ADD jurnaltype_code
-alter table public."jurnaltype" add jurnaltype_code text  ;
-comment on column public."jurnaltype".jurnaltype_code is '';
+-- ADD jurnaltype_name
+alter table public."jurnaltype" add jurnaltype_name text  ;
+comment on column public."jurnaltype".jurnaltype_name is '';
 
--- MODIFY jurnaltype_code
+-- MODIFY jurnaltype_name
 alter table public."jurnaltype"
-	alter column jurnaltype_code type text,
-	ALTER COLUMN jurnaltype_code DROP DEFAULT,
-	ALTER COLUMN jurnaltype_code DROP NOT NULL;
-comment on column public."jurnaltype".jurnaltype_code is '';
+	alter column jurnaltype_name type text,
+	ALTER COLUMN jurnaltype_name DROP DEFAULT,
+	ALTER COLUMN jurnaltype_name DROP NOT NULL;
+comment on column public."jurnaltype".jurnaltype_name is '';
+
+
+-- =============================================
+-- FIELD: doc_id varchar(4)
+-- =============================================
+-- ADD doc_id
+alter table public."jurnaltype" add doc_id varchar(4)  ;
+comment on column public."jurnaltype".doc_id is '';
+
+-- MODIFY doc_id
+alter table public."jurnaltype"
+	alter column doc_id type varchar(4),
+	ALTER COLUMN doc_id DROP DEFAULT,
+	ALTER COLUMN doc_id DROP NOT NULL;
+comment on column public."jurnaltype".doc_id is '';
 
 
 -- =============================================
@@ -39,21 +54,6 @@ alter table public."jurnaltype"
 	ALTER COLUMN jurnaltype_isallowselect SET DEFAULT false,
 	ALTER COLUMN jurnaltype_isallowselect SET NOT NULL;
 comment on column public."jurnaltype".jurnaltype_isallowselect is '';
-
-
--- =============================================
--- FIELD: jurnaltype_name text
--- =============================================
--- ADD jurnaltype_name
-alter table public."jurnaltype" add jurnaltype_name text  ;
-comment on column public."jurnaltype".jurnaltype_name is '';
-
--- MODIFY jurnaltype_name
-alter table public."jurnaltype"
-	alter column jurnaltype_name type text,
-	ALTER COLUMN jurnaltype_name DROP DEFAULT,
-	ALTER COLUMN jurnaltype_name DROP NOT NULL;
-comment on column public."jurnaltype".jurnaltype_name is '';
 
 
 -- =============================================
@@ -102,108 +102,18 @@ comment on column public."jurnaltype".isheadhasduedate is '';
 
 
 -- =============================================
--- FIELD: isheadhasvalue boolean
+-- FIELD: isheadhaspaymreq boolean
 -- =============================================
--- ADD isheadhasvalue
-alter table public."jurnaltype" add isheadhasvalue boolean not null default false;
-comment on column public."jurnaltype".isheadhasvalue is '';
+-- ADD isheadhaspaymreq
+alter table public."jurnaltype" add isheadhaspaymreq boolean not null default false;
+comment on column public."jurnaltype".isheadhaspaymreq is '';
 
--- MODIFY isheadhasvalue
+-- MODIFY isheadhaspaymreq
 alter table public."jurnaltype"
-	alter column isheadhasvalue type boolean,
-	ALTER COLUMN isheadhasvalue SET DEFAULT false,
-	ALTER COLUMN isheadhasvalue SET NOT NULL;
-comment on column public."jurnaltype".isheadhasvalue is '';
-
-
--- =============================================
--- FIELD: isheadhascoa boolean
--- =============================================
--- ADD isheadhascoa
-alter table public."jurnaltype" add isheadhascoa boolean not null default false;
-comment on column public."jurnaltype".isheadhascoa is '';
-
--- MODIFY isheadhascoa
-alter table public."jurnaltype"
-	alter column isheadhascoa type boolean,
-	ALTER COLUMN isheadhascoa SET DEFAULT false,
-	ALTER COLUMN isheadhascoa SET NOT NULL;
-comment on column public."jurnaltype".isheadhascoa is '';
-
-
--- =============================================
--- FIELD: isheadhasunit boolean
--- =============================================
--- ADD isheadhasunit
-alter table public."jurnaltype" add isheadhasunit boolean not null default false;
-comment on column public."jurnaltype".isheadhasunit is '';
-
--- MODIFY isheadhasunit
-alter table public."jurnaltype"
-	alter column isheadhasunit type boolean,
-	ALTER COLUMN isheadhasunit SET DEFAULT false,
-	ALTER COLUMN isheadhasunit SET NOT NULL;
-comment on column public."jurnaltype".isheadhasunit is '';
-
-
--- =============================================
--- FIELD: isheadhassite boolean
--- =============================================
--- ADD isheadhassite
-alter table public."jurnaltype" add isheadhassite boolean not null default false;
-comment on column public."jurnaltype".isheadhassite is '';
-
--- MODIFY isheadhassite
-alter table public."jurnaltype"
-	alter column isheadhassite type boolean,
-	ALTER COLUMN isheadhassite SET DEFAULT false,
-	ALTER COLUMN isheadhassite SET NOT NULL;
-comment on column public."jurnaltype".isheadhassite is '';
-
-
--- =============================================
--- FIELD: isheadhasstruct boolean
--- =============================================
--- ADD isheadhasstruct
-alter table public."jurnaltype" add isheadhasstruct boolean not null default false;
-comment on column public."jurnaltype".isheadhasstruct is '';
-
--- MODIFY isheadhasstruct
-alter table public."jurnaltype"
-	alter column isheadhasstruct type boolean,
-	ALTER COLUMN isheadhasstruct SET DEFAULT false,
-	ALTER COLUMN isheadhasstruct SET NOT NULL;
-comment on column public."jurnaltype".isheadhasstruct is '';
-
-
--- =============================================
--- FIELD: isheadhaspartner boolean
--- =============================================
--- ADD isheadhaspartner
-alter table public."jurnaltype" add isheadhaspartner boolean not null default false;
-comment on column public."jurnaltype".isheadhaspartner is '';
-
--- MODIFY isheadhaspartner
-alter table public."jurnaltype"
-	alter column isheadhaspartner type boolean,
-	ALTER COLUMN isheadhaspartner SET DEFAULT false,
-	ALTER COLUMN isheadhaspartner SET NOT NULL;
-comment on column public."jurnaltype".isheadhaspartner is '';
-
-
--- =============================================
--- FIELD: isheadhasproject boolean
--- =============================================
--- ADD isheadhasproject
-alter table public."jurnaltype" add isheadhasproject boolean not null default false;
-comment on column public."jurnaltype".isheadhasproject is '';
-
--- MODIFY isheadhasproject
-alter table public."jurnaltype"
-	alter column isheadhasproject type boolean,
-	ALTER COLUMN isheadhasproject SET DEFAULT false,
-	ALTER COLUMN isheadhasproject SET NOT NULL;
-comment on column public."jurnaltype".isheadhasproject is '';
+	alter column isheadhaspaymreq type boolean,
+	ALTER COLUMN isheadhaspaymreq SET DEFAULT false,
+	ALTER COLUMN isheadhaspaymreq SET NOT NULL;
+comment on column public."jurnaltype".isheadhaspaymreq is '';
 
 
 -- =============================================
@@ -222,228 +132,33 @@ comment on column public."jurnaltype".isheadhaspaymtype is '';
 
 
 -- =============================================
--- FIELD: isheadhaspaymreq boolean
+-- FIELD: isheadhascoa boolean
 -- =============================================
--- ADD isheadhaspaymreq
-alter table public."jurnaltype" add isheadhaspaymreq boolean not null default false;
-comment on column public."jurnaltype".isheadhaspaymreq is '';
+-- ADD isheadhascoa
+alter table public."jurnaltype" add isheadhascoa boolean not null default false;
+comment on column public."jurnaltype".isheadhascoa is '';
 
--- MODIFY isheadhaspaymreq
+-- MODIFY isheadhascoa
 alter table public."jurnaltype"
-	alter column isheadhaspaymreq type boolean,
-	ALTER COLUMN isheadhaspaymreq SET DEFAULT false,
-	ALTER COLUMN isheadhaspaymreq SET NOT NULL;
-comment on column public."jurnaltype".isheadhaspaymreq is '';
+	alter column isheadhascoa type boolean,
+	ALTER COLUMN isheadhascoa SET DEFAULT false,
+	ALTER COLUMN isheadhascoa SET NOT NULL;
+comment on column public."jurnaltype".isheadhascoa is '';
 
 
 -- =============================================
--- FIELD: isheadunitmandatory boolean
+-- FIELD: isheadhasvalue boolean
 -- =============================================
--- ADD isheadunitmandatory
-alter table public."jurnaltype" add isheadunitmandatory boolean not null default false;
-comment on column public."jurnaltype".isheadunitmandatory is '';
+-- ADD isheadhasvalue
+alter table public."jurnaltype" add isheadhasvalue boolean not null default false;
+comment on column public."jurnaltype".isheadhasvalue is '';
 
--- MODIFY isheadunitmandatory
+-- MODIFY isheadhasvalue
 alter table public."jurnaltype"
-	alter column isheadunitmandatory type boolean,
-	ALTER COLUMN isheadunitmandatory SET DEFAULT false,
-	ALTER COLUMN isheadunitmandatory SET NOT NULL;
-comment on column public."jurnaltype".isheadunitmandatory is '';
-
-
--- =============================================
--- FIELD: isheadsitemandatory boolean
--- =============================================
--- ADD isheadsitemandatory
-alter table public."jurnaltype" add isheadsitemandatory boolean not null default false;
-comment on column public."jurnaltype".isheadsitemandatory is '';
-
--- MODIFY isheadsitemandatory
-alter table public."jurnaltype"
-	alter column isheadsitemandatory type boolean,
-	ALTER COLUMN isheadsitemandatory SET DEFAULT false,
-	ALTER COLUMN isheadsitemandatory SET NOT NULL;
-comment on column public."jurnaltype".isheadsitemandatory is '';
-
-
--- =============================================
--- FIELD: isheadstructmandatory boolean
--- =============================================
--- ADD isheadstructmandatory
-alter table public."jurnaltype" add isheadstructmandatory boolean not null default false;
-comment on column public."jurnaltype".isheadstructmandatory is '';
-
--- MODIFY isheadstructmandatory
-alter table public."jurnaltype"
-	alter column isheadstructmandatory type boolean,
-	ALTER COLUMN isheadstructmandatory SET DEFAULT false,
-	ALTER COLUMN isheadstructmandatory SET NOT NULL;
-comment on column public."jurnaltype".isheadstructmandatory is '';
-
-
--- =============================================
--- FIELD: isheadprojectmandatory boolean
--- =============================================
--- ADD isheadprojectmandatory
-alter table public."jurnaltype" add isheadprojectmandatory boolean not null default false;
-comment on column public."jurnaltype".isheadprojectmandatory is '';
-
--- MODIFY isheadprojectmandatory
-alter table public."jurnaltype"
-	alter column isheadprojectmandatory type boolean,
-	ALTER COLUMN isheadprojectmandatory SET DEFAULT false,
-	ALTER COLUMN isheadprojectmandatory SET NOT NULL;
-comment on column public."jurnaltype".isheadprojectmandatory is '';
-
-
--- =============================================
--- FIELD: isdetilhasunit boolean
--- =============================================
--- ADD isdetilhasunit
-alter table public."jurnaltype" add isdetilhasunit boolean not null default false;
-comment on column public."jurnaltype".isdetilhasunit is '';
-
--- MODIFY isdetilhasunit
-alter table public."jurnaltype"
-	alter column isdetilhasunit type boolean,
-	ALTER COLUMN isdetilhasunit SET DEFAULT false,
-	ALTER COLUMN isdetilhasunit SET NOT NULL;
-comment on column public."jurnaltype".isdetilhasunit is '';
-
-
--- =============================================
--- FIELD: isdetilhassite boolean
--- =============================================
--- ADD isdetilhassite
-alter table public."jurnaltype" add isdetilhassite boolean not null default false;
-comment on column public."jurnaltype".isdetilhassite is '';
-
--- MODIFY isdetilhassite
-alter table public."jurnaltype"
-	alter column isdetilhassite type boolean,
-	ALTER COLUMN isdetilhassite SET DEFAULT false,
-	ALTER COLUMN isdetilhassite SET NOT NULL;
-comment on column public."jurnaltype".isdetilhassite is '';
-
-
--- =============================================
--- FIELD: isdetilhasstruct boolean
--- =============================================
--- ADD isdetilhasstruct
-alter table public."jurnaltype" add isdetilhasstruct boolean not null default false;
-comment on column public."jurnaltype".isdetilhasstruct is '';
-
--- MODIFY isdetilhasstruct
-alter table public."jurnaltype"
-	alter column isdetilhasstruct type boolean,
-	ALTER COLUMN isdetilhasstruct SET DEFAULT false,
-	ALTER COLUMN isdetilhasstruct SET NOT NULL;
-comment on column public."jurnaltype".isdetilhasstruct is '';
-
-
--- =============================================
--- FIELD: isdetilhaspartner boolean
--- =============================================
--- ADD isdetilhaspartner
-alter table public."jurnaltype" add isdetilhaspartner boolean not null default false;
-comment on column public."jurnaltype".isdetilhaspartner is '';
-
--- MODIFY isdetilhaspartner
-alter table public."jurnaltype"
-	alter column isdetilhaspartner type boolean,
-	ALTER COLUMN isdetilhaspartner SET DEFAULT false,
-	ALTER COLUMN isdetilhaspartner SET NOT NULL;
-comment on column public."jurnaltype".isdetilhaspartner is '';
-
-
--- =============================================
--- FIELD: isdetilhasproject boolean
--- =============================================
--- ADD isdetilhasproject
-alter table public."jurnaltype" add isdetilhasproject boolean not null default false;
-comment on column public."jurnaltype".isdetilhasproject is '';
-
--- MODIFY isdetilhasproject
-alter table public."jurnaltype"
-	alter column isdetilhasproject type boolean,
-	ALTER COLUMN isdetilhasproject SET DEFAULT false,
-	ALTER COLUMN isdetilhasproject SET NOT NULL;
-comment on column public."jurnaltype".isdetilhasproject is '';
-
-
--- =============================================
--- FIELD: isdetilallowselectunit boolean
--- =============================================
--- ADD isdetilallowselectunit
-alter table public."jurnaltype" add isdetilallowselectunit boolean not null default false;
-comment on column public."jurnaltype".isdetilallowselectunit is '';
-
--- MODIFY isdetilallowselectunit
-alter table public."jurnaltype"
-	alter column isdetilallowselectunit type boolean,
-	ALTER COLUMN isdetilallowselectunit SET DEFAULT false,
-	ALTER COLUMN isdetilallowselectunit SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowselectunit is '';
-
-
--- =============================================
--- FIELD: isdetilallowselectsite boolean
--- =============================================
--- ADD isdetilallowselectsite
-alter table public."jurnaltype" add isdetilallowselectsite boolean not null default false;
-comment on column public."jurnaltype".isdetilallowselectsite is '';
-
--- MODIFY isdetilallowselectsite
-alter table public."jurnaltype"
-	alter column isdetilallowselectsite type boolean,
-	ALTER COLUMN isdetilallowselectsite SET DEFAULT false,
-	ALTER COLUMN isdetilallowselectsite SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowselectsite is '';
-
-
--- =============================================
--- FIELD: isdetilallowselectstruct boolean
--- =============================================
--- ADD isdetilallowselectstruct
-alter table public."jurnaltype" add isdetilallowselectstruct boolean not null default false;
-comment on column public."jurnaltype".isdetilallowselectstruct is '';
-
--- MODIFY isdetilallowselectstruct
-alter table public."jurnaltype"
-	alter column isdetilallowselectstruct type boolean,
-	ALTER COLUMN isdetilallowselectstruct SET DEFAULT false,
-	ALTER COLUMN isdetilallowselectstruct SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowselectstruct is '';
-
-
--- =============================================
--- FIELD: isdetilallowselectpartner boolean
--- =============================================
--- ADD isdetilallowselectpartner
-alter table public."jurnaltype" add isdetilallowselectpartner boolean not null default false;
-comment on column public."jurnaltype".isdetilallowselectpartner is '';
-
--- MODIFY isdetilallowselectpartner
-alter table public."jurnaltype"
-	alter column isdetilallowselectpartner type boolean,
-	ALTER COLUMN isdetilallowselectpartner SET DEFAULT false,
-	ALTER COLUMN isdetilallowselectpartner SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowselectpartner is '';
-
-
--- =============================================
--- FIELD: isdetilallowselectproject boolean
--- =============================================
--- ADD isdetilallowselectproject
-alter table public."jurnaltype" add isdetilallowselectproject boolean not null default false;
-comment on column public."jurnaltype".isdetilallowselectproject is '';
-
--- MODIFY isdetilallowselectproject
-alter table public."jurnaltype"
-	alter column isdetilallowselectproject type boolean,
-	ALTER COLUMN isdetilallowselectproject SET DEFAULT false,
-	ALTER COLUMN isdetilallowselectproject SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowselectproject is '';
+	alter column isheadhasvalue type boolean,
+	ALTER COLUMN isheadhasvalue SET DEFAULT false,
+	ALTER COLUMN isheadhasvalue SET NOT NULL;
+comment on column public."jurnaltype".isheadhasvalue is '';
 
 
 -- =============================================
@@ -474,6 +189,456 @@ alter table public."jurnaltype"
 	ALTER COLUMN isdetilallowgetar SET DEFAULT false,
 	ALTER COLUMN isdetilallowgetar SET NOT NULL;
 comment on column public."jurnaltype".isdetilallowgetar is '';
+
+
+-- =============================================
+-- FIELD: isheadhaspartner boolean
+-- =============================================
+-- ADD isheadhaspartner
+alter table public."jurnaltype" add isheadhaspartner boolean not null default false;
+comment on column public."jurnaltype".isheadhaspartner is '';
+
+-- MODIFY isheadhaspartner
+alter table public."jurnaltype"
+	alter column isheadhaspartner type boolean,
+	ALTER COLUMN isheadhaspartner SET DEFAULT false,
+	ALTER COLUMN isheadhaspartner SET NOT NULL;
+comment on column public."jurnaltype".isheadhaspartner is '';
+
+
+-- =============================================
+-- FIELD: isheadpartnermandatory boolean
+-- =============================================
+-- ADD isheadpartnermandatory
+alter table public."jurnaltype" add isheadpartnermandatory boolean not null default false;
+comment on column public."jurnaltype".isheadpartnermandatory is '';
+
+-- MODIFY isheadpartnermandatory
+alter table public."jurnaltype"
+	alter column isheadpartnermandatory type boolean,
+	ALTER COLUMN isheadpartnermandatory SET DEFAULT false,
+	ALTER COLUMN isheadpartnermandatory SET NOT NULL;
+comment on column public."jurnaltype".isheadpartnermandatory is '';
+
+
+-- =============================================
+-- FIELD: isheadallowselectpartner boolean
+-- =============================================
+-- ADD isheadallowselectpartner
+alter table public."jurnaltype" add isheadallowselectpartner boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectpartner is '';
+
+-- MODIFY isheadallowselectpartner
+alter table public."jurnaltype"
+	alter column isheadallowselectpartner type boolean,
+	ALTER COLUMN isheadallowselectpartner SET DEFAULT false,
+	ALTER COLUMN isheadallowselectpartner SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectpartner is '';
+
+
+-- =============================================
+-- FIELD: isheadhasunit boolean
+-- =============================================
+-- ADD isheadhasunit
+alter table public."jurnaltype" add isheadhasunit boolean not null default false;
+comment on column public."jurnaltype".isheadhasunit is '';
+
+-- MODIFY isheadhasunit
+alter table public."jurnaltype"
+	alter column isheadhasunit type boolean,
+	ALTER COLUMN isheadhasunit SET DEFAULT false,
+	ALTER COLUMN isheadhasunit SET NOT NULL;
+comment on column public."jurnaltype".isheadhasunit is '';
+
+
+-- =============================================
+-- FIELD: isheadunitmandatory boolean
+-- =============================================
+-- ADD isheadunitmandatory
+alter table public."jurnaltype" add isheadunitmandatory boolean not null default false;
+comment on column public."jurnaltype".isheadunitmandatory is '';
+
+-- MODIFY isheadunitmandatory
+alter table public."jurnaltype"
+	alter column isheadunitmandatory type boolean,
+	ALTER COLUMN isheadunitmandatory SET DEFAULT false,
+	ALTER COLUMN isheadunitmandatory SET NOT NULL;
+comment on column public."jurnaltype".isheadunitmandatory is '';
+
+
+-- =============================================
+-- FIELD: isheadallowselectunit boolean
+-- =============================================
+-- ADD isheadallowselectunit
+alter table public."jurnaltype" add isheadallowselectunit boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectunit is '';
+
+-- MODIFY isheadallowselectunit
+alter table public."jurnaltype"
+	alter column isheadallowselectunit type boolean,
+	ALTER COLUMN isheadallowselectunit SET DEFAULT false,
+	ALTER COLUMN isheadallowselectunit SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectunit is '';
+
+
+-- =============================================
+-- FIELD: isheadhassite boolean
+-- =============================================
+-- ADD isheadhassite
+alter table public."jurnaltype" add isheadhassite boolean not null default false;
+comment on column public."jurnaltype".isheadhassite is '';
+
+-- MODIFY isheadhassite
+alter table public."jurnaltype"
+	alter column isheadhassite type boolean,
+	ALTER COLUMN isheadhassite SET DEFAULT false,
+	ALTER COLUMN isheadhassite SET NOT NULL;
+comment on column public."jurnaltype".isheadhassite is '';
+
+
+-- =============================================
+-- FIELD: isheadsitemandatory boolean
+-- =============================================
+-- ADD isheadsitemandatory
+alter table public."jurnaltype" add isheadsitemandatory boolean not null default false;
+comment on column public."jurnaltype".isheadsitemandatory is '';
+
+-- MODIFY isheadsitemandatory
+alter table public."jurnaltype"
+	alter column isheadsitemandatory type boolean,
+	ALTER COLUMN isheadsitemandatory SET DEFAULT false,
+	ALTER COLUMN isheadsitemandatory SET NOT NULL;
+comment on column public."jurnaltype".isheadsitemandatory is '';
+
+
+-- =============================================
+-- FIELD: isheadallowselectsite boolean
+-- =============================================
+-- ADD isheadallowselectsite
+alter table public."jurnaltype" add isheadallowselectsite boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectsite is '';
+
+-- MODIFY isheadallowselectsite
+alter table public."jurnaltype"
+	alter column isheadallowselectsite type boolean,
+	ALTER COLUMN isheadallowselectsite SET DEFAULT false,
+	ALTER COLUMN isheadallowselectsite SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectsite is '';
+
+
+-- =============================================
+-- FIELD: isheadhasstruct boolean
+-- =============================================
+-- ADD isheadhasstruct
+alter table public."jurnaltype" add isheadhasstruct boolean not null default false;
+comment on column public."jurnaltype".isheadhasstruct is '';
+
+-- MODIFY isheadhasstruct
+alter table public."jurnaltype"
+	alter column isheadhasstruct type boolean,
+	ALTER COLUMN isheadhasstruct SET DEFAULT false,
+	ALTER COLUMN isheadhasstruct SET NOT NULL;
+comment on column public."jurnaltype".isheadhasstruct is '';
+
+
+-- =============================================
+-- FIELD: isheadstructmandatory boolean
+-- =============================================
+-- ADD isheadstructmandatory
+alter table public."jurnaltype" add isheadstructmandatory boolean not null default false;
+comment on column public."jurnaltype".isheadstructmandatory is '';
+
+-- MODIFY isheadstructmandatory
+alter table public."jurnaltype"
+	alter column isheadstructmandatory type boolean,
+	ALTER COLUMN isheadstructmandatory SET DEFAULT false,
+	ALTER COLUMN isheadstructmandatory SET NOT NULL;
+comment on column public."jurnaltype".isheadstructmandatory is '';
+
+
+-- =============================================
+-- FIELD: isheadallowselectstruct boolean
+-- =============================================
+-- ADD isheadallowselectstruct
+alter table public."jurnaltype" add isheadallowselectstruct boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectstruct is '';
+
+-- MODIFY isheadallowselectstruct
+alter table public."jurnaltype"
+	alter column isheadallowselectstruct type boolean,
+	ALTER COLUMN isheadallowselectstruct SET DEFAULT false,
+	ALTER COLUMN isheadallowselectstruct SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectstruct is '';
+
+
+-- =============================================
+-- FIELD: isheadhasproject boolean
+-- =============================================
+-- ADD isheadhasproject
+alter table public."jurnaltype" add isheadhasproject boolean not null default false;
+comment on column public."jurnaltype".isheadhasproject is '';
+
+-- MODIFY isheadhasproject
+alter table public."jurnaltype"
+	alter column isheadhasproject type boolean,
+	ALTER COLUMN isheadhasproject SET DEFAULT false,
+	ALTER COLUMN isheadhasproject SET NOT NULL;
+comment on column public."jurnaltype".isheadhasproject is '';
+
+
+-- =============================================
+-- FIELD: isheadprojectmandatory boolean
+-- =============================================
+-- ADD isheadprojectmandatory
+alter table public."jurnaltype" add isheadprojectmandatory boolean not null default false;
+comment on column public."jurnaltype".isheadprojectmandatory is '';
+
+-- MODIFY isheadprojectmandatory
+alter table public."jurnaltype"
+	alter column isheadprojectmandatory type boolean,
+	ALTER COLUMN isheadprojectmandatory SET DEFAULT false,
+	ALTER COLUMN isheadprojectmandatory SET NOT NULL;
+comment on column public."jurnaltype".isheadprojectmandatory is '';
+
+
+-- =============================================
+-- FIELD: isheadallowselectproject boolean
+-- =============================================
+-- ADD isheadallowselectproject
+alter table public."jurnaltype" add isheadallowselectproject boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectproject is '';
+
+-- MODIFY isheadallowselectproject
+alter table public."jurnaltype"
+	alter column isheadallowselectproject type boolean,
+	ALTER COLUMN isheadallowselectproject SET DEFAULT false,
+	ALTER COLUMN isheadallowselectproject SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectproject is '';
+
+
+-- =============================================
+-- FIELD: isdetilhaspartner boolean
+-- =============================================
+-- ADD isdetilhaspartner
+alter table public."jurnaltype" add isdetilhaspartner boolean not null default false;
+comment on column public."jurnaltype".isdetilhaspartner is '';
+
+-- MODIFY isdetilhaspartner
+alter table public."jurnaltype"
+	alter column isdetilhaspartner type boolean,
+	ALTER COLUMN isdetilhaspartner SET DEFAULT false,
+	ALTER COLUMN isdetilhaspartner SET NOT NULL;
+comment on column public."jurnaltype".isdetilhaspartner is '';
+
+
+-- =============================================
+-- FIELD: isdetilpartnermandatory boolean
+-- =============================================
+-- ADD isdetilpartnermandatory
+alter table public."jurnaltype" add isdetilpartnermandatory boolean not null default false;
+comment on column public."jurnaltype".isdetilpartnermandatory is '';
+
+-- MODIFY isdetilpartnermandatory
+alter table public."jurnaltype"
+	alter column isdetilpartnermandatory type boolean,
+	ALTER COLUMN isdetilpartnermandatory SET DEFAULT false,
+	ALTER COLUMN isdetilpartnermandatory SET NOT NULL;
+comment on column public."jurnaltype".isdetilpartnermandatory is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowselectpartner boolean
+-- =============================================
+-- ADD isdetilallowselectpartner
+alter table public."jurnaltype" add isdetilallowselectpartner boolean not null default false;
+comment on column public."jurnaltype".isdetilallowselectpartner is '';
+
+-- MODIFY isdetilallowselectpartner
+alter table public."jurnaltype"
+	alter column isdetilallowselectpartner type boolean,
+	ALTER COLUMN isdetilallowselectpartner SET DEFAULT false,
+	ALTER COLUMN isdetilallowselectpartner SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowselectpartner is '';
+
+
+-- =============================================
+-- FIELD: isdetilhasunit boolean
+-- =============================================
+-- ADD isdetilhasunit
+alter table public."jurnaltype" add isdetilhasunit boolean not null default false;
+comment on column public."jurnaltype".isdetilhasunit is '';
+
+-- MODIFY isdetilhasunit
+alter table public."jurnaltype"
+	alter column isdetilhasunit type boolean,
+	ALTER COLUMN isdetilhasunit SET DEFAULT false,
+	ALTER COLUMN isdetilhasunit SET NOT NULL;
+comment on column public."jurnaltype".isdetilhasunit is '';
+
+
+-- =============================================
+-- FIELD: isdetilunitmandatory boolean
+-- =============================================
+-- ADD isdetilunitmandatory
+alter table public."jurnaltype" add isdetilunitmandatory boolean not null default false;
+comment on column public."jurnaltype".isdetilunitmandatory is '';
+
+-- MODIFY isdetilunitmandatory
+alter table public."jurnaltype"
+	alter column isdetilunitmandatory type boolean,
+	ALTER COLUMN isdetilunitmandatory SET DEFAULT false,
+	ALTER COLUMN isdetilunitmandatory SET NOT NULL;
+comment on column public."jurnaltype".isdetilunitmandatory is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowselectunit boolean
+-- =============================================
+-- ADD isdetilallowselectunit
+alter table public."jurnaltype" add isdetilallowselectunit boolean not null default false;
+comment on column public."jurnaltype".isdetilallowselectunit is '';
+
+-- MODIFY isdetilallowselectunit
+alter table public."jurnaltype"
+	alter column isdetilallowselectunit type boolean,
+	ALTER COLUMN isdetilallowselectunit SET DEFAULT false,
+	ALTER COLUMN isdetilallowselectunit SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowselectunit is '';
+
+
+-- =============================================
+-- FIELD: isdetilhassite boolean
+-- =============================================
+-- ADD isdetilhassite
+alter table public."jurnaltype" add isdetilhassite boolean not null default false;
+comment on column public."jurnaltype".isdetilhassite is '';
+
+-- MODIFY isdetilhassite
+alter table public."jurnaltype"
+	alter column isdetilhassite type boolean,
+	ALTER COLUMN isdetilhassite SET DEFAULT false,
+	ALTER COLUMN isdetilhassite SET NOT NULL;
+comment on column public."jurnaltype".isdetilhassite is '';
+
+
+-- =============================================
+-- FIELD: isdetilsitemandatory boolean
+-- =============================================
+-- ADD isdetilsitemandatory
+alter table public."jurnaltype" add isdetilsitemandatory boolean not null default false;
+comment on column public."jurnaltype".isdetilsitemandatory is '';
+
+-- MODIFY isdetilsitemandatory
+alter table public."jurnaltype"
+	alter column isdetilsitemandatory type boolean,
+	ALTER COLUMN isdetilsitemandatory SET DEFAULT false,
+	ALTER COLUMN isdetilsitemandatory SET NOT NULL;
+comment on column public."jurnaltype".isdetilsitemandatory is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowselectsite boolean
+-- =============================================
+-- ADD isdetilallowselectsite
+alter table public."jurnaltype" add isdetilallowselectsite boolean not null default false;
+comment on column public."jurnaltype".isdetilallowselectsite is '';
+
+-- MODIFY isdetilallowselectsite
+alter table public."jurnaltype"
+	alter column isdetilallowselectsite type boolean,
+	ALTER COLUMN isdetilallowselectsite SET DEFAULT false,
+	ALTER COLUMN isdetilallowselectsite SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowselectsite is '';
+
+
+-- =============================================
+-- FIELD: isdetilhasstruct boolean
+-- =============================================
+-- ADD isdetilhasstruct
+alter table public."jurnaltype" add isdetilhasstruct boolean not null default false;
+comment on column public."jurnaltype".isdetilhasstruct is '';
+
+-- MODIFY isdetilhasstruct
+alter table public."jurnaltype"
+	alter column isdetilhasstruct type boolean,
+	ALTER COLUMN isdetilhasstruct SET DEFAULT false,
+	ALTER COLUMN isdetilhasstruct SET NOT NULL;
+comment on column public."jurnaltype".isdetilhasstruct is '';
+
+
+-- =============================================
+-- FIELD: isdetilstructmandatory boolean
+-- =============================================
+-- ADD isdetilstructmandatory
+alter table public."jurnaltype" add isdetilstructmandatory boolean not null default false;
+comment on column public."jurnaltype".isdetilstructmandatory is '';
+
+-- MODIFY isdetilstructmandatory
+alter table public."jurnaltype"
+	alter column isdetilstructmandatory type boolean,
+	ALTER COLUMN isdetilstructmandatory SET DEFAULT false,
+	ALTER COLUMN isdetilstructmandatory SET NOT NULL;
+comment on column public."jurnaltype".isdetilstructmandatory is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowselectstruct boolean
+-- =============================================
+-- ADD isdetilallowselectstruct
+alter table public."jurnaltype" add isdetilallowselectstruct boolean not null default false;
+comment on column public."jurnaltype".isdetilallowselectstruct is '';
+
+-- MODIFY isdetilallowselectstruct
+alter table public."jurnaltype"
+	alter column isdetilallowselectstruct type boolean,
+	ALTER COLUMN isdetilallowselectstruct SET DEFAULT false,
+	ALTER COLUMN isdetilallowselectstruct SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowselectstruct is '';
+
+
+-- =============================================
+-- FIELD: isdetilhasproject boolean
+-- =============================================
+-- ADD isdetilhasproject
+alter table public."jurnaltype" add isdetilhasproject boolean not null default false;
+comment on column public."jurnaltype".isdetilhasproject is '';
+
+-- MODIFY isdetilhasproject
+alter table public."jurnaltype"
+	alter column isdetilhasproject type boolean,
+	ALTER COLUMN isdetilhasproject SET DEFAULT false,
+	ALTER COLUMN isdetilhasproject SET NOT NULL;
+comment on column public."jurnaltype".isdetilhasproject is '';
+
+
+-- =============================================
+-- FIELD: isdetilprojectmandatory boolean
+-- =============================================
+-- ADD isdetilprojectmandatory
+alter table public."jurnaltype" add isdetilprojectmandatory boolean not null default false;
+comment on column public."jurnaltype".isdetilprojectmandatory is '';
+
+-- MODIFY isdetilprojectmandatory
+alter table public."jurnaltype"
+	alter column isdetilprojectmandatory type boolean,
+	ALTER COLUMN isdetilprojectmandatory SET DEFAULT false,
+	ALTER COLUMN isdetilprojectmandatory SET NOT NULL;
+comment on column public."jurnaltype".isdetilprojectmandatory is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowselectproject boolean
+-- =============================================
+-- ADD isdetilallowselectproject
+alter table public."jurnaltype" add isdetilallowselectproject boolean not null default false;
+comment on column public."jurnaltype".isdetilallowselectproject is '';
+
+-- MODIFY isdetilallowselectproject
+alter table public."jurnaltype"
+	alter column isdetilallowselectproject type boolean,
+	ALTER COLUMN isdetilallowselectproject SET DEFAULT false,
+	ALTER COLUMN isdetilallowselectproject SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowselectproject is '';
 
 
 -- =============================================
@@ -541,12 +706,32 @@ comment on column public."jurnaltype"._modifydate is 'waktu terakhir record dimo
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Add Foreign Key Constraint  	
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."jurnaltype" DROP CONSTRAINT fk$public$jurnaltype$doc_id;
+
+
+-- Add Foreign Key Constraint  
+ALTER TABLE public."jurnaltype"
+	ADD CONSTRAINT fk$public$jurnaltype$doc_id
+	FOREIGN KEY (doc_id)
+	REFERENCES core."doc"(doc_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$jurnaltype$doc_id;
+CREATE INDEX idx_fk$public$jurnaltype$doc_id ON public."jurnaltype"(doc_id);	
+
+	
 
 
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."jurnaltype"
+	drop constraint uq$public$jurnaltype$jurnaltype_name;
+	
+
 -- Add unique index 
 alter table  public."jurnaltype"
 	add constraint uq$public$jurnaltype$jurnaltype_name unique (jurnaltype_name); 

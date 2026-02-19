@@ -1,7 +1,9 @@
-import Context from './program-context.mjs'  
-import * as programHeaderList from './programHeaderList.mjs' 
-import * as programHeaderEdit from './programHeaderEdit.mjs' 
-import * as Extender from './program-ext.mjs'
+import Context from './jurnal-context.mjs'  
+import * as jurnalHeaderList from './jurnalHeaderList.mjs' 
+import * as jurnalHeaderEdit from './jurnalHeaderEdit.mjs' 
+import * as jurnalDetilList from './jurnalDetilList.mjs' 
+import * as jurnalDetilEdit from './jurnalDetilEdit.mjs' 
+import * as Extender from './jurnal-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -15,7 +17,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Program')
+		app.setTitle('Jurnal')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -42,8 +44,10 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			programHeaderList, 
-			programHeaderEdit, 
+			jurnalHeaderList, 
+			jurnalHeaderEdit, 
+			jurnalDetilList, 
+			jurnalDetilEdit, 
 		}
 
 		try {
@@ -64,8 +68,10 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				programHeaderList.init(self, args), 
-				programHeaderEdit.init(self, args), 
+				jurnalHeaderList.init(self, args), 
+				jurnalHeaderEdit.init(self, args), 
+				jurnalDetilList.init(self, args), 
+				jurnalDetilEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -77,7 +83,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['programHeaderEdit']
+			const modNameList = ['jurnalHeaderEdit', 'jurnalDetilEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -108,7 +114,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/program/program.svg')
+		Crsl.setIconUrl('public/modules/jurnal/jurnal.svg')
 
 
 		// Set listener untuk section carousel
@@ -177,7 +183,7 @@ async function render(self) {
 		});
 
 		
-		// program-ext.mjs, export function extendPage(self) {} 
+		// jurnal-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {

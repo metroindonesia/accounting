@@ -1,41 +1,57 @@
-import Context from './jurnaltype-context.mjs'
-import * as Ext from './jurnaltype-ext.mjs'
+import Context from './jurnal-context.mjs'
+import * as Ext from './jurnal-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
-const Extender = Ext.extenderCoa ?? Ext
+const Extender = Ext.extenderDetil ?? Ext
 
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.jurnaltypeCoaEdit
+const CurrentSectionId = Context.Sections.jurnalDetilEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
-const TitleWhenNew = 'New Coa'
-const TitleWhenView = 'View Coa'
-const TitleWhenEdit = 'Edit Coa'
+const TitleWhenNew = 'New Detil'
+const TitleWhenView = 'View Detil'
+const TitleWhenEdit = 'Edit Detil'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
 
 
-const btn_edit = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_new', 'jurnaltypeCoa-addrow')
-const btn_del = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_delete', 'jurnaltypeCoa-delrow')
-const btn_reset = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('jurnaltypeCoaEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('jurnalDetilEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('jurnalDetilEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('jurnalDetilEdit-btn_new', 'jurnalDetil-addrow')
+const btn_del = new $fgta5.ActionButton('jurnalDetilEdit-btn_delete', 'jurnalDetil-delrow')
+const btn_reset = new $fgta5.ActionButton('jurnalDetilEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('jurnalDetilEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('jurnalDetilEdit-btn_next')
 
-const btn_recordstatus = document.getElementById('jurnaltypeCoa-btn_recordstatus')
-const btn_logs = document.getElementById('jurnaltypeCoa-btn_logs')
+const btn_recordstatus = document.getElementById('jurnalDetil-btn_recordstatus')
+const btn_logs = document.getElementById('jurnalDetil-btn_logs')
 
-const frm = new $fgta5.Form('jurnaltypeCoaEdit-frm');
-const obj_jurnaltypecoa_id = frm.Inputs['jurnaltypeCoaEdit-obj_jurnaltypecoa_id']
-const obj_coa_id = frm.Inputs['jurnaltypeCoaEdit-obj_coa_id']
-const obj_jurnaltypecoa_isdr = frm.Inputs['jurnaltypeCoaEdit-obj_jurnaltypecoa_isdr']
-const obj_jurnaltypecoa_iscr = frm.Inputs['jurnaltypeCoaEdit-obj_jurnaltypecoa_iscr']
-const obj_jurnaltype_id = frm.Inputs['jurnaltypeCoaEdit-obj_jurnaltype_id']	
+const frm = new $fgta5.Form('jurnalDetilEdit-frm');
+const obj_jurnaldetil_id = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_id']
+const obj_coa_id = frm.Inputs['jurnalDetilEdit-obj_coa_id']
+const obj_jurnaldetil_descr = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_descr']
+const obj_partner_id = frm.Inputs['jurnalDetilEdit-obj_partner_id']
+const obj_struct_id = frm.Inputs['jurnalDetilEdit-obj_struct_id']
+const obj_site_id = frm.Inputs['jurnalDetilEdit-obj_site_id']
+const obj_unit_id = frm.Inputs['jurnalDetilEdit-obj_unit_id']
+const obj_project_id = frm.Inputs['jurnalDetilEdit-obj_project_id']
+const obj_curr_id = frm.Inputs['jurnalDetilEdit-obj_curr_id']
+const obj_jurnaldetil_value = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_value']
+const obj_curr_rate = frm.Inputs['jurnalDetilEdit-obj_curr_rate']
+const obj_jurnaldetil_idr = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_idr']
+const obj_jurnaltype_id = frm.Inputs['jurnalDetilEdit-obj_jurnaltype_id']
+const obj_jurnaldetil_id_ref = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_id_ref']
+const obj_coacurr = frm.Inputs['jurnalDetilEdit-obj_coacurr']
+const obj_agingtype_id = frm.Inputs['jurnalDetilEdit-obj_agingtype_id']
+const obj_iscurradj = frm.Inputs['jurnalDetilEdit-obj_iscurradj']
+const obj_jurnaldetil_ishead = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_ishead']
+const obj_isdebet = frm.Inputs['jurnalDetilEdit-obj_isdebet']
+const obj_iskredit = frm.Inputs['jurnalDetilEdit-obj_iskredit']
+const obj_jurnal_id = frm.Inputs['jurnalDetilEdit-obj_jurnal_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -76,8 +92,8 @@ export async function init(self, args) {
 	}
 
 	CurrentState.getHeaderForm = () => {
-		const jurnaltypeHeaderEdit = self.Modules.jurnaltypeHeaderEdit
-		const frmHeader = jurnaltypeHeaderEdit.getHeaderForm()
+		const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit
+		const frmHeader = jurnalHeaderEdit.getHeaderForm()
 		return frmHeader
 	}
 
@@ -147,6 +163,378 @@ export async function init(self, args) {
 			
 		}		
 	})
+	
+	// Combobox: obj_partner_id
+	obj_partner_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_partner_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_partner_id_selecting(self, obj_partner_id, frm, evt) {}
+			fn_selecting(self, obj_partner_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'partner/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_partner_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.partner_id, row.partner_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	// Combobox: obj_struct_id
+	obj_struct_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_struct_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_struct_id_selecting(self, obj_struct_id, frm, evt) {}
+			fn_selecting(self, obj_struct_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'struct/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_struct_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.struct_id, row.struct_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	// Combobox: obj_site_id
+	obj_site_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_site_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_site_id_selecting(self, obj_site_id, frm, evt) {}
+			fn_selecting(self, obj_site_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'site/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_site_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.site_id, row.site_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	// Combobox: obj_unit_id
+	obj_unit_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_unit_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_unit_id_selecting(self, obj_unit_id, frm, evt) {}
+			fn_selecting(self, obj_unit_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'unit/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_unit_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.unit_id, row.unit_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	// Combobox: obj_project_id
+	obj_project_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_project_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_project_id_selecting(self, obj_project_id, frm, evt) {}
+			fn_selecting(self, obj_project_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'project/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_project_id_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_project_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.project_id, row.project_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
+	// Combobox: obj_curr_id
+	obj_curr_id.addEventListener('selected', (evt)=>{
+		const fn_selected_name = 'obj_curr_id_selected'
+		const fn_selected = Extender[fn_selected_name]
+		if (typeof fn_selected === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_id_selected(self, obj_curr_id, frm, evt) {}
+			fn_selected(self, obj_curr_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_id_selected is not implemented')
+		}		
+	})
+	obj_curr_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_curr_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
+			fn_selecting(self, obj_curr_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'curr/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
+			
+			// buat function di extender:
+			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.curr_id, row.curr_code, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	obj_curr_id.addEventListener('populating', (evt)=>{
+		const fn_populating_name = 'obj_curr_id_populating'
+		const fn_populating = Extender[fn_populating_name]
+		if (typeof fn_populating === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_id_populating(self, obj_curr_id, frm, evt) {}
+			fn_populating(self, obj_curr_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_id_populating is not implemented')
+		}		
+	})
+	
+	// Numberbox: obj_jurnaldetil_value
+	obj_jurnaldetil_value.addEventListener('changed', (evt)=>{
+		const fn_changed_name = 'obj_jurnaldetil_value_changed'
+		const fn_changed = Extender[fn_changed_name]
+		if (typeof fn_changed === 'function') {
+			// create function di Extender:
+			// export async function obj_jurnaldetil_value_changed(self, obj_jurnaldetil_value, frm, evt) {}
+			fn_changed(self, obj_jurnaldetil_value, frm, evt)
+		} else {	
+			console.warn('Extender.obj_jurnaldetil_value_changed is not implemented')
+		}		
+	})
+	
+	// Numberbox: obj_curr_rate
+	obj_curr_rate.addEventListener('changed', (evt)=>{
+		const fn_changed_name = 'obj_curr_rate_changed'
+		const fn_changed = Extender[fn_changed_name]
+		if (typeof fn_changed === 'function') {
+			// create function di Extender:
+			// export async function obj_curr_rate_changed(self, obj_curr_rate, frm, evt) {}
+			fn_changed(self, obj_curr_rate, frm, evt)
+		} else {	
+			console.warn('Extender.obj_curr_rate_changed is not implemented')
+		}		
+	})
 		
 }
 
@@ -157,6 +545,12 @@ export async function openSelectedData(self, params) {
 	let mask = $fgta5.Modal.createMask()
 	try {
 		obj_coa_id.clear()
+		obj_partner_id.clear()
+		obj_struct_id.clear()
+		obj_site_id.clear()
+		obj_unit_id.clear()
+		obj_project_id.clear()
+		obj_curr_id.clear()
 		
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -168,7 +562,7 @@ export async function openSelectedData(self, params) {
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
-			const fn_iseditdisabled_name = 'jurnaltypeCoaEdit_isEditDisabled'
+			const fn_iseditdisabled_name = 'jurnalDetilEdit_isEditDisabled'
 			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 			if (typeof fn_iseditdisabled === 'function') {
 				const editDisabled = fn_iseditdisabled(self, data)
@@ -183,8 +577,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export function jurnaltypeCoaEdit_formOpened(self, frm, CurrentState) {}
-		const fn_formopened_name = 'jurnaltypeCoaEdit_formOpened'
+		// export function jurnalDetilEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'jurnalDetilEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			fn_formopened(self, frm, CurrentState)
@@ -222,8 +616,8 @@ export function headerLocked(self) {
 	btn_new.disabled = true
 
 	// Extender untuk event Locked
-	// export function jurnaltypeCoaEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeCoaEdit_formLocked'
+	// export function jurnalDetilEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnalDetilEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -236,8 +630,8 @@ export function headerUnlocked(self) {
 	btn_new.disabled = false
 
 	// Extender untuk event Unlocked
-	// export function jurnaltypeCoaEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeCoaEdit_formUnlocked'
+	// export function jurnalDetilEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnalDetilEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -289,7 +683,7 @@ async function newData(self, datainit) {
 
 
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/coa-open`
+	const url = `/${Context.moduleName}/detil-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -299,7 +693,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/coa-create`
+	const url = `/${Context.moduleName}/detil-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -309,7 +703,7 @@ async function createData(self, data, formData) {
 }
 
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/coa-update`
+	const url = `/${Context.moduleName}/detil-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -319,7 +713,7 @@ async function updateData(self, data, formData) {
 }
 
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/coa-delete`
+	const url = `/${Context.moduleName}/detil-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -347,7 +741,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.jurnaltypeCoaList
+		const listId =  Context.Sections.jurnalDetilList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -373,8 +767,8 @@ async function  frm_locked(self, evt) {
 
 
 	// Extender untuk event locked
-	// export function jurnaltypeCoaEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeCoaEdit_formLocked'
+	// export function jurnalDetilEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnalDetilEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -410,8 +804,8 @@ async function  frm_unlocked(self, evt) {
 	btn_next.disabled = true
 
 	// Extender untuk event Unlocked
-	// export function jurnaltypeCoaEdit_formUnlocked(self, frm) {}
-	const fn_name = 'jurnaltypeCoaEdit_formUnlocked'
+	// export function jurnalDetilEdit_formUnlocked(self, frm) {}
+	const fn_name = 'jurnalDetilEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm)
@@ -451,13 +845,13 @@ async function btn_new_click(self, evt) {
 	console.log('new')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const jurnaltypeCoaList = self.Modules.jurnaltypeCoaList
-	const listsecid = jurnaltypeCoaList.Section.Id
+	const jurnalDetilList = self.Modules.jurnalDetilList
+	const listsecid = jurnalDetilList.Section.Id
 	const fromListSection = sourceSection===listsecid
 
 	if (fromListSection) {
 		console.log('tambahkan row baru')
-		CurrentSection.setSectionReturn(jurnaltypeCoaList.Section)
+		CurrentSection.setSectionReturn(jurnalDetilList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -483,22 +877,25 @@ async function btn_new_click(self, evt) {
 	try {
 	
 		// ambil id header
-		const jurnaltypeHeaderEdit = self.Modules.jurnaltypeHeaderEdit
-		const frmHeader = jurnaltypeHeaderEdit.getHeaderForm()
+		const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit
+		const frmHeader = jurnalHeaderEdit.getHeaderForm()
 		const header_pk = frmHeader.getPrimaryInput()
-		const jurnaltype_id = header_pk.value
+		const jurnal_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
-			jurnaltype_id,
+			jurnal_id,
+			jurnaldetil_value: 0,
+			curr_rate: 1,
+			jurnaldetil_idr: 0,
 		}
 
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, 
 		// dapat dibuat di Extender.newData
-		// export async function jurnaltypeCoaEdit_newData(self, datainit, frm, CurrentState) {}
-		const fn_newdata_name = 'jurnaltypeCoaEdit_newData'
+		// export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'jurnalDetilEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
 			await fn_newdata(self, datainit, frm, CurrentState)
@@ -518,7 +915,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.jurnaltypeCoaList.Section.show()
+			self.Modules.jurnalDetilList.Section.show()
 		}
 	}
 }
@@ -528,8 +925,8 @@ async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
 	// Extender Autofill
-	// export async function jurnaltypeCoaEdit_autofill(self, frm) {}
-	const fn_autofill_name = 'jurnaltypeCoaEdit_autofill'
+	// export async function jurnalDetilEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'jurnalDetilEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -579,9 +976,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function jurnaltypeCoaEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'jurnaltypeCoaEdit_dataSaving'
+	const fn_datasaving_name = 'jurnalDetilEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -631,8 +1028,8 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function jurnaltypeCoaEdit_dataSaved(self, data, frm) {}
-		const fn_datasaved_name = 'jurnaltypeCoaEdit_dataSaved'
+		// export async function jurnalDetilEdit_dataSaved(self, data, frm) {}
+		const fn_datasaved_name = 'jurnalDetilEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
 			await fn_datasaved(self, data, frm)
@@ -650,10 +1047,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.jurnaltypeCoaList.addNewRow(self, data)
+			self.Modules.jurnalDetilList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.jurnaltypeCoaList.updateCurrentRow(self, data)
+			self.Modules.jurnalDetilList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -691,9 +1088,9 @@ async function btn_del_click(self, evt) {
 	try {
 
 		// Extender Deleting
-		// export async function jurnaltypeCoaEdit_dataDeleting(self, id, args) {}
+		// export async function jurnalDetilEdit_dataDeleting(self, id, args) {}
 		const args = { cancelDelete: false }
-		const fn_datadeleting_name = 'jurnaltypeCoaEdit_dataDeleting'
+		const fn_datadeleting_name = 'jurnalDetilEdit_dataDeleting'
 		const fn_datadeleting = Extender[fn_datadeleting_name]
 		if (typeof fn_datadeleting === 'function') {
 			await fn_datadeleting(self, idValue, args)
@@ -710,8 +1107,8 @@ async function btn_del_click(self, evt) {
 		
 
 		// Extender Delete
-		// export async function jurnaltypeCoaEdit_dataDeleted(self, data) {}
-		const fn_datadeleted_name = 'jurnaltypeCoaEdit_dataDeleted'
+		// export async function jurnalDetilEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'jurnalDetilEdit_dataDeleted'
 		const fn_datadeleted = Extender[fn_datadeleted_name]
 		if (typeof fn_datadeleted === 'function') {
 			await fn_datadeleted(self, result)
@@ -719,10 +1116,10 @@ async function btn_del_click(self, evt) {
 
 
 		// hapus current row yang dipilih di list
-		self.Modules.jurnaltypeCoaList.removeCurrentRow(self)
+		self.Modules.jurnalDetilList.removeCurrentRow(self)
 
 		// kembali ke list
-		self.Modules.jurnaltypeCoaList.Section.show()
+		self.Modules.jurnalDetilList.Section.show()
 
 
 		// lock kembali form
@@ -765,12 +1162,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.jurnaltypeCoaList.selectPreviousRow(self)
+	self.Modules.jurnalDetilList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.jurnaltypeCoaList.selectNextRow(self)
+	self.Modules.jurnalDetilList.selectNextRow(self)
 }
 
 
@@ -806,9 +1203,9 @@ async function btn_recordstatus_click(self, evt) {
 
 			// jika mau menambah beberapa informasi mengenai record,
 			// misalnya commit by, postby, dll
-			// melalui extender jurnaltypeCoaEdit_addRecordInfo
-			// export async function jurnaltypeCoaEdit_addRecordInfo(self,  data) {}
-			const fn_addrecordinfo_name = 'jurnaltypeCoaEdit_addRecordInfo'
+			// melalui extender jurnalDetilEdit_addRecordInfo
+			// export async function jurnalDetilEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'jurnalDetilEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self,  data)
@@ -851,7 +1248,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.jurnaltypecoa',
+				table: 'public.jurnaldetil',
 				id: id
 			}
 
