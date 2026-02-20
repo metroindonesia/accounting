@@ -136,6 +136,11 @@ comment on column public."jurnaltypeuser"._modifydate is 'waktu terakhir record 
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."jurnaltypeuser" DROP CONSTRAINT fk$public$jurnaltypeuser$user_id;
+ALTER TABLE public."jurnaltypeuser" DROP CONSTRAINT fk$public$jurnaltypeuser$jurnaltype_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE public."jurnaltypeuser"
 	ADD CONSTRAINT fk$public$jurnaltypeuser$user_id
@@ -164,3 +169,12 @@ CREATE INDEX idx_fk$public$jurnaltypeuser$jurnaltype_id ON public."jurnaltypeuse
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."jurnaltypeuser"
+	drop constraint uq$public$jurnaltypeuser$jurnaltypeuser_pair;
+	
+
+-- Add unique index 
+alter table  public."jurnaltypeuser"
+	add constraint uq$public$jurnaltypeuser$jurnaltypeuser_pair unique (jurnaltype_id, user_id); 
+

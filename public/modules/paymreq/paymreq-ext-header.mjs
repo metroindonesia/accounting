@@ -24,7 +24,6 @@ const _paymreq_invoice = 'paymreqHeaderEdit-obj_paymreq_invoice'
 const _ffl_id = 'paymreqHeaderEdit-obj_ffl_id'
 const _po_id = 'paymreqHeaderEdit-obj_po_id'
 const _bc_id = 'paymreqHeaderEdit-obj_bc_id'
-const _payment_bgno = 'paymreqHeaderEdit-obj_payment_bgno'
 const _partner_id = 'paymreqHeaderEdit-obj_partner_id'
 const _partnerbank_id = 'paymreqHeaderEdit-obj_partnerbank_id'
 const _partnercontact_id = 'paymreqHeaderEdit-obj_partnercontact_id'
@@ -541,14 +540,12 @@ function paymreqtype_changed(paymreqtype, frm) {
 }
 
 function paymtype_changed(paymtype, frm) {
-	pageHelper.setVisibility(`${_payment_bgno}-container`, paymtype.ishasgiro)
 	pageHelper.setVisibility(`${_partnerbank_id}-container`, paymtype.ishaspartnerbankselector)
 	pageHelper.setVisibility(`${_partnercontact_id}-container`, paymtype.ishaspartnercontact)
 	pageHelper.setVisibility(`${_partnerbank_account}-container`, paymtype.ishasbankaccount)
 	pageHelper.setVisibility(`${_partnerbank_accountname}-container`, paymtype.ishasbankaccountname)
 	pageHelper.setVisibility(`${_partnerbank_bankname}-container`, paymtype.ishasbankname)
 
-	frm.Inputs[_payment_bgno].markAsRequired(paymtype.ishasgiro)
 	frm.Inputs[_partnerbank_id].markAsRequired(paymtype.ishaspartnerbankselector)
 	frm.Inputs[_partnerbank_account].markAsRequired(paymtype.ishasbankaccount)
 	frm.Inputs[_partnerbank_accountname].markAsRequired(paymtype.ishasbankaccountname)

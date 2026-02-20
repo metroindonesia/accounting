@@ -13,7 +13,8 @@ const moduleName = 'jurnaltype'
 const headerSectionName = 'header'
 const headerTableName = 'public.jurnaltype' 
 const coaTableName = 'public.jurnaltypecoa'  
-const userTableName = 'public.jurnaltypeuser'  	
+const userTableName = 'public.jurnaltypeuser'  
+const paymreqtypeTableName = 'public.jurnaltypepaymreqtype'  	
 
 // api: account
 export default class extends Api {
@@ -54,6 +55,14 @@ export default class extends Api {
 	async userCreate(body) { return await jurnaltype_userCreate(this, body) }
 	async userDelete(body) { return await jurnaltype_userDelete(this, body) }
 	async userDeleteRows(body) { return await jurnaltype_userDeleteRows(this, body) }
+	
+	// paymreqtype	
+	async paymreqtypeList(body) { return await jurnaltype_paymreqtypeList(this, body) }
+	async paymreqtypeOpen(body) { return await jurnaltype_paymreqtypeOpen(this, body) }
+	async paymreqtypeUpdate(body) { return await jurnaltype_paymreqtypeUpdate(this, body)}
+	async paymreqtypeCreate(body) { return await jurnaltype_paymreqtypeCreate(this, body) }
+	async paymreqtypeDelete(body) { return await jurnaltype_paymreqtypeDelete(this, body) }
+	async paymreqtypeDeleteRows(body) { return await jurnaltype_paymreqtypeDeleteRows(this, body) }
 			
 }	
 
@@ -446,6 +455,34 @@ async function jurnaltype_headerDelete(self, body) {
 
 					jurnaltype_log(self, body, startTime, userTableName, rowuser.jurnaltypeuser_id, 'DELETE', {rowdata: deletedRow})
 					jurnaltype_log(self, body, startTime, headerTableName, rowuser.jurnaltype_id, 'DELETE ROW USER', {jurnaltypeuser_id: rowuser.jurnaltypeuser_id, tablename: userTableName}, `removed: ${rowuser.jurnaltypeuser_id}`)
+
+
+				}	
+			}
+
+			// hapus data paymreqtype
+			{
+				const sql = `select * from ${paymreqtypeTableName} where jurnaltype_id=\${jurnaltype_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowpaymreqtype of rows) {
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.paymreqtypeDeleting === 'function') {
+						// export async function paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata) {}
+						await Extender.paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata)
+					}
+
+					const param = {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id}
+					const cmd = sqlUtil.createDeleteCommand(paymreqtypeTableName, ['jurnaltypepaymreqtype_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.paymreqtypeDeleted === 'function') {
+						// export async function paymreqtypeDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.paymreqtypeDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					jurnaltype_log(self, body, startTime, paymreqtypeTableName, rowpaymreqtype.jurnaltypepaymreqtype_id, 'DELETE', {rowdata: deletedRow})
+					jurnaltype_log(self, body, startTime, headerTableName, rowpaymreqtype.jurnaltype_id, 'DELETE ROW PAYMREQTYPE', {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id, tablename: paymreqtypeTableName}, `removed: ${rowpaymreqtype.jurnaltypepaymreqtype_id}`)
 
 
 				}	
@@ -1172,6 +1209,359 @@ async function jurnaltype_userDeleteRows(self, body) {
 
 				jurnaltype_log(self, body, startTime, userTableName, rowuser.jurnaltypeuser_id, 'DELETE', {rowdata: deletedRow})
 				jurnaltype_log(self, body, startTime, headerTableName, rowuser.jurnaltype_id, 'DELETE ROW USER', {jurnaltypeuser_id: rowuser.jurnaltypeuser_id, tablename: userTableName}, `removed: ${rowuser.jurnaltypeuser_id}`)
+			}
+		})
+
+		const res = {
+			deleted: true,
+			jurnaltype_id: jurnaltype_id,
+			message: ''
+		}
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
+
+
+// paymreqtype	
+
+async function jurnaltype_paymreqtypeList(self, body) {
+	const tablename = paymreqtypeTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		jurnaltype_id: `jurnaltype_id=try_cast_bigint(\${jurnaltype_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.jurnaltypepaymreqtype_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.paymreqtypeListCriteria === 'function') {
+			// export async function paymreqtypeListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.paymreqtypeListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			// lookup: paymreqtype_name dari field paymreqtype_name pada table public.paymreqtype dimana (public.paymreqtype.paymreqtype_id = public.jurnaltype.paymreqtype_id)
+			{
+				const { paymreqtype_name } = await sqlUtil.lookupdb(db, 'public.paymreqtype', 'paymreqtype_id', row.paymreqtype_id)
+				row.paymreqtype_name = paymreqtype_name
+			}
+			
+
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+		return {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+	} catch (err) {
+		throw err
+	}
+}
+
+async function jurnaltype_paymreqtypeOpen(self, body) {
+	const tablename = paymreqtypeTableName
+
+	try {
+		const { id } = body 
+		const criteria = { jurnaltypepaymreqtype_id: id }
+		const searchMap = { jurnaltypepaymreqtype_id: `jurnaltypepaymreqtype_id = \${jurnaltypepaymreqtype_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		// lookup: paymreqtype_name dari field paymreqtype_name pada table public.paymreqtype dimana (public.paymreqtype.paymreqtype_id = public.jurnaltype.paymreqtype_id)
+		{
+			const { paymreqtype_name } = await sqlUtil.lookupdb(db, 'public.paymreqtype', 'paymreqtype_id', data.paymreqtype_id)
+			data.paymreqtype_name = paymreqtype_name
+		}
+		
+
+		// lookup data createby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function paymreqtypeOpen(self, db, data) {}
+		if (typeof Extender.paymreqtypeOpen === 'function') {
+			// export async function paymreqtypeOpen(self, db, data) {}
+			await Extender.paymreqtypeOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function jurnaltype_paymreqtypeCreate(self, body) {
+	const { source='jurnaltype', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = paymreqtypeTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._createby = user_id
+		data._createdate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'paymreqtype', 
+				prefix: ''	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.prefix)
+			data.jurnaltypepaymreqtype_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.paymreqtypeCreating === 'function') {
+				// export async function paymreqtypeCreating(self, tx, data, seqdata, args) {}
+				await Extender.paymreqtypeCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.paymreqtypeCreated === 'function') {
+				// export async function paymreqtypeCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.paymreqtypeCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			jurnaltype_log(self, body, startTime, tablename, ret.jurnaltypepaymreqtype_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function jurnaltype_paymreqtypeUpdate(self, body) {
+	const { source='jurnaltype', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = paymreqtypeTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._modifyby = user_id
+		data._modifydate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.paymreqtypeUpdating === 'function') {
+				// export async function paymreqtypeUpdating(self, tx, data) {}
+				await Extender.paymreqtypeUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['jurnaltypepaymreqtype_id'])
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.paymreqtypeUpdated === 'function') {
+				// export async function paymreqtypeUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.paymreqtypeUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			jurnaltype_log(self, body, startTime, tablename, data.jurnaltypepaymreqtype_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function jurnaltype_paymreqtypeDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = paymreqtypeTableName
+
+	try {
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {jurnaltypepaymreqtype_id: id}
+			const sql = `select * from ${paymreqtypeTableName} where jurnaltypepaymreqtype_id=\${jurnaltypepaymreqtype_id}`
+			const rowpaymreqtype = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.paymreqtypeDeleting === 'function') {
+				// export async function paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata) {}
+				await Extender.paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata)
+			}
+
+			const param = {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id}
+			const cmd = sqlUtil.createDeleteCommand(paymreqtypeTableName, ['jurnaltypepaymreqtype_id'])
+			const deletedRow = await cmd.execute(param)
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.paymreqtypeDeleted === 'function') {
+				// export async function paymreqtypeDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.paymreqtypeDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			jurnaltype_log(self, body, startTime, paymreqtypeTableName, rowpaymreqtype.jurnaltypepaymreqtype_id, 'DELETE', {rowdata: deletedRow})
+			jurnaltype_log(self, body, startTime, headerTableName, rowpaymreqtype.jurnaltype_id, 'DELETE ROW PAYMREQTYPE', {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id, tablename: paymreqtypeTableName}, `removed: ${rowpaymreqtype.jurnaltypepaymreqtype_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function jurnaltype_paymreqtypeDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = paymreqtypeTableName
+
+
+	try {
+
+		let jurnaltype_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {jurnaltypepaymreqtype_id: id}
+				const sql = `select * from ${paymreqtypeTableName} where jurnaltypepaymreqtype_id=\${jurnaltypepaymreqtype_id}`
+				const rowpaymreqtype = await tx.oneOrNone(sql, dataToRemove)
+				jurnaltype_id = rowpaymreqtype.jurnaltype_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.paymreqtypeDeleting === 'function') {
+					// async function paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata) {}
+					await Extender.paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata)
+				}
+
+				const param = {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id}
+				const cmd = sqlUtil.createDeleteCommand(paymreqtypeTableName, ['jurnaltypepaymreqtype_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.paymreqtypeDeleted === 'function') {
+					// export async function paymreqtypeDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.paymreqtypeDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				jurnaltype_log(self, body, startTime, paymreqtypeTableName, rowpaymreqtype.jurnaltypepaymreqtype_id, 'DELETE', {rowdata: deletedRow})
+				jurnaltype_log(self, body, startTime, headerTableName, rowpaymreqtype.jurnaltype_id, 'DELETE ROW PAYMREQTYPE', {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id, tablename: paymreqtypeTableName}, `removed: ${rowpaymreqtype.jurnaltypepaymreqtype_id}`)
 			}
 		})
 

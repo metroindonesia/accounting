@@ -139,12 +139,6 @@
 		
 	}
 	
-	#paymreqHeaderEdit-obj_payment_bgno-container {
-		grid-row: 10;
-		grid-column: 4 / span 3;
-		
-	}
-	
 	#paymreqHeaderEdit-obj_partnerbank_id-container {
 		grid-row: 10;
 		grid-column: 4 / span 3;

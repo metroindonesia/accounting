@@ -1,0 +1,28 @@
+<div id="currRateList-head">
+	<div id="currRateList-head-title" class="section-detil-title"></div>
+	<div id="currRateList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="currRateList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="currrate_id">
+			<th rowselector></th>
+			<th data-name="currrate_date" binding="currrate_date" formatter="dateshort(v)">Date</th>
+			<th data-name="currrate_value" binding="currrate_value" formatter="decimal(v, 0)" style='text-align:right'>Value</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="currRateList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div>
+		<button id="currRateList-btn_addrow" data-action="currRate-addrow" data-sectionsource="currRateList-section">Add Row</button>
+		<button id="currRateList-btn_delrow">Delete Row</button>
+	</div>
+	<div></div>
+</div>

@@ -2,91 +2,48 @@ import Context from './jurnaltype-context.mjs'
 import * as Ext from './jurnaltype-ext.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
-const Extender = Ext.extenderHeader ?? Ext
+const Extender = Ext.extenderPaymreqtype ?? Ext
 
 
 const CurrentState = {}
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.jurnaltypeHeaderEdit
+const CurrentSectionId = Context.Sections.jurnaltypePaymreqtypeEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 
-
-const TitleWhenNew = 'New Jurnal Type'
-const TitleWhenView = 'View Jurnal Type'
-const TitleWhenEdit = 'Edit Jurnal Type'
+const TitleWhenNew = 'New Payment Request Type'
+const TitleWhenView = 'View Payment Request Type'
+const TitleWhenEdit = 'Edit Payment Request Type'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_new', 'jurnaltypeHeader-new')
-const btn_del = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('jurnaltypeHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('jurnaltypeHeader-btn_recordstatus')
-const btn_logs = document.getElementById('jurnaltypeHeader-btn_logs')
-const btn_about = document.getElementById('jurnaltypeHeader-btn_about')
+const btn_edit = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_new', 'jurnaltypePaymreqtype-addrow')
+const btn_del = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_delete', 'jurnaltypePaymreqtype-delrow')
+const btn_reset = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('jurnaltypePaymreqtypeEdit-btn_next')
 
-const frm = new $fgta5.Form('jurnaltypeHeaderEdit-frm');
-const obj_jurnaltype_id = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_id']
-const obj_jurnaltype_name = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_name']
-const obj_doc_id = frm.Inputs['jurnaltypeHeaderEdit-obj_doc_id']
-const obj_jurnaltype_isallowselect = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_isallowselect']
-const obj_jurnaltype_descr = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_descr']
-const obj_jurnaltype_headcopyto = frm.Inputs['jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto']
-const obj_ishasduedate = frm.Inputs['jurnaltypeHeaderEdit-obj_ishasduedate']
-const obj_isheadhaspaymreq = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymreq']
-const obj_isheadhaspaymtype = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspaymtype']
-const obj_isheadhascoa = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhascoa']
-const obj_isheadhasvalue = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasvalue']
-const obj_isdetilallowgetap = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetap']
-const obj_isdetilallowgetar = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowgetar']
-const obj_isheadhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhaspartner']
-const obj_isheadpartnermandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadpartnermandatory']
-const obj_ispartnerdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_ispartnerdisabled']
-const obj_isheadhasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasunit']
-const obj_isheadunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadunitmandatory']
-const obj_isunitdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_isunitdisabled']
-const obj_isheadhassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhassite']
-const obj_isheadsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadsitemandatory']
-const obj_issitedisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_issitedisabled']
-const obj_isheadhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasstruct']
-const obj_isheadstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadstructmandatory']
-const obj_isstructdisabled = frm.Inputs['jurnaltypeHeaderEdit-obj_isstructdisabled']
-const obj_isheadhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadhasproject']
-const obj_isheadprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadprojectmandatory']
-const obj_isheadallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isheadallowselectproject']
-const obj_isdetilhaspartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhaspartner']
-const obj_isdetilpartnermandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilpartnermandatory']
-const obj_isdetilallowselectpartner = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectpartner']
-const obj_isdethasunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethasunit']
-const obj_isdetilunitmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilunitmandatory']
-const obj_isdetilallowselectunit = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectunit']
-const obj_isdethassite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdethassite']
-const obj_isdetilsitemandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilsitemandatory']
-const obj_isdetilallowselectsite = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectsite']
-const obj_isdetilhasstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasstruct']
-const obj_isdetilstructmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilstructmandatory']
-const obj_isdetilallowselectstruct = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectstruct']
-const obj_isdetilhasproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilhasproject']
-const obj_isdetilprojectmandatory = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilprojectmandatory']
-const obj_isdetilallowselectproject = frm.Inputs['jurnaltypeHeaderEdit-obj_isdetilallowselectproject']	
+const btn_recordstatus = document.getElementById('jurnaltypePaymreqtype-btn_recordstatus')
+const btn_logs = document.getElementById('jurnaltypePaymreqtype-btn_logs')
+
+const frm = new $fgta5.Form('jurnaltypePaymreqtypeEdit-frm');
+const obj_jurnaltypepaymreqtype_id = frm.Inputs['jurnaltypePaymreqtypeEdit-obj_jurnaltypepaymreqtype_id']
+const obj_paymreqtype_id = frm.Inputs['jurnaltypePaymreqtypeEdit-obj_paymreqtype_id']
+const obj_jurnaltype_id = frm.Inputs['jurnaltypePaymreqtypeEdit-obj_jurnaltype_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
 const rec_modifydate = document.getElementById('fRecord-section-modifydate')
 const rec_id = document.getElementById('fRecord-section-id')
 
-
 export const Section = CurrentSection
 
+
 export async function init(self, args) {
-	console.log('initializing jurnaltypeHeaderEdit ...')
-	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 		backToList(self, evt)
@@ -98,64 +55,60 @@ export async function init(self, args) {
 
 	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
 	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt)})
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt)})
+	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
 	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
 	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
 	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-
+	
 
 	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
 	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
-	btn_about.addEventListener('click', evt=>{ btn_about_click(self, evt) })
 
-	// set actions
+	CurrentState.headerFormLocked = true 
+	CurrentState.editDisabled = false
+
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
-	}
-	
-	// export async function jurnaltypeHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'jurnaltypeHeaderEdit_init'
-	const fn_init = Extender[fn_init_name]
-	if (typeof fn_init === 'function') {
-		await fn_init(self, CurrentState)
+		edit: btn_edit,
 	}
 
+	CurrentState.getHeaderForm = () => {
+		const jurnaltypeHeaderEdit = self.Modules.jurnaltypeHeaderEdit
+		const frmHeader = jurnaltypeHeaderEdit.getHeaderForm()
+		return frmHeader
+	}
+
 
 	
-
-	
-	// Combobox: obj_doc_id
-	obj_doc_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_doc_id_selecting'
+	// Combobox: obj_paymreqtype_id
+	obj_paymreqtype_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_paymreqtype_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_doc_id_selecting(self, obj_doc_id, frm, evt) {}
-			fn_selecting(self, obj_doc_id, frm, evt)
+			// export async function obj_paymreqtype_id_selecting(self, obj_paymreqtype_id, frm, evt) {}
+			fn_selecting(self, obj_paymreqtype_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'doc/header-list'
+			const url = 'paymreqtype/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
 			}
 
 			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
 			
 			// buat function di extender:
-			// export function obj_doc_id_selecting_criteria(self, obj_doc_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_doc_id_selecting_criteria'
+			// export function obj_paymreqtype_id_selecting_criteria(self, obj_paymreqtype_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_paymreqtype_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_doc_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_paymreqtype_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -168,7 +121,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.doc_id, row.doc_name, row)
+					evt.detail.addRow(row.paymreqtype_id, row.paymreqtype_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -181,31 +134,33 @@ export async function init(self, args) {
 			
 		}		
 	})
-	
 		
-	
 }
+
 
 export async function openSelectedData(self, params) {
 	console.log('openSelectedData')
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_doc_id.clear()
-					
+		obj_paymreqtype_id.clear()
+		
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
 		
 
 		CurrentState.currentOpenedId = id
-
-		// export async function jurnaltypeHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'jurnaltypeHeaderEdit_isEditDisabled'
-		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
-		if (typeof fn_iseditdisabled === 'function') {
-			const editDisabled = fn_iseditdisabled(self, data)
-			CurrentState.editDisabled = editDisabled
+		
+		
+		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
+		if (!CurrentState.headerFormLocked) {
+			const fn_iseditdisabled_name = 'jurnaltypePaymreqtypeEdit_isEditDisabled'
+			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
+			if (typeof fn_iseditdisabled === 'function') {
+				const editDisabled = fn_iseditdisabled(self, data)
+				CurrentState.editDisabled = editDisabled
+			}
 		}
 
 		// disable primary key
@@ -213,14 +168,15 @@ export async function openSelectedData(self, params) {
 
 		// isi form dengan data
 		frm.setData(data)
-
+	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function jurnaltypeHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'jurnaltypeHeaderEdit_formOpened'
+		// export function jurnaltypePaymreqtypeEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'jurnaltypePaymreqtypeEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
-			await fn_formopened(self, frm, CurrentState)
+			fn_formopened(self, frm, CurrentState)
 		}
+
 
 		// finally, accept changes dan lock form
 		frm.acceptChanges()
@@ -235,10 +191,8 @@ export async function openSelectedData(self, params) {
 	}
 }
 
-
-
-export function getHeaderForm(self) {
-	return frm
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getForm(self) {
@@ -247,6 +201,34 @@ export function getForm(self) {
 
 export function clearForm(self, text) {
 	frm.clear(text)
+}
+
+export function headerLocked(self) {
+	CurrentState.headerFormLocked = true
+	CurrentState.editDisabled = true
+	btn_new.disabled = true
+
+	// Extender untuk event Locked
+	// export function jurnaltypePaymreqtypeEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnaltypePaymreqtypeEdit_formLocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
+}
+
+export function headerUnlocked(self) {
+	CurrentState.headerFormLocked = false
+	CurrentState.editDisabled = false
+	btn_new.disabled = false
+
+	// Extender untuk event Unlocked
+	// export function jurnaltypePaymreqtypeEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnaltypePaymreqtypeEdit_formUnlocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
 }
 
 export function disableNextButton(self, disabled=true) {
@@ -292,8 +274,9 @@ async function newData(self, datainit) {
 	}
 }
 
+
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/header-open`
+	const url = `/${Context.moduleName}/paymreqtype-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -303,7 +286,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-create`
+	const url = `/${Context.moduleName}/paymreqtype-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -312,9 +295,8 @@ async function createData(self, data, formData) {
 	} 	
 }
 
-
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-update`
+	const url = `/${Context.moduleName}/paymreqtype-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -323,9 +305,8 @@ async function updateData(self, data, formData) {
 	} 
 }
 
-
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/header-delete`
+	const url = `/${Context.moduleName}/paymreqtype-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -353,16 +334,21 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.jurnaltypeHeaderList
+		const listId =  Context.Sections.jurnaltypePaymreqtypeList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
 }
 
+
 async function  frm_locked(self, evt) {
+	console.log('frm_locked')
+
 	CurrentSection.Title = TitleWhenView
 
 	btn_edit.setText(EditModeText)
+
+	//  todo: cek dulu apakah boleh add/remove rows 
 
 	btn_edit.disabled = false
 	btn_save.disabled = true
@@ -372,40 +358,30 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
-	
+
 	// Extender untuk event locked
-	// export function jurnaltypeHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeHeaderEdit_formLocked'
+	// export function jurnaltypePaymreqtypeEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'jurnaltypePaymreqtypeEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}
+	}	
 
+	// jika heder form dalam kondisi lock,
+	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
-		// jika karena suatu kondisi data mengharuskan data tidak boleh diedit
 		btn_edit.disabled = true
-	}
-
-	
-	// trigger lock event di coa
-	self.Modules.jurnaltypeCoaList.headerLocked(self)
-	self.Modules.jurnaltypeCoaEdit.headerLocked(self)
-	
-	// trigger lock event di user
-	self.Modules.jurnaltypeUserList.headerLocked(self)
-	self.Modules.jurnaltypeUserEdit.headerLocked(self)
-	
-	// trigger lock event di paymreqtype
-	self.Modules.jurnaltypePaymreqtypeList.headerLocked(self)
-	self.Modules.jurnaltypePaymreqtypeEdit.headerLocked(self)
-		
+		btn_new.disabled = true
+	} 
 
 }
 
 async function  frm_unlocked(self, evt) {
+	console.log('frm_unlocked')
+
 	if (frm.isNew()) {
 		CurrentSection.Title = TitleWhenNew
+
 	} else {
 		CurrentSection.Title = TitleWhenEdit
 	}
@@ -420,29 +396,13 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
-
 	// Extender untuk event Unlocked
-	// export function jurnaltypeHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'jurnaltypeHeaderEdit_formUnlocked'
+	// export function jurnaltypePaymreqtypeEdit_formUnlocked(self, frm) {}
+	const fn_name = 'jurnaltypePaymreqtypeEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
-		fn(self, frm, CurrentState)
+		fn(self, frm)
 	}
-
-	
-	// trigger unlock event di coa
-	self.Modules.jurnaltypeCoaList.headerUnlocked(self)
-	self.Modules.jurnaltypeCoaEdit.headerUnlocked(self)	
-	
-	// trigger unlock event di user
-	self.Modules.jurnaltypeUserList.headerUnlocked(self)
-	self.Modules.jurnaltypeUserEdit.headerUnlocked(self)	
-	
-	// trigger unlock event di paymreqtype
-	self.Modules.jurnaltypePaymreqtypeList.headerUnlocked(self)
-	self.Modules.jurnaltypePaymreqtypeEdit.headerUnlocked(self)	
-		
 }
 
 async function setPrimaryKeyState(self, opt) {
@@ -473,16 +433,18 @@ async function btn_edit_click(self, evt) {
 	}
 }
 
+
 async function btn_new_click(self, evt) {
-	console.log('btn_new_click')
+	console.log('new')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const jurnaltypeHeaderList = self.Modules.jurnaltypeHeaderList
-	const listsecid = jurnaltypeHeaderList.Section.Id
+	const jurnaltypePaymreqtypeList = self.Modules.jurnaltypePaymreqtypeList
+	const listsecid = jurnaltypePaymreqtypeList.Section.Id
 	const fromListSection = sourceSection===listsecid
+
 	if (fromListSection) {
-		// klik new dari list (tidak perlu cek ada perubahan data)
-		// tampilkan dulu form
+		console.log('tambahkan row baru')
+		CurrentSection.setSectionReturn(jurnaltypePaymreqtypeList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -503,21 +465,30 @@ async function btn_new_click(self, evt) {
 	} else {
 		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
 	}
-
+	
+	
 	try {
+	
+		// ambil id header
+		const jurnaltypeHeaderEdit = self.Modules.jurnaltypeHeaderEdit
+		const frmHeader = jurnaltypeHeaderEdit.getHeaderForm()
+		const header_pk = frmHeader.getPrimaryInput()
+		const jurnaltype_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
+			jurnaltype_id,
 		}
 
 
 		// jika perlu modifikasi data initial,
-		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'jurnaltypeHeaderEdit_newData'
+		// atau dialog untuk opsi data baru, 
+		// dapat dibuat di Extender.newData
+		// export async function jurnaltypePaymreqtypeEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'jurnaltypePaymreqtypeEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function jurnaltypeHeaderEdit_newData(self, datainit, frm) {}
-			await fn_newdata(self, datainit, frm)
+			await fn_newdata(self, datainit, frm, CurrentState)
 		}
 
 		// buat data baru
@@ -525,10 +496,6 @@ async function btn_new_click(self, evt) {
 
 		// buka lock, agar user bisa edit
 		frm.lock(false)
-
-		// jika edit di suspend, enable dulu
-		btn_edit.suspend(false)
-
 
 		// matikan tombol edit dan del saat kondisi form adalah data baru 
 		btn_edit.disabled = true
@@ -538,17 +505,18 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.jurnaltypeHeaderList.Section.show()
+			self.Modules.jurnaltypePaymreqtypeList.Section.show()
 		}
 	}
 }
 
+
 async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
-
 	// Extender Autofill
-	const fn_autofill_name = 'jurnaltypeHeaderEdit_autofill'
+	// export async function jurnaltypePaymreqtypeEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'jurnaltypePaymreqtypeEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -584,8 +552,7 @@ async function btn_save_click(self, evt) {
 		dataToSave = frm.getData()		
 	}
 
-
-
+	
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
@@ -599,9 +566,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function jurnaltypeHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function jurnaltypePaymreqtypeEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'jurnaltypeHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'jurnaltypePaymreqtypeEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -612,7 +579,7 @@ async function btn_save_click(self, evt) {
 		console.log('save is canceled')
 		return
 	}
-	
+
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -651,10 +618,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'jurnaltypeHeaderEdit_dataSaved'
+		// export async function jurnaltypePaymreqtypeEdit_dataSaved(self, data, frm) {}
+		const fn_datasaved_name = 'jurnaltypePaymreqtypeEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function jurnaltypeHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, data, frm)
 		}
 
@@ -670,10 +637,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.jurnaltypeHeaderList.addNewRow(self, data)
+			self.Modules.jurnaltypePaymreqtypeList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.jurnaltypeHeaderList.updateCurrentRow(self, data)
+			self.Modules.jurnaltypePaymreqtypeList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -709,13 +676,40 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function jurnaltypePaymreqtypeEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'jurnaltypePaymreqtypeEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
-		// hapus current row yang dipilih di list
-		self.Modules.jurnaltypeHeaderList.removeCurrentRow(self)
 		
+
+		// Extender Delete
+		// export async function jurnaltypePaymreqtypeEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'jurnaltypePaymreqtypeEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
+		// hapus current row yang dipilih di list
+		self.Modules.jurnaltypePaymreqtypeList.removeCurrentRow(self)
+
 		// kembali ke list
-		self.Modules.jurnaltypeHeaderList.Section.show()
+		self.Modules.jurnaltypePaymreqtypeList.Section.show()
 
 
 		// lock kembali form
@@ -728,9 +722,7 @@ async function btn_del_click(self, evt) {
 		mask.close()
 		mask = null
 	}
-
 }
-
 
 async function btn_reset_click(self, evt) {
 	console.log('btn_reset_click')
@@ -755,19 +747,18 @@ async function btn_reset_click(self, evt) {
 			console.log('tidak ada perubahan data, reset data tidak dieksekusi')
 		}
 	}
-
 }
+
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.jurnaltypeHeaderList.selectPreviousRow(self)
+	self.Modules.jurnaltypePaymreqtypeList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.jurnaltypeHeaderList.selectNextRow(self)
+	self.Modules.jurnaltypePaymreqtypeList.selectNextRow(self)
 }
-
 
 
 
@@ -799,10 +790,15 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'jurnaltypeHeaderEdit_addRecordInfo'
+
+			// jika mau menambah beberapa informasi mengenai record,
+			// misalnya commit by, postby, dll
+			// melalui extender jurnaltypePaymreqtypeEdit_addRecordInfo
+			// export async function jurnaltypePaymreqtypeEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'jurnaltypePaymreqtypeEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self, data)
+				await fn_addrecordinfo(self,  data)
 			}
 
 		} catch (err) {
@@ -837,11 +833,12 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
+
 			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.jurnaltype',
+				table: 'public.jurnaltypepaymreqtype',
 				id: id
 			}
 
@@ -860,37 +857,5 @@ async function btn_logs_click(self, evt) {
 			mask = null
 		}
 
-	})
-}
-
-async function btn_about_click(self, evt) {
-	const params = {
-		Context,
-		sectionReturn: CurrentSection
-	}
-	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
-		
-		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Jurnal Type'
-
-		const section = document.getElementById('fAbout-section')
-
-		if ( document.getElementById('fAbout-section-fdescr') == null) {
-			const divDescr = document.createElement('div')
-			divDescr.setAttribute('id', 'fAbout-section-fdescr')
-			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
-			const divTopbar = section.querySelector('div[data-topbar]')
-			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
-		}
-
-		if ( document.getElementById('fAbout-section-footer') == null) {
-			const divFooter = document.createElement('div')
-			divFooter.setAttribute('id', 'fAbout-section-footer')
-			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 20 Feb 2026 18:52'
-			section.appendChild(divFooter)
-		}
-		
 	})
 }

@@ -5,12 +5,14 @@ import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import context from '@agung_dhewe/webapps/src/context.js'  
 import logger from '@agung_dhewe/webapps/src/logger.js'
+import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
 
 import * as Extender from './extenders/curr.apiext.js'
 
 const moduleName = 'curr'
 const headerSectionName = 'header'
-const headerTableName = 'public.curr' 	
+const headerTableName = 'public.curr' 
+const rateTableName = 'public.currrate'  	
 
 // api: account
 export default class extends Api {
@@ -25,13 +27,24 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await curr_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await curr_headerList(this, body) }
 	async headerOpen(body) { return await curr_headerOpen(this, body) }
 	async headerUpdate(body) { return await curr_headerUpdate(this, body)}
 	async headerCreate(body) { return await curr_headerCreate(this, body)}
 	async headerDelete(body) { return await curr_headerDelete(this, body) }
+
 	
+	// rate	
+	async rateList(body) { return await curr_rateList(this, body) }
+	async rateOpen(body) { return await curr_rateOpen(this, body) }
+	async rateUpdate(body) { return await curr_rateUpdate(this, body)}
+	async rateCreate(body) { return await curr_rateCreate(this, body) }
+	async rateDelete(body) { return await curr_rateDelete(this, body) }
+	async rateDeleteRows(body) { return await curr_rateDeleteRows(this, body) }
 			
 }	
 
@@ -79,6 +92,24 @@ async function curr_init(self, body) {
 }
 
 
+// execute extender function
+async function curr_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, curr_log) {}
+		return await Extender[fnName](self, db, body, curr_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function curr_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -94,6 +125,8 @@ async function curr_log(self, body, startTime, tablename, id, action, data={}, r
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -236,7 +269,7 @@ async function curr_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', doc_id:'' }
 
 				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
@@ -343,6 +376,36 @@ async function curr_headerDelete(self, body) {
 			}
 
 			
+			// hapus data rate
+			{
+				const sql = `select * from ${rateTableName} where curr_id=\${curr_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowrate of rows) {
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.rateDeleting === 'function') {
+						// export async function rateDeleting(self, tx, rowrate, logMetadata) {}
+						await Extender.rateDeleting(self, tx, rowrate, logMetadata)
+					}
+
+					const param = {currrate_id: rowrate.currrate_id}
+					const cmd = sqlUtil.createDeleteCommand(rateTableName, ['currrate_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.rateDeleted === 'function') {
+						// export async function rateDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.rateDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					curr_log(self, body, startTime, rateTableName, rowrate.currrate_id, 'DELETE', {rowdata: deletedRow})
+					curr_log(self, body, startTime, headerTableName, rowrate.curr_id, 'DELETE ROW RATE', {currrate_id: rowrate.currrate_id, tablename: rateTableName}, `removed: ${rowrate.currrate_id}`)
+
+
+				}	
+			}
+
+			
+			
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['curr_id'])
@@ -369,5 +432,348 @@ async function curr_headerDelete(self, body) {
 	}
 }
 
+
+
+// rate	
+
+async function curr_rateList(self, body) {
+	const tablename = rateTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		curr_id: `curr_id=try_cast_bigint(\${curr_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.currrate_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.rateListCriteria === 'function') {
+			// export async function rateListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.rateListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			
+
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+		return {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+	} catch (err) {
+		throw err
+	}
+}
+
+async function curr_rateOpen(self, body) {
+	const tablename = rateTableName
+
+	try {
+		const { id } = body 
+		const criteria = { currrate_id: id }
+		const searchMap = { currrate_id: `currrate_id = \${currrate_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		
+
+		// lookup data createby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function rateOpen(self, db, data) {}
+		if (typeof Extender.rateOpen === 'function') {
+			// export async function rateOpen(self, db, data) {}
+			await Extender.rateOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function curr_rateCreate(self, body) {
+	const { source='curr', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = rateTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._createby = user_id
+		data._createdate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'rate', 
+				prefix: ''	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.prefix)
+			data.currrate_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.rateCreating === 'function') {
+				// export async function rateCreating(self, tx, data, seqdata, args) {}
+				await Extender.rateCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.rateCreated === 'function') {
+				// export async function rateCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.rateCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			curr_log(self, body, startTime, tablename, ret.currrate_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function curr_rateUpdate(self, body) {
+	const { source='curr', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = rateTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._modifyby = user_id
+		data._modifydate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.rateUpdating === 'function') {
+				// export async function rateUpdating(self, tx, data) {}
+				await Extender.rateUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['currrate_id'])
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.rateUpdated === 'function') {
+				// export async function rateUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.rateUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			curr_log(self, body, startTime, tablename, data.currrate_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function curr_rateDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = rateTableName
+
+	try {
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {currrate_id: id}
+			const sql = `select * from ${rateTableName} where currrate_id=\${currrate_id}`
+			const rowrate = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.rateDeleting === 'function') {
+				// export async function rateDeleting(self, tx, rowrate, logMetadata) {}
+				await Extender.rateDeleting(self, tx, rowrate, logMetadata)
+			}
+
+			const param = {currrate_id: rowrate.currrate_id}
+			const cmd = sqlUtil.createDeleteCommand(rateTableName, ['currrate_id'])
+			const deletedRow = await cmd.execute(param)
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.rateDeleted === 'function') {
+				// export async function rateDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.rateDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			curr_log(self, body, startTime, rateTableName, rowrate.currrate_id, 'DELETE', {rowdata: deletedRow})
+			curr_log(self, body, startTime, headerTableName, rowrate.curr_id, 'DELETE ROW RATE', {currrate_id: rowrate.currrate_id, tablename: rateTableName}, `removed: ${rowrate.currrate_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function curr_rateDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = rateTableName
+
+
+	try {
+
+		let curr_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {currrate_id: id}
+				const sql = `select * from ${rateTableName} where currrate_id=\${currrate_id}`
+				const rowrate = await tx.oneOrNone(sql, dataToRemove)
+				curr_id = rowrate.curr_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.rateDeleting === 'function') {
+					// async function rateDeleting(self, tx, rowrate, logMetadata) {}
+					await Extender.rateDeleting(self, tx, rowrate, logMetadata)
+				}
+
+				const param = {currrate_id: rowrate.currrate_id}
+				const cmd = sqlUtil.createDeleteCommand(rateTableName, ['currrate_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.rateDeleted === 'function') {
+					// export async function rateDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.rateDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				curr_log(self, body, startTime, rateTableName, rowrate.currrate_id, 'DELETE', {rowdata: deletedRow})
+				curr_log(self, body, startTime, headerTableName, rowrate.curr_id, 'DELETE ROW RATE', {currrate_id: rowrate.currrate_id, tablename: rateTableName}, `removed: ${rowrate.currrate_id}`)
+			}
+		})
+
+		const res = {
+			deleted: true,
+			curr_id: curr_id,
+			message: ''
+		}
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
 
 	

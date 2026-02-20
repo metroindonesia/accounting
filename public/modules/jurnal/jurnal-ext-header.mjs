@@ -33,6 +33,7 @@ const _copyto = 'jurnalHeaderEdit-obj_copyto'
 const _coacurr = 'jurnalHeaderEdit-obj_coacurr'
 
 
+const selectedPeriode = { periode_start: null, periode_end: null }
 
 export function init_header(self, args) {
 	const moduleHeader = self.Modules.jurnalHeaderEdit;
@@ -60,14 +61,18 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 
 
 	const {
-		jurnaltype, paymtype, periode_isclosed, ispost, jurnal_source,
-		_postby, _postdate,
-		isallowposting, isallowunposting,
-		total_value, total_idr
+		jurnaltype, paymtype, periode, ispost,
+		_commitby, _commitdate, _postby, _postdate,
+		isallowposting, isallowunposting
 	} = frm.getOriginalData()
+
 
 	jurnaltype_changed(jurnaltype, frm)
 	paymtype_changed(paymtype, frm)
+
+	const periode_isclosed = periode.periode_isclosed
+	selectedPeriode.periode_start = periode.periode_start
+	selectedPeriode.periode_end = periode.periode_end
 
 
 	CurrentState.Actions.edit.suspend(periode_isclosed || ispost)
@@ -76,6 +81,9 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 
 	// CurrentState.Actions.post.hide(!isallowposting)
 	// CurrentState.Actions.unpost.hide(!isallowunposting)
+
+
+
 
 
 }
@@ -88,6 +96,37 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 
 	jurnaltype_changed({}, frm)
 	paymtype_changed({}, frm)
+
+
+
+}
+
+export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
+	// cek periode vs tanggal
+	const jurnal_date = new Date(frm.Inputs[_jurnal_date].value)
+	const jurnal_datedue = new Date(frm.Inputs[_jurnal_datedue].value)
+	const periode_start = new Date(selectedPeriode.periode_start)
+	const periode_end = new Date(selectedPeriode.periode_end)
+
+
+	try {
+		if (jurnal_datedue < jurnal_date) {
+			throw new Error('due date tidak boleh lebih lampau dari jurnal date')
+		}
+
+		if (jurnal_date < periode_start || jurnal_date > periode_end) {
+			throw new Error('tanggal buku tidak sesuai dengan periode')
+		}
+
+
+	} catch (err) {
+		args.cancelSave = true
+		$fgta5.MessageBox.warning(err.message)
+	}
+
+	// console.log(jurnal_date, jurnal_datedue, selectedPeriode)
+	console.log(selectedPeriode)
+
 }
 
 export async function jurnalHeaderEdit_dataSaved(self, data, frm) {
@@ -115,7 +154,31 @@ export async function obj_jurnaltype_id_selected(self, obj_jurnaltype_id, frm, e
 	const jurnaltype = evt.detail.data
 	jurnaltype_changed(jurnaltype, frm)
 	paymtype_changed({}, frm)
+
+	// reset paymreq
+	const obj_paymreq_id = frm.Inputs[_paymreq_id]
+	obj_paymreq_id.clear()
+	obj_paymreq_id.setSelected(null)
+
 }
+
+
+export function obj_paymreq_id_selecting_criteria(self, obj_paymreq_id, frm, criteria, sort, evt) {
+	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
+	criteria.isapproved = true
+	criteria.jurnaltype_id = jurnaltype_id
+}
+
+export async function obj_periode_id_selected(self, obj_periode_id, frm, evt) {
+	if (!obj_periode_id.isSelectedChanged()) {
+		return
+	}
+	const periode = evt.detail.data
+	selectedPeriode.periode_start = periode.periode_start
+	selectedPeriode.periode_end = periode.periode_end
+
+}
+
 
 export function obj_periode_id_selecting_criteria(self, obj_periode_id, frm, criteria, sort, evt) {
 	criteria.periode_isclosed = false
@@ -151,9 +214,7 @@ export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontac
 	criteria.partnercontact_isdisabled = false
 }
 
-export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt) {
-	criteria.coa_isdisabled = false
-}
+
 
 export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
 	criteria.struct_isdisabled = false
@@ -168,8 +229,96 @@ export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria,
 }
 
 
+export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt) {
+	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
+	const copyto = frm.Inputs[_copyto].value
+
+	criteria.jurnaltype_id = jurnaltype_id
+	criteria.coa_isdisabled = false
+
+	if (copyto == 'D') {
+		criteria.isdebet = true
+	}
+
+	if (copyto == 'K') {
+		criteria.iskredit = true
+	}
+
+	// arahkan api ke endpoint coa-filtered/list-by-jurnaltype
+	evt.detail.url = 'coa-filtered/list-by-jurnaltype'
+}
+
+export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
+	if (!obj_coa_id.isSelectedChanged()) {
+		return
+	}
+
+	const { curr_id } = evt.detail.data
+	frm.Inputs[_coacurr].value = curr_id
+	frm.Inputs[_curr_id].clear()
+	if (curr_id != null) {
+		if (frm.Inputs[_curr_id].value != curr_id) {
+			frm.Inputs[_curr_id].setSelected(null, '')
+			frm.Inputs[_curr_rate].value = 1
+		}
+	}
+}
+
+export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {
+	const curr_id = frm.Inputs[_coacurr].value
+	const bookdate = frm.Inputs[_jurnal_date].value
+	criteria.curr_date = bookdate
+
+	if (curr_id != '') {
+		criteria.curr_id = curr_id
+	}
+
+	sort.curr_code = 'asc'
+}
+
+export async function obj_curr_id_populating(self, obj_curr_id, frm, evt) {
+	const { tr, data, text } = evt.detail
+
+	const td = tr.querySelector('td')
+	td.style.display = 'flex'
+	td.style.justifyContent = 'space-between';
+	td.style.paddingRight = '10px'
+
+	const divCode = document.createElement('div')
+	divCode.innerHTML = text
+	divCode.classList.add('curr-row-code')
+
+	const divDate = document.createElement('div')
+	divDate.innerHTML = data.curr_date
+	divDate.classList.add('curr-row-date')
+
+	const divRate = document.createElement('div')
+	divRate.innerHTML = pageHelper.formatNumber(data.curr_rate)
+	divRate.classList.add('curr-row-value')
+
+	td.innerHTML = ''
+	td.appendChild(divCode)
+	td.appendChild(divDate)
+	td.appendChild(divRate)
+}
 
 
+
+export async function obj_curr_id_selected(self, obj_curr_id, frm, evt) {
+	const { data } = evt.detail
+	frm.Inputs[_curr_rate].value = data.curr_rate
+	recalculateCurrency(self, frm)
+}
+
+export async function obj_jurnal_value_changed(self, obj_jurnal_value, frm, evt) {
+	console.log('value changed')
+	recalculateCurrency(self, frm)
+}
+
+export async function obj_curr_rate_changed(self, obj_curr_rate, frm, evt) {
+	console.log('rate changed')
+	recalculateCurrency(self, frm)
+}
 
 
 
@@ -194,7 +343,7 @@ function jurnaltype_changed(jurnaltype, frm) {
 	const obj_copyto = frm.Inputs[_copyto]
 	obj_copyto.value = jurnaltype.jurnaltype_headcopyto
 	const jurnaltype_headcopyto = jurnaltype.jurnaltype_headcopyto ?? ''
-	pageHelper.setVisibility(`${_copyto}-container`, jurnaltype_headcopyto.trim()!='')
+	pageHelper.setVisibility(`${_copyto}-container`, jurnaltype_headcopyto.trim() != '')
 
 
 	// payment req
@@ -307,4 +456,12 @@ function partner_changed(partner, frm) {
 	frm.Inputs[_partnerbank_account].value = ""
 	frm.Inputs[_partnerbank_accountname].value = ""
 	frm.Inputs[_partnerbank_bankname].value = ""
+}
+
+function recalculateCurrency(self, frm) {
+	const rate = frm.Inputs[_curr_rate].value
+	const value = frm.Inputs[_jurnal_value].value
+	const idr = value * rate
+
+	frm.Inputs[_jurnal_idr].value = idr
 }

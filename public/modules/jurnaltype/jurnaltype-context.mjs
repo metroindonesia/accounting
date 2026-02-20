@@ -14,6 +14,8 @@ export default {
 		jurnaltypeCoaEdit: 'jurnaltypeCoaEdit-section', 
 		jurnaltypeUserList: 'jurnaltypeUserList-section', 
 		jurnaltypeUserEdit: 'jurnaltypeUserEdit-section', 
+		jurnaltypePaymreqtypeList: 'jurnaltypePaymreqtypeList-section', 
+		jurnaltypePaymreqtypeEdit: 'jurnaltypePaymreqtypeEdit-section', 
 	},
 	SectionMap: { 
 		'jurnaltypeHeaderList-section' : 'jurnaltypeHeaderList', 
@@ -22,5 +24,7 @@ export default {
 		'jurnaltypeCoaEdit-section' : 'jurnaltypeCoaEdit', 
 		'jurnaltypeUserList-section' : 'jurnaltypeUserList', 
 		'jurnaltypeUserEdit-section' : 'jurnaltypeUserEdit', 
+		'jurnaltypePaymreqtypeList-section' : 'jurnaltypePaymreqtypeList', 
+		'jurnaltypePaymreqtypeEdit-section' : 'jurnaltypePaymreqtypeEdit', 
 	}
 }

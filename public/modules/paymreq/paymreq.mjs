@@ -1,8 +1,8 @@
-import Context from './paymreq-context.mjs'
-import * as paymreqHeaderList from './paymreqHeaderList.mjs'
-import * as paymreqHeaderEdit from './paymreqHeaderEdit.mjs'
-import * as paymreqDetilList from './paymreqDetilList.mjs'
-import * as paymreqDetilEdit from './paymreqDetilEdit.mjs'
+import Context from './paymreq-context.mjs'  
+import * as paymreqHeaderList from './paymreqHeaderList.mjs' 
+import * as paymreqHeaderEdit from './paymreqHeaderEdit.mjs' 
+import * as paymreqDetilList from './paymreqDetilList.mjs' 
+import * as paymreqDetilEdit from './paymreqDetilEdit.mjs' 
 import * as Extender from './paymreq-ext.mjs'
 
 const app = Context.app
@@ -14,12 +14,12 @@ export default class extends Module {
 		super()
 	}
 
-	async main(args = {}) {
-
+	async main(args={}) {
+		
 		console.log('initializing module...')
 		app.setTitle('Payment Request')
 		app.showFooter(true)
-
+		
 		args.autoLoadGridData = true
 
 		const self = this
@@ -43,18 +43,18 @@ export default class extends Module {
 		// module-module yang di load perlu di pack dulu ke dalam variable
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
-		self.Modules = {
-			paymreqHeaderList,
-			paymreqHeaderEdit,
-			paymreqDetilList,
-			paymreqDetilEdit,
+		self.Modules = { 
+			paymreqHeaderList, 
+			paymreqHeaderEdit, 
+			paymreqDetilList, 
+			paymreqDetilEdit, 
 		}
 
 		try {
 
 			// inisiasi sisi server
 			try {
-				const result = await Module.apiCall(`/${Context.moduleName}/init`, {})
+				const result = await Module.apiCall(`/${Context.moduleName}/init`, { })
 				Context.notifierId = result.notifierId
 				Context.notifierSocket = result.notifierSocket
 				Context.userId = result.userId
@@ -63,16 +63,15 @@ export default class extends Module {
 				Context.appName = result.appName
 				Context.appsUrls = result.appsUrls
 				Context.setting = result.setting
-
 			} catch (err) {
 				throw err
-			}
+			} 
 
-			await Promise.all([
-				paymreqHeaderList.init(self, args),
-				paymreqHeaderEdit.init(self, args),
-				paymreqDetilList.init(self, args),
-				paymreqDetilEdit.init(self, args),
+			await Promise.all([ 
+				paymreqHeaderList.init(self, args), 
+				paymreqHeaderEdit.init(self, args), 
+				paymreqDetilList.init(self, args), 
+				paymreqDetilEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -81,11 +80,11 @@ export default class extends Module {
 
 			// listen keyboard action
 			listenUserKeys(self)
-
+			
 
 			// kalau user melakukan reload, konfirm dulu
 			const modNameList = ['paymreqHeaderEdit', 'paymreqDetilEdit']
-			window.onbeforeunload = (evt) => {
+			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
 				for (var modname of modNameList) {
@@ -97,7 +96,7 @@ export default class extends Module {
 				}
 				if (isFormDirty) {
 					evt.preventDefault();
-					return "Changes you made may not be saved."
+					return  "Changes you made may not be saved."
 				}
 			};
 
@@ -111,24 +110,24 @@ export default class extends Module {
 
 async function render(self) {
 	try {
-		const footerButtonsContainer = document.getElementsByClassName('footer-buttons-container')
+		const footerButtonsContainer =  document.getElementsByClassName('footer-buttons-container')
 		Module.renderFooterButtons(footerButtonsContainer)
-
+	
 		// Setup Icon
 		Crsl.setIconUrl('public/modules/paymreq/paymreq.svg')
 
 
 		// Set listener untuk section carousel
-		Crsl.addEventListener($fgta5.SectionCarousell.EVT_SECTIONSHOWING, (evt) => {
+		Crsl.addEventListener($fgta5.SectionCarousell.EVT_SECTIONSHOWING, (evt)=>{
 			var sectionId = evt.detail.commingSection.Id
 			for (let cont of footerButtonsContainer) {
 				var currContainerSectionId = cont.getAttribute('data-section')
-				if (currContainerSectionId == sectionId) {
-					setTimeout(() => {
+				if (currContainerSectionId==sectionId) {
+					setTimeout(()=>{
 						cont.classList.remove('hidden')
 						cont.style.animation = 'dropped 0.3s forwards'
-						setTimeout(() => {
-							cont.style.animation = 'unset'
+						setTimeout(()=>{
+							cont.style.animation = 'unset'	
 						}, 300)
 					}, 500)
 				} else {
@@ -136,19 +135,19 @@ async function render(self) {
 				}
 			}
 		})
-
-		Crsl.Items['fRecord-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt) => {
+		
+		Crsl.Items['fRecord-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 			evt.detail.fn_ShowNextSection()
 		})
 
-		Crsl.Items['fLogs-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt) => {
+		Crsl.Items['fLogs-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 			evt.detail.fn_ShowNextSection()
 		})
 
-		Crsl.Items['fAbout-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt) => {
+		Crsl.Items['fAbout-section'].addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 			evt.detail.fn_ShowNextSection()
 		})
-
+		
 
 		// Set panel detil saat hover di detil item
 		const detilpanel = document.getElementById('panel-detil-selector')
@@ -164,13 +163,13 @@ async function render(self) {
 
 			const sectionTargetName = link.getAttribute('data-target-section')
 			const sectionCurrentName = link.getAttribute('data-current-section')
-
+			
 			// Detil bisa dibuka apabila data sudah di save
-			link.addEventListener('click', (evt) => {
+			link.addEventListener('click', (evt)=>{
 				const moduleHeaderEdit = self.Modules[sectionCurrentName]
 				const form = moduleHeaderEdit.getForm()
 				if (form.isNew()) {
-					console.warn('tidak bisa buka detil jika data baru')
+					console.warn('tidak bisa buka detil jika data baru')	
 					$fgta5.MessageBox.warning('Detil bisa dibuka setelah data disimpan')
 					return;
 				}
@@ -183,7 +182,7 @@ async function render(self) {
 			// }
 		});
 
-
+		
 		// paymreq-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
@@ -201,7 +200,7 @@ async function render(self) {
 
 function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	const sectionCurrentId = Context.Sections[sectionCurrentName]
-	const sectionCurrent = Crsl.Items[sectionCurrentId]
+	const sectionCurrent =   Crsl.Items[sectionCurrentId]
 
 	const sectionId = Context.Sections[sectionTargetName]
 	const section = Crsl.Items[sectionId]
@@ -215,7 +214,7 @@ function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	}
 
 	section.setSectionReturn(sectionCurrent)
-	section.show({}, () => {
+	section.show({}, ()=>{
 		const moduleTarget = self.Modules[sectionTargetName]
 		moduleTarget.openList(self, {
 			moduleHeaderEdit
@@ -251,12 +250,12 @@ function listenUserKeys(self) {
 		const dialog = dialogs.pop() || null;
 		// const dialog = document.querySelector('dialog[open]');
 		if (dialog) {
-			if (evt.key.toLowerCase() == 'escape') {
+			if (evt.key.toLowerCase()=='escape') {
 				dialog.close()
 				evt.preventDefault()
 				evt.stopPropagation()
 			} else if ((evt.ctrlKey || evt.metaKey) && evt.key.toLowerCase() === 's') {
-				evt.preventDefault();
+				evt.preventDefault(); 
 			}
 			return
 		}
@@ -266,23 +265,23 @@ function listenUserKeys(self) {
 		if ((evt.ctrlKey || evt.metaKey) && key === 's') {
 			evt.preventDefault(); // Mencegah aksi default (save page)
 			keyboardAction(self, module, 'save', evt)
-		} else if (((evt.ctrlKey || evt.metaKey) && key === 'n') || (evt.ctrlKey && key === 'f2')) {
+		} else if (((evt.ctrlKey || evt.metaKey) && key === 'n') || (evt.ctrlKey && key==='f2')) {
 			evt.preventDefault(); // Mencegah aksi default
 			keyboardAction(self, module, 'new', evt)
-		} else if (key === 'escape') {
+		} else if ( key ==='escape') {
 			evt.preventDefault();
 			keyboardAction(self, module, 'escape', evt)
-		} else if (key === 'f2') {
+		} else if ( key === 'f2' ) {
 			keyboardAction(self, module, 'togleEdit', evt)
-		} else if (key === 'arrowup') {
+		} else if ( key === 'arrowup' ) {
 			keyboardAction(self, module, 'up', evt)
-		} else if (key === 'arrowdown') {
+		} else if ( key === 'arrowdown' ) {	
 			keyboardAction(self, module, 'down', evt)
-		} else if (key === 'arrowright') {
+		} else if ( key === 'arrowright' ) {
 			keyboardAction(self, module, 'right', evt)
-		} else if (key === 'arrowleft') {
+		} else if ( key === 'arrowleft' ) {	
 			keyboardAction(self, module, 'left', evt)
-		} else if (key === 'enter') {
+		} else if ( key === 'enter' ) {	
 			keyboardAction(self, module, 'enter', evt)
 		}
 	});
@@ -291,11 +290,11 @@ function listenUserKeys(self) {
 
 function keyboardAction(self, module, actionName, evt) {
 
-	if (module != null) {
-		module.keyboardAction(self, actionName, evt)
+	if (module!=null) {
+		module.keyboardAction(self,  actionName, evt)
 	} else {
 		// untuk keperluan log dan about, saat escape: back
-		if (actionName == 'escape') {
+		if (actionName=='escape') {
 			Crsl.CurrentSection.back()
 		}
 	}

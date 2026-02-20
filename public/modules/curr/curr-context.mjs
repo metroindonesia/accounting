@@ -10,9 +10,13 @@ export default {
 	Sections: { 
 		currHeaderList: 'currHeaderList-section', 
 		currHeaderEdit: 'currHeaderEdit-section', 
+		currRateList: 'currRateList-section', 
+		currRateEdit: 'currRateEdit-section', 
 	},
 	SectionMap: { 
 		'currHeaderList-section' : 'currHeaderList', 
 		'currHeaderEdit-section' : 'currHeaderEdit', 
+		'currRateList-section' : 'currRateList', 
+		'currRateEdit-section' : 'currRateEdit', 
 	}
 }

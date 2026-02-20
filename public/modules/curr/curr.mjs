@@ -1,6 +1,8 @@
 import Context from './curr-context.mjs'  
 import * as currHeaderList from './currHeaderList.mjs' 
 import * as currHeaderEdit from './currHeaderEdit.mjs' 
+import * as currRateList from './currRateList.mjs' 
+import * as currRateEdit from './currRateEdit.mjs' 
 import * as Extender from './curr-ext.mjs'
 
 const app = Context.app
@@ -23,12 +25,29 @@ export default class extends Module {
 		const self = this
 		Context.program = self
 
+		// ambil metadata variance dan id
+		const variance = document.querySelector('meta[name="variance"]').getAttribute('content');
+		const id = document.querySelector('meta[name="id"]').getAttribute('content');
+		Context.variance = variance
+		Context.id = id
+
+
+		// configureModule
+		// gunakan untuk setup context atau args
+		const fn_configureModule_name = 'configureModule'
+		const fn_configureModule = Extender[fn_configureModule_name]
+		if (typeof fn_configureModule === 'function') {
+			fn_configureModule(self, args)
+		}
+
 		// module-module yang di load perlu di pack dulu ke dalam variable
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
 			currHeaderList, 
 			currHeaderEdit, 
+			currRateList, 
+			currRateEdit, 
 		}
 
 		try {
@@ -51,6 +70,8 @@ export default class extends Module {
 			await Promise.all([ 
 				currHeaderList.init(self, args), 
 				currHeaderEdit.init(self, args), 
+				currRateList.init(self, args), 
+				currRateEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -62,7 +83,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['currHeaderEdit']
+			const modNameList = ['currHeaderEdit', 'currRateEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -184,10 +205,17 @@ function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	const sectionId = Context.Sections[sectionTargetName]
 	const section = Crsl.Items[sectionId]
 
+	const moduleHeaderEdit = self.Modules[sectionCurrentName]
+	const frm = moduleHeaderEdit.getForm()
+
+	if (frm.isChanged()) {
+		$fgta5.MessageBox.warning(`simpan data dulu sebelum ke <b>${section.Title}</b>`)
+		return
+	}
+
 	section.setSectionReturn(sectionCurrent)
 	section.show({}, ()=>{
 		const moduleTarget = self.Modules[sectionTargetName]
-		const moduleHeaderEdit = self.Modules[sectionCurrentName]
 		moduleTarget.openList(self, {
 			moduleHeaderEdit
 		})

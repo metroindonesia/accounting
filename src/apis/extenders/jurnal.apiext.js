@@ -66,11 +66,13 @@ export async function headerOpen(self, db, data) {
 		db.oneOrNone(`SELECT SUM(jurnaldetil_value) as total_value, SUM(jurnaldetil_idr) as total_idr FROM ${TABLE.jurnaldetil} WHERE jurnal_id = \${jurnal_id}`, { jurnal_id })
 	]);
 
+
 	// Mapping hasil secara ringkas
 	Object.assign(data, {
 		jurnaltype,
 		paymtype,
-		periode_isclosed: periode?.periode_isclosed,
+		periode,
+		// periode_isclosed: periode?.periode_isclosed,
 		_postby: postByUser?.user_fullname ?? '',
 		_commitby: commitByUser?.user_fullname ?? '',
 		isallowposting: allowRow?.isallowposting ?? false,

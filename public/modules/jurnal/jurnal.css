@@ -1,0 +1,12 @@
+.curr-row-code {
+	width: 200px;
+}
+
+.curr-row-date {
+	width: 200px;
+}
+
+.curr-row-value {
+	width: 200px;
+	text-align: right;
+}

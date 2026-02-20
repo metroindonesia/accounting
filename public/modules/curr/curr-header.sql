@@ -42,6 +42,21 @@ comment on column public."curr".curr_descr is '';
 
 
 -- =============================================
+-- FIELD: curr_code text
+-- =============================================
+-- ADD curr_code
+alter table public."curr" add curr_code text  ;
+comment on column public."curr".curr_code is '';
+
+-- MODIFY curr_code
+alter table public."curr"
+	alter column curr_code type text,
+	ALTER COLUMN curr_code DROP DEFAULT,
+	ALTER COLUMN curr_code DROP NOT NULL;
+comment on column public."curr".curr_code is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby
@@ -112,6 +127,11 @@ comment on column public."curr"._modifydate is 'waktu terakhir record dimodifika
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."curr"
+	drop constraint uq$public$curr$curr_name;
+	
+
 -- Add unique index 
 alter table  public."curr"
 	add constraint uq$public$curr$curr_name unique (curr_name); 

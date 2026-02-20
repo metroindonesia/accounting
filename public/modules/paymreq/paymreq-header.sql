@@ -312,21 +312,6 @@ comment on column public."paymreq".curr_id is '';
 
 
 -- =============================================
--- FIELD: payment_bgno text
--- =============================================
--- ADD payment_bgno
-alter table public."paymreq" add payment_bgno text  ;
-comment on column public."paymreq".payment_bgno is '';
-
--- MODIFY payment_bgno
-alter table public."paymreq"
-	alter column payment_bgno type text,
-	ALTER COLUMN payment_bgno DROP DEFAULT,
-	ALTER COLUMN payment_bgno DROP NOT NULL;
-comment on column public."paymreq".payment_bgno is '';
-
-
--- =============================================
 -- FIELD: partnerbank_id bigint
 -- =============================================
 -- ADD partnerbank_id

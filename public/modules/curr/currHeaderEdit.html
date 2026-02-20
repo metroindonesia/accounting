@@ -35,6 +35,20 @@
 			maxlength="30" 
 		>
 	</div>
+
+
+	<!-- Textbox: curr_code-->	
+	<div id="currHeaderEdit-obj_curr_code-container" class="input-field" field="currHeaderEdit-obj_curr_code">
+		<label for="currHeaderEdit-obj_curr_code">Code</label>
+		<input id="currHeaderEdit-obj_curr_code"  fgta5-component="Textbox" placeholder="code" autocomplete="off" spellcheck="false" 
+			binding="curr_code"
+			data-tabindex="4" 
+			required 
+			invalid-message-required="code currency tidak boleh kosong" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
 	
 </form>
 
@@ -42,14 +56,15 @@
 <div id="currHeaderEdit-footer">
 </div>
 
-<div id="currHeaderEdit-panelaction" class="panel-action"></div>
-
-
-<div id="panel-detil-selector" class="panel-detil hidden">
+<div id="panel-detil-selector" class="panel-detil ">
 	<div panel-title>
 		Information Detil
 	</div>
 	<div panel-content>
+		<div class="panel-detil-row" id="currHeaderEdit-info-rate-row">
+			<div data-label><a href="javascript:void(0)" data-target-section="currRateList" data-current-section="currHeaderEdit">Rate</a></div>
+			<div data-info>&nbsp</div>
+		</div>
 
 		<div id="panel-detil-additionalinfo">
 			<!-- tambahkan additional info disini -->
@@ -57,8 +72,10 @@
 	</div>
 </div>
  
+<div id="currHeaderEdit-panelaction" class="panel-action hidden"></div>
 
-<div class="panel-recordbar" data-view="nodetil">
+
+<div class="panel-recordbar" >
 	<div><a id="currHeader-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
 	<div><a id="currHeader-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
 	<div><a id="currHeader-btn_about" href="javascript:void(0)" tabindex="-1">About</a></div>

@@ -1,0 +1,84 @@
+<div id="currRateEdit-head">
+	<div id="currRateEdit-head-title" class="section-detil-title"></div>
+	<div id="currRateEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="currRateEdit-frm" class="module-form" locked="true" autoid="true" primarykey="currRateEdit-obj_currrate_id">
+
+	<!-- Textbox: currrate_id-->	
+	<div id="currRateEdit-obj_currrate_id-container" class="input-field hidden" field="currRateEdit-obj_currrate_id">
+		<label for="currRateEdit-obj_currrate_id">ID</label>
+		<input id="currRateEdit-obj_currrate_id"  fgta5-component="Textbox" placeholder="currrate_id" autocomplete="off" spellcheck="false" 
+			binding="currrate_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Datepicker: currrate_date-->	
+	<div id="currRateEdit-obj_currrate_date-container" class="input-field" field="currRateEdit-obj_currrate_date">
+		<label for="currRateEdit-obj_currrate_date">Date</label>
+		<input id="currRateEdit-obj_currrate_date"  fgta5-component="Datepicker" placeholder="date" autocomplete="off" spellcheck="false" 
+			binding="currrate_date"
+			data-tabindex="2" 
+			required 
+			invalid-message-required="tanggal harus diisi" 
+		>
+	</div>
+
+
+	<!-- Numberbox: currrate_value-->	
+	<div id="currRateEdit-obj_currrate_value-container" class="input-field" field="currRateEdit-obj_currrate_value">
+		<label for="currRateEdit-obj_currrate_value">Value</label>
+		<input id="currRateEdit-obj_currrate_value"  fgta5-component="Numberbox" placeholder="value" autocomplete="off" spellcheck="false" 
+			binding="currrate_value"
+			value="0" 
+			data-tabindex="3" 
+			maxlength="5" 
+		>
+	</div>
+
+
+	<!-- Textbox: curr_id-->	
+	<div id="currRateEdit-obj_curr_id-container" class="input-field hidden hidden" field="currRateEdit-obj_curr_id">
+		<label for="currRateEdit-obj_curr_id">Curr_id</label>
+		<input id="currRateEdit-obj_curr_id"  fgta5-component="Textbox" placeholder="curr_id" autocomplete="off" spellcheck="false" 
+			binding="curr_id"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="currRateEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="currRate-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="currRate-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="currRateEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="currRateEdit-btn_save">Save</button>
+		<button id="currRateEdit-btn_edit">Edit</button>
+		<button id="currRateEdit-btn_new" data-action="currRate-addrow">New</button>
+		<button id="currRateEdit-btn_reset">Reset</button>
+		<button id="currRateEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="currRateEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

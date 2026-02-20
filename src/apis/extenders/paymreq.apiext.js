@@ -47,6 +47,8 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	searchMap.isapproved = 'isapproved = ${isapproved}'
 	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	searchMap.struct_id = 'struct_id = ${struct_id}'
+	searchMap.jurnaltype_id = 'paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+
 
 }
 
