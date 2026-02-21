@@ -53,6 +53,8 @@ export function init_header(self, args) {
 
 
 
+
+
 }
 
 
@@ -111,7 +113,13 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 
 	try {
 		if (jurnal_datedue < jurnal_date) {
-			throw new Error('due date tidak boleh lebih lampau dari jurnal date')
+			// 'due date tidak boleh lebih lampau dari jurnal date'
+			// konfirmasi ke user
+			const res = await $fgta5.MessageBox.confirm('Due date lebih lampau dari book date!<br>Lanjutkan?')
+			if (res != 'ok') {
+				args.cancelSave = true
+				return
+			}
 		}
 
 		if (jurnal_date < periode_start || jurnal_date > periode_end) {
@@ -168,6 +176,42 @@ export function obj_paymreq_id_selecting_criteria(self, obj_paymreq_id, frm, cri
 	criteria.isapproved = true
 	criteria.jurnaltype_id = jurnaltype_id
 }
+
+export async function obj_paymreq_id_populating(self, obj_paymreq_id, frm, evt) {
+	const { tr, data, text } = evt.detail
+
+	const td = tr.querySelector('td')
+	td.style.display = 'flex'
+	td.style.paddingRight = '10px'
+
+	const divDoc = document.createElement('div')
+	divDoc.innerHTML = data.paymreq_doc
+	divDoc.classList.add('paymreq-row-doc')
+
+	const divDescr = document.createElement('div')
+	divDescr.innerHTML = text
+	divDescr.classList.add('paymreq-row-descr')
+
+	const divValue = document.createElement('div')
+	divValue.innerHTML = pageHelper.formatNumber(data.paymreq_total)
+	divValue.classList.add('paymreq-row-value')
+
+	td.innerHTML = ''
+	td.appendChild(divDoc)
+	td.appendChild(divDescr)
+	td.appendChild(divValue)
+}
+
+export async function obj_paymreq_id_selected(self, obj_paymreq_id, frm, evt) {
+	if (!obj_paymreq_id.isSelectedChanged()) {
+		return
+	}
+
+	const paymreq = evt.detail.data
+	paymreq_changed(paymreq, frm)
+
+}
+
 
 export async function obj_periode_id_selected(self, obj_periode_id, frm, evt) {
 	if (!obj_periode_id.isSelectedChanged()) {
@@ -233,6 +277,8 @@ export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, s
 	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
 	const copyto = frm.Inputs[_copyto].value
 
+
+
 	criteria.jurnaltype_id = jurnaltype_id
 	criteria.coa_isdisabled = false
 
@@ -242,6 +288,12 @@ export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, s
 
 	if (copyto == 'K') {
 		criteria.iskredit = true
+	}
+
+	const obj_curr_id = frm.Inputs[_curr_id]
+	if (obj_curr_id.disabled) {
+		// jika currencty disabled, maka cari coa yang currencynya sama atau null
+		criteria.curr_id = obj_curr_id.value
 	}
 
 	// arahkan api ke endpoint coa-filtered/list-by-jurnaltype
@@ -337,6 +389,8 @@ function jurnaltype_changed(jurnaltype, frm) {
 	}
 
 	// due date
+	const obj_jurnal_datedue = frm.Inputs[_jurnal_datedue]
+	obj_jurnal_datedue.disabled = !jurnaltype.isheadallowchangeduedate
 	pageHelper.setVisibility(`${_jurnal_datedue}-container`, jurnaltype.isheadhasduedate)
 
 	// copyto
@@ -367,10 +421,15 @@ function jurnaltype_changed(jurnaltype, frm) {
 
 
 	// value
+	const obj_curr_id = frm.Inputs[_curr_id]
+	const obj_jurnal_value = frm.Inputs[_jurnal_value]
+	obj_curr_id.disabled = !jurnaltype.isheadallowchangevalue
+	obj_jurnal_value.disabled = !jurnaltype.isheadallowchangevalue
 	pageHelper.setVisibility(`${_jurnal_idr}-container`, jurnaltype.isheadhasvalue)
 	pageHelper.setVisibility(`${_jurnal_value}-container`, jurnaltype.isheadhasvalue)
 	pageHelper.setVisibility(`${_curr_id}-container`, jurnaltype.isheadhasvalue)
 	pageHelper.setVisibility(`${_curr_rate}-container`, jurnaltype.isheadhasvalue)
+	pageHelper.setVisibility(`${_coacurr}-container`, jurnaltype.isheadhasvalue)
 
 
 
@@ -406,6 +465,77 @@ function jurnaltype_changed(jurnaltype, frm) {
 	pageHelper.setVisibility(`${_project_id}-container`, jurnaltype.isheadhasproject)
 
 }
+
+
+function paymreq_changed(paymreq, frm) {
+	console.log(paymreq)
+
+	// duedate
+	frm.Inputs[_jurnal_datedue].value = paymreq.paymreq_datedue
+
+
+	// descr
+	let descr = paymreq.paymreq_invoice?.trim()
+	if (descr) {
+		descr = `[${descr}]`
+	}
+	descr = `${descr} ${paymreq.paymreq_descr}`
+	frm.Inputs[_jurnal_descr].value = descr
+
+
+	// partner
+	frm.Inputs[_partner_id].setSelected(paymreq.partner_id, paymreq.partner_name)
+
+	// struct
+	frm.Inputs[_struct_id].setSelected(paymreq.struct_id, paymreq.struct_name)
+
+	// site
+	frm.Inputs[_site_id].setSelected(paymreq.site_id, paymreq.site_name)
+
+	// unit
+	frm.Inputs[_unit_id].setSelected(paymreq.unit_id, paymreq.unit_name)
+
+	// project
+	frm.Inputs[_project_id].setSelected(paymreq.project_id, paymreq.project_name)
+
+	// paymtype
+	frm.Inputs[_paymtype_id].setSelected(paymreq.paymtype_id, paymreq.paymtype_name)
+	const paymtype = Context.setting.paymtype[paymreq.paymtype_id]
+	paymtype_changed(paymtype, frm)
+
+
+	// partnerbank
+	frm.Inputs[_partnerbank_id].setSelected(paymreq.partnerbank_id, paymreq.partnerbank_name)
+
+
+	// bankaccount
+	frm.Inputs[_partnerbank_account].value = paymreq.partnerbank_account
+
+	// accountname
+	frm.Inputs[_partnerbank_accountname].value = paymreq.partnerbank_accountname
+
+	// bankname
+	frm.Inputs[_partnerbank_bankname].value = paymreq.partnerbank_bankname
+
+
+	// partnercontact
+	frm.Inputs[_partnercontact_id].setSelected(paymreq.partnercontact_id, paymreq.partnercontact_name)
+
+	// curr
+	frm.Inputs[_curr_id].setSelected(paymreq.curr_id, paymreq.curr_name)
+
+	// value
+	const value = paymreq.paymreq_total
+	const rate = paymreq.curr_rate
+	const idr = value * rate
+	frm.Inputs[_jurnal_value].value = value
+	frm.Inputs[_jurnal_idr].value = idr
+	frm.Inputs[_curr_rate].value = rate
+
+
+
+}
+
 
 function paymtype_changed(paymtype, frm) {
 	if (paymtype == null) {

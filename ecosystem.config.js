@@ -1,5 +1,5 @@
 export const apps = [{
-	name: 'core',
+	name: 'accounting',
 	script: './src/index.js',
     exec_mode: 'fork', // fork, cluster
     instances: '1', // 1, 2, 3, 4, max: gunakan semua core CPU

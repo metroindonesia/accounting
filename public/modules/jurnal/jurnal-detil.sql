@@ -222,6 +222,21 @@ comment on column public."jurnaldetil".coacurr is '';
 
 
 -- =============================================
+-- FIELD: jurnaldetil_ishead boolean
+-- =============================================
+-- ADD jurnaldetil_ishead
+alter table public."jurnaldetil" add jurnaldetil_ishead boolean not null default false;
+comment on column public."jurnaldetil".jurnaldetil_ishead is '';
+
+-- MODIFY jurnaldetil_ishead
+alter table public."jurnaldetil"
+	alter column jurnaldetil_ishead type boolean,
+	ALTER COLUMN jurnaldetil_ishead SET DEFAULT false,
+	ALTER COLUMN jurnaldetil_ishead SET NOT NULL;
+comment on column public."jurnaldetil".jurnaldetil_ishead is '';
+
+
+-- =============================================
 -- FIELD: agingtype_id smallint
 -- =============================================
 -- ADD agingtype_id
@@ -237,33 +252,18 @@ comment on column public."jurnaldetil".agingtype_id is '';
 
 
 -- =============================================
--- FIELD: iscurradj boolean
+-- FIELD: paymreq_id bigint
 -- =============================================
--- ADD iscurradj
-alter table public."jurnaldetil" add iscurradj boolean not null default false;
-comment on column public."jurnaldetil".iscurradj is '';
+-- ADD paymreq_id
+alter table public."jurnaldetil" add paymreq_id bigint  ;
+comment on column public."jurnaldetil".paymreq_id is '';
 
--- MODIFY iscurradj
+-- MODIFY paymreq_id
 alter table public."jurnaldetil"
-	alter column iscurradj type boolean,
-	ALTER COLUMN iscurradj SET DEFAULT false,
-	ALTER COLUMN iscurradj SET NOT NULL;
-comment on column public."jurnaldetil".iscurradj is '';
-
-
--- =============================================
--- FIELD: jurnaldetil_ishead boolean
--- =============================================
--- ADD jurnaldetil_ishead
-alter table public."jurnaldetil" add jurnaldetil_ishead boolean not null default false;
-comment on column public."jurnaldetil".jurnaldetil_ishead is '';
-
--- MODIFY jurnaldetil_ishead
-alter table public."jurnaldetil"
-	alter column jurnaldetil_ishead type boolean,
-	ALTER COLUMN jurnaldetil_ishead SET DEFAULT false,
-	ALTER COLUMN jurnaldetil_ishead SET NOT NULL;
-comment on column public."jurnaldetil".jurnaldetil_ishead is '';
+	alter column paymreq_id type bigint,
+	ALTER COLUMN paymreq_id DROP DEFAULT,
+	ALTER COLUMN paymreq_id DROP NOT NULL;
+comment on column public."jurnaldetil".paymreq_id is '';
 
 
 -- =============================================
@@ -294,6 +294,21 @@ alter table public."jurnaldetil"
 	ALTER COLUMN iskredit SET DEFAULT false,
 	ALTER COLUMN iskredit SET NOT NULL;
 comment on column public."jurnaldetil".iskredit is '';
+
+
+-- =============================================
+-- FIELD: iscurradj boolean
+-- =============================================
+-- ADD iscurradj
+alter table public."jurnaldetil" add iscurradj boolean not null default false;
+comment on column public."jurnaldetil".iscurradj is '';
+
+-- MODIFY iscurradj
+alter table public."jurnaldetil"
+	alter column iscurradj type boolean,
+	ALTER COLUMN iscurradj SET DEFAULT false,
+	ALTER COLUMN iscurradj SET NOT NULL;
+comment on column public."jurnaldetil".iscurradj is '';
 
 
 -- =============================================
@@ -507,6 +522,7 @@ ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$curr_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaltype_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaldetil_id_ref;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$agingtype_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 
@@ -620,6 +636,17 @@ ALTER TABLE public."jurnaldetil"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$agingtype_id;
 CREATE INDEX idx_fk$public$jurnaldetil$agingtype_id ON public."jurnaldetil"(agingtype_id);	
+
+
+ALTER TABLE public."jurnaldetil"
+	ADD CONSTRAINT fk$public$jurnaldetil$paymreq_id
+	FOREIGN KEY (paymreq_id)
+	REFERENCES public."paymreq"(paymreq_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$paymreq_id;
+CREATE INDEX idx_fk$public$jurnaldetil$paymreq_id ON public."jurnaldetil"(paymreq_id);	
 
 
 ALTER TABLE public."jurnaldetil"

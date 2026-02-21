@@ -72,6 +72,21 @@ comment on column public."jurnaltype".jurnaltype_descr is '';
 
 
 -- =============================================
+-- FIELD: jurnalmodel_id varchar(16)
+-- =============================================
+-- ADD jurnalmodel_id
+alter table public."jurnaltype" add jurnalmodel_id varchar(16)  ;
+comment on column public."jurnaltype".jurnalmodel_id is '';
+
+-- MODIFY jurnalmodel_id
+alter table public."jurnaltype"
+	alter column jurnalmodel_id type varchar(16),
+	ALTER COLUMN jurnalmodel_id DROP DEFAULT,
+	ALTER COLUMN jurnalmodel_id DROP NOT NULL;
+comment on column public."jurnaltype".jurnalmodel_id is '';
+
+
+-- =============================================
 -- FIELD: jurnaltype_headcopyto varchar(1)
 -- =============================================
 -- ADD jurnaltype_headcopyto
@@ -84,21 +99,6 @@ alter table public."jurnaltype"
 	ALTER COLUMN jurnaltype_headcopyto DROP DEFAULT,
 	ALTER COLUMN jurnaltype_headcopyto DROP NOT NULL;
 comment on column public."jurnaltype".jurnaltype_headcopyto is '';
-
-
--- =============================================
--- FIELD: isheadhasduedate boolean
--- =============================================
--- ADD isheadhasduedate
-alter table public."jurnaltype" add isheadhasduedate boolean not null default false;
-comment on column public."jurnaltype".isheadhasduedate is '';
-
--- MODIFY isheadhasduedate
-alter table public."jurnaltype"
-	alter column isheadhasduedate type boolean,
-	ALTER COLUMN isheadhasduedate SET DEFAULT false,
-	ALTER COLUMN isheadhasduedate SET NOT NULL;
-comment on column public."jurnaltype".isheadhasduedate is '';
 
 
 -- =============================================
@@ -147,6 +147,36 @@ comment on column public."jurnaltype".isheadhascoa is '';
 
 
 -- =============================================
+-- FIELD: isheadhasduedate boolean
+-- =============================================
+-- ADD isheadhasduedate
+alter table public."jurnaltype" add isheadhasduedate boolean not null default false;
+comment on column public."jurnaltype".isheadhasduedate is '';
+
+-- MODIFY isheadhasduedate
+alter table public."jurnaltype"
+	alter column isheadhasduedate type boolean,
+	ALTER COLUMN isheadhasduedate SET DEFAULT false,
+	ALTER COLUMN isheadhasduedate SET NOT NULL;
+comment on column public."jurnaltype".isheadhasduedate is '';
+
+
+-- =============================================
+-- FIELD: isheadallowchangeduedate boolean
+-- =============================================
+-- ADD isheadallowchangeduedate
+alter table public."jurnaltype" add isheadallowchangeduedate boolean not null default false;
+comment on column public."jurnaltype".isheadallowchangeduedate is '';
+
+-- MODIFY isheadallowchangeduedate
+alter table public."jurnaltype"
+	alter column isheadallowchangeduedate type boolean,
+	ALTER COLUMN isheadallowchangeduedate SET DEFAULT false,
+	ALTER COLUMN isheadallowchangeduedate SET NOT NULL;
+comment on column public."jurnaltype".isheadallowchangeduedate is '';
+
+
+-- =============================================
 -- FIELD: isheadhasvalue boolean
 -- =============================================
 -- ADD isheadhasvalue
@@ -159,6 +189,21 @@ alter table public."jurnaltype"
 	ALTER COLUMN isheadhasvalue SET DEFAULT false,
 	ALTER COLUMN isheadhasvalue SET NOT NULL;
 comment on column public."jurnaltype".isheadhasvalue is '';
+
+
+-- =============================================
+-- FIELD: isheadallowchangevalue boolean
+-- =============================================
+-- ADD isheadallowchangevalue
+alter table public."jurnaltype" add isheadallowchangevalue boolean not null default false;
+comment on column public."jurnaltype".isheadallowchangevalue is '';
+
+-- MODIFY isheadallowchangevalue
+alter table public."jurnaltype"
+	alter column isheadallowchangevalue type boolean,
+	ALTER COLUMN isheadallowchangevalue SET DEFAULT false,
+	ALTER COLUMN isheadallowchangevalue SET NOT NULL;
+comment on column public."jurnaltype".isheadallowchangevalue is '';
 
 
 -- =============================================
@@ -708,6 +753,7 @@ comment on column public."jurnaltype"._modifydate is 'waktu terakhir record dimo
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."jurnaltype" DROP CONSTRAINT fk$public$jurnaltype$doc_id;
+ALTER TABLE public."jurnaltype" DROP CONSTRAINT fk$public$jurnaltype$jurnalmodel_id;
 
 
 -- Add Foreign Key Constraint  
@@ -720,6 +766,17 @@ ALTER TABLE public."jurnaltype"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$jurnaltype$doc_id;
 CREATE INDEX idx_fk$public$jurnaltype$doc_id ON public."jurnaltype"(doc_id);	
+
+
+ALTER TABLE public."jurnaltype"
+	ADD CONSTRAINT fk$public$jurnaltype$jurnalmodel_id
+	FOREIGN KEY (jurnalmodel_id)
+	REFERENCES public."jurnalmodel"(jurnalmodel_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$jurnaltype$jurnalmodel_id;
+CREATE INDEX idx_fk$public$jurnaltype$jurnalmodel_id ON public."jurnaltype"(jurnalmodel_id);	
 
 	
 

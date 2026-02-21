@@ -10,3 +10,20 @@
 	width: 200px;
 	text-align: right;
 }
+
+
+
+
+.paymreq-row-doc {
+	width: 160px;
+}
+
+.paymreq-row-descr {
+	flex-grow: 1;
+}
+
+.paymreq-row-value {
+	align-self: flex-end;
+	text-align: right;
+	width: 200px;
+}

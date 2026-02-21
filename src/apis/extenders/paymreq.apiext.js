@@ -16,9 +16,12 @@ const TABLE = {
 	unit: 'public.unit',
 	project: 'public.project',
 	user: 'core.user',
-	auth: 'core.auth'
+	auth: 'core.auth',
+	currrate: "public.currrate"
 
 }
+
+
 
 export async function paymreq_init(self, initialData) {
 	const req = self.req
@@ -69,6 +72,18 @@ export async function headerOpen(self, db, data) {
 	data.paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', data.paymtype_id)
 	data.paymreqtype = await sqlUtil.lookupdb(db, TABLE.paymreqtype, 'paymreqtype_id', data.paymreqtype_id)
 
+
+}
+
+export async function headerListRow(self, row, args) {
+	const db = args.db
+	const curr_id = row.curr_id
+
+	const sql = `select * from ${TABLE.currrate} where curr_id=\${curr_id} and currrate_date<=now() order by currrate_date desc limit 1`
+	const data = await db.oneOrNone(sql, { curr_id })
+
+	row.curr_rate = data.currrate_value
+	row.curr_date = data.currrate_date
 
 }
 

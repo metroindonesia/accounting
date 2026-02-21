@@ -1,0 +1,47 @@
+<!-- 
+manual format excel:
+https://github.com/linways/table-to-excel 
+-->
+
+<div id="print-area">
+
+	<div id="judul-laporan">Chart of Account</div>
+
+	<table id="tbl-report" width="100%" data-cols-width="5,10,70,15">
+		<thead>
+			<tr>
+				<th data-colname="rowid" data-fill-color="CCCCCC" data-f-bold="true">No</td>
+				<th data-colname="coa_id" data-fill-color="CCCCCC" data-f-bold="true">ID</td>
+				<th data-colname="coa_name" data-fill-color="CCCCCC" data-f-bold="true">COA</td>
+				<th data-colname="agingtype_name" data-fill-color="CCCCCC" data-f-bold="true">Aging</td>
+				<th data-colname="curr_name" data-fill-color="CCCCCC" data-f-bold="true">Curr</td>
+				<!-- hanya muncul di spreadsheet -->
+				<th style="display: none;" data-fill-color="CCCCCC" data-f-bold="true">IsGroup</td>	 
+			</tr>
+		</thead>
+		
+		<tbody>
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td>
+					<div id="tbl-infoloader" style="position: absolute;"><!-- Report Loader Info --></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+	<template name="template-report-row">
+		<tr>
+			<td data-colname="rowid" data-f-bold="{{isgroup}}" class="coarow">{{rowid}}</td>	
+			<td data-colname="coa_id" data-f-bold="{{isgroup}}" class="coarow">{{coa_id}}</td>	
+			<td data-colname="coa_name" data-f-bold="{{isgroup}}" data-a-indent="{{coa_level}}" class="coarow">{{coa_name}}</td>
+			<td data-colname="agingtype_name" data-f-bold="{{isgroup}}" class="coarow">{{agingtype_name}}</td>	
+			<td data-colname="curr_name" data-f-bold="{{isgroup}}" class="coarow">{{curr_name}}</td>	
+			<!-- hanya muncul di spreadsheet -->
+			<td style="display: none;" data-a-h="center" class="coarow">{{isgroup}}</td>	 
+		</tr>
+	</template>	
+
+</div>

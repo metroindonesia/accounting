@@ -5,27 +5,27 @@
 
 <form id="jurnalDetilEdit-frm" class="module-form" locked="true" autoid="true" primarykey="jurnalDetilEdit-obj_jurnaldetil_id">
 
-	<!-- Textbox: jurnaldetil_id-->	
-	<div id="jurnalDetilEdit-obj_jurnaldetil_id-container" class="input-field detil-el-entry-top" field="jurnalDetilEdit-obj_jurnaldetil_id">
-		<label for="jurnalDetilEdit-obj_jurnaldetil_id">LineId</label>
-		<input id="jurnalDetilEdit-obj_jurnaldetil_id"  fgta5-component="Textbox" placeholder="jurnaldetil_id" autocomplete="off" spellcheck="false" 
-			binding="jurnaldetil_id"
-			data-tabindex="1" 
-			autocomplete="off" spellcheck="false" 
-			maxlength="30" 
-		>
-	</div>
-
-
 	<!-- Combobox: coa_id-->	
 	<div id="jurnalDetilEdit-obj_coa_id-container" class="input-field detil-el-entry-top" field="jurnalDetilEdit-obj_coa_id">
 		<label for="jurnalDetilEdit-obj_coa_id">COA</label>
 		<input id="jurnalDetilEdit-obj_coa_id"  fgta5-component="Combobox" placeholder="coa" autocomplete="off" spellcheck="false" 
 			binding="coa_id"
-			data-tabindex="2" 
+			data-tabindex="1" 
 			required 
 			invalid-message-required="coa harus diisi" 
 			data-display="coa_name" 
+		>
+	</div>
+
+
+	<!-- Textbox: jurnaldetil_id-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_id-container" class="input-field detil-el-entry-top" field="jurnalDetilEdit-obj_jurnaldetil_id">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_id">LineId</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_id"  fgta5-component="Textbox" placeholder="jurnaldetil_id" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_id"
+			data-tabindex="2" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
 		>
 	</div>
 
@@ -107,7 +107,6 @@
 		<input id="jurnalDetilEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="curr" autocomplete="off" spellcheck="false" 
 			binding="curr_id"
 			data-tabindex="9" 
-			style="margin-top: 13px;" 
 			required 
 			invalid-message-required="currency harus diisi" 
 			data-display="curr_code" 
@@ -122,7 +121,6 @@
 			binding="jurnaldetil_value"
 			value="0" 
 			data-tabindex="10" 
-			style="margin-top: 13px;" 
 			precision="2" 
 			maxlength="14" 
 		>
@@ -136,7 +134,6 @@
 			binding="curr_rate"
 			value="1" 
 			data-tabindex="11" 
-			style="margin-top: 13px;" 
 			maxlength="5" 
 			min="1" 
 			invalid-message-min="miminum nilai rate adalah 1" 
@@ -197,12 +194,24 @@
 	</div>
 
 
+	<!-- Checkbox: jurnaldetil_ishead-->	
+	<div id="jurnalDetilEdit-obj_jurnaldetil_ishead-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_ishead">
+		<label for="jurnalDetilEdit-obj_jurnaldetil_ishead">Head</label>
+		<input id="jurnalDetilEdit-obj_jurnaldetil_ishead"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="jurnaldetil_ishead"
+			data-tabindex="16" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
 	<!-- Textbox: agingtype_id-->	
 	<div id="jurnalDetilEdit-obj_agingtype_id-container" class="input-field" field="jurnalDetilEdit-obj_agingtype_id">
 		<label for="jurnalDetilEdit-obj_agingtype_id">AgingType</label>
 		<input id="jurnalDetilEdit-obj_agingtype_id"  fgta5-component="Textbox" placeholder="agingtype" autocomplete="off" spellcheck="false" 
 			binding="agingtype_id"
-			data-tabindex="16" 
+			data-tabindex="17" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 
@@ -210,25 +219,14 @@
 	</div>
 
 
-	<!-- Checkbox: iscurradj-->	
-	<div id="jurnalDetilEdit-obj_iscurradj-container" class="input-field" field="jurnalDetilEdit-obj_iscurradj">
-		<label for="jurnalDetilEdit-obj_iscurradj">Curr Adjustment</label>
-		<input id="jurnalDetilEdit-obj_iscurradj"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
-			binding="iscurradj"
-			data-tabindex="17" 
-			type="checkbox" 
-			disabled 
-		>
-	</div>
-
-
-	<!-- Checkbox: jurnaldetil_ishead-->	
-	<div id="jurnalDetilEdit-obj_jurnaldetil_ishead-container" class="input-field" field="jurnalDetilEdit-obj_jurnaldetil_ishead">
-		<label for="jurnalDetilEdit-obj_jurnaldetil_ishead">Head</label>
-		<input id="jurnalDetilEdit-obj_jurnaldetil_ishead"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
-			binding="jurnaldetil_ishead"
+	<!-- Textbox: paymreq_id-->	
+	<div id="jurnalDetilEdit-obj_paymreq_id-container" class="input-field" field="jurnalDetilEdit-obj_paymreq_id">
+		<label for="jurnalDetilEdit-obj_paymreq_id">Paym.Req</label>
+		<input id="jurnalDetilEdit-obj_paymreq_id"  fgta5-component="Textbox" placeholder="paymreq_id" autocomplete="off" spellcheck="false" 
+			binding="paymreq_id"
 			data-tabindex="18" 
-			type="checkbox" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
 			disabled 
 		>
 	</div>
@@ -258,12 +256,24 @@
 	</div>
 
 
+	<!-- Checkbox: iscurradj-->	
+	<div id="jurnalDetilEdit-obj_iscurradj-container" class="input-field" field="jurnalDetilEdit-obj_iscurradj">
+		<label for="jurnalDetilEdit-obj_iscurradj">Curr g/l</label>
+		<input id="jurnalDetilEdit-obj_iscurradj"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="iscurradj"
+			data-tabindex="21" 
+			type="checkbox" 
+			disabled 
+		>
+	</div>
+
+
 	<!-- Textbox: jurnal_id-->	
 	<div id="jurnalDetilEdit-obj_jurnal_id-container" class="input-field hidden hidden" field="jurnalDetilEdit-obj_jurnal_id">
 		<label for="jurnalDetilEdit-obj_jurnal_id">Id</label>
 		<input id="jurnalDetilEdit-obj_jurnal_id"  fgta5-component="Textbox" placeholder="ID" autocomplete="off" spellcheck="false" 
 			binding="jurnal_id"
-			data-tabindex="29" 
+			data-tabindex="30" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 			disabled 

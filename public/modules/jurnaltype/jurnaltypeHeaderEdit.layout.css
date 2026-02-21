@@ -43,39 +43,57 @@
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto-container {
+	#jurnaltypeHeaderEdit-obj_jurnalmodel_id-container {
 		grid-row: 4;
-		grid-column: 1 / span 1;
+		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_ishasduedate-container {
+	#jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto-container {
+		grid-row: 4;
+		grid-column: 3;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
 		grid-row: 5;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
+	#jurnaltypeHeaderEdit-obj_isheadhaspaymtype-container {
 		grid-row: 6;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhaspaymtype-container {
+	#jurnaltypeHeaderEdit-obj_isheadhascoa-container {
 		grid-row: 7;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhascoa-container {
+	#jurnaltypeHeaderEdit-obj_ishasduedate-container {
 		grid-row: 8;
 		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadallowchangeduedate-container {
+		grid-row: 8;
+		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhasvalue-container {
 		grid-row: 9;
 		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadallowchangevalue-container {
+		grid-row: 9;
+		grid-column: 3 / span 2;
 		
 	}
 	

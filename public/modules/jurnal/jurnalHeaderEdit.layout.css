@@ -45,13 +45,13 @@
 	
 	#jurnalHeaderEdit-obj_jurnaltype_id-container {
 		grid-row: 2;
-		grid-column: 1 / span 3;
+		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnalHeaderEdit-obj_paymreq_id-container {
 		grid-row: 2;
-		grid-column: 4 / span 3;
+		grid-column: 3 / span 4;
 		
 	}
 	

@@ -195,6 +195,11 @@ async function jurnaltype_headerList(self, body) {
 				const { doc_name } = await sqlUtil.lookupdb(db, 'core.doc', 'doc_id', row.doc_id)
 				row.doc_name = doc_name
 			}
+			// lookup: jurnalmodel_name dari field jurnalmodel_name pada table public.jurnalmodel dimana (public.jurnalmodel.jurnalmodel_id = public.jurnaltype.jurnalmodel_id)
+			{
+				const { jurnalmodel_name } = await sqlUtil.lookupdb(db, 'public.jurnalmodel', 'jurnalmodel_id', row.jurnalmodel_id)
+				row.jurnalmodel_name = jurnalmodel_name
+			}
 			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
@@ -248,6 +253,11 @@ async function jurnaltype_headerOpen(self, body) {
 		{
 			const { doc_name } = await sqlUtil.lookupdb(db, 'core.doc', 'doc_id', data.doc_id)
 			data.doc_name = doc_name
+		}
+		// lookup: jurnalmodel_name dari field jurnalmodel_name pada table public.jurnalmodel dimana (public.jurnalmodel.jurnalmodel_id = public.jurnaltype.jurnalmodel_id)
+		{
+			const { jurnalmodel_name } = await sqlUtil.lookupdb(db, 'public.jurnalmodel', 'jurnalmodel_id', data.jurnalmodel_id)
+			data.jurnalmodel_name = jurnalmodel_name
 		}
 		
 

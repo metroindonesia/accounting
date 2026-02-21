@@ -17,6 +17,26 @@ export async function jurnal_init(self, initialData) {
 	initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
 
 
+	/* ambil data paymtype */
+	try {
+		const sql = `
+		select 
+			paymtype_id, 
+			ishaspartnercontact, ishaspartnerbankselector , ishasbankaccount, 
+			ishasbankaccountname, ishasbankname, ishasgiro
+		from ${TABLE.paymtype}
+		`
+		const rows = await db.any(sql)
+		const paymtype = {}
+		for (let row of rows) {
+			paymtype[row.paymtype_id] = row
+		}
+		initialData.setting.paymtype = paymtype
+	} catch (err) {
+		throw err
+	}
+
+
 }
 
 export async function sequencerSetup(self, tx, sequencer, data, args) {
