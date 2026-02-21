@@ -19,6 +19,11 @@ export async function init(self, args) {
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
 	}
+
+	const docLogo = document.getElementById('report-logo')
+	const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
+	docLogo.style.backgroundImage = `url(${logoUrl})`
+
 }
 
 export function getParams() {

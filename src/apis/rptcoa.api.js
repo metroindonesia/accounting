@@ -60,6 +60,10 @@ async function reportviewer_init(self, body) {
 			setting: {}
 		}
 
+		// set data setting	
+		initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
+
+
 		return initialData
 	} catch (err) {
 		throw err

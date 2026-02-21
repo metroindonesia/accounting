@@ -33,9 +33,7 @@ export default class extends Module {
 				Context.sid = result.sid
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
-
-
-
+				Context.setting = result.setting
 			} catch (err) {
 				throw err
 			}
