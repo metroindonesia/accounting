@@ -1,0 +1,38 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="lapkeuHeader">
+		<!-- <div style="flex-grow: 1;"> -->
+		<div id="filter-container">Type :
+			<select id="typelap">
+				<option value="nr_mtd">Neraca MTD</option>
+				<option value="nr_ytd">Neraca YTD</option>
+				<option value="lr_mtd">Laba Rugi MTD</option>
+				<option value="lr_ytd">Laba Rugi YTD</option>
+			</select>
+
+			Filter :
+			<select id="filter" disabled style="width: 200px;">
+				<option value="">Filter by</option>
+				<option value="">Site</option>
+				<option value="">Dept</option>
+			</select>
+
+			Per Tanggal : <input type="date" id="rptLapkeu_tgl">
+			<button id="btnLoad">Load</button>
+			<!-- </div> -->
+		</div>
+
+		<div id="btn">
+			<button id="btnDownload">Download</button>
+			<button id="btnPrint">Cetak</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptlapkeuPage.html`) %>
+	</div>
+</section>

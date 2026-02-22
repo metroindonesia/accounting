@@ -41,3 +41,18 @@
 	}
 
 }
+
+
+.jurnaltype-row-coa_id {
+	width: 100px;
+}
+
+
+.jurnaltype-row-coa_name {
+	flex-grow: 1;
+
+}
+
+.jurnaltype-row-agingtype {
+	width: 50px;
+}

@@ -1,0 +1,135 @@
+@media print {
+
+	@page {
+		size: A4 potrait;
+		margin: 1cm;
+	}
+
+	@page :first {
+		margin-top: 0;
+	}
+
+	#print-media {
+		/* Ukuran A4 standar adalah 21cm x 29.7cm */
+		width: 21cm;
+		min-height: 29.7cm;
+		margin: 0;
+		padding: 0;
+		font-size: 12pt;
+		display: flex;
+		flex-direction: column;
+	}
+
+
+	#print-area {
+		margin-top: 1cm;
+		flex-grow: 1;
+	}
+
+	#tbl-infoloader {
+		display: none;
+	}
+
+
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 15mm;
+		width: 60mm;
+	}
+
+}
+
+
+@media screen {
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 32px;
+		width: 128px;
+	}
+}
+
+
+#judul-laporan {
+	font-weight: bold;
+	font-size: 1.2em;
+	margin-bottom: 5px;
+}
+
+#tbl-report th {
+	background-color: #ccc;
+	border-bottom: 1px solid #999;
+}
+
+#tbl-report tr [ data-colname="rowid"] {
+	width: 60px;
+	text-align: center;
+}
+
+#tbl-report tr [ data-colname="coa_id"] {
+	width: 100px;
+	text-align: center;
+}
+
+#tbl-report tr [ data-colname="saldo"] {
+	width: 200px;
+	text-align: right;
+}
+
+
+#tbl-report td[data-isgroup="true"][data-colname="coa_id"] {
+	color: #fff;
+}
+
+/* #tbl-report td[data-isgroup="true"][data-colname="saldoawal_idr"] { color: #fff; } */
+
+
+#tbl-report td[data-f-bold="true"] {
+	font-weight: bold;
+}
+
+#tbl-report td[data-istotal="true"] {
+	border-top: 2px solid #000;
+	border-bottom: 1px solid #000;
+	background-color: #ccc;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+#ledgerHeader {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	/* grid-auto-rows: auto; */
+	gap: 0px;
+	width: 100%;
+	margin-bottom: 10px;
+
+}
+
+#filter-container {
+	grid-row: 1;
+	grid-column: 1 / span 8;
+}
+
+#btn {
+	grid-row: 1;
+	grid-column: 11 / span 2;
+	text-align: right;
+}
+
+
+
+.reportrow {
+	border-bottom: 1px dotted #ddd;
+
+	white-space: nowrap;
+	/* Mencegah teks turun ke baris baru */
+	overflow: hidden;
+	/* Menyembunyikan teks yang keluar dari div */
+	text-overflow: ellipsis;
+	/* Menambahkan simbol ... */
+	border-bottom: 1px #ccc dotted;
+}

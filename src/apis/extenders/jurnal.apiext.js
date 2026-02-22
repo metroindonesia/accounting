@@ -60,6 +60,17 @@ export async function headerUpdating(self, tx, data) {
 	excludeNonEditableHeader(data) 	// buang data yang tidak boleh dimodif user
 }
 
+export async function detilCreating(self, tx, data, seqdata, args) {
+	excludeNonEditableDetil(data)
+
+	if (data.paymreq_id == '') {
+		data.paymreq_id = null
+	}
+}
+
+export async function detilUpdating(self, tx, data) {
+	excludeNonEditableDetil(data)
+}
 
 export async function headerOpen(self, db, data) {
 	const { userId: user_id } = self.req.session.user;
@@ -119,4 +130,6 @@ function excludeNonEditableHeader(data) {
 function excludeNonEditableDetil(data) {
 	delete data.jurnaldetil_id_ref
 	delete data.jurnaldetil_ishead
+
+
 }

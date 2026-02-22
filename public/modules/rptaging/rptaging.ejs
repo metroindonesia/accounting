@@ -1,0 +1,43 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="agingHeader">
+		<!-- <div style="flex-grow: 1;"> -->
+		<div id="filter-container">Type:
+			<select id="typelap">
+				<option value="ar_part">Receivable by Partner</option>
+				<option value="ar_partcoa">Receivable by PartnerCOA</option>
+				<option value="ar_his">Receivable History</option>
+				<option value="ap_part">Payable by Partner</option>
+				<option value="ap_partcoa">Payable by PartnerCOA</option>
+				<option value="ap_his">Payable History</option>
+			</select>
+
+			<!-- Filter -->
+			Filter :
+			<select id="filter" disabled style="width: 200px;">
+				<option value="">Filter by</option>
+				<option value="">Site</option>
+				<option value="">Dept</option>
+			</select>
+
+			Per Tanggal: <input type="date" id="rptaging_tgl">
+			<button id="btnLoad">Load</button>
+		</div>
+
+		<!-- </div> -->
+
+
+		<div id="btn">
+			<button id="btnDownload">Download</button>
+			<button id="btnPrint">Cetak</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptagingPage.html`) %>
+	</div>
+</section>

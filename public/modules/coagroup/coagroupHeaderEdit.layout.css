@@ -31,26 +31,32 @@
 		
 	}
 	
-	#coagroupHeaderEdit-obj_coagroup_parent-container {
+	#coagroupHeaderEdit-obj_coarpt_id-container {
 		grid-row: 4;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#coagroupHeaderEdit-obj_coagroup_parent-container {
+		grid-row: 5;
 		grid-column: 1 / span 4;
 		
 	}
 	
 	#coagroupHeaderEdit-obj_coagroup_level-container {
-		grid-row: 4;
+		grid-row: 5;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#coagroupHeaderEdit-obj_coagroup_pathid-container {
-		grid-row: 5;
+		grid-row: 6;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#coagroupHeaderEdit-obj_coagroup_path-container {
-		grid-row: 5;
+		grid-row: 6;
 		grid-column: 3 / span 2;
 		
 	}

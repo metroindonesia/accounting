@@ -1,3 +1,28 @@
+@media screen and (max-width: 500px) {
+	.detil-info {
+		display: none;
+	}
+}
+
+@media screen and (min-width: 501px) {
+	.detil-el-footer {
+		margin-top: 30px;
+		padding-top: 10px;
+	}
+
+	.detil-info {
+		background-color: #eee;
+		border: 1px solid #b5b5b5;
+		border-radius: 10px;
+		grid-row: 7 / span 5;
+		grid-column: 1 / span 6;
+		margin-top: 15px;
+		margin-bottom: -15px;
+	}
+}
+
+
+
 .curr-row-code {
 	width: 200px;
 }
@@ -26,4 +51,23 @@
 	align-self: flex-end;
 	text-align: right;
 	width: 200px;
+}
+
+
+.coa-row-coa_id {
+	width: 100px;
+}
+
+.coa-row-coa_name {
+	flex-grow: 1;
+}
+
+.coa-row-agingtype {
+	width: 50px;
+	text-align: center;
+}
+
+.coa-row-curr {
+	width: 50px;
+	text-align: center;
 }

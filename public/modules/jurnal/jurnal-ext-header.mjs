@@ -1,4 +1,5 @@
 import Context from './jurnal-context.mjs'
+import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 
@@ -69,8 +70,8 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	} = frm.getOriginalData()
 
 
-	jurnaltype_changed(jurnaltype, frm)
-	paymtype_changed(paymtype, frm)
+	jurnaltype_changed(self, jurnaltype, frm)
+	paymtype_changed(self, paymtype, frm)
 
 	const periode_isclosed = periode.periode_isclosed
 	selectedPeriode.periode_start = periode.periode_start
@@ -96,8 +97,8 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 	// set default currency
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
 
-	jurnaltype_changed({}, frm)
-	paymtype_changed({}, frm)
+	jurnaltype_changed(self, {}, frm)
+	paymtype_changed(self, {}, frm)
 
 
 
@@ -146,7 +147,7 @@ export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) 
 		return
 	}
 	const paymtype = evt.detail.data
-	paymtype_changed(paymtype, frm)
+	paymtype_changed(self, paymtype, frm)
 }
 
 export function obj_jurnaltype_id_selecting_criteria(self, obj_jurnaltype_id, frm, criteria, sort, evt) {
@@ -160,8 +161,8 @@ export async function obj_jurnaltype_id_selected(self, obj_jurnaltype_id, frm, e
 		return
 	}
 	const jurnaltype = evt.detail.data
-	jurnaltype_changed(jurnaltype, frm)
-	paymtype_changed({}, frm)
+	jurnaltype_changed(self, jurnaltype, frm)
+	paymtype_changed(self, {}, frm)
 
 	// reset paymreq
 	const obj_paymreq_id = frm.Inputs[_paymreq_id]
@@ -208,7 +209,7 @@ export async function obj_paymreq_id_selected(self, obj_paymreq_id, frm, evt) {
 	}
 
 	const paymreq = evt.detail.data
-	paymreq_changed(paymreq, frm)
+	paymreq_changed(self, paymreq, frm)
 
 }
 
@@ -278,6 +279,7 @@ export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, s
 	const copyto = frm.Inputs[_copyto].value
 
 
+	evt.detail.url = 'coa-filtered/list-by-jurnaltype'
 
 	criteria.jurnaltype_id = jurnaltype_id
 	criteria.coa_isdisabled = false
@@ -297,8 +299,14 @@ export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, s
 	}
 
 	// arahkan api ke endpoint coa-filtered/list-by-jurnaltype
-	evt.detail.url = 'coa-filtered/list-by-jurnaltype'
 }
+
+
+export async function obj_coa_id_populating(self, obj_coa_id, frm, evt) {
+	jurnalHelper.coa_id_populating(self, obj_coa_id, frm, evt, 'header')
+}
+
+
 
 export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 	if (!obj_coa_id.isSelectedChanged()) {
@@ -307,9 +315,10 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 
 	const { curr_id } = evt.detail.data
 	frm.Inputs[_coacurr].value = curr_id
-	frm.Inputs[_curr_id].clear()
+
 	if (curr_id != null) {
 		if (frm.Inputs[_curr_id].value != curr_id) {
+			frm.Inputs[_curr_id].clear()
 			frm.Inputs[_curr_id].setSelected(null, '')
 			frm.Inputs[_curr_rate].value = 1
 		}
@@ -329,29 +338,7 @@ export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria,
 }
 
 export async function obj_curr_id_populating(self, obj_curr_id, frm, evt) {
-	const { tr, data, text } = evt.detail
-
-	const td = tr.querySelector('td')
-	td.style.display = 'flex'
-	td.style.justifyContent = 'space-between';
-	td.style.paddingRight = '10px'
-
-	const divCode = document.createElement('div')
-	divCode.innerHTML = text
-	divCode.classList.add('curr-row-code')
-
-	const divDate = document.createElement('div')
-	divDate.innerHTML = data.curr_date
-	divDate.classList.add('curr-row-date')
-
-	const divRate = document.createElement('div')
-	divRate.innerHTML = pageHelper.formatNumber(data.curr_rate)
-	divRate.classList.add('curr-row-value')
-
-	td.innerHTML = ''
-	td.appendChild(divCode)
-	td.appendChild(divDate)
-	td.appendChild(divRate)
+	jurnalHelper.curr_id_populating(self, obj_curr_id, frm, evt, 'detil')
 }
 
 
@@ -383,10 +370,16 @@ function disableJurnaltype(frm, disabled) {
 }
 
 
-function jurnaltype_changed(jurnaltype, frm) {
+function jurnaltype_changed(self, jurnaltype, frm) {
 	if (jurnaltype == null) {
 		jurnaltype = {}
 	}
+
+
+	// informasikan juga ke detil soal perubahan jurnaltype
+	self.Modules.extenderDetil.headerJurnaltype_changed(self, jurnaltype, frm)
+
+
 
 	// due date
 	const obj_jurnal_datedue = frm.Inputs[_jurnal_datedue]
@@ -467,8 +460,7 @@ function jurnaltype_changed(jurnaltype, frm) {
 }
 
 
-function paymreq_changed(paymreq, frm) {
-	console.log(paymreq)
+function paymreq_changed(self, paymreq, frm) {
 
 	// duedate
 	frm.Inputs[_jurnal_datedue].value = paymreq.paymreq_datedue
@@ -501,7 +493,7 @@ function paymreq_changed(paymreq, frm) {
 	// paymtype
 	frm.Inputs[_paymtype_id].setSelected(paymreq.paymtype_id, paymreq.paymtype_name)
 	const paymtype = Context.setting.paymtype[paymreq.paymtype_id]
-	paymtype_changed(paymtype, frm)
+	paymtype_changed(self, paymtype, frm)
 
 
 	// partnerbank
@@ -537,7 +529,7 @@ function paymreq_changed(paymreq, frm) {
 }
 
 
-function paymtype_changed(paymtype, frm) {
+function paymtype_changed(self, paymtype, frm) {
 	if (paymtype == null) {
 		paymtype = {}
 	}

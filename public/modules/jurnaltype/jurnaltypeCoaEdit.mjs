@@ -147,6 +147,17 @@ export async function init(self, args) {
 			
 		}		
 	})
+	obj_coa_id.addEventListener('populating', (evt)=>{
+		const fn_populating_name = 'obj_coa_id_populating'
+		const fn_populating = Extender[fn_populating_name]
+		if (typeof fn_populating === 'function') {
+			// create function di Extender:
+			// export async function obj_coa_id_populating(self, obj_coa_id, frm, evt) {}
+			fn_populating(self, obj_coa_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_coa_id_populating is not implemented')
+		}		
+	})
 		
 }
 

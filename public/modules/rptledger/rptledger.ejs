@@ -1,0 +1,36 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="ledgerHeader">
+		<!-- <div style="flex-grow: 1;"> -->
+		<div id="filter-container">Type :
+			<select id="isytd">
+				<option value="true">Buku besar YTD - all</option>
+				<option value="false">Buku besar MTD - all</option>
+			</select>
+			Filter :
+			<select id="filter" disabled style="width: 200px;">
+				<option value="">Filter by</option>
+				<option value="">Site</option>
+				<option value="">Dept</option>
+			</select>
+
+			<input type="date" id="rptLedger_tgl">
+			<button id="btnLoad">Load</button>
+		</div>
+		<!-- </div> -->
+
+
+		<div id="btn">
+			<button id="btnDownload">Download</button>
+			<button id="btnPrint">Cetak</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptledgerPage.html`) %>
+	</div>
+</section>

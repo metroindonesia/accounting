@@ -42,6 +42,21 @@ comment on column public."coagroup".coagroup_descr is '';
 
 
 -- =============================================
+-- FIELD: coarpt_id smallint
+-- =============================================
+-- ADD coarpt_id
+alter table public."coagroup" add coarpt_id smallint  ;
+comment on column public."coagroup".coarpt_id is '';
+
+-- MODIFY coarpt_id
+alter table public."coagroup"
+	alter column coarpt_id type smallint,
+	ALTER COLUMN coarpt_id DROP DEFAULT,
+	ALTER COLUMN coarpt_id DROP NOT NULL;
+comment on column public."coagroup".coarpt_id is '';
+
+
+-- =============================================
 -- FIELD: coagroup_parent int
 -- =============================================
 -- ADD coagroup_parent
@@ -166,7 +181,22 @@ comment on column public."coagroup"._modifydate is 'waktu terakhir record dimodi
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."coagroup" DROP CONSTRAINT fk$public$coagroup$coagroup_parent;
+
+
 -- Add Foreign Key Constraint  
+ALTER TABLE public."coagroup"
+	ADD CONSTRAINT fk$public$coagroup$coarpt_id
+	FOREIGN KEY (coarpt_id)
+	REFERENCES public."coarpt"(coarpt_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$coagroup$coarpt_id;
+CREATE INDEX idx_fk$public$coagroup$coarpt_id ON public."coagroup"(coarpt_id);	
+
+
 ALTER TABLE public."coagroup"
 	ADD CONSTRAINT fk$public$coagroup$coagroup_parent
 	FOREIGN KEY (coagroup_parent)
@@ -183,6 +213,11 @@ CREATE INDEX idx_fk$public$coagroup$coagroup_parent ON public."coagroup"(coagrou
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."coagroup"
+	drop constraint uq$public$coagroup$coagroup_name;
+	
+
 -- Add unique index 
 alter table  public."coagroup"
 	add constraint uq$public$coagroup$coagroup_name unique (coagroup_name); 

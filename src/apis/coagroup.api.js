@@ -26,13 +26,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await coagroup_init(this, body) }
 
+	// extender call
+	async execute(body) { return await paymreq_execute(this, body) }
+
 	// header
 	async headerList(body) { return await coagroup_headerList(this, body) }
 	async headerOpen(body) { return await coagroup_headerOpen(this, body) }
 	async headerUpdate(body) { return await coagroup_headerUpdate(this, body)}
 	async headerCreate(body) { return await coagroup_headerCreate(this, body)}
 	async headerDelete(body) { return await coagroup_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -80,6 +83,24 @@ async function coagroup_init(self, body) {
 }
 
 
+// execute extender function
+async function coagroup_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, coagroup_log) {}
+		return await Extender[fnName](self, db, body, coagroup_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function coagroup_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -95,6 +116,8 @@ async function coagroup_log(self, body, startTime, tablename, id, action, data={
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -140,6 +163,11 @@ async function coagroup_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
+			// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coagroup.coarpt_id)
+			{
+				const { coarpt_name } = await sqlUtil.lookupdb(db, 'public.coarpt', 'coarpt_id', row.coarpt_id)
+				row.coarpt_name = coarpt_name
+			}
 			// lookup: coagroup_parent_name dari field coagroup_name pada table public.coagroup dimana (public.coagroup.coagroup_id = public.coagroup.coagroup_parent)
 			{
 				const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', row.coagroup_parent)
@@ -194,6 +222,11 @@ async function coagroup_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
+		// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coagroup.coarpt_id)
+		{
+			const { coarpt_name } = await sqlUtil.lookupdb(db, 'public.coarpt', 'coarpt_id', data.coarpt_id)
+			data.coarpt_name = coarpt_name
+		}
 		// lookup: coagroup_parent_name dari field coagroup_name pada table public.coagroup dimana (public.coagroup.coagroup_id = public.coagroup.coagroup_parent)
 		{
 			const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', data.coagroup_parent)
@@ -247,7 +280,7 @@ async function coagroup_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'COGR' }
+			const args = { section: 'header', doc_id:'COGR' }
 
 			
 			// buat short sequencer	

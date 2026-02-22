@@ -1,0 +1,71 @@
+<!-- 
+manual format excel:
+https://github.com/linways/table-to-excel 
+-->
+
+<div id="print-area">
+
+	<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+		<div>
+			<div id="judul-laporan">Laporan Keuangan</div>
+			<div id="subjudul-laporan"></div>
+			<div id="tgl_cetak" style="margin-bottom:15px;"></div>
+		</div>
+		<div id="report-logo"></div>
+	</div>
+
+	<table id="tbl-report" width="100%" data-cols-width="5,10,70,15">
+		<thead>
+			<tr>
+				<th data-colname="rowid" data-fill-color="CCCCCC" data-f-bold="true">No</th>
+				<th data-colname="coa_id" data-fill-color="CCCCCC" data-f-bold="true">ID</th>
+				<th data-colname="coa_name" data-fill-color="CCCCCC" data-f-bold="true">COA</th>
+				<th data-colname="mutasi_idr" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Bulan ini
+				</th>
+				<th data-colname="saldoakhir_idr" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">s/d Bulan
+					ini
+				</th>
+				<th data-colname="saldoawal_idr" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">s/d Bulan
+					lalu
+				</th>
+
+				<!-- hanya muncul di spreadsheet -->
+				<th style="display: none;" data-fill-color="CCCCCC" data-f-bold="true">IsGroup</td>
+			</tr>
+		</thead>
+
+		<tbody>
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td>
+					<div id="tbl-infoloader" style="position: absolute;"><!-- Report Loader Info --></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+	<template name="template-report-row">
+		<tr>
+			<td data-colname="rowid" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" class="reportrow" data-isgroup="{{isgroup}}">{{rowid}}</td>
+			<td data-colname="coa_id" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" class="reportrow" data-isgroup="{{isgroup}}">{{coa_id}}</td>
+			<td data-colname="coa_name" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}"
+				data-a-indent="{{coa_level}}" class="reportrow" data-isgroup="{{isgroup}}">{{coa_name}}</td>
+			<td data-colname="mutasi_idr" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{mutasi_idr}}" class="reportrow" data-isgroup="{{isgroup}}">
+				{{mutasi_idr}}</td>
+			<td data-colname="saldoakhir_idr" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{saldoakhir_idr}}" class="reportrow" data-isgroup="{{isgroup}}">
+				{{saldoakhir_idr}}</td>
+			<td data-colname="saldoawal_idr" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{saldoawal_idr}}" class="reportrow" data-isgroup="{{isgroup}}">
+				{{saldoawal_idr}}</td>
+
+			<!-- hanya muncul di spreadsheet -->
+			<td style="display: none;" data-a-h="center">{{isgroup}}</td>
+
+		</tr>
+	</template>
+
+</div>

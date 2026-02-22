@@ -9,8 +9,14 @@ export const extenderDetil = ExtDetil;
 
 export async function init(self, args) {
 	console.log('initializing jurnalExtender ...')
+
+	// referensikan extender ke self
+	self.Modules.extenderHeader = extenderHeader
+	self.Modules.extenderDetil = extenderDetil
+
 	ExtHeader.init_header(self, args)
 	ExtDetil.init_detil(self, args)
+
 
 
 }
