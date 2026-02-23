@@ -1,0 +1,81 @@
+#dialog-outstanding {
+	width: 100vw;
+	height: 100vh;
+	border: none;
+	padding: 0;
+	margin: 0;
+	max-width: none;
+	max-height: none;
+	/* display: flex; */
+	/* flex-direction: column; */
+
+	/* Hilangkan background blokir bawaan browser */
+	background: white; /* atau transparan */
+}
+
+
+#dialog-outstanding::backdrop {
+	background: rgba(0,0,0,0.4); /* opsional */
+}
+
+
+#dialog-outstanding > div {
+	display: flex;
+	flex-direction: column;
+}
+
+
+#dialog-outstanding-headerbar {
+	position: sticky;
+	order: 1;
+
+}
+
+
+
+.dialog-outstanding-content {
+	padding: 10px;
+	order: 2
+}
+
+
+#dialog-outstanding-filter {
+	margin-top: 15px;
+	margin-bottom: 25px;
+}
+
+#dialog-outstanding-filter > div {
+	display: flex;
+	column-gap: 5px;
+	max-width: 800px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+
+
+#dialog-outstanding-table {
+	margin-bottom: 50px;
+}
+
+#dialog-outstanding-table thead th {
+	background-color: #ccc;
+	border-bottom: 1px solid #888;
+	font-weight: bold;
+	font-size: 1em;
+	padding: 10px;
+}
+
+
+
+#dialog-outstanding-table tr:hover {
+	background-color: darkkhaki;
+}
+
+#dialog-outstanding-table tr td {
+	cursor: pointer;
+	vertical-align: top;
+	padding-bottom: 2px;
+	padding-top: 3px;
+	border-bottom: 1px dotted #ccc;
+}

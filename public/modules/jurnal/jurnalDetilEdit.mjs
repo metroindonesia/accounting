@@ -1040,11 +1040,11 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function jurnalDetilEdit_dataSaved(self, data, frm) {}
 		const fn_datasaved_name = 'jurnalDetilEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			await fn_datasaved(self, data, frm)
+			// export async function jurnalDetilEdit_dataSaved(self, data, frm) {}
+			await fn_datasaved(self, result, frm)
 		}
 
 

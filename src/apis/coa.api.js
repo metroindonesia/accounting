@@ -25,13 +25,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await coa_init(this, body) }
 
+	// extender call
+	async execute(body) { return await coa_execute(this, body) }
+
 	// header
 	async headerList(body) { return await coa_headerList(this, body) }
 	async headerOpen(body) { return await coa_headerOpen(this, body) }
 	async headerUpdate(body) { return await coa_headerUpdate(this, body)}
 	async headerCreate(body) { return await coa_headerCreate(this, body)}
 	async headerDelete(body) { return await coa_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -79,6 +82,24 @@ async function coa_init(self, body) {
 }
 
 
+// execute extender function
+async function coa_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, coa_log) {}
+		return await Extender[fnName](self, db, body, coa_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function coa_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -97,11 +118,13 @@ async function coa_log(self, body, startTime, tablename, id, action, data={}, re
 
 
 
+
+
 async function coa_headerList(self, body) {
 	const tablename = headerTableName
 	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
-		searchtext: `coa_name ILIKE '%' || \${searchtext} || '%'`,
+		searchtext: `coa_id=try_cast_int(\${searchtext}, 0) OR coa_name ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
@@ -276,7 +299,7 @@ async function coa_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', doc_id:'' }
 
 				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

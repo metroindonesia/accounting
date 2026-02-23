@@ -26,7 +26,7 @@ export async function coa_listByJurnaltype(self, body) {
 	const columns = ['A.*', 'B.jurnaltypecoa_isdr as isdebet', 'B.jurnaltypecoa_iscr as iskredit']
 	const { criteria = {}, limit = 0, offset = 0, sort = {} } = body
 	const searchMap = {
-		searchtext: `A.coa_id=\${searchtext} or A.coa_name ILIKE '%' || \${searchtext} || '%'`,
+		searchtext: `A.coa_id=try_cast_int(\${searchtext}, 0) OR A.coa_name ILIKE '%' || \${searchtext} || '%'`,
 		coa_isdisabled: 'A.coa_isdisabled = ${coa_isdisabled}',
 		jurnaltype_id: 'B.jurnaltype_id = ${jurnaltype_id}',
 		curr_id: '(A.curr_id is null or A.curr_id = ${curr_id})',

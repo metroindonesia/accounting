@@ -12,4 +12,14 @@
 		width: unset;
 	}
 
+
+	#paymreqHeaderEdit-btn_actionApprove {
+		margin-left: auto;
+		order: 4;
+	}
+
+	#paymreqHeaderEdit-btn_actionReject {
+		margin-left: 0;
+		order: 5;
+	}
 }

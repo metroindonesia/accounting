@@ -226,6 +226,10 @@ comment on column public."periode"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."periode" DROP CONSTRAINT fk$public$periode$previous_periode_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE public."periode"
 	ADD CONSTRAINT fk$public$periode$previous_periode_id
@@ -243,6 +247,17 @@ CREATE INDEX idx_fk$public$periode$previous_periode_id ON public."periode"(previ
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."periode"
+	drop constraint uq$public$periode$periode_name;
+
+alter table public."periode"
+	drop constraint uq$public$periode$periode_yearmonth;
+
+alter table public."periode"
+	drop constraint uq$public$periode$previous_periode_id;
+	
+
 -- Add unique index 
 alter table  public."periode"
 	add constraint uq$public$periode$periode_yearmonth unique (periode_year, periode_month); 

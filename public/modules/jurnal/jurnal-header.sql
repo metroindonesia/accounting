@@ -27,6 +27,36 @@ comment on column public."jurnal".jurnal_doc is '';
 
 
 -- =============================================
+-- FIELD: jurnal_version smallint
+-- =============================================
+-- ADD jurnal_version
+alter table public."jurnal" add jurnal_version smallint not null default 0;
+comment on column public."jurnal".jurnal_version is '';
+
+-- MODIFY jurnal_version
+alter table public."jurnal"
+	alter column jurnal_version type smallint,
+	ALTER COLUMN jurnal_version SET DEFAULT 0,
+	ALTER COLUMN jurnal_version SET NOT NULL;
+comment on column public."jurnal".jurnal_version is '';
+
+
+-- =============================================
+-- FIELD: jurnal_source text
+-- =============================================
+-- ADD jurnal_source
+alter table public."jurnal" add jurnal_source text  ;
+comment on column public."jurnal".jurnal_source is '';
+
+-- MODIFY jurnal_source
+alter table public."jurnal"
+	alter column jurnal_source type text,
+	ALTER COLUMN jurnal_source DROP DEFAULT,
+	ALTER COLUMN jurnal_source DROP NOT NULL;
+comment on column public."jurnal".jurnal_source is '';
+
+
+-- =============================================
 -- FIELD: iscommit boolean
 -- =============================================
 -- ADD iscommit
@@ -54,21 +84,6 @@ alter table public."jurnal"
 	ALTER COLUMN ispost SET DEFAULT false,
 	ALTER COLUMN ispost SET NOT NULL;
 comment on column public."jurnal".ispost is '';
-
-
--- =============================================
--- FIELD: jurnal_source text
--- =============================================
--- ADD jurnal_source
-alter table public."jurnal" add jurnal_source text  ;
-comment on column public."jurnal".jurnal_source is '';
-
--- MODIFY jurnal_source
-alter table public."jurnal"
-	alter column jurnal_source type text,
-	ALTER COLUMN jurnal_source DROP DEFAULT,
-	ALTER COLUMN jurnal_source DROP NOT NULL;
-comment on column public."jurnal".jurnal_source is '';
 
 
 -- =============================================

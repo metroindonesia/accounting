@@ -25,21 +25,27 @@
 		
 	}
 	
-	#jurnalHeaderEdit-obj_iscommit-container {
-		grid-row: auto;
-		grid-column: 3;
-		
-	}
-	
-	#jurnalHeaderEdit-obj_ispost-container {
+	#jurnalHeaderEdit-obj_jurnal_version-container {
 		grid-row: 1;
-		grid-column: 4;
+		grid-column: 3;
 		
 	}
 	
 	#jurnalHeaderEdit-obj_jurnal_source-container {
 		grid-row: 1;
-		grid-column: 5 / span 2;
+		grid-column: 4;
+		
+	}
+	
+	#jurnalHeaderEdit-obj_iscommit-container {
+		grid-row: auto;
+		grid-column: 5;
+		
+	}
+	
+	#jurnalHeaderEdit-obj_ispost-container {
+		grid-row: 1;
+		grid-column: 6;
 		
 	}
 	

@@ -1,3 +1,6 @@
+@import url('./jurnal-outstandingdialog.css');
+
+
 @media screen and (max-width: 500px) {
 	.detil-info {
 		display: none;
@@ -19,6 +22,51 @@
 		margin-top: 15px;
 		margin-bottom: -15px;
 	}
+
+
+	#jurnalHeaderEdit-btn_actionPost {
+		margin-left: auto;
+		order: 4;
+	}
+
+	#jurnalHeaderEdit-btn_actionUnpost {
+		margin-left: 0;
+		order: 5;
+	}
+
+
+
+	#jurnalDetilList-tbl [data-name="coa_name"] {
+		width: 200px;
+	}
+
+	#jurnalDetilList-tbl [data-name="jurnaldetil_value"] {
+		width: 120px;
+		text-align: right;
+	}
+
+	#jurnalDetilList-tbl [data-name="curr_code"] {
+		width: 100px;
+	}
+
+	#jurnalDetilList-tbl [data-name="jurnaldetil_idr"] {
+		width: 120px;
+		text-align: right;
+	}
+
+}
+
+
+
+#jurnalDetilList-tbl td {
+	vertical-align: top;
+}
+
+#jurnalDetilList-tbl tfoot td {
+	font-weight: bold;
+	font-size: 1.2em;
+	padding-top: 5px;
+	border-top: 2px solid #666;
 }
 
 
@@ -70,4 +118,33 @@
 .coa-row-curr {
 	width: 50px;
 	text-align: center;
+}
+
+
+.refbutton-container {
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.formdetil-current-balance {
+	display: flex;
+	justify-content: right;
+	column-gap: 10px;
+	margin-top: 30px;
+
+	background-color: #b8e5c3;
+	border: 1px solid #b5b5b5;
+	border-radius: 5px;
+
+	padding: 10px;
+
+}
+
+.formdetil-current-balance[unbalance] {
+	background-color: #e5b8b8
+}
+
+
+.unbalance-text {
+	color: red;
 }

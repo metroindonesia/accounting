@@ -5,7 +5,9 @@ import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const _jurnal_id = 'jurnalHeaderEdit-obj_jurnal_id'
 const _jurnal_doc = 'jurnalHeaderEdit-obj_jurnal_doc'
+const _iscommit = 'jurnalHeaderEdit-obj_iscommit'
 const _ispost = 'jurnalHeaderEdit-obj_ispost'
+const _jurnal_version = 'jurnalHeaderEdit-obj_jurnal_version'
 const _jurnal_source = 'jurnalHeaderEdit-obj_jurnal_source'
 const _jurnaltype_id = 'jurnalHeaderEdit-obj_jurnaltype_id'
 const _paymreq_id = 'jurnalHeaderEdit-obj_paymreq_id'
@@ -53,20 +55,28 @@ export function init_header(self, args) {
 	frm.Inputs[_coa_id].markAsRequired(false)
 
 
-
-
+	// 
 
 }
 
+export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
+	CurrentState.Actions.commit.addEventListener('click', (evt) => { btn_actionCommit_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.uncommit.addEventListener('click', (evt) => { btn_actionUncommit_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.post.addEventListener('click', (evt) => { btn_actionPost_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.unpost.addEventListener('click', (evt) => { btn_actionUnpost_click(self, frm, CurrentState, evt) })
+	CurrentState.Actions.print.addEventListener('click', (evt) => { btn_actionPrint_click(self, frm, CurrentState, evt) })
+
+}
 
 export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	disableJurnaltype(frm, true) // user tidak bisa memilih jurnaltype untuk data yang sudah disimpan
 
 
 	const {
-		jurnaltype, paymtype, periode, ispost,
+		jurnaltype, paymtype, periode, iscommit, ispost,
 		_commitby, _commitdate, _postby, _postdate,
-		isallowposting, isallowunposting
+		isallowposting, isallowunposting,
+		balance_idr
 	} = frm.getOriginalData()
 
 
@@ -78,16 +88,20 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	selectedPeriode.periode_end = periode.periode_end
 
 
-	CurrentState.Actions.edit.suspend(periode_isclosed || ispost)
-	CurrentState.Actions.post.suspend(periode_isclosed || ispost || !isallowposting)
+	CurrentState.Actions.print.suspend(!iscommit)
+	CurrentState.Actions.edit.suspend(periode_isclosed || iscommit || ispost)
+	CurrentState.Actions.commit.suspend(periode_isclosed || iscommit)
+	CurrentState.Actions.uncommit.suspend(periode_isclosed || !iscommit || ispost)
+	CurrentState.Actions.post.suspend(periode_isclosed || !iscommit || ispost || !isallowposting)
 	CurrentState.Actions.unpost.suspend(periode_isclosed || !ispost || !isallowunposting)
 
-	// CurrentState.Actions.post.hide(!isallowposting)
-	// CurrentState.Actions.unpost.hide(!isallowunposting)
+
+	CurrentState.Actions.post.hide(!isallowposting)
+	CurrentState.Actions.unpost.hide(!isallowunposting)
 
 
 
-
+	updateDetilInfo_balance(self, balance_idr)
 
 }
 
@@ -113,15 +127,22 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 
 
 	try {
-		if (jurnal_datedue < jurnal_date) {
-			// 'due date tidak boleh lebih lampau dari jurnal date'
-			// konfirmasi ke user
-			const res = await $fgta5.MessageBox.confirm('Due date lebih lampau dari book date!<br>Lanjutkan?')
-			if (res != 'ok') {
-				args.cancelSave = true
-				return
+
+
+		const elDuedate = document.getElementById(`${_jurnal_datedue}-container`)
+		const cekDuedate = elDuedate.classList.contains('hidden')
+		if (cekDuedate) {
+			if (jurnal_datedue < jurnal_date) {
+				// 'due date tidak boleh lebih lampau dari jurnal date'
+				// konfirmasi ke user
+				const res = await $fgta5.MessageBox.confirm('Due date lebih lampau dari book date!<br>Lanjutkan?')
+				if (res != 'ok') {
+					args.cancelSave = true
+					return
+				}
 			}
 		}
+
 
 		if (jurnal_date < periode_start || jurnal_date > periode_end) {
 			throw new Error('tanggal buku tidak sesuai dengan periode')
@@ -140,6 +161,7 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 
 export async function jurnalHeaderEdit_dataSaved(self, data, frm) {
 	disableJurnaltype(frm, true)  // user tidak bisa memilih jurnaltype untuk data yang sudah disimpan
+	updateDetilInfo_balance(self, data.balance_idr)
 }
 
 export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) {
@@ -359,10 +381,241 @@ export async function obj_curr_rate_changed(self, obj_curr_rate, frm, evt) {
 	recalculateCurrency(self, frm)
 }
 
+export function updateDetilInfo_balance(self, balance_idr) {
+	const el_tabdetil = document.getElementById('jurnalHeaderEdit-info-detil-row')
+	const el_datainfo = el_tabdetil.querySelector('div[data-info]')
+	el_datainfo.innerHTML = pageHelper.formatDecimal(balance_idr)
+
+	const balance = Number(balance_idr)
+	if (balance != 0) {
+		el_datainfo.classList.add('unbalance-text')
+	} else {
+		el_datainfo.classList.remove('unbalance-text')
+	}
+}
 
 
+async function btn_actionCommit_click(self, frm, CurrentState, evt) {
+	const jurnal_id = frm.Inputs[_jurnal_id].value
+	const jurnal_doc = frm.Inputs[_jurnal_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <b>Commit</b> jurnal '${jurnal_doc}'.<br>Lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
 
 
+	const obj_iscommit = frm.Inputs[_iscommit]
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'commit',
+			jurnal_id: jurnal_id
+		})
+
+		if (result.iscommit == false) {
+			throw new Error('<b>Gagal</b> saat proses commit')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already commited. Data unchanged')
+			return
+		}
+
+		// check commit status
+		obj_iscommit.value = result.iscommit
+		frm.acceptChanges()
+
+		self.Modules.jurnalHeaderList.updateCurrentRow(self, { iscommit: result.iscommit })
+
+		CurrentState.Actions.edit.suspend(true)
+		CurrentState.Actions.commit.suspend(true)
+		CurrentState.Actions.uncommit.suspend(false)
+		CurrentState.Actions.post.suspend(false)
+		CurrentState.Actions.unpost.suspend(true)
+		CurrentState.Actions.print.suspend(false)
+
+		$fgta5.MessageBox.info(`jurnal '${jurnal_doc}' berhasil di commit`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
+
+
+async function btn_actionUncommit_click(self, frm, CurrentState, evt) {
+	const jurnal_id = frm.Inputs[_jurnal_id].value
+	const jurnal_doc = frm.Inputs[_jurnal_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <span style="font-weight:bold; color:red">un-Commit</span> jurnal '${jurnal_doc}'.<br>Lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
+
+
+	const obj_jurnal_version = frm.Inputs[_jurnal_version]
+	const obj_iscommit = frm.Inputs[_iscommit]
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'uncommit',
+			jurnal_id: jurnal_id
+		})
+
+		if (result.iscommit == true) {
+			throw new Error('<b>Gagal</b> saat proses un-commit')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('still draft. Data unchanged')
+			return
+		}
+
+		// uncheck commit status
+		obj_iscommit.value = result.iscommit
+
+		// update version
+		obj_jurnal_version.value = result.version
+
+
+		frm.acceptChanges()
+		self.Modules.jurnalHeaderList.updateCurrentRow(self, { iscommit: result.iscommit })
+
+
+		CurrentState.Actions.edit.suspend(false)
+		CurrentState.Actions.commit.suspend(false)
+		CurrentState.Actions.uncommit.suspend(true)
+		CurrentState.Actions.post.suspend(true)
+		CurrentState.Actions.unpost.suspend(true)
+		CurrentState.Actions.print.suspend(true)
+
+		$fgta5.MessageBox.info(`jurnal '${jurnal_doc}' berhasil di un-commit`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
+
+
+async function btn_actionPost_click(self, frm, CurrentState, evt) {
+	const jurnal_id = frm.Inputs[_jurnal_id].value
+	const jurnal_doc = frm.Inputs[_jurnal_doc].value
+
+	// konfirmasi kommit
+	const ret = await $fgta5.MessageBox.confirm(`anda mau <b>Posting</b> jurnal '${jurnal_doc}'. lanjutkan?`)
+	if (ret !== 'ok') {
+		return;
+	}
+
+	const obj_ispost = frm.Inputs[_ispost]
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'post',
+			jurnal_id: jurnal_id
+		})
+
+		if (result.ispost == false) {
+			throw new Error('<b>Gagal</b> saat proses posting')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already posted. Data unchanged')
+			return
+		}
+
+		obj_ispost.value = result.ispost
+		frm.acceptChanges()
+
+		self.Modules.jurnalHeaderList.updateCurrentRow(self, { ispost: result.ispost })
+
+
+		CurrentState.Actions.edit.suspend(true)
+		CurrentState.Actions.commit.suspend(true)
+		CurrentState.Actions.uncommit.suspend(true)
+		CurrentState.Actions.post.suspend(true)
+		CurrentState.Actions.unpost.suspend(false)
+		CurrentState.Actions.print.suspend(false)
+
+		$fgta5.MessageBox.info(`jurnal '${jurnal_doc}' berhasil di posting`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
+
+
+async function btn_actionUnpost_click(self, frm, CurrentState, evt) {
+	const jurnal_id = frm.Inputs[_jurnal_id].value
+	const jurnal_doc = frm.Inputs[_jurnal_doc].value
+
+	// konfirmasi kommit
+	const upostMessage = await $fgta5.MessageBox.ask(`<div class="fgta5-messagebox-questdiv">anda mau <span style="font-weight:bold; color:red">Un-Posting</span> jurnal '${jurnal_doc}'</div>Alasan unpost?`)
+	if (upostMessage == null) {
+		return;
+	}
+
+
+	const obj_ispost = frm.Inputs[_ispost]
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'unpost',
+			jurnal_id: jurnal_id,
+			upostMessage: upostMessage
+		})
+
+		if (result.ispost == true) {
+			throw new Error('<b>Gagal</b> saat proses unposting')
+		}
+
+		// check unchanged status
+		if (result.unchanged) {
+			console.warn('already in un-post status. Data unchanged')
+			return
+		}
+
+		obj_ispost.value = result.ispost
+		frm.acceptChanges()
+
+		self.Modules.jurnalHeaderList.updateCurrentRow(self, { ispost: result.ispost })
+
+		CurrentState.Actions.edit.suspend(true)
+		CurrentState.Actions.commit.suspend(true)
+		CurrentState.Actions.uncommit.suspend(false)
+		CurrentState.Actions.post.suspend(false)
+		CurrentState.Actions.unpost.suspend(true)
+		CurrentState.Actions.print.suspend(false)
+
+		$fgta5.MessageBox.info(`jurnal '${jurnal_doc}' berhasil di unposting`)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		throw err
+	}
+}
+
+
+async function btn_actionPrint_click(self, frm, CurrentState, evt) {
+	evt.preventDefault();
+	evt.stopPropagation();
+
+	const printArea = document.getElementById('print-area')
+	const jurnal_id = frm.Inputs[_jurnal_id].value
+	const jurnal_doc = frm.Inputs[_jurnal_doc].value
+	const iscommit = frm.Inputs[_iscommit].value
+
+	if (iscommit) {
+		// await printDocument(self, printArea, paymreq_id)
+		window.print();
+	} else {
+		printArea.innerHTML = `document ${jurnal_id} belum di-commit`
+	}
+}
 
 function disableJurnaltype(frm, disabled) {
 	const obj_jurnaltype_id = frm.Inputs[_jurnaltype_id]
@@ -456,6 +709,7 @@ function jurnaltype_changed(self, jurnaltype, frm) {
 	obj_project_id.disabled = !jurnaltype.isheadallowselectproject
 	obj_project_id.markAsRequired(jurnaltype.isheadprojectmandatory)
 	pageHelper.setVisibility(`${_project_id}-container`, jurnaltype.isheadhasproject)
+
 
 }
 

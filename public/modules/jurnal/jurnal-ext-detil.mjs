@@ -1,5 +1,6 @@
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import outstandingDialog from './jurnal-outstandingdialog.mjs'
 
 
 const _coa_id = 'jurnalDetilEdit-obj_coa_id'
@@ -26,6 +27,8 @@ const _iscurradj = 'jurnalDetilEdit-obj_iscurradj'
 const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 
+const refButtons = {}
+
 export function init_detil(self, args) {
 	const formEl = document.getElementById('jurnalDetilEdit-frm')
 
@@ -44,19 +47,80 @@ export function init_detil(self, args) {
 			const clone = tpl.content.cloneNode(true); // salin isi template
 			const divButton = clone.querySelector('div')
 			target.insertAdjacentElement('afterend', divButton);
+
+			const dlg = new outstandingDialog()
+			dlg.addEventListener('selected', async evt => {
+				await outstandingSelected(self, evt.detail.data, evt)
+				if (evt.detail.cancelSelect) {
+					return
+				}
+				dlg.close()
+			})
+
+			refButtons.payable = new $fgta5.ActionButton('btn_getPayable')
+			refButtons.receivable = new $fgta5.ActionButton('btn_getReceivable')
+
+			refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
+			refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
 		}
 	}
+
+	// tambahkan total di list detil table
+	{
+		const tpl = document.getElementById('tpl-detil-tfoot')
+		const target = document.getElementById('jurnalDetilList-tbl')
+		if (tpl != null) {
+			const clone = tpl.content.cloneNode(true); // salin isi template
+			const tfoot = clone.querySelector('tfoot')
+			target.appendChild(tfoot)
+		}
+	}
+
+
+	// tambahkan current balance di form
+	{
+		const target = document.getElementById('jurnalDetilEdit-frm')
+		const tpl = document.getElementById('tpl-detil-balance')
+		if (tpl != null) {
+			const clone = tpl.content.cloneNode(true); // salin isi template
+			const divBalance = clone.querySelector('div')
+			const balInfo = clone.querySelector('.formdetil-current-balance');
+			balInfo.id = 'formdetil-current-balance' // beri nama container balance info
+			target.appendChild(divBalance)
+		}
+	}
+
+	// divBalance.id = 'balance-info-container'
+	// divBalance.
 }
 
 
 export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {
 	self.currentJurnaltype = jurnaltype
 
+	refButtons.payable.hide(!jurnaltype.isdetilallowgetap)
+	refButtons.receivable.hide(!jurnaltype.isdetilallowgetar)
+
+
+	// setup sub account
+	const jurnalDetilEdit = self.Modules.jurnalDetilEdit
+	const frm = jurnalDetilEdit.getForm()
+
+
+	jurnaltype_changed(self, jurnaltype, frm)
+
+
 }
 
+export async function jurnalDetilList_tableDataLoaded(self, tbl, result) {
+	updateBalance(self, result.balance_idr)
+}
 
 export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState) {
-	const jurnaltype_id = self.currentJurnaltype.jurnaltype_id
+	const jurnaltype = self.currentJurnaltype
+	jurnaltype_changed(self, jurnaltype, frm)
+	suspendReferencedEditor(self, frm, false)
+
 
 	const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit
 	const frmHeader = jurnalHeaderEdit.getForm()
@@ -87,13 +151,29 @@ export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState)
 
 
 	// set default data saat new
-	datainit.jurnaltype_id = jurnaltype_id
+	datainit.jurnaltype_id = jurnaltype.jurnaltype_id
 	datainit.curr_id = { value: header_curr_id, text: header_curr_name }
 	datainit.partner_id = { value: header_partner_id, text: header_partner_name }
 	datainit.site_id = { value: header_site_id, text: header_site_name }
 	datainit.unit_id = { value: header_unit_id, text: header_unit_name }
 	datainit.struct_id = { value: header_struct_id, text: header_struct_name }
 	datainit.project_id = { value: header_project_id, text: header_project_name }
+
+}
+
+export async function jurnalDetilEdit_formOpened(self, frm, CurrentState) {
+	const jurnaltype = self.currentJurnaltype
+	jurnaltype_changed(self, jurnaltype, frm)
+
+	const obj_jurnaldetil_id_ref = frm.Inputs[_jurnaldetil_id_ref]
+	if (obj_jurnaldetil_id_ref.value != '') {
+		suspendReferencedEditor(self, frm)
+	} else {
+		suspendReferencedEditor(self, frm, false)
+	}
+
+	const ishead = frm.Inputs[_jurnaldetil_ishead].value
+	CurrentState.Actions.edit.suspend(ishead)
 
 }
 
@@ -127,6 +207,17 @@ export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {
 
 
 }
+
+export async function jurnalDetilEdit_dataSaved(self, data, frm) {
+	const balance_idr = data.balance_idr
+	updateBalance(self, balance_idr)
+}
+
+export async function jurnalDetilEdit_dataDeleted(self, data) {
+	const balance_idr = Number(data.balance_idr)
+	updateBalance(self, balance_idr)
+}
+
 
 export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt) {
 	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
@@ -208,4 +299,158 @@ function recalculateCurrency(self, frm) {
 	const idr = value * rate
 
 	frm.Inputs[_jurnaldetil_idr].value = idr
+}
+
+
+async function btn_getReceivable_click(self, dlg, evt) {
+	console.log('receivable clicked')
+	dlg.show('AR')
+}
+
+
+async function btn_getPayable_click(self, dlg, evt) {
+	console.log('payable clicked')
+	dlg.show('AP')
+}
+
+
+async function jurnaltype_changed(self, jurnaltype, frm) {
+	// partner
+	const obj_partner_id = frm.Inputs[_partner_id]
+	obj_partner_id.disabled = !jurnaltype.isdetilallowselectpartner
+	obj_partner_id.markAsRequired(jurnaltype.isdetilpartnermandatory)
+	pageHelper.setVisibility(`${_partner_id}-container`, jurnaltype.isdetilhaspartner)
+
+	// struct
+	const obj_struct_id = frm.Inputs[_struct_id]
+	obj_struct_id.disabled = !jurnaltype.isdetilallowselectstruct
+	obj_struct_id.markAsRequired(jurnaltype.isdetilstructmandatory)
+	pageHelper.setVisibility(`${_struct_id}-container`, jurnaltype.isdetilhasstruct)
+
+	// site
+	const obj_site_id = frm.Inputs[_site_id]
+	obj_site_id.disabled = !jurnaltype.isdetilallowselectsite
+	obj_site_id.markAsRequired(jurnaltype.isdetilsitemandatory)
+	pageHelper.setVisibility(`${_site_id}-container`, jurnaltype.isdetilhassite)
+
+	// unit
+	const obj_unit_id = frm.Inputs[_unit_id]
+	obj_unit_id.disabled = !jurnaltype.isdetilallowselectunit
+	obj_unit_id.markAsRequired(jurnaltype.isdetilunitmandatory)
+	pageHelper.setVisibility(`${_unit_id}-container`, jurnaltype.isdetilhasunit)
+
+	// project
+	const obj_project_id = frm.Inputs[_project_id]
+	obj_project_id.disabled = !jurnaltype.isdetilallowselectproject
+	obj_project_id.markAsRequired(jurnaltype.isdetilprojectmandatory)
+	pageHelper.setVisibility(`${_project_id}-container`, jurnaltype.isdetilhasproject)
+
+}
+
+async function outstandingSelected(self, data, evt) {
+	console.log(data)
+
+	const jurnalDetilEdit = self.Modules.jurnalDetilEdit
+	const frm = jurnalDetilEdit.getForm()
+
+	const obj_jurnaldetil_descr = frm.Inputs[_jurnaldetil_descr]
+	const obj_coa_id = frm.Inputs[_coa_id]
+	const obj_partner_id = frm.Inputs[_partner_id]
+	const obj_struct_id = frm.Inputs[_struct_id]
+	const obj_site_id = frm.Inputs[_site_id]
+	const obj_unit_id = frm.Inputs[_unit_id]
+	const obj_project_id = frm.Inputs[_project_id]
+	const obj_curr_id = frm.Inputs[_curr_id]
+	const obj_jurnaldetil_value = frm.Inputs[_jurnaldetil_value]
+	const obj_curr_rate = frm.Inputs[_curr_rate]
+	const obj_jurnaldetil_idr = frm.Inputs[_jurnaldetil_idr]
+	const obj_jurnaldetil_id_ref = frm.Inputs[_jurnaldetil_id_ref]
+	const obj_agingtype_id = frm.Inputs[_agingtype_id]
+
+	// nilai data hasil tarikan adalah negasi dari value data referensinya
+	const idrChanged = obj_jurnaldetil_idr.value != -Number(data.jurnaldetil_idr)
+	const valueChanged = obj_jurnaldetil_value.value != -Number(data.jurnaldetil_value)
+	const refChanged = obj_jurnaldetil_id_ref.value != data.jurnaldetil_id
+
+
+	// kalau masih kosong langsing terima aja, kalau sudah ada isinya, tanya dulu kalau berubah
+	if (obj_jurnaldetil_id_ref.value != '') {
+		if (idrChanged || valueChanged || refChanged) {
+			// user pilih data lagi, sedangkan pilihan sebelumnya sudah dilakukan / diubah
+			const ret = await $fgta5.MessageBox.confirm('anda sudah membuat perubahan data sebelumnya, apakah akan ditimpa?')
+			if (ret == 'cancel') {
+				evt.detail.cancelSelect = true
+				return
+			}
+		}
+	}
+
+
+	obj_coa_id.setSelected(data.coa_id, data.coa_name)
+	obj_partner_id.setSelected(data.partner_id, data.partner_name)
+	obj_struct_id.setSelected(data.struct_id, data.struct_name)
+	obj_site_id.setSelected(data.site_id, data.site_name)
+	obj_unit_id.setSelected(data.unit_id, data.unit_name)
+	obj_project_id.setSelected(data.project_id, data.project_name)
+	obj_curr_id.setSelected(data.curr_id, data.curr_code)
+	obj_curr_rate.value = data.curr_rate
+	obj_jurnaldetil_descr.value = data.jurnaldetil_descr
+	obj_jurnaldetil_value.value = -data.jurnaldetil_value
+	obj_jurnaldetil_idr.value = -data.jurnaldetil_idr
+	obj_jurnaldetil_id_ref.value = data.jurnaldetil_id
+	obj_agingtype_id.value = data.agingtype_id
+
+	suspendReferencedEditor(self, frm)
+}
+
+
+function suspendReferencedEditor(self, frm, suspended = true) {
+	const obj_jurnaldetil_descr = frm.Inputs[_jurnaldetil_descr]
+	const obj_coa_id = frm.Inputs[_coa_id]
+	const obj_partner_id = frm.Inputs[_partner_id]
+	const obj_struct_id = frm.Inputs[_struct_id]
+	const obj_site_id = frm.Inputs[_site_id]
+	const obj_unit_id = frm.Inputs[_unit_id]
+	const obj_project_id = frm.Inputs[_project_id]
+	const obj_curr_id = frm.Inputs[_curr_id]
+	const obj_curr_rate = frm.Inputs[_curr_rate]
+
+	obj_coa_id.suspend(suspended)
+	obj_partner_id.suspend(suspended)
+	obj_struct_id.suspend(suspended)
+	obj_site_id.suspend(suspended)
+	obj_unit_id.suspend(suspended)
+	obj_project_id.suspend(suspended)
+	obj_curr_id.suspend(suspended)
+	obj_curr_rate.suspend(suspended)
+	obj_jurnaldetil_descr.suspend(suspended)
+
+}
+
+function updateBalance(self, balance_idr) {
+	// update di list
+	const el_list_balance_idr = document.getElementById('jurnalDetilList-balance_idr')
+	el_list_balance_idr.innerHTML = pageHelper.formatDecimal(balance_idr)
+
+	// update di form header
+	const extenderHeader = self.Modules.extenderHeader
+	extenderHeader.updateDetilInfo_balance(self, balance_idr)
+
+
+	console.log('UPDATE TOTALLLL')
+	// update di current form detil
+	const balContainer = document.getElementById('formdetil-current-balance')
+	const elBalValue = document.getElementById('jurnalDetilEdit-balance_idr')
+	elBalValue.innerHTML = pageHelper.formatDecimal(balance_idr)
+
+
+	if (balance_idr == 0) {
+		balContainer.removeAttribute('unbalance')
+		el_list_balance_idr.classList.remove('unbalance-text')
+	} else {
+		balContainer.setAttribute('unbalance', true)
+		el_list_balance_idr.classList.add('unbalance-text')
+	}
+
+
 }
