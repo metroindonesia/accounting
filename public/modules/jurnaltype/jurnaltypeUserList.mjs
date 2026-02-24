@@ -106,15 +106,22 @@ export async function openList(self, params) {
 
 	const jurnaltypeUserEdit = self.Modules.jurnaltypeUserEdit
 	const btn_addrow = jurnaltypeUserEdit.getCurrentState().Actions.newdata
-	const btn_edit = jurnaltypeUserEdit.getCurrentState().Actions.edit
 	
-	if (CurrentState.headerFormLocked) {
+
+
+	// walaupun CurrentState.headerFormLocked, tapi kalau header edit tidak di suspend tetap bisa add/remove row di detil
+	const suspended = self.Modules.jurnaltypeHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+	if (suspended) {
  		btn_addrow.disabled = true
 		btn_delrow.disabled = true
 	} else {
 		btn_addrow.disabled = false
 		btn_delrow.disabled = false
 	}
+}
+
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getGrid(self) {

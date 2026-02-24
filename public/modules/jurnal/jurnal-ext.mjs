@@ -14,10 +14,19 @@ export async function init(self, args) {
 	self.Modules.extenderHeader = extenderHeader
 	self.Modules.extenderDetil = extenderDetil
 
-	ExtHeader.init_header(self, args)
-	ExtDetil.init_detil(self, args)
+	await Promise.all([
+		ExtHeader.init_header(self, args),
+		ExtDetil.init_detil(self, args)
+	])
 
-
+	const variance = Context.variance
+	if (variance == 'posting') {
+		document.title = 'Jurnal Posting'
+		Context.app.setTitle(document.title)
+	} else if (variance == 'unposting') {
+		document.title = 'Jurnal UnPosting'
+		Context.app.setTitle(document.title)
+	}
 
 }
 

@@ -54,6 +54,12 @@ export async function sequencerSetup(self, tx, sequencer, data, args) {
 	}
 }
 
+export async function headerListCriteria(self, db, searchMap, criteria, sort, columns, args) {
+	searchMap.iscommit = 'iscommit = ${iscommit}'
+	searchMap.ispost = 'ispost = ${ispost}'
+	searchMap.jurnaltype_id = 'jurnaltype_id = ${jurnaltype_id}'
+
+}
 
 export async function headerCreating(self, tx, data, seqdata) {
 	excludeNonEditableHeader(data)  // buang data yang tidak boleh dimodif user
@@ -151,10 +157,15 @@ export async function detilList(self, listData, args) {
 	const { db, criteria } = args
 	const { jurnal_id } = criteria
 
-	const sqlBalance = `select sum(jurnaldetil_idr) as balance_idr from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id}`
+	const sqlBalance = `
+		select 
+		sum(jurnaldetil_idr) as balance_idr ,
+		sum(jurnaldetil_value) as balance_value
+		from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id}`
 	const row = await db.one(sqlBalance, { jurnal_id })
 
 	listData.balance_idr = row.balance_idr
+	listData.balance_value = row.balance_value
 }
 
 export async function detilCreating(self, tx, data, seqdata, args) {
@@ -163,7 +174,11 @@ export async function detilCreating(self, tx, data, seqdata, args) {
 
 export async function detilCreated(self, tx, ret, data, logMetadata, args) {
 	const { jurnal_id } = ret
-	ret.balance_idr = await getBalance(self, tx, jurnal_id)
+	const { balance_idr, balance_value } = await getBalance(self, tx, jurnal_id)
+	ret.balance_idr = balance_idr
+	ret.balance_value = balance_value
+
+	await updateHeaderValue(self, tx, ret, jurnal_id)
 }
 
 export async function detilUpdating(self, tx, data) {
@@ -172,12 +187,20 @@ export async function detilUpdating(self, tx, data) {
 
 export async function detilUpdated(self, tx, ret, data, logMetadata) {
 	const { jurnal_id } = ret
-	ret.balance_idr = await getBalance(self, tx, jurnal_id)
+	const { balance_idr, balance_value } = await getBalance(self, tx, jurnal_id)
+	ret.balance_idr = balance_idr
+	ret.balance_value = balance_value
+
+	await updateHeaderValue(self, tx, ret, jurnal_id)
 }
 
 export async function detilDeleted(self, tx, deletedRow, logMetadata) {
 	const { jurnal_id } = deletedRow
-	deletedRow.balance_idr = await getBalance(self, tx, jurnal_id)
+	const { balance_idr, balance_value } = await getBalance(self, tx, jurnal_id)
+	deletedRow.balance_idr = balance_idr
+	deletedRow.balance_value = balance_value
+
+	await updateHeaderValue(self, tx, ret, jurnal_id)
 }
 
 
@@ -585,10 +608,17 @@ async function calculateTotal(self, db, ret) {
 
 
 async function checkBalance(self, db, jurnal_id) {
-	const balance = await getBalance(self, db, jurnal_id)
-	if (balance != 0) {
-		throw new Error('Jurnal belum balace')
+	const { balance_idr, balance_value } = await getBalance(self, db, jurnal_id)
+	if (balance_idr != 0) {
+		throw new Error('Jurnal belum balance. Cek nilai IDR')
 	}
+
+	// cek apa perlu cek balance untuk yang value. 
+	// pertimbangan tidak perlu dicek, karena apabila mata uang berbeda tidak bisa dijumlah
+	// if (balance_value != 0) {
+	// 	throw new Error('Jurnal belum balance. Cek Value')
+	// }
+
 }
 
 async function checkJurnalRow(self, db, jurnal_id) {
@@ -605,8 +635,50 @@ async function checkPeriode(self, db, jurnal_id) {
 }
 
 async function getBalance(self, db, jurnal_id) {
-	const sqlBalance = 'select sum(jurnaldetil_idr) as balance from public.jurnaldetil where jurnal_id=${jurnal_id}'
+	const sqlBalance = `
+			select 
+			sum(jurnaldetil_value) as balance_value , sum(jurnaldetil_idr) as balance_idr 
+			from public.jurnaldetil where jurnal_id=\${jurnal_id}`
 	const rowBal = await db.one(sqlBalance, { jurnal_id })
-	const balance = Number(rowBal.balance)
-	return balance
+	const balance_idr = Number(rowBal.balance_idr)
+	const balance_value = Number(rowBal.balance_value)
+	return { balance_idr, balance_value }
+}
+
+async function getDebetValue(self, db, jurnal_id) {
+
+}
+
+async function updateHeaderValue(self, db, ret, jurnal_id) {
+	sqlUtil.connect(db)
+
+	try {
+		const sql = `select jurnaldetil_id_link from ${TABLE.jurnal} where jurnal_id=\${jurnal_id}`
+		const row = db.one(sql, { jurnal_id })
+		if (row.jurnaldetil_id_link == null) {
+			// jurnal header value tidak terkait dengan detil
+			// update value berdasarkan value debet (+)
+			const sqlDebet = `
+				select 
+				sum(jurnaldetil_value) as total_value, sum(jurnaldetil_idr) as total_idr
+				from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and jurnaldetil_idr > 0`
+			const rowSum = await db.one(sqlDebet, { jurnal_id })
+			const total_idr = Number(rowSum.total_idr)
+			const total_value = Number(rowSum.total_value)
+
+			// update header
+			const data = {
+				jurnal_id,
+				jurnal_idr: total_idr
+			}
+			const cmd = sqlUtil.createUpdateCommand(TABLE.jurnal, data, ['jurnal_id'])
+			await cmd.execute(data)
+
+			ret.total_idr = total_idr
+			ret.total_value = total_value
+			ret.updateTotal = true
+		}
+	} catch (err) {
+		throw err
+	}
 }

@@ -3,17 +3,17 @@ import pgp from 'pg-promise';
 import db from '@agung_dhewe/webapps/src/db.js'
 import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
-import context from '@agung_dhewe/webapps/src/context.js'
+import context from '@agung_dhewe/webapps/src/context.js'  
 import logger from '@agung_dhewe/webapps/src/logger.js'
-import { createSequencerDocument } from '@agung_dhewe/webapps/src/sequencerdoc.js'
-import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
+import { createSequencerDocument } from '@agung_dhewe/webapps/src/sequencerdoc.js' 
+import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
 
 import * as Extender from './extenders/jurnal.apiext.js'
 
 const moduleName = 'jurnal'
 const headerSectionName = 'header'
-const headerTableName = 'public.jurnal'
-const detilTableName = 'public.jurnaldetil'
+const headerTableName = 'public.jurnal' 
+const detilTableName = 'public.jurnaldetil'  	
 
 // api: account
 export default class extends Api {
@@ -34,20 +34,20 @@ export default class extends Api {
 	// header
 	async headerList(body) { return await jurnal_headerList(this, body) }
 	async headerOpen(body) { return await jurnal_headerOpen(this, body) }
-	async headerUpdate(body) { return await jurnal_headerUpdate(this, body) }
-	async headerCreate(body) { return await jurnal_headerCreate(this, body) }
+	async headerUpdate(body) { return await jurnal_headerUpdate(this, body)}
+	async headerCreate(body) { return await jurnal_headerCreate(this, body)}
 	async headerDelete(body) { return await jurnal_headerDelete(this, body) }
 
-
+	
 	// detil	
 	async detilList(body) { return await jurnal_detilList(this, body) }
 	async detilOpen(body) { return await jurnal_detilOpen(this, body) }
-	async detilUpdate(body) { return await jurnal_detilUpdate(this, body) }
+	async detilUpdate(body) { return await jurnal_detilUpdate(this, body)}
 	async detilCreate(body) { return await jurnal_detilCreate(this, body) }
 	async detilDelete(body) { return await jurnal_detilDelete(this, body) }
 	async detilDeleteRows(body) { return await jurnal_detilDeleteRows(this, body) }
-
-}
+			
+}	
 
 // init module
 async function jurnal_init(self, body) {
@@ -72,21 +72,21 @@ async function jurnal_init(self, body) {
 			userId: req.session.user.userId,
 			userName: req.session.user.userName,
 			userFullname: req.session.userFullname,
-			sid: req.session.sid,
+			sid: req.session.sid ,
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
 			appName: req.app.locals.appConfig.appName,
 			appsUrls: appsUrls,
 			setting: {}
 		}
-
+		
 		if (typeof Extender.jurnal_init === 'function') {
 			// export async function jurnal_init(self, initialData) {}
 			await Extender.jurnal_init(self, initialData)
 		}
 
 		return initialData
-
+		
 	} catch (err) {
 		throw err
 	}
@@ -97,8 +97,8 @@ async function jurnal_init(self, body) {
 async function jurnal_execute(self, body) {
 	const { fnName } = body
 
-	if (fnName == null || fnName == '') {
-		throw new Error('fnName belum didefinisikan di api call')
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
 	}
 
 	if (typeof Extender[fnName] === 'function') {
@@ -112,17 +112,17 @@ async function jurnal_execute(self, body) {
 
 
 // data logging
-async function jurnal_log(self, body, startTime, tablename, id, action, data = {}, remark = '') {
+async function jurnal_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const user_name = req.session.user.userFullname
 	const ipaddress = req.ip
-	const metadata = JSON.stringify({ ...{ source: source }, ...data })
+	const metadata = JSON.stringify({...{source:source}, ...data})
 	const endTime = process.hrtime.bigint();
 	const executionTimeMs = Number((endTime - startTime) / 1_000_000n); // hasil dalam ms tanpa desimal
-
-	const logdata = { id, user_id, user_name, moduleName, action, tablename, executionTimeMs, remark, metadata, ipaddress }
+	
+	const logdata = {id, user_id, user_name, moduleName, action, tablename, executionTimeMs, remark, metadata, ipaddress}
 	const ret = await logger.log(logdata)
 	return ret
 }
@@ -133,22 +133,22 @@ async function jurnal_log(self, body, startTime, tablename, id, action, data = {
 
 async function jurnal_headerList(self, body) {
 	const tablename = headerTableName
-	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
 		searchtext: `jurnal_id=try_cast_bigint(\${searchtext}, 0) OR jurnal_doc = \${searchtext} OR jurnal_descr ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
-
+	
 		// jika tidak ada default searchtext
-		if (searchMap.searchtext === undefined) {
-			throw new Error(`'searchtext' belum didefinisikan di searchMap`)
+		if (searchMap.searchtext===undefined) {
+			throw new Error(`'searchtext' belum didefinisikan di searchMap`)	
 		}
-
+		
 
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname] === '' || criteria[cname] === null) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
 				delete criteria[cname]
 			}
 		}
@@ -161,17 +161,17 @@ async function jurnal_headerList(self, body) {
 			await Extender.headerListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit == 0 ? 10 : limit
-		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
-		const sql = sqlUtil.createSqlSelect({ tablename, columns, whereClause, sort, limit: max_rows + 1, offset, queryParams })
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
 		const rows = await db.any(sql, queryParams);
 
-
+		
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i > max_rows) { break }
+			if (i>max_rows) { break }
 
 			// lookup: jurnaltype_name dari field jurnaltype_name pada table public.jurnaltype dimana (public.jurnaltype.jurnaltype_id = public.jurnal.jurnaltype_id)
 			{
@@ -238,7 +238,7 @@ async function jurnal_headerList(self, body) {
 				const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
 				row.curr_name = curr_name
 			}
-
+			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
 				// export async function headerListRow(self, row, args) {}
@@ -249,13 +249,13 @@ async function jurnal_headerList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length > max_rows) {
-			nextoffset = offset + max_rows
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
 		}
 
 		return {
 			criteria: criteria,
-			limit: max_rows,
+			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -269,23 +269,23 @@ async function jurnal_headerOpen(self, body) {
 	const tablename = headerTableName
 
 	try {
-		const { id } = body
+		const { id } = body 
 		const criteria = { jurnal_id: id }
-		const searchMap = { jurnal_id: `jurnal_id = \${jurnal_id}` }
-		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
+		const searchMap = { jurnal_id: `jurnal_id = \${jurnal_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
 		const sql = sqlUtil.createSqlSelect({
-			tablename: tablename,
-			columns: [],
-			whereClause,
-			sort: {},
-			limit: 0,
-			offset: 0,
+			tablename: tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data == null) {
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
-		}
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
 
 		// lookup: jurnaltype_name dari field jurnaltype_name pada table public.jurnaltype dimana (public.jurnaltype.jurnaltype_id = public.jurnal.jurnaltype_id)
 		{
@@ -352,7 +352,7 @@ async function jurnal_headerOpen(self, body) {
 			const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
 			data.curr_name = curr_name
 		}
-
+		
 
 		// lookup data createby
 		{
@@ -365,7 +365,7 @@ async function jurnal_headerOpen(self, body) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
-
+		
 		// pasang extender untuk olah data
 		// export async function headerOpen(self, db, data) {}
 		if (typeof Extender.headerOpen === 'function') {
@@ -381,7 +381,7 @@ async function jurnal_headerOpen(self, body) {
 
 
 async function jurnal_headerCreate(self, body) {
-	const { source = 'jurnal', data = {} } = body
+	const { source='jurnal', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -396,14 +396,14 @@ async function jurnal_headerCreate(self, body) {
 		data._createby = user_id
 		data._createdate = (new Date()).toISOString()
 
-		const result = await db.tx(async tx => {
+		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', doc_id: 'XX' }
+			const args = { section: 'header', doc_id:'XX' }
 
 			// buat sequencer document	
-			const sequencer = createSequencerDocument(tx, {
+			const sequencer = createSequencerDocument(tx, { 
 				COMPANY_CODE: req.app.locals.appConfig.COMPANY_CODE,
 				blockLength: 3,
 				numberLength: 6,
@@ -417,21 +417,21 @@ async function jurnal_headerCreate(self, body) {
 			}
 
 			// generate data sesuai prefix dari doc_id (default: XX) reset perbulan
-			const seqdata = await sequencer.monthly(args.doc_id)
+			const seqdata = await sequencer.monthly(args.doc_id)	
 			data.jurnal_id = seqdata.id
 
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
 			if (typeof Extender.headerCreating === 'function') {
 				// export async function headerCreating(self, tx, data, seqdata, args) {}
 				await Extender.headerCreating(self, tx, data, seqdata, args)
-			}
-
-
+			}			
+			
+			
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 
-
+			
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -453,7 +453,7 @@ async function jurnal_headerCreate(self, body) {
 }
 
 async function jurnal_headerUpdate(self, body) {
-	const { source = 'jurnal', data = {} } = body
+	const { source='jurnal', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -468,7 +468,7 @@ async function jurnal_headerUpdate(self, body) {
 		data._modifyby = user_id
 		data._modifydate = (new Date()).toISOString()
 
-		const result = await db.tx(async tx => {
+		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
 
@@ -482,21 +482,21 @@ async function jurnal_headerUpdate(self, body) {
 			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['jurnal_id'])
 			const ret = await cmd.execute(data)
 
-
+			
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
 			if (typeof Extender.headerUpdated === 'function') {
 				// export async function headerUpdated(self, tx, ret, data, logMetadata) {}
 				await Extender.headerUpdated(self, tx, ret, data, logMetadata)
-			}
+			}			
 
 			// record log
 			jurnal_log(self, body, startTime, tablename, data.jurnal_id, 'UPDATE')
 
 			return ret
 		})
-
+		
 
 		return result
 	} catch (err) {
@@ -514,12 +514,10 @@ async function jurnal_headerDelete(self, body) {
 
 	try {
 
-		const deletedRow = await db.tx(async tx => {
+		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
-			const dataToRemove = { jurnal_id: id }
-			const logMetadata = {}
-
+			const dataToRemove = {jurnal_id: id}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender headerDeleting
 			if (typeof Extender.headerDeleting === 'function') {
@@ -527,7 +525,7 @@ async function jurnal_headerDelete(self, body) {
 				await Extender.headerDeleting(self, tx, dataToRemove)
 			}
 
-
+			
 			// hapus data detil
 			{
 				const sql = `select * from ${detilTableName} where jurnal_id=\${jurnal_id}`
@@ -539,7 +537,7 @@ async function jurnal_headerDelete(self, body) {
 						await Extender.detilDeleting(self, tx, rowdetil, logMetadata)
 					}
 
-					const param = { jurnaldetil_id: rowdetil.jurnaldetil_id }
+					const param = {jurnaldetil_id: rowdetil.jurnaldetil_id}
 					const cmd = sqlUtil.createDeleteCommand(detilTableName, ['jurnaldetil_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -547,23 +545,23 @@ async function jurnal_headerDelete(self, body) {
 					if (typeof Extender.detilDeleted === 'function') {
 						// export async function detilDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.detilDeleted(self, tx, deletedRow, logMetadata)
-					}
+					}					
 
-					jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', { rowdata: deletedRow })
-					jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', { jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName }, `removed: ${rowdetil.jurnaldetil_id}`)
+					jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', {rowdata: deletedRow})
+					jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', {jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName}, `removed: ${rowdetil.jurnaldetil_id}`)
 
 
-				}
+				}	
 			}
 
-
-
+			
+			
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['jurnal_id'])
 			const deletedRow = await cmd.execute(dataToRemove)
 
-
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
@@ -576,7 +574,7 @@ async function jurnal_headerDelete(self, body) {
 
 			return deletedRow
 		})
-
+	
 
 		return deletedRow
 	} catch (err) {
@@ -590,7 +588,7 @@ async function jurnal_headerDelete(self, body) {
 
 async function jurnal_detilList(self, body) {
 	const tablename = detilTableName
-	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
 		jurnal_id: `jurnal_id=try_cast_bigint(\${jurnal_id}, 0)`,
 	};
@@ -602,10 +600,10 @@ async function jurnal_detilList(self, body) {
 
 
 	try {
-
+	
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname] === '' || criteria[cname] === null) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
 				delete criteria[cname]
 			}
 		}
@@ -618,17 +616,17 @@ async function jurnal_detilList(self, body) {
 			await Extender.detilListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit == 0 ? 10 : limit
-		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
-		const sql = sqlUtil.createSqlSelect({ tablename, columns, whereClause, sort, limit: max_rows + 1, offset, queryParams })
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
 		const rows = await db.any(sql, queryParams);
 
-
+		
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i > max_rows) { break }
+			if (i>max_rows) { break }
 
 			// lookup: coa_name dari field coa_name pada table public.coa dimana (public.coa.coa_id = public.jurnal.coa_id)
 			{
@@ -670,7 +668,7 @@ async function jurnal_detilList(self, body) {
 				const { periode_name } = await sqlUtil.lookupdb(db, 'public.periode', 'periode_id', row.periode_id)
 				row.periode_name = periode_name
 			}
-
+			
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -682,14 +680,14 @@ async function jurnal_detilList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length > max_rows) {
-			nextoffset = offset + max_rows
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit: max_rows,
+			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -709,23 +707,23 @@ async function jurnal_detilOpen(self, body) {
 	const tablename = detilTableName
 
 	try {
-		const { id } = body
+		const { id } = body 
 		const criteria = { jurnaldetil_id: id }
-		const searchMap = { jurnaldetil_id: `jurnaldetil_id = \${jurnaldetil_id}` }
-		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
+		const searchMap = { jurnaldetil_id: `jurnaldetil_id = \${jurnaldetil_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
 		const sql = sqlUtil.createSqlSelect({
-			tablename,
-			columns: [],
-			whereClause,
-			sort: {},
-			limit: 0,
-			offset: 0,
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data == null) {
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
-		}
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
 
 
 		// lookup: coa_name dari field coa_name pada table public.coa dimana (public.coa.coa_id = public.jurnal.coa_id)
@@ -768,7 +766,7 @@ async function jurnal_detilOpen(self, body) {
 			const { periode_name } = await sqlUtil.lookupdb(db, 'public.periode', 'periode_id', data.periode_id)
 			data.periode_name = periode_name
 		}
-
+		
 
 		// lookup data createby
 		{
@@ -780,7 +778,7 @@ async function jurnal_detilOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}
+		}	
 
 
 		// pasang extender untuk olah data
@@ -797,7 +795,7 @@ async function jurnal_detilOpen(self, body) {
 }
 
 async function jurnal_detilCreate(self, body) {
-	const { source = 'jurnal', data = {} } = body
+	const { source='jurnal', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -812,13 +810,13 @@ async function jurnal_detilCreate(self, body) {
 		data._createby = user_id
 		data._createdate = (new Date()).toISOString()
 
-		const result = await db.tx(async tx => {
+		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
 
-			const args = {
-				section: 'detil',
-				prefix: 'XX'
+			const args = { 
+				section: 'detil', 
+				prefix: 'XX'	
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -843,7 +841,7 @@ async function jurnal_detilCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-
+			
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -865,7 +863,7 @@ async function jurnal_detilCreate(self, body) {
 }
 
 async function jurnal_detilUpdate(self, body) {
-	const { source = 'jurnal', data = {} } = body
+	const { source='jurnal', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -880,7 +878,7 @@ async function jurnal_detilUpdate(self, body) {
 		data._modifyby = user_id
 		data._modifydate = (new Date()).toISOString()
 
-		const result = await db.tx(async tx => {
+		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
 
@@ -888,11 +886,11 @@ async function jurnal_detilUpdate(self, body) {
 			if (typeof Extender.detilUpdating === 'function') {
 				// export async function detilUpdating(self, tx, data) {}
 				await Extender.detilUpdating(self, tx, data)
-			}
-
-			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['jurnaldetil_id'])
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['jurnaldetil_id'])
 			const ret = await cmd.execute(data)
-
+			
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -906,7 +904,7 @@ async function jurnal_detilUpdate(self, body) {
 
 			return ret
 		})
-
+	
 		return result
 	} catch (err) {
 		throw err
@@ -914,7 +912,7 @@ async function jurnal_detilUpdate(self, body) {
 }
 
 async function jurnal_detilDelete(self, body) {
-	const { source, id } = body
+	const { source, id } = body 
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -922,10 +920,10 @@ async function jurnal_detilDelete(self, body) {
 
 	try {
 
-		const deletedRow = await db.tx(async tx => {
+		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
-			const dataToRemove = { jurnaldetil_id: id }
+			const dataToRemove = {jurnaldetil_id: id}
 			const sql = `select * from ${detilTableName} where jurnaldetil_id=\${jurnaldetil_id}`
 			const rowdetil = await tx.oneOrNone(sql, dataToRemove)
 
@@ -937,7 +935,7 @@ async function jurnal_detilDelete(self, body) {
 				await Extender.detilDeleting(self, tx, rowdetil, logMetadata)
 			}
 
-			const param = { jurnaldetil_id: rowdetil.jurnaldetil_id }
+			const param = {jurnaldetil_id: rowdetil.jurnaldetil_id}
 			const cmd = sqlUtil.createDeleteCommand(detilTableName, ['jurnaldetil_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -945,14 +943,14 @@ async function jurnal_detilDelete(self, body) {
 			if (typeof Extender.detilDeleted === 'function') {
 				// export async function detilDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.detilDeleted(self, tx, deletedRow, logMetadata)
-			}
+			}					
 
-			jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', { rowdata: deletedRow })
-			jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', { jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName }, `removed: ${rowdetil.jurnaldetil_id}`)
+			jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', {rowdata: deletedRow})
+			jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', {jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName}, `removed: ${rowdetil.jurnaldetil_id}`)
 
 			return deletedRow
 		})
-
+	
 
 		return deletedRow
 	} catch (err) {
@@ -961,7 +959,7 @@ async function jurnal_detilDelete(self, body) {
 }
 
 async function jurnal_detilDeleteRows(self, body) {
-	const { data } = body
+	const { data } = body 
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -971,25 +969,25 @@ async function jurnal_detilDeleteRows(self, body) {
 	try {
 
 		let jurnal_id
-		const result = await db.tx(async tx => {
+		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = { jurnaldetil_id: id }
+				const dataToRemove = {jurnaldetil_id: id}
 				const sql = `select * from ${detilTableName} where jurnaldetil_id=\${jurnaldetil_id}`
 				const rowdetil = await tx.oneOrNone(sql, dataToRemove)
 				jurnal_id = rowdetil.jurnal_id
 
 				const logMetadata = {}
 
-
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.detilDeleting === 'function') {
 					// async function detilDeleting(self, tx, rowdetil, logMetadata) {}
 					await Extender.detilDeleting(self, tx, rowdetil, logMetadata)
 				}
 
-				const param = { jurnaldetil_id: rowdetil.jurnaldetil_id }
+				const param = {jurnaldetil_id: rowdetil.jurnaldetil_id}
 				const cmd = sqlUtil.createDeleteCommand(detilTableName, ['jurnaldetil_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -997,10 +995,10 @@ async function jurnal_detilDeleteRows(self, body) {
 				if (typeof Extender.detilDeleted === 'function') {
 					// export async function detilDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.detilDeleted(self, tx, deletedRow, logMetadata)
-				}
+				}					
 
-				jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', { rowdata: deletedRow })
-				jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', { jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName }, `removed: ${rowdetil.jurnaldetil_id}`)
+				jurnal_log(self, body, startTime, detilTableName, rowdetil.jurnaldetil_id, 'DELETE', {rowdata: deletedRow})
+				jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', {jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName}, `removed: ${rowdetil.jurnaldetil_id}`)
 			}
 		})
 
@@ -1012,6 +1010,7 @@ async function jurnal_detilDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}
+	}	
 }
 
+	

@@ -29,7 +29,7 @@ const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 const refButtons = {}
 
-export function init_detil(self, args) {
+export async function init_detil(self, args) {
 	const formEl = document.getElementById('jurnalDetilEdit-frm')
 
 	// tambahkan box information
@@ -44,6 +44,7 @@ export function init_detil(self, args) {
 		const target = document.getElementById('jurnalDetilEdit-head')
 		const tpl = document.getElementById('tpl-get-outstd-buttons')
 		if (tpl != null) {
+
 			const clone = tpl.content.cloneNode(true); // salin isi template
 			const divButton = clone.querySelector('div')
 			target.insertAdjacentElement('afterend', divButton);
@@ -113,7 +114,7 @@ export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {
 }
 
 export async function jurnalDetilList_tableDataLoaded(self, tbl, result) {
-	updateBalance(self, result.balance_idr)
+	updateBalance(self, result.balance_idr, result.balance_value)
 }
 
 export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState) {
@@ -209,13 +210,36 @@ export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {
 }
 
 export async function jurnalDetilEdit_dataSaved(self, data, frm) {
-	const balance_idr = data.balance_idr
-	updateBalance(self, balance_idr)
+	updateBalance(self, data.balance_idr, data.balance_value)
+	if (data.updateTotal === true) {
+		updateTotal(self, data.total_idr, data.total_value)
+	}
 }
 
 export async function jurnalDetilEdit_dataDeleted(self, data) {
 	const balance_idr = Number(data.balance_idr)
-	updateBalance(self, balance_idr)
+	updateBalance(self, data.balance_idr, data.balance_value)
+	if (data.updateTotal === true) {
+		updateTotal(self, data.total_idr, data.total_value)
+	}
+}
+
+export function jurnalDetilEdit_formLocked(self, frm, CurrentState) {
+	if (refButtons.payable) {
+		refButtons.payable.disabled = true;
+	}
+	if (refButtons.receivable) {
+		refButtons.receivable.disabled = true;
+	}
+}
+
+export function jurnalDetilEdit_formUnlocked(self, frm) {
+	if (refButtons.payable) {
+		refButtons.payable.disabled = false;
+	}
+	if (refButtons.receivable) {
+		refButtons.receivable.disabled = false;
+	}
 }
 
 
@@ -427,7 +451,7 @@ function suspendReferencedEditor(self, frm, suspended = true) {
 
 }
 
-function updateBalance(self, balance_idr) {
+function updateBalance(self, balance_idr, balance_value) {
 	// update di list
 	const el_list_balance_idr = document.getElementById('jurnalDetilList-balance_idr')
 	el_list_balance_idr.innerHTML = pageHelper.formatDecimal(balance_idr)
@@ -453,4 +477,8 @@ function updateBalance(self, balance_idr) {
 	}
 
 
+}
+
+function updateTotal(self, total_idr, total_value) {
+	self.Modules.jurnalHeaderList.updateCurrentRow(self, { jurnal_idr: total_idr })
 }

@@ -38,9 +38,9 @@ const _coacurr = 'jurnalHeaderEdit-obj_coacurr'
 
 const selectedPeriode = { periode_start: null, periode_end: null }
 
-export function init_header(self, args) {
-	const moduleHeader = self.Modules.jurnalHeaderEdit;
-	const frm = moduleHeader.getForm();
+export async function init_header(self, args) {
+	const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit;
+	const frm = jurnalHeaderEdit.getForm();
 
 
 
@@ -54,8 +54,31 @@ export function init_header(self, args) {
 	frm.Inputs[_partnerbank_accountname].markAsRequired(false)
 	frm.Inputs[_coa_id].markAsRequired(false)
 
+	const btnUnpost = document.getElementById('jurnalHeaderEdit-btn_actionUnpost')
+	const btnPost = document.getElementById('jurnalHeaderEdit-btn_actionPost')
+	const CurrentState = jurnalHeaderEdit.getCurrentState()
+	const variance = Context.variance
+	if (variance == 'posting') {
+		CurrentState.Actions.commit.hide(true)
+		CurrentState.Actions.uncommit.hide(true)
+		CurrentState.Actions.post.hide(false)
+		CurrentState.Actions.unpost.hide(true)
+		btnPost.style.marginLeft = 'auto';
+		btnPost.style.order = '5';
+	} else if (variance == 'unposting') {
+		CurrentState.Actions.commit.hide(true)
+		CurrentState.Actions.uncommit.hide(true)
+		CurrentState.Actions.post.hide(true)
+		CurrentState.Actions.unpost.hide(false)
+		btnUnpost.style.marginLeft = 'auto';
+		btnUnpost.style.order = '5';
+	} else {
+		CurrentState.Actions.commit.hide(false)
+		CurrentState.Actions.uncommit.hide(false)
+		CurrentState.Actions.post.hide(true)
+		CurrentState.Actions.unpost.hide(true)
+	}
 
-	// 
 
 }
 
@@ -65,6 +88,20 @@ export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 	CurrentState.Actions.post.addEventListener('click', (evt) => { btn_actionPost_click(self, frm, CurrentState, evt) })
 	CurrentState.Actions.unpost.addEventListener('click', (evt) => { btn_actionUnpost_click(self, frm, CurrentState, evt) })
 	CurrentState.Actions.print.addEventListener('click', (evt) => { btn_actionPrint_click(self, frm, CurrentState, evt) })
+
+}
+
+export function headerList_dataLoad(self, criteria, sort, evt) {
+	sort.jurnal_date = 'DESC'
+
+	if (Context.variance == 'posting') {
+		criteria.iscommit = true
+		criteria.ispost = false
+	} else if (Context.variance == 'unposting') {
+		criteria.ispost = true
+	} else if (Context.variance == 'view') {
+	} else {
+	}
 
 }
 
@@ -94,12 +131,6 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	CurrentState.Actions.uncommit.suspend(periode_isclosed || !iscommit || ispost)
 	CurrentState.Actions.post.suspend(periode_isclosed || !iscommit || ispost || !isallowposting)
 	CurrentState.Actions.unpost.suspend(periode_isclosed || !ispost || !isallowunposting)
-
-
-	CurrentState.Actions.post.hide(!isallowposting)
-	CurrentState.Actions.unpost.hide(!isallowunposting)
-
-
 
 	updateDetilInfo_balance(self, balance_idr)
 

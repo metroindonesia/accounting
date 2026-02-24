@@ -5,11 +5,11 @@ import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 const Extender = Ext.extenderDetil ?? Ext
 
 
-const CurrentState = {}
 const Crsl =  Context.Crsl
 const CurrentSectionId = Context.Sections.jurnalDetilEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
+const CurrentState = {}
 
 const TitleWhenNew = 'New Detil'
 const TitleWhenView = 'View Detil'
@@ -569,8 +569,10 @@ export async function openSelectedData(self, params) {
 
 		
 
+		const suspended = self.Modules.jurnalHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+
+		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
