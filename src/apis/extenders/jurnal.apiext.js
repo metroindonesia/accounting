@@ -200,7 +200,7 @@ export async function detilDeleted(self, tx, deletedRow, logMetadata) {
 	deletedRow.balance_idr = balance_idr
 	deletedRow.balance_value = balance_value
 
-	await updateHeaderValue(self, tx, ret, jurnal_id)
+	await updateHeaderValue(self, tx, deletedRow, jurnal_id)
 }
 
 

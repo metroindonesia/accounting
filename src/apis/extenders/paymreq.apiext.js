@@ -340,19 +340,29 @@ export async function approve(self, db, body, paymreq_log) {
 			throw new Error('tidak bisa approve dokumen yang belum dicommit')
 		}
 
-		const result = await db.tx(async tx => {
-			sqlUtil.connect(tx)
 
-			const data = {
-				paymreq_id,
-				isapproved: true,
-				_approveby: user_id,
-				_approvedate: (new Date()).toISOString()
-			}
-
-			const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
-			const ret = await cmd.execute(data)
+		// main process
+		// commit jurnal
+		const sqlCommit = 'call public.paymreq_approve(${paymreq_id}, ${user_id})'
+		await db.none(sqlCommit, {
+			paymreq_id: paymreq_id,
+			user_id: user_id
 		})
+
+
+		// const result = await db.tx(async tx => {
+		// 	sqlUtil.connect(tx)
+
+		// 	const data = {
+		// 		paymreq_id,
+		// 		isapproved: true,
+		// 		_approveby: user_id,
+		// 		_approvedate: (new Date()).toISOString()
+		// 	}
+
+		// 	const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
+		// 	const ret = await cmd.execute(data)
+		// })
 
 		// cek hasil approval
 		const sql = `
@@ -403,20 +413,27 @@ export async function reject(self, db, body, paymreq_log) {
 		// jika sudah ditarik ke jurnal tidak bisa direject
 		// ???
 
-
-		const result = await db.tx(async tx => {
-			sqlUtil.connect(tx)
-
-			const data = {
-				paymreq_id,
-				isapproved: false,
-				_approveby: null,
-				_approvedate: null
-			}
-
-			const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
-			const ret = await cmd.execute(data)
+		// main process
+		// commit jurnal
+		const sqlCommit = 'call public.paymreq_reject(${paymreq_id}, ${user_id})'
+		await db.none(sqlCommit, {
+			paymreq_id: paymreq_id,
+			user_id: user_id
 		})
+
+		// const result = await db.tx(async tx => {
+		// 	sqlUtil.connect(tx)
+
+		// 	const data = {
+		// 		paymreq_id,
+		// 		isapproved: false,
+		// 		_approveby: null,
+		// 		_approvedate: null
+		// 	}
+
+		// 	const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
+		// 	const ret = await cmd.execute(data)
+		// })
 
 		// cek hasil approval
 		const sql = `

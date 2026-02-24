@@ -531,6 +531,9 @@ async function jurnal_headerDelete(self, body) {
 				const sql = `select * from ${detilTableName} where jurnal_id=\${jurnal_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowdetil of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.detilDeleting === 'function') {
 						// export async function detilDeleting(self, tx, rowdetil, logMetadata) {}
