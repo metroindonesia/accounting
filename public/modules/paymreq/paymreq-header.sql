@@ -602,6 +602,12 @@ comment on column public."paymreq"._modifydate is 'waktu terakhir record dimodif
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partner_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnercontact_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$paymtype_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$curr_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnerbank_id;
+ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$ppn_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$paymreqtype_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$ffl_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$po_id;
@@ -610,12 +616,6 @@ ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$project_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$site_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$unit_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$bc_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partner_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnercontact_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$paymtype_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$curr_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$partnerbank_id;
-ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$ppn_id;
 ALTER TABLE public."paymreq" DROP CONSTRAINT fk$public$paymreq$pph_id;
 
 

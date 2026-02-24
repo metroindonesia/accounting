@@ -1,6 +1,10 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import db from '@agung_dhewe/webapps/src/db.js'
 import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
+import { processApBill } from './jurnal.apiext.ap-bill.js'
+import { processApPayment } from './jurnal.apiext.ap-payment.js'
+import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
+
 
 const TABLE = {
 	jurnal: 'public.jurnal',
@@ -502,6 +506,10 @@ function excludeNonEditableDetil(data) {
 		data.paymreq_id = null
 	}
 
+	if (data.paymreqdetil_id == '') {
+		data.paymreqdetil_id = null
+	}
+
 	if (data.agingtype_id == '') {
 		data.agingtype_id = null
 	}
@@ -541,8 +549,11 @@ async function composeDataDetil(tx, data, copyto) {
 async function createDetilFromHeader(self, tx, ret, param) {
 	const req = self.req
 	const user_id = req.session.user.userId
+	const jurnal_id = ret.jurnal_id
+	const { doc_id } = param
 
 	sqlUtil.connect(tx)
+
 
 
 	try {
@@ -560,11 +571,16 @@ async function createDetilFromHeader(self, tx, ret, param) {
 
 		// update header jurnaldetil_id_link
 		const headdata = {
-			jurnal_id: ret.jurnal_id,
+			jurnal_id: jurnal_id,
 			jurnaldetil_id_link: data.jurnaldetil_id
 		}
 		const cmdHead = sqlUtil.createUpdateCommand(TABLE.jurnal, headdata, ['jurnal_id'])
 		await cmdHead.execute(headdata)
+
+
+
+		// berikutnya cek process pada paymentrequest jika memenuhi syarat 
+		await processPaymreq(self, tx, doc_id, ret)
 
 	} catch (err) {
 		throw err
@@ -575,11 +591,14 @@ async function createDetilFromHeader(self, tx, ret, param) {
 async function updateDetilFromHeader(self, tx, ret, param) {
 	const req = self.req
 	const user_id = req.session.user.userId
+	const { doc_id } = param
+
 
 	sqlUtil.connect(tx)
 
 
 	try {
+
 		const data = await composeDataDetil(tx, ret, param.jurnaltype_headcopyto)
 		data.jurnaldetil_id = ret.jurnaldetil_id_link
 		data._modifyby = user_id
@@ -588,10 +607,34 @@ async function updateDetilFromHeader(self, tx, ret, param) {
 		const cmd = sqlUtil.createUpdateCommand(TABLE.jurnaldetil, data, ['jurnaldetil_id'])
 		const result = await cmd.execute(data)
 
+
+		// berikutnya cek process pada paymentrequest jika memenuhi syarat 
+		await processPaymreq(self, tx, doc_id, ret)
+
+
 	} catch (err) {
 		throw err
 	}
 }
+
+async function processPaymreq(self, tx, doc_id, jurnalHeader) {
+	const { jurnaltype_id } = jurnalHeader
+
+	try {
+		//  cek processing pada jurnaltype_id
+		const { paymreqprocess } = await sqlUtil.lookupdb(tx, TABLE.jurnaltype, 'jurnaltype_id', jurnaltype_id)
+		if (paymreqprocess == 'ap-bill') {
+			await processApBill(self, tx, doc_id, jurnalHeader)
+		} else if (paymreqprocess == 'ap-payment') {
+			await processApPayment(self, tx, doc_id, jurnalHeader)
+		} else if (paymreqprocess == 'advance-payment') {
+			await processAdvancePayment(self, tx, doc_id, jurnalHeader)
+		}
+	} catch (err) {
+		throw err
+	}
+}
+
 
 async function calculateTotal(self, db, ret) {
 	const jurnal_id = ret.jurnal_id

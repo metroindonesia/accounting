@@ -153,7 +153,7 @@ async function jurnal_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -163,7 +163,16 @@ async function jurnal_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -611,7 +620,7 @@ async function jurnal_detilList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.detilListCriteria === 'function') {
@@ -621,7 +630,15 @@ async function jurnal_detilList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		

@@ -144,6 +144,7 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 
 	jurnaltype_changed(self, {}, frm)
 	paymtype_changed(self, {}, frm)
+	updateDetilInfo_balance(self, 0)
 
 
 
@@ -226,9 +227,13 @@ export async function obj_jurnaltype_id_selected(self, obj_jurnaltype_id, frm, e
 
 
 export function obj_paymreq_id_selecting_criteria(self, obj_paymreq_id, frm, criteria, sort, evt) {
+	const jurnal_id = frm.Inputs[_jurnal_id].value
 	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
+
 	criteria.isapproved = true
 	criteria.jurnaltype_id = jurnaltype_id
+	criteria.outstanding = true
+	criteria.current_jurnal_id = jurnal_id
 }
 
 export async function obj_paymreq_id_populating(self, obj_paymreq_id, frm, evt) {

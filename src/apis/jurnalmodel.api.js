@@ -26,7 +26,7 @@ export default class extends Api {
 	async init(body) { return await jurnalmodel_init(this, body) }
 
 	// extender call
-	async execute(body) { return await paymreq_execute(this, body) }
+	async execute(body) { return await jurnalmodel_execute(this, body) }
 
 	// header
 	async headerList(body) { return await jurnalmodel_headerList(this, body) }

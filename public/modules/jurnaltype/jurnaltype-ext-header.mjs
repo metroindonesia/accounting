@@ -1,4 +1,6 @@
 const _jurnaltype_headcopyto = 'jurnaltypeHeaderEdit-obj_jurnaltype_headcopyto'
+const _jurnaltype_printout = 'jurnaltypeHeaderEdit-obj_jurnaltype_printout'
+const _jurnaltype_printtitle = 'jurnaltypeHeaderEdit-obj_jurnaltype_printtitle'
 
 
 
@@ -44,7 +46,15 @@ export async function obj_jurnalmodel_id_selected(self, obj_jurnalmodel_id, frm,
 
 
 function jurnalmodel_changed(jurnalmodel, frm) {
+	console.log(jurnalmodel)
+
+
 	const obj_jurnaltype_headcopyto = frm.Inputs[_jurnaltype_headcopyto]
+	const obj_jurnaltype_printout = frm.Inputs[_jurnaltype_printout]
+	const obj_jurnaltype_printtitle = frm.Inputs[_jurnaltype_printtitle]
+
 	obj_jurnaltype_headcopyto.value = jurnalmodel.jurnalmodel_copyto
+	obj_jurnaltype_printout.value = jurnalmodel.jurnalmodel_printout
+	obj_jurnaltype_printtitle.value = jurnalmodel.jurnalmodel_title
 }
 

@@ -153,7 +153,7 @@ async function paymreq_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -163,7 +163,16 @@ async function paymreq_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -551,6 +560,9 @@ async function paymreq_headerDelete(self, body) {
 				const sql = `select * from ${detilTableName} where paymreq_id=\${paymreq_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowdetil of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.detilDeleting === 'function') {
 						// export async function detilDeleting(self, tx, rowdetil, logMetadata) {}
@@ -628,7 +640,7 @@ async function paymreq_detilList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.detilListCriteria === 'function') {
@@ -638,7 +650,15 @@ async function paymreq_detilList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -689,13 +709,20 @@ async function paymreq_detilList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}

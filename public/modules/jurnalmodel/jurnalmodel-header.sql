@@ -57,6 +57,36 @@ comment on column public."jurnalmodel".jurnalmodel_copyto is '';
 
 
 -- =============================================
+-- FIELD: jurnalmodel_printout text
+-- =============================================
+-- ADD jurnalmodel_printout
+alter table public."jurnalmodel" add jurnalmodel_printout text  ;
+comment on column public."jurnalmodel".jurnalmodel_printout is '';
+
+-- MODIFY jurnalmodel_printout
+alter table public."jurnalmodel"
+	alter column jurnalmodel_printout type text,
+	ALTER COLUMN jurnalmodel_printout DROP DEFAULT,
+	ALTER COLUMN jurnalmodel_printout DROP NOT NULL;
+comment on column public."jurnalmodel".jurnalmodel_printout is '';
+
+
+-- =============================================
+-- FIELD: jurnalmodel_title text
+-- =============================================
+-- ADD jurnalmodel_title
+alter table public."jurnalmodel" add jurnalmodel_title text  ;
+comment on column public."jurnalmodel".jurnalmodel_title is '';
+
+-- MODIFY jurnalmodel_title
+alter table public."jurnalmodel"
+	alter column jurnalmodel_title type text,
+	ALTER COLUMN jurnalmodel_title DROP DEFAULT,
+	ALTER COLUMN jurnalmodel_title DROP NOT NULL;
+comment on column public."jurnalmodel".jurnalmodel_title is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby

@@ -45,12 +45,37 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	const user_id = req.session.user.userId
 
 	// criteria.user_id = user_id
+	const outstanding = criteria.outstanding
+	const current_jurnal_id = criteria.current_jurnal_id
+	delete criteria.outstanding
+	delete criteria.current_jurnal_id
 
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.isapproved = 'isapproved = ${isapproved}'
 	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	searchMap.struct_id = 'struct_id = ${struct_id}'
 	searchMap.jurnaltype_id = 'paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+
+	if (outstanding) {
+		columns.push('B.*')
+		args.tablename = `
+			paymreq_outstanding A left join paymreq B on B.paymreq_id = A.paymreq_id 
+						left join public.jurnal C on C.paymreq_id = B.paymreq_id 
+		`
+
+		if (current_jurnal_id != null) {
+			criteria.jurnal_id = current_jurnal_id
+			searchMap.jurnal_id = '(C.jurnal_id is null or C.jurnal_id=${jurnal_id})'
+		} else {
+			criteria.jurnal_id = 1
+			searchMap.jurnal_id = 'C.jurnal_id is null'
+		}
+
+
+		searchMap.isapproved = 'isapproved = ${isapproved}'
+
+		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+	}
 
 
 }

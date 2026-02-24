@@ -267,6 +267,36 @@ comment on column public."jurnaldetil".paymreq_id is '';
 
 
 -- =============================================
+-- FIELD: paymreqdetil_id bigint
+-- =============================================
+-- ADD paymreqdetil_id
+alter table public."jurnaldetil" add paymreqdetil_id bigint  ;
+comment on column public."jurnaldetil".paymreqdetil_id is '';
+
+-- MODIFY paymreqdetil_id
+alter table public."jurnaldetil"
+	alter column paymreqdetil_id type bigint,
+	ALTER COLUMN paymreqdetil_id DROP DEFAULT,
+	ALTER COLUMN paymreqdetil_id DROP NOT NULL;
+comment on column public."jurnaldetil".paymreqdetil_id is '';
+
+
+-- =============================================
+-- FIELD: tag_paymreq_id bigint
+-- =============================================
+-- ADD tag_paymreq_id
+alter table public."jurnaldetil" add tag_paymreq_id bigint  ;
+comment on column public."jurnaldetil".tag_paymreq_id is 'untuk penanda bahwa baris ini merupakan hasil tarikan detil dari dokumen paymreq';
+
+-- MODIFY tag_paymreq_id
+alter table public."jurnaldetil"
+	alter column tag_paymreq_id type bigint,
+	ALTER COLUMN tag_paymreq_id DROP DEFAULT,
+	ALTER COLUMN tag_paymreq_id DROP NOT NULL;
+comment on column public."jurnaldetil".tag_paymreq_id is 'untuk penanda bahwa baris ini merupakan hasil tarikan detil dari dokumen paymreq';
+
+
+-- =============================================
 -- FIELD: isdebet boolean
 -- =============================================
 -- ADD isdebet
@@ -523,6 +553,7 @@ ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaltyp
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaldetil_id_ref;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$agingtype_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 
@@ -647,6 +678,28 @@ ALTER TABLE public."jurnaldetil"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$paymreq_id;
 CREATE INDEX idx_fk$public$jurnaldetil$paymreq_id ON public."jurnaldetil"(paymreq_id);	
+
+
+ALTER TABLE public."jurnaldetil"
+	ADD CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id
+	FOREIGN KEY (paymreqdetil_id)
+	REFERENCES public."paymreqdetil"(paymreqdetil_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$paymreqdetil_id;
+CREATE INDEX idx_fk$public$jurnaldetil$paymreqdetil_id ON public."jurnaldetil"(paymreqdetil_id);	
+
+
+ALTER TABLE public."jurnaldetil"
+	ADD CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id
+	FOREIGN KEY (tag_paymreq_id)
+	REFERENCES public."paymreq"(paymreq_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$tag_paymreq_id;
+CREATE INDEX idx_fk$public$jurnaldetil$tag_paymreq_id ON public."jurnaldetil"(tag_paymreq_id);	
 
 
 ALTER TABLE public."jurnaldetil"

@@ -5,11 +5,11 @@ import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 const Extender = Ext.extenderDetil ?? Ext
 
 
-const CurrentState = {}
 const Crsl =  Context.Crsl
 const CurrentSectionId = Context.Sections.paymreqDetilEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
+const CurrentState = {}
 
 const TitleWhenNew = 'New Detil'
 const TitleWhenView = 'View Detil'
@@ -376,8 +376,10 @@ export async function openSelectedData(self, params) {
 
 		
 
+		const suspended = self.Modules.paymreqHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+
+		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
@@ -845,11 +847,11 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function paymreqDetilEdit_dataSaved(self, data, frm) {}
 		const fn_datasaved_name = 'paymreqDetilEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			await fn_datasaved(self, data, frm)
+			// export async function paymreqDetilEdit_dataSaved(self, data, frm) {}
+			await fn_datasaved(self, result, frm)
 		}
 
 

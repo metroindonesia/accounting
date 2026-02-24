@@ -170,7 +170,7 @@ async function jurnaltype_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -180,7 +180,16 @@ async function jurnaltype_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -419,6 +428,9 @@ async function jurnaltype_headerDelete(self, body) {
 				const sql = `select * from ${coaTableName} where jurnaltype_id=\${jurnaltype_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowcoa of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.coaDeleting === 'function') {
 						// export async function coaDeleting(self, tx, rowcoa, logMetadata) {}
@@ -447,6 +459,9 @@ async function jurnaltype_headerDelete(self, body) {
 				const sql = `select * from ${userTableName} where jurnaltype_id=\${jurnaltype_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowuser of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.userDeleting === 'function') {
 						// export async function userDeleting(self, tx, rowuser, logMetadata) {}
@@ -475,6 +490,9 @@ async function jurnaltype_headerDelete(self, body) {
 				const sql = `select * from ${paymreqtypeTableName} where jurnaltype_id=\${jurnaltype_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowpaymreqtype of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.paymreqtypeDeleting === 'function') {
 						// export async function paymreqtypeDeleting(self, tx, rowpaymreqtype, logMetadata) {}
@@ -552,7 +570,7 @@ async function jurnaltype_coaList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.coaListCriteria === 'function') {
@@ -562,7 +580,15 @@ async function jurnaltype_coaList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -912,7 +938,7 @@ async function jurnaltype_userList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.userListCriteria === 'function') {
@@ -922,7 +948,15 @@ async function jurnaltype_userList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -1272,7 +1306,7 @@ async function jurnaltype_paymreqtypeList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.paymreqtypeListCriteria === 'function') {
@@ -1282,7 +1316,15 @@ async function jurnaltype_paymreqtypeList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		

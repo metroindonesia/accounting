@@ -102,6 +102,36 @@ comment on column public."jurnaltype".jurnaltype_headcopyto is '';
 
 
 -- =============================================
+-- FIELD: jurnaltype_printout text
+-- =============================================
+-- ADD jurnaltype_printout
+alter table public."jurnaltype" add jurnaltype_printout text  ;
+comment on column public."jurnaltype".jurnaltype_printout is '';
+
+-- MODIFY jurnaltype_printout
+alter table public."jurnaltype"
+	alter column jurnaltype_printout type text,
+	ALTER COLUMN jurnaltype_printout DROP DEFAULT,
+	ALTER COLUMN jurnaltype_printout DROP NOT NULL;
+comment on column public."jurnaltype".jurnaltype_printout is '';
+
+
+-- =============================================
+-- FIELD: jurnaltype_title text
+-- =============================================
+-- ADD jurnaltype_title
+alter table public."jurnaltype" add jurnaltype_title text  ;
+comment on column public."jurnaltype".jurnaltype_title is '';
+
+-- MODIFY jurnaltype_title
+alter table public."jurnaltype"
+	alter column jurnaltype_title type text,
+	ALTER COLUMN jurnaltype_title DROP DEFAULT,
+	ALTER COLUMN jurnaltype_title DROP NOT NULL;
+comment on column public."jurnaltype".jurnaltype_title is '';
+
+
+-- =============================================
 -- FIELD: isheadhaspaymreq boolean
 -- =============================================
 -- ADD isheadhaspaymreq
@@ -144,6 +174,51 @@ alter table public."jurnaltype"
 	ALTER COLUMN isheadhascoa SET DEFAULT false,
 	ALTER COLUMN isheadhascoa SET NOT NULL;
 comment on column public."jurnaltype".isheadhascoa is '';
+
+
+-- =============================================
+-- FIELD: paymreqprocess text
+-- =============================================
+-- ADD paymreqprocess
+alter table public."jurnaltype" add paymreqprocess text  ;
+comment on column public."jurnaltype".paymreqprocess is '';
+
+-- MODIFY paymreqprocess
+alter table public."jurnaltype"
+	alter column paymreqprocess type text,
+	ALTER COLUMN paymreqprocess DROP DEFAULT,
+	ALTER COLUMN paymreqprocess DROP NOT NULL;
+comment on column public."jurnaltype".paymreqprocess is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowgetap boolean
+-- =============================================
+-- ADD isdetilallowgetap
+alter table public."jurnaltype" add isdetilallowgetap boolean not null default false;
+comment on column public."jurnaltype".isdetilallowgetap is '';
+
+-- MODIFY isdetilallowgetap
+alter table public."jurnaltype"
+	alter column isdetilallowgetap type boolean,
+	ALTER COLUMN isdetilallowgetap SET DEFAULT false,
+	ALTER COLUMN isdetilallowgetap SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowgetap is '';
+
+
+-- =============================================
+-- FIELD: isdetilallowgetar boolean
+-- =============================================
+-- ADD isdetilallowgetar
+alter table public."jurnaltype" add isdetilallowgetar boolean not null default false;
+comment on column public."jurnaltype".isdetilallowgetar is '';
+
+-- MODIFY isdetilallowgetar
+alter table public."jurnaltype"
+	alter column isdetilallowgetar type boolean,
+	ALTER COLUMN isdetilallowgetar SET DEFAULT false,
+	ALTER COLUMN isdetilallowgetar SET NOT NULL;
+comment on column public."jurnaltype".isdetilallowgetar is '';
 
 
 -- =============================================
@@ -204,36 +279,6 @@ alter table public."jurnaltype"
 	ALTER COLUMN isheadallowchangevalue SET DEFAULT false,
 	ALTER COLUMN isheadallowchangevalue SET NOT NULL;
 comment on column public."jurnaltype".isheadallowchangevalue is '';
-
-
--- =============================================
--- FIELD: isdetilallowgetap boolean
--- =============================================
--- ADD isdetilallowgetap
-alter table public."jurnaltype" add isdetilallowgetap boolean not null default false;
-comment on column public."jurnaltype".isdetilallowgetap is '';
-
--- MODIFY isdetilallowgetap
-alter table public."jurnaltype"
-	alter column isdetilallowgetap type boolean,
-	ALTER COLUMN isdetilallowgetap SET DEFAULT false,
-	ALTER COLUMN isdetilallowgetap SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowgetap is '';
-
-
--- =============================================
--- FIELD: isdetilallowgetar boolean
--- =============================================
--- ADD isdetilallowgetar
-alter table public."jurnaltype" add isdetilallowgetar boolean not null default false;
-comment on column public."jurnaltype".isdetilallowgetar is '';
-
--- MODIFY isdetilallowgetar
-alter table public."jurnaltype"
-	alter column isdetilallowgetar type boolean,
-	ALTER COLUMN isdetilallowgetar SET DEFAULT false,
-	ALTER COLUMN isdetilallowgetar SET NOT NULL;
-comment on column public."jurnaltype".isdetilallowgetar is '';
 
 
 -- =============================================

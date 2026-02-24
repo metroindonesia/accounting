@@ -55,236 +55,254 @@
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
+	#jurnaltypeHeaderEdit-obj_jurnaltype_printout-container {
 		grid-row: 5;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_jurnaltype_printtitle-container {
+		grid-row: 5;
+		grid-column: 3 / span 3;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhaspaymreq-container {
+		grid-row: 8;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhaspaymtype-container {
-		grid-row: 6;
+		grid-row: 9;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhascoa-container {
-		grid-row: 7;
+		grid-row: 10;
 		grid-column: 1 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_ishasduedate-container {
+	#jurnaltypeHeaderEdit-obj_paymreqprocess-container {
 		grid-row: 8;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadallowchangeduedate-container {
-		grid-row: 8;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadhasvalue-container {
-		grid-row: 9;
-		grid-column: 1 / span 2;
-		
-	}
-	
-	#jurnaltypeHeaderEdit-obj_isheadallowchangevalue-container {
-		grid-row: 9;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowgetap-container {
-		grid-row: 5;
+		grid-row: 8;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowgetar-container {
-		grid-row: 6;
+		grid-row: 9;
 		grid-column: 5 / span 2;
 		
 	}
 	
-	#jurnaltypeHeaderEdit-obj_isheadhaspartner-container {
+	#jurnaltypeHeaderEdit-obj_ishasduedate-container {
 		grid-row: 11;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadallowchangeduedate-container {
+		grid-row: 11;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhasvalue-container {
+		grid-row: 12;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadallowchangevalue-container {
+		grid-row: 12;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#jurnaltypeHeaderEdit-obj_isheadhaspartner-container {
+		grid-row: 14;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadpartnermandatory-container {
-		grid-row: 11;
+		grid-row: 14;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_ispartnerdisabled-container {
-		grid-row: 11;
+		grid-row: 14;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhasunit-container {
-		grid-row: 12;
+		grid-row: 15;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadunitmandatory-container {
-		grid-row: 12;
+		grid-row: 15;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isunitdisabled-container {
-		grid-row: 12;
+		grid-row: 15;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhassite-container {
-		grid-row: 13;
+		grid-row: 16;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadsitemandatory-container {
-		grid-row: 13;
+		grid-row: 16;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_issitedisabled-container {
-		grid-row: 13;
+		grid-row: 16;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhasstruct-container {
-		grid-row: 14;
+		grid-row: 17;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadstructmandatory-container {
-		grid-row: 14;
+		grid-row: 17;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isstructdisabled-container {
-		grid-row: 14;
+		grid-row: 17;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadhasproject-container {
-		grid-row: 15;
+		grid-row: 18;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadprojectmandatory-container {
-		grid-row: 15;
+		grid-row: 18;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isheadallowselectproject-container {
-		grid-row: 15;
+		grid-row: 18;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilhaspartner-container {
-		grid-row: 17;
+		grid-row: 20;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilpartnermandatory-container {
-		grid-row: 17;
+		grid-row: 20;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowselectpartner-container {
-		grid-row: 17;
+		grid-row: 20;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdethasunit-container {
-		grid-row: 18;
+		grid-row: 21;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilunitmandatory-container {
-		grid-row: 18;
+		grid-row: 21;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowselectunit-container {
-		grid-row: 18;
+		grid-row: 21;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdethassite-container {
-		grid-row: 19;
+		grid-row: 22;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilsitemandatory-container {
-		grid-row: 19;
+		grid-row: 22;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowselectsite-container {
-		grid-row: 19;
+		grid-row: 22;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilhasstruct-container {
-		grid-row: 20;
+		grid-row: 23;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilstructmandatory-container {
-		grid-row: 20;
+		grid-row: 23;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowselectstruct-container {
-		grid-row: 20;
+		grid-row: 23;
 		grid-column: 5 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilhasproject-container {
-		grid-row: 21;
+		grid-row: 24;
 		grid-column: 1 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilprojectmandatory-container {
-		grid-row: 21;
+		grid-row: 24;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#jurnaltypeHeaderEdit-obj_isdetilallowselectproject-container {
-		grid-row: 21;
+		grid-row: 24;
 		grid-column: 5 / span 2;
 		
 	}

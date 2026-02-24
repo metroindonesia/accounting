@@ -36,6 +36,18 @@
 		grid-column: 1 / span 2;
 		
 	}
+	
+	#jurnalmodelHeaderEdit-obj_jurnalmodel_printout-container {
+		grid-row: 4;
+		grid-column: 1 / span 2;
+		
+	}
+	
+	#jurnalmodelHeaderEdit-obj_jurnalmodel_title-container {
+		grid-row: 4;
+		grid-column: 3 / span 3;
+		
+	}
 		
 
 
