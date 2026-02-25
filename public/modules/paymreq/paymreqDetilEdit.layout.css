@@ -61,6 +61,12 @@
 		
 	}
 	
+	#paymreqDetilEdit-obj_curr_id-container {
+		grid-row: 6;
+		grid-column: 3 / span 2;
+		
+	}
+	
 	#paymreqDetilEdit-obj_paymreq_id-container {
 		grid-row: 1;
 		grid-column: 1 / span 2;

@@ -192,6 +192,36 @@ comment on column public."paymreqtype".bcismandatory is '';
 
 
 -- =============================================
+-- FIELD: hasppn boolean
+-- =============================================
+-- ADD hasppn
+alter table public."paymreqtype" add hasppn boolean not null default false;
+comment on column public."paymreqtype".hasppn is '';
+
+-- MODIFY hasppn
+alter table public."paymreqtype"
+	alter column hasppn type boolean,
+	ALTER COLUMN hasppn SET DEFAULT false,
+	ALTER COLUMN hasppn SET NOT NULL;
+comment on column public."paymreqtype".hasppn is '';
+
+
+-- =============================================
+-- FIELD: haspph boolean
+-- =============================================
+-- ADD haspph
+alter table public."paymreqtype" add haspph boolean not null default false;
+comment on column public."paymreqtype".haspph is '';
+
+-- MODIFY haspph
+alter table public."paymreqtype"
+	alter column haspph type boolean,
+	ALTER COLUMN haspph SET DEFAULT false,
+	ALTER COLUMN haspph SET NOT NULL;
+comment on column public."paymreqtype".haspph is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby

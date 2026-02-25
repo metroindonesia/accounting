@@ -16,7 +16,8 @@ const TABLE = {
 	jurnaldetil: 'public.jurnaldetil',
 	doc: 'core.doc',
 	user: 'core.user',
-	coa: 'public.coa'
+	coa: 'public.coa',
+	periode: 'public.periode'
 }
 
 export async function jurnal_init(self, initialData) {
@@ -25,21 +26,44 @@ export async function jurnal_init(self, initialData) {
 	initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
 
 
-	/* ambil data paymtype */
+
 	try {
-		const sql = `
-		select 
-			paymtype_id, 
-			ishaspartnercontact, ishaspartnerbankselector , ishasbankaccount, 
-			ishasbankaccountname, ishasbankname, ishasgiro
-		from ${TABLE.paymtype}
-		`
-		const rows = await db.any(sql)
+
+		/* ambil data paymtype */
+		const sqlPaymtype = `
+			select 
+				paymtype_id, 
+				ishaspartnercontact, ishaspartnerbankselector , ishasbankaccount, 
+				ishasbankaccountname, ishasbankname, ishasgiro
+			from ${TABLE.paymtype}`
+
+		const rowsPaymtype = await db.any(sqlPaymtype)
 		const paymtype = {}
-		for (let row of rows) {
+		for (let row of rowsPaymtype) {
 			paymtype[row.paymtype_id] = row
 		}
 		initialData.setting.paymtype = paymtype
+
+		/* ambil data current periode_id */
+		const sqlCurrentPeriode = `
+			select 
+				periode_id, periode_name, periode_start, periode_end 
+			from ${TABLE.periode}
+			where periode_start <= now() and periode_end >=now() and periode_isclosed=false
+			limit 1
+		`
+		const rowPeriode = await db.one(sqlCurrentPeriode)
+		if (rowPeriode != null) {
+			initialData.setting.currentPeriode = {
+				value: rowPeriode.periode_id,
+				text: rowPeriode.periode_name,
+				periode_start: rowPeriode.periode_start,
+				periode_end: rowPeriode.periode_end
+			}
+		} else {
+			initialData.setting.currentPeriode = null
+		}
+
 	} catch (err) {
 		throw err
 	}
@@ -207,7 +231,14 @@ export async function detilDeleted(self, tx, deletedRow, logMetadata) {
 	await updateHeaderValue(self, tx, deletedRow, jurnal_id)
 }
 
+export async function detilRowsDeleted(self, db, res) {
+	const { jurnal_id } = res
+	const { balance_idr, balance_value } = await getBalance(self, db, jurnal_id)
+	res.balance_idr = balance_idr
+	res.balance_value = balance_value
 
+	await updateHeaderValue(self, db, res, jurnal_id)
+}
 
 
 export async function commit(self, db, body, jurnal_log) {
@@ -244,6 +275,7 @@ export async function commit(self, db, body, jurnal_log) {
 		await checkJurnalRow(self, db, jurnal_id)
 		await checkBalance(self, db, jurnal_id)
 		await checkPeriode(self, db, jurnal_id)
+
 
 
 
@@ -665,17 +697,26 @@ async function checkBalance(self, db, jurnal_id) {
 }
 
 async function checkJurnalRow(self, db, jurnal_id) {
-	const sqlRowcount = 'select count(jurnaldetil_id) as rowcount from public.jurnaldetil where jurnal_id=${jurnal_id}'
+	const sqlRowcount = `select count(jurnaldetil_id) as rowcount from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id}`
 	const rowBal = await db.one(sqlRowcount, { jurnal_id })
-	const rowcount = Number(rowBal.rowcount)
-	if (rowcount == 0) {
+	if (Number(rowBal.rowcount) == 0) {
 		throw new Error('Belum ada baris jurnal')
 	}
+
+	const sqlCekCoa = `select count(jurnaldetil_id) as rowcount from  ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and coa_id is null`
+	const rowCekCoa = await db.one(sqlCekCoa, { jurnal_id })
+	if (Number(rowCekCoa.rowcount) > 0) {
+		throw new Error('Ada beberapa baris jurnal yang belum assign Chart of Account')
+	}
+
 }
 
 async function checkPeriode(self, db, jurnal_id) {
 
 }
+
+
+
 
 async function getBalance(self, db, jurnal_id) {
 	const sqlBalance = `
@@ -697,7 +738,10 @@ async function updateHeaderValue(self, db, ret, jurnal_id) {
 
 	try {
 		const sql = `select jurnaldetil_id_link from ${TABLE.jurnal} where jurnal_id=\${jurnal_id}`
-		const row = db.one(sql, { jurnal_id })
+		const row = await db.one(sql, { jurnal_id })
+
+
+		// hanya update jurnal_value, dan jurnal_idr jika tidak link ke detil (jurnaldetil_id_link == null)
 		if (row.jurnaldetil_id_link == null) {
 			// jurnal header value tidak terkait dengan detil
 			// update value berdasarkan value debet (+)
@@ -720,6 +764,8 @@ async function updateHeaderValue(self, db, ret, jurnal_id) {
 			ret.total_idr = total_idr
 			ret.total_value = total_value
 			ret.updateTotal = true
+		} else {
+			ret.updateTotal = false
 		}
 	} catch (err) {
 		throw err

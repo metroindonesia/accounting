@@ -27,16 +27,27 @@
 	</div>
 
 
+	<!-- Checkbox: iscurradj-->	
+	<div id="coaHeaderEdit-obj_iscurradj-container" class="input-field" field="coaHeaderEdit-obj_iscurradj">
+		<label for="coaHeaderEdit-obj_iscurradj">Currency Adjustment</label>
+		<input id="coaHeaderEdit-obj_iscurradj"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="iscurradj"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
 	<!-- Textbox: coa_name-->	
 	<div id="coaHeaderEdit-obj_coa_name-container" class="input-field" field="coaHeaderEdit-obj_coa_name">
 		<label for="coaHeaderEdit-obj_coa_name">Name</label>
 		<input id="coaHeaderEdit-obj_coa_name"  fgta5-component="Textbox" placeholder="name" autocomplete="off" spellcheck="false" 
 			binding="coa_name"
-			data-tabindex="3" 
+			data-tabindex="4" 
 			required 
 			invalid-message-required="nama coa harus diisi" 
 			autocomplete="off" spellcheck="false" 
-			maxlength="30" 
+			maxlength="255" 
 		>
 	</div>
 
@@ -46,7 +57,7 @@
 		<label for="coaHeaderEdit-obj_curr_id">Curr</label>
 		<input id="coaHeaderEdit-obj_curr_id"  fgta5-component="Combobox" placeholder="currency" autocomplete="off" spellcheck="false" 
 			binding="curr_id"
-			data-tabindex="4" 
+			data-tabindex="5" 
 			data-display="curr_name" 
 		>
 	</div>
@@ -57,7 +68,7 @@
 		<label for="coaHeaderEdit-obj_curr_descr">Descr</label>
 		<input id="coaHeaderEdit-obj_curr_descr"  fgta5-component="Textbox" placeholder="descr" autocomplete="off" spellcheck="false" 
 			binding="curr_descr"
-			data-tabindex="5" 
+			data-tabindex="6" 
 			autocomplete="off" spellcheck="false" 
 			maxlength="30" 
 		>
@@ -69,7 +80,7 @@
 		<label for="coaHeaderEdit-obj_coagroup_id">Group</label>
 		<input id="coaHeaderEdit-obj_coagroup_id"  fgta5-component="Combobox" placeholder="group" autocomplete="off" spellcheck="false" 
 			binding="coagroup_id"
-			data-tabindex="6" 
+			data-tabindex="7" 
 			data-display="coagroup_name" 
 		>
 	</div>
@@ -80,7 +91,7 @@
 		<label for="coaHeaderEdit-obj_coarpt_id">Report</label>
 		<input id="coaHeaderEdit-obj_coarpt_id"  fgta5-component="Combobox" placeholder="report" autocomplete="off" spellcheck="false" 
 			binding="coarpt_id"
-			data-tabindex="7" 
+			data-tabindex="8" 
 			required 
 			invalid-message-required="report harus diisi" 
 			data-display="coarpt_name" 
@@ -93,7 +104,7 @@
 		<label for="coaHeaderEdit-obj_agingtype_id">Aging</label>
 		<input id="coaHeaderEdit-obj_agingtype_id"  fgta5-component="Combobox" placeholder="non aging" autocomplete="off" spellcheck="false" 
 			binding="agingtype_id"
-			data-tabindex="8" 
+			data-tabindex="9" 
 			data-display="agingtype_name" 
 		>
 	</div>

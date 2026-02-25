@@ -35,13 +35,20 @@ const _paymreq_total = 'paymreqHeaderEdit-obj_paymreq_total'
 const _paymreq_ppn = 'paymreqHeaderEdit-obj_paymreq_ppn'
 const _paymreq_pph = 'paymreqHeaderEdit-obj_paymreq_pph'
 const _paymreq_bill = 'paymreqHeaderEdit-obj_paymreq_bill'
-
+const _ppn_id = 'paymreqHeaderEdit-obj_ppn_id'
+const _pph_id = 'paymreqHeaderEdit-obj_pph_id'
 
 export function init_header(self, args) {
 	// untuk keperluan cetak halaman
 
 	const printContainer = document.getElementById('print-media-container')
 	const origintalTitle = document.title
+
+	pageHelper.setVisibility(`${_ppn_id}-container`, false)
+	pageHelper.setVisibility(`${_pph_id}-container`, false)
+	pageHelper.setVisibility(`${_paymreq_ppn}-container`, false)
+	pageHelper.setVisibility(`${_paymreq_pph}-container`, false)
+
 
 	window.addEventListener('beforeprint', (event) => {
 		printContainer.classList.remove('hidden')
@@ -139,6 +146,21 @@ export async function obj_paymreqtype_id_selected(self, obj_paymreqtype_id, frm,
 
 	const paymreqtype = evt.detail.data
 	paymreqtype_changed(paymreqtype, frm)
+
+	if (!paymreqtype.hasppn) {
+		// reset data ppn
+		frm.Inputs[_ppn_id].clear()
+		frm.Inputs[_ppn_id].setSelected(null)
+		frm.Inputs[_paymreq_ppn].value = 0
+	}
+
+	if (!paymreqtype.haspph) {
+		// rest data pph
+		frm.Inputs[_pph_id].clear()
+		frm.Inputs[_pph_id].setSelected(null)
+		frm.Inputs[_paymreq_pph].value = 0
+	}
+
 }
 
 export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) {
@@ -167,7 +189,7 @@ export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 
 export function obj_partnerbank_id_selecting_criteria(self, obj_partnerbank_id, frm, criteria, sort, evt) {
 	const partner_id = frm.Inputs[_partner_id].value
-	criteria.partner_id = partner_id
+	criteria.partner_id = partner_id ?? 1
 	criteria.partnerbank_isdisabled = false
 }
 
@@ -183,7 +205,7 @@ export async function obj_partnerbank_id_selected(self, obj_partnerbank_id, frm,
 export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontact_id, frm, criteria, sort, evt) {
 	console.log('SELECTING PARTNERCONTACT')
 	const partner_id = frm.Inputs[_partner_id].value
-	criteria.partner_id = partner_id
+	criteria.partner_id = partner_id ?? 1
 	criteria.partnercontact_isdisabled = false
 }
 
@@ -532,6 +554,13 @@ function paymreqtype_changed(paymreqtype, frm) {
 	pageHelper.setVisibility(`${_ffl_id}-container`, paymreqtype.hasffl)
 	pageHelper.setVisibility(`${_po_id}-container`, paymreqtype.haspo)
 	pageHelper.setVisibility(`${_bc_id}-container`, paymreqtype.hasbc)
+	pageHelper.setVisibility(`${_bc_id}-container`, paymreqtype.hasbc)
+	pageHelper.setVisibility(`${_ppn_id}-container`, paymreqtype.hasppn)
+	pageHelper.setVisibility(`${_pph_id}-container`, paymreqtype.haspph)
+	pageHelper.setVisibility(`${_paymreq_ppn}-container`, paymreqtype.hasppn)
+	pageHelper.setVisibility(`${_paymreq_pph}-container`, paymreqtype.haspph)
+
+
 
 	frm.Inputs[_paymreq_invoice].markAsRequired(paymreqtype.hasinvoice)
 	frm.Inputs[_ffl_id].markAsRequired(paymreqtype.fflismandatory)

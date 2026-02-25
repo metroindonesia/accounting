@@ -36,7 +36,9 @@ const _copyto = 'jurnalHeaderEdit-obj_copyto'
 const _coacurr = 'jurnalHeaderEdit-obj_coacurr'
 
 
-const selectedPeriode = { periode_start: null, periode_end: null }
+let selectedPeriode = { periode_start: null, periode_end: null }
+let selectedJurnaltype = {}
+
 
 export async function init_header(self, args) {
 	const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit;
@@ -54,32 +56,35 @@ export async function init_header(self, args) {
 	frm.Inputs[_partnerbank_accountname].markAsRequired(false)
 	frm.Inputs[_coa_id].markAsRequired(false)
 
-	const btnUnpost = document.getElementById('jurnalHeaderEdit-btn_actionUnpost')
-	const btnPost = document.getElementById('jurnalHeaderEdit-btn_actionPost')
-	const CurrentState = jurnalHeaderEdit.getCurrentState()
-	const variance = Context.variance
-	if (variance == 'posting') {
-		CurrentState.Actions.commit.hide(true)
-		CurrentState.Actions.uncommit.hide(true)
-		CurrentState.Actions.post.hide(false)
-		CurrentState.Actions.unpost.hide(true)
-		btnPost.style.marginLeft = 'auto';
-		btnPost.style.order = '5';
-	} else if (variance == 'unposting') {
-		CurrentState.Actions.commit.hide(true)
-		CurrentState.Actions.uncommit.hide(true)
-		CurrentState.Actions.post.hide(true)
-		CurrentState.Actions.unpost.hide(false)
-		btnUnpost.style.marginLeft = 'auto';
-		btnUnpost.style.order = '5';
-	} else {
-		CurrentState.Actions.commit.hide(false)
-		CurrentState.Actions.uncommit.hide(false)
-		CurrentState.Actions.post.hide(true)
-		CurrentState.Actions.unpost.hide(true)
-	}
+	/*	
+		const btnUnpost = document.getElementById('jurnalHeaderEdit-btn_actionUnpost')
+		const btnPost = document.getElementById('jurnalHeaderEdit-btn_actionPost')
+		const CurrentState = jurnalHeaderEdit.getCurrentState()
+		const variance = Context.variance
+		if (variance == 'posting') {
+			CurrentState.Actions.commit.hide(true)
+			CurrentState.Actions.uncommit.hide(true)
+			CurrentState.Actions.post.hide(false)
+			CurrentState.Actions.unpost.hide(true)
+			btnPost.style.marginLeft = 'auto';
+			btnPost.style.order = '5';
+		} else if (variance == 'unposting') {
+			CurrentState.Actions.commit.hide(true)
+			CurrentState.Actions.uncommit.hide(true)
+			CurrentState.Actions.post.hide(true)
+			CurrentState.Actions.unpost.hide(false)
+			btnUnpost.style.marginLeft = 'auto';
+			btnUnpost.style.order = '5';
+		} else {
+			CurrentState.Actions.commit.hide(false)
+			CurrentState.Actions.uncommit.hide(false)
+			CurrentState.Actions.post.hide(true)
+			CurrentState.Actions.unpost.hide(true)
+		}
+	*/
 
-
+	selectedPeriode.periode_start = Context.setting.currentPeriode.periode_start
+	selectedPeriode.periode_end = Context.setting.currentPeriode.periode_end
 }
 
 export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
@@ -107,6 +112,7 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 
 export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	disableJurnaltype(frm, true) // user tidak bisa memilih jurnaltype untuk data yang sudah disimpan
+	disablePaymreq(frm, true)
 
 
 	const {
@@ -138,9 +144,13 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 
 export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 	disableJurnaltype(frm, false)  // aktifkan kembali jurnaltype saat membuat data baru
+	disablePaymreq(frm, false)
 
 	// set default currency
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
+	if (Context.setting.currentPeriode != null) {
+		datainit.periode_id = { value: Context.setting.currentPeriode.value, text: Context.setting.currentPeriode.text }
+	}
 
 	jurnaltype_changed(self, {}, frm)
 	paymtype_changed(self, {}, frm)
@@ -193,6 +203,7 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 
 export async function jurnalHeaderEdit_dataSaved(self, data, frm) {
 	disableJurnaltype(frm, true)  // user tidak bisa memilih jurnaltype untuk data yang sudah disimpan
+	disablePaymreq(frm, true)
 	updateDetilInfo_balance(self, data.balance_idr)
 }
 
@@ -215,6 +226,7 @@ export async function obj_jurnaltype_id_selected(self, obj_jurnaltype_id, frm, e
 		return
 	}
 	const jurnaltype = evt.detail.data
+	selectedJurnaltype = jurnaltype
 	jurnaltype_changed(self, jurnaltype, frm)
 	paymtype_changed(self, {}, frm)
 
@@ -232,7 +244,6 @@ export function obj_paymreq_id_selecting_criteria(self, obj_paymreq_id, frm, cri
 
 	criteria.isapproved = true
 	criteria.jurnaltype_id = jurnaltype_id
-	criteria.outstanding = true
 	criteria.current_jurnal_id = jurnal_id
 }
 
@@ -255,10 +266,17 @@ export async function obj_paymreq_id_populating(self, obj_paymreq_id, frm, evt) 
 	divValue.innerHTML = pageHelper.formatNumber(data.paymreq_total)
 	divValue.classList.add('paymreq-row-value')
 
+	const divCurr = document.createElement('div')
+	divCurr.innerHTML = data.curr_name
+	divCurr.classList.add('paymreq-row-value')
+	divCurr.setAttribute('name', 'curr_id')
+
+
 	td.innerHTML = ''
 	td.appendChild(divDoc)
 	td.appendChild(divDescr)
 	td.appendChild(divValue)
+	td.appendChild(divCurr)
 }
 
 export async function obj_paymreq_id_selected(self, obj_paymreq_id, frm, evt) {
@@ -658,6 +676,12 @@ function disableJurnaltype(frm, disabled) {
 	obj_jurnaltype_id.disabled = disabled
 }
 
+function disablePaymreq(frm, disabled) {
+	const obj_paymreq_id = frm.Inputs[_paymreq_id]
+	obj_paymreq_id.disabled = disabled
+
+}
+
 
 function jurnaltype_changed(self, jurnaltype, frm) {
 	if (jurnaltype == null) {
@@ -684,7 +708,6 @@ function jurnaltype_changed(self, jurnaltype, frm) {
 
 	// payment req
 	const obj_paymreq_id = frm.Inputs[_paymreq_id]
-	obj_paymreq_id.disabled = !jurnaltype.isheadhaspaymreq
 	obj_paymreq_id.markAsRequired(jurnaltype.isheadhaspaymreq)
 	pageHelper.setVisibility(`${_paymreq_id}-container`, jurnaltype.isheadhaspaymreq)
 
@@ -705,7 +728,7 @@ function jurnaltype_changed(self, jurnaltype, frm) {
 	// value
 	const obj_curr_id = frm.Inputs[_curr_id]
 	const obj_jurnal_value = frm.Inputs[_jurnal_value]
-	obj_curr_id.disabled = !jurnaltype.isheadallowchangevalue
+	obj_curr_id.disabled = !jurnaltype.isheadallowselectcurr
 	obj_jurnal_value.disabled = !jurnaltype.isheadallowchangevalue
 	pageHelper.setVisibility(`${_jurnal_idr}-container`, jurnaltype.isheadhasvalue)
 	pageHelper.setVisibility(`${_jurnal_value}-container`, jurnaltype.isheadhasvalue)
@@ -781,9 +804,16 @@ function paymreq_changed(self, paymreq, frm) {
 	frm.Inputs[_project_id].setSelected(paymreq.project_id, paymreq.project_name)
 
 	// paymtype
-	frm.Inputs[_paymtype_id].setSelected(paymreq.paymtype_id, paymreq.paymtype_name)
-	const paymtype = Context.setting.paymtype[paymreq.paymtype_id]
-	paymtype_changed(self, paymtype, frm)
+	if (selectedJurnaltype.isheadhaspaymtype === true) {
+		frm.Inputs[_paymtype_id].setSelected(paymreq.paymtype_id, paymreq.paymtype_name)
+		const paymtype = Context.setting.paymtype[paymreq.paymtype_id]
+		paymtype_changed(self, paymtype, frm)
+	} else {
+		frm.Inputs[_paymtype_id].clear()
+		frm.Inputs[_paymtype_id].setSelected(null)
+		paymtype_changed(self, null, frm)
+	}
+
 
 
 	// partnerbank

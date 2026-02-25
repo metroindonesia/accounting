@@ -173,6 +173,10 @@ export async function jurnalDetilEdit_formOpened(self, frm, CurrentState) {
 		suspendReferencedEditor(self, frm, false)
 	}
 
+	const obj_iscurradj = frm.Inputs[_iscurradj]
+	iscurradj_changed(self, obj_iscurradj.value, frm)
+
+
 	const ishead = frm.Inputs[_jurnaldetil_ishead].value
 	CurrentState.Actions.edit.suspend(ishead)
 
@@ -187,7 +191,7 @@ export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {
 
 
 	try {
-		if (isdebet || iskredit) {
+		if (isdebet != iskredit) {
 			// perlu cek debet kredit
 			if (isdebet) {
 				if (value < 0 || idr < 0) {
@@ -217,7 +221,6 @@ export async function jurnalDetilEdit_dataSaved(self, data, frm) {
 }
 
 export async function jurnalDetilEdit_dataDeleted(self, data) {
-	const balance_idr = Number(data.balance_idr)
 	updateBalance(self, data.balance_idr, data.balance_value)
 	if (data.updateTotal === true) {
 		updateTotal(self, data.total_idr, data.total_value)
@@ -243,6 +246,13 @@ export function jurnalDetilEdit_formUnlocked(self, frm) {
 }
 
 
+export async function jurnalDetilList_rowsDeleted(self, data) {
+	updateBalance(self, data.balance_idr, data.balance_value)
+	if (data.updateTotal === true) {
+		updateTotal(self, data.total_idr, data.total_value)
+	}
+}
+
 export function obj_coa_id_selecting_criteria(self, obj_coa_id, frm, criteria, sort, evt) {
 	const jurnaltype_id = frm.Inputs[_jurnaltype_id].value
 
@@ -262,9 +272,10 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 	}
 
 
-	const { curr_id, agingtype_id, isdebet, iskredit } = evt.detail.data
+	const { curr_id, agingtype_id, isdebet, iskredit, iscurradj } = evt.detail.data
 	frm.Inputs[_agingtype_id].value = agingtype_id
 	frm.Inputs[_coacurr].value = curr_id
+	frm.Inputs[_iscurradj].value = iscurradj
 
 	const obj_curr_id = frm.Inputs[_curr_id]
 	if (curr_id != null) {
@@ -277,6 +288,8 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 
 	frm.Inputs[_isdebet].value = isdebet
 	frm.Inputs[_iskredit].value = iskredit
+
+	iscurradj_changed(self, iscurradj, frm)
 
 }
 
@@ -318,6 +331,15 @@ export async function obj_jurnaldetil_value_changed(self, obj_jurnal_value, frm,
 
 
 function recalculateCurrency(self, frm) {
+	const obj_iscurradj = frm.Inputs[_iscurradj]
+	const iscurradj = obj_iscurradj.value
+
+	if (iscurradj) {
+		// jika coa untuk adjust currency tidak perlu di kalukasi idr dan rate
+		return
+	}
+
+
 	const rate = frm.Inputs[_curr_rate].value
 	const value = frm.Inputs[_jurnaldetil_value].value
 	const idr = value * rate
@@ -481,4 +503,14 @@ function updateBalance(self, balance_idr, balance_value) {
 
 function updateTotal(self, total_idr, total_value) {
 	self.Modules.jurnalHeaderList.updateCurrentRow(self, { jurnal_idr: total_idr })
+}
+
+function iscurradj_changed(self, iscurradj, frm) {
+	const obj_jurnaldetil_idr = frm.Inputs[_jurnaldetil_idr]
+
+	if (iscurradj) {
+		obj_jurnaldetil_idr.disabled = false
+	} else {
+		obj_jurnaldetil_idr.disabled = true
+	}
 }

@@ -5,7 +5,8 @@ import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
 const TABLE = {
 	paymreq: "public.paymreq",
 	paymreqdetil: "public.paymreqdetil",
-	jurnaldetil: "public.jurnaldetil"
+	jurnaldetil: "public.jurnaldetil",
+	taxtype: "public.taxtype"
 }
 
 export async function processApBill(self, tx, doc_id, jurnalHeader) {
@@ -16,7 +17,7 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 
 	sqlUtil.connect(tx)
 	try {
-		// const paymreq = sqlUtil.lookupdb(tx, TABLE.paymreq, "paymreq_id", paymreq_id)
+		const paymreq = await sqlUtil.lookupdb(tx, TABLE.paymreq, "paymreq_id", paymreq_id)
 
 		// jika paymreq sebelumnya diganti, hapus dulu data lama
 		const sqlRemovePrev = `delete from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and tag_paymreq_id is not null and tag_paymreq_id<>\${paymreq_id}`
@@ -27,10 +28,12 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 		const _createdate = (new Date()).toISOString()
 		const sqlPaymreqDetil = `select * from ${TABLE.paymreqdetil} where paymreq_id=\${paymreq_id}`
 		const rows = await tx.any(sqlPaymreqDetil, { paymreq_id })
+
+		await setPPN(self, tx, paymreq, rows, jurnalHeader) // tambahkan PPN kalau ada
+		await setPPh(self, tx, paymreq, rows, jurnalHeader) // tambahkan PPh kalau ada
+
 		for (let row of rows) {
-
 			const paymreqdetil_id = row.paymreqdetil_id
-
 			// cek apakah baris sudah ada
 			const sqlCek = `select jurnaldetil_id from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and paymreqdetil_id=\${paymreqdetil_id}`
 			const rowExists = await tx.oneOrNone(sqlCek, { jurnal_id, paymreqdetil_id })
@@ -51,11 +54,12 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 				jurnaldetil_descr: row.paymreqdetil_descr,
 				jurnaldetil_value: row.paymreqdetil_value,
 				jurnaldetil_idr: row.paymreqdetil_value * jurnalHeader.curr_rate,
+				coa_id: row.coa_id ?? null,
+				partner_id: row.partner_id ?? company_partner_id,
 				unit_id: row.unit_id,
 				site_id: row.site_id,
 				struct_id: row.struct_id,
 				project_id: row.project_id,
-				partner_id: company_partner_id,
 				curr_id: jurnalHeader.curr_id,
 				curr_rate: jurnalHeader.curr_rate,
 				periode_id: jurnalHeader.periode_id,
@@ -69,13 +73,59 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 			}
 
 
+
 			const cmd = sqlUtil.createInsertCommand(TABLE.jurnaldetil, jurnalDetil)
 			await cmd.execute(jurnalDetil)
 
 		}
 
+
+		// masukkan PPN
+
+
 	} catch (err) {
 		throw err
 	}
 
+}
+
+
+async function setPPN(self, tx, paymreq, rows, jurnalHeader) {
+	if (paymreq.ppn_id == null) {
+		return
+	}
+
+	const taxtype = await sqlUtil.lookupdb(tx, TABLE.taxtype, "taxtype_id", paymreq.ppn_id)
+	rows.push({
+		paymreqdetil_id: null,
+		paymreqdetil_descr: taxtype.taxtype_name,
+		paymreqdetil_value: paymreq.paymreq_ppn,
+		coa_id: taxtype.bill_coa_id,
+		unit_id: jurnalHeader.unit_id,
+		site_id: jurnalHeader.site_id,
+		struct_id: jurnalHeader.struct_id,
+		project_id: jurnalHeader.project_id,
+		partner_id: null, // partner pajak,
+		taxmodel: 'PPN'
+	})
+}
+
+async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
+	if (paymreq.pph_id == null) {
+		return
+	}
+
+	const taxtype = await sqlUtil.lookupdb(tx, TABLE.taxtype, "taxtype_id", paymreq.pph_id)
+	rows.push({
+		paymreqdetil_id: null,
+		paymreqdetil_descr: taxtype.taxtype_name,
+		paymreqdetil_value: -paymreq.paymreq_pph,
+		coa_id: taxtype.bill_coa_id,
+		unit_id: jurnalHeader.unit_id,
+		site_id: jurnalHeader.site_id,
+		struct_id: jurnalHeader.struct_id,
+		project_id: jurnalHeader.project_id,
+		partner_id: null, // partner pajak,
+		taxmodel: 'PPh'
+	})
 }

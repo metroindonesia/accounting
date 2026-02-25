@@ -25,13 +25,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await taxtype_init(this, body) }
 
+	// extender call
+	async execute(body) { return await taxtype_execute(this, body) }
+
 	// header
 	async headerList(body) { return await taxtype_headerList(this, body) }
 	async headerOpen(body) { return await taxtype_headerOpen(this, body) }
 	async headerUpdate(body) { return await taxtype_headerUpdate(this, body)}
 	async headerCreate(body) { return await taxtype_headerCreate(this, body)}
 	async headerDelete(body) { return await taxtype_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -79,6 +82,24 @@ async function taxtype_init(self, body) {
 }
 
 
+// execute extender function
+async function taxtype_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, taxtype_log) {}
+		return await Extender[fnName](self, db, body, taxtype_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function taxtype_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -94,6 +115,8 @@ async function taxtype_log(self, body, startTime, tablename, id, action, data={}
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -119,7 +142,7 @@ async function taxtype_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -129,7 +152,16 @@ async function taxtype_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -139,6 +171,11 @@ async function taxtype_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
+			// lookup: coa_name dari field coa_name pada table public.coa dimana (public.coa.coa_id = public.taxtype.bill_coa_id)
+			{
+				const { coa_name } = await sqlUtil.lookupdb(db, 'public.coa', 'coa_id', row.bill_coa_id)
+				row.coa_name = coa_name
+			}
 			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
@@ -188,6 +225,11 @@ async function taxtype_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
+		// lookup: coa_name dari field coa_name pada table public.coa dimana (public.coa.coa_id = public.taxtype.bill_coa_id)
+		{
+			const { coa_name } = await sqlUtil.lookupdb(db, 'public.coa', 'coa_id', data.bill_coa_id)
+			data.coa_name = coa_name
+		}
 		
 
 		// lookup data createby

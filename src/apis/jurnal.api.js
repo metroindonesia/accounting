@@ -1021,12 +1021,22 @@ async function jurnal_detilDeleteRows(self, body) {
 				jurnal_log(self, body, startTime, headerTableName, rowdetil.jurnal_id, 'DELETE ROW DETIL', {jurnaldetil_id: rowdetil.jurnaldetil_id, tablename: detilTableName}, `removed: ${rowdetil.jurnaldetil_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			jurnal_id: jurnal_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'detilRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function detilRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

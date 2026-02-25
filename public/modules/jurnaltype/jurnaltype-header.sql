@@ -282,6 +282,21 @@ comment on column public."jurnaltype".isheadallowchangevalue is '';
 
 
 -- =============================================
+-- FIELD: isheadallowselectcurr boolean
+-- =============================================
+-- ADD isheadallowselectcurr
+alter table public."jurnaltype" add isheadallowselectcurr boolean not null default false;
+comment on column public."jurnaltype".isheadallowselectcurr is '';
+
+-- MODIFY isheadallowselectcurr
+alter table public."jurnaltype"
+	alter column isheadallowselectcurr type boolean,
+	ALTER COLUMN isheadallowselectcurr SET DEFAULT false,
+	ALTER COLUMN isheadallowselectcurr SET NOT NULL;
+comment on column public."jurnaltype".isheadallowselectcurr is '';
+
+
+-- =============================================
 -- FIELD: isheadhaspartner boolean
 -- =============================================
 -- ADD isheadhaspartner

@@ -693,6 +693,11 @@ async function paymreq_detilList(self, body) {
 				const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', row.unit_id)
 				row.unit_name = unit_name
 			}
+			// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+			{
+				const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
+				row.curr_name = curr_name
+			}
 			
 
 			// pasang extender di sini
@@ -775,6 +780,11 @@ async function paymreq_detilOpen(self, body) {
 		{
 			const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', data.unit_id)
 			data.unit_name = unit_name
+		}
+		// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.paymreq.curr_id)
+		{
+			const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
+			data.curr_name = curr_name
 		}
 		
 
@@ -1011,12 +1021,22 @@ async function paymreq_detilDeleteRows(self, body) {
 				paymreq_log(self, body, startTime, headerTableName, rowdetil.paymreq_id, 'DELETE ROW DETIL', {paymreqdetil_id: rowdetil.paymreqdetil_id, tablename: detilTableName}, `removed: ${rowdetil.paymreqdetil_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			paymreq_id: paymreq_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'detilRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function detilRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

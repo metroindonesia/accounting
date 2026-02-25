@@ -901,12 +901,22 @@ async function jurnaltype_coaDeleteRows(self, body) {
 				jurnaltype_log(self, body, startTime, headerTableName, rowcoa.jurnaltype_id, 'DELETE ROW COA', {jurnaltypecoa_id: rowcoa.jurnaltypecoa_id, tablename: coaTableName}, `removed: ${rowcoa.jurnaltypecoa_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			jurnaltype_id: jurnaltype_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'coaRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function coaRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -1269,12 +1279,22 @@ async function jurnaltype_userDeleteRows(self, body) {
 				jurnaltype_log(self, body, startTime, headerTableName, rowuser.jurnaltype_id, 'DELETE ROW USER', {jurnaltypeuser_id: rowuser.jurnaltypeuser_id, tablename: userTableName}, `removed: ${rowuser.jurnaltypeuser_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			jurnaltype_id: jurnaltype_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'userRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function userRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -1637,12 +1657,22 @@ async function jurnaltype_paymreqtypeDeleteRows(self, body) {
 				jurnaltype_log(self, body, startTime, headerTableName, rowpaymreqtype.jurnaltype_id, 'DELETE ROW PAYMREQTYPE', {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id, tablename: paymreqtypeTableName}, `removed: ${rowpaymreqtype.jurnaltypepaymreqtype_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			jurnaltype_id: jurnaltype_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'paymreqtypeRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function paymreqtypeRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

@@ -101,6 +101,12 @@
 	width: 200px;
 }
 
+.paymreq-row-value[name="curr_id"] {
+	align-self: flex-end;
+	text-align: center;
+	width: 80px;
+}
+
 
 .coa-row-coa_id {
 	width: 100px;

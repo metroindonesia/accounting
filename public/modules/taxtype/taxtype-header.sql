@@ -72,6 +72,21 @@ comment on column public."taxtype".taxtype_value is '';
 
 
 -- =============================================
+-- FIELD: bill_coa_id int
+-- =============================================
+-- ADD bill_coa_id
+alter table public."taxtype" add bill_coa_id int  ;
+comment on column public."taxtype".bill_coa_id is '';
+
+-- MODIFY bill_coa_id
+alter table public."taxtype"
+	alter column bill_coa_id type int,
+	ALTER COLUMN bill_coa_id DROP DEFAULT,
+	ALTER COLUMN bill_coa_id DROP NOT NULL;
+comment on column public."taxtype".bill_coa_id is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby
@@ -136,7 +151,22 @@ comment on column public."taxtype"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Add Foreign Key Constraint  	
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."taxtype" DROP CONSTRAINT fk$public$taxtype$bill_coa_id;
+
+
+-- Add Foreign Key Constraint  
+ALTER TABLE public."taxtype"
+	ADD CONSTRAINT fk$public$taxtype$bill_coa_id
+	FOREIGN KEY (bill_coa_id)
+	REFERENCES public."coa"(coa_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$taxtype$bill_coa_id;
+CREATE INDEX idx_fk$public$taxtype$bill_coa_id ON public."taxtype"(bill_coa_id);	
+
+	
 
 
 -- =============================================

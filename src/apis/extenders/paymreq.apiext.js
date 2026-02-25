@@ -17,9 +17,13 @@ const TABLE = {
 	project: 'public.project',
 	user: 'core.user',
 	auth: 'core.auth',
-	currrate: "public.currrate"
+	currrate: "public.currrate",
+	jurnaltype: "public.jurnaltype"
 
 }
+
+const reqOutstandingProcess = ['ap-bill', 'advance-payment']
+const reqBillProcess = ['ap-payment']
 
 
 
@@ -45,18 +49,21 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	const user_id = req.session.user.userId
 
 	// criteria.user_id = user_id
-	const outstanding = criteria.outstanding
 	const current_jurnal_id = criteria.current_jurnal_id
-	delete criteria.outstanding
 	delete criteria.current_jurnal_id
 
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.isapproved = 'isapproved = ${isapproved}'
 	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	searchMap.struct_id = 'struct_id = ${struct_id}'
-	searchMap.jurnaltype_id = 'paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+	// searchMap.jurnaltype_id = 'paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
 
-	if (outstanding) {
+	const jurnaltype = await sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', criteria.jurnaltype_id)
+
+
+	if (reqOutstandingProcess.includes(jurnaltype.paymreqprocess)) {
+		// AP Bill dan Advance Payment
+		// tampilkan data PR yang belum diproses
 		columns.push('B.*')
 		args.tablename = `
 			paymreq_outstanding A left join paymreq B on B.paymreq_id = A.paymreq_id 
@@ -71,10 +78,21 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 			searchMap.jurnal_id = 'C.jurnal_id is null'
 		}
 
-
 		searchMap.isapproved = 'isapproved = ${isapproved}'
-
 		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+
+
+	} else if (reqBillProcess.includes(jurnaltype.paymreqprocess)) {
+		// AP Payment
+		// tampilkan PR yang sudah dijurnal AP
+		columns.push('B.*')
+		args.tablename = `
+			paymreq_bill A left join paymreq B on B.paymreq_id = A.paymreq_id 
+		`
+		searchMap.isapproved = 'isapproved = ${isapproved}'
+		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+
+
 	}
 
 
@@ -122,65 +140,6 @@ export async function detilDeleted(self, tx, deletedRow, logMetadata) {
 
 export async function detilCreated(self, tx, ret, data, logMetadata, args) {
 	await updateHeaderValue(self, tx, data.paymreq_id)
-}
-
-
-
-async function updateHeaderValue(self, tx, paymreq_id) {
-	sqlUtil.connect(tx)
-
-
-	try {
-		const sqlSum = `select sum(paymreqdetil_value) as value from ${TABLE.paymreqdetil} where paymreq_id=\${paymreq_id}`
-		const rowSum = await tx.one(sqlSum, { paymreq_id: paymreq_id })
-		const value = Number(rowSum.value)
-
-		// ambil data header
-		const sqlHead = `select ppn_id, pph_id from ${TABLE.paymreq} where paymreq_id=\${paymreq_id}`
-		const rowHead = await tx.one(sqlHead, { paymreq_id: paymreq_id })
-		const ppn_id = rowHead.ppn_id
-		const pph_id = rowHead.pph_id
-
-		// cek PPN
-		let ppnPercent = 0
-		if (ppn_id != null) {
-			const sqlPPN = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=\${taxtype_id}`
-			const rowPPN = await tx.one(sqlPPN, { taxtype_id: ppn_id })
-			ppnPercent = rowPPN.taxtype_value
-
-		}
-
-		// cek PPh
-		let pphPercent = 0
-		if (pph_id != null) {
-			const sqlPPh = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=\${taxtype_id}`
-			const rowPPh = await tx.one(sqlPPh, { taxtype_id: pph_id })
-			pphPercent = rowPPh.taxtype_value
-		}
-
-
-		// hitung 
-		const ppnValue = (ppnPercent / 100) * value
-		const pphValue = (pphPercent / 100) * value
-		const bill = value + ppnValue
-		const total = value + ppnValue - pphValue
-
-
-		// update ke header
-		const data = {
-			paymreq_id: paymreq_id,
-			paymreq_value: value,
-			paymreq_ppn: ppnValue,
-			paymreq_pph: pphValue,
-			paymreq_bill: bill,
-			paymreq_total: total
-		}
-		const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
-		await cmd.execute(data)
-
-	} catch (err) {
-		throw err
-	}
 }
 
 
@@ -597,6 +556,65 @@ export async function getPrintData(self, db, body) {
 
 
 		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+
+
+async function updateHeaderValue(self, tx, paymreq_id) {
+	sqlUtil.connect(tx)
+
+
+	try {
+		const sqlSum = `select sum(paymreqdetil_value) as value from ${TABLE.paymreqdetil} where paymreq_id=\${paymreq_id}`
+		const rowSum = await tx.one(sqlSum, { paymreq_id: paymreq_id })
+		const value = Number(rowSum.value)
+
+		// ambil data header
+		const sqlHead = `select ppn_id, pph_id from ${TABLE.paymreq} where paymreq_id=\${paymreq_id}`
+		const rowHead = await tx.one(sqlHead, { paymreq_id: paymreq_id })
+		const ppn_id = rowHead.ppn_id
+		const pph_id = rowHead.pph_id
+
+		// cek PPN
+		let ppnPercent = 0
+		if (ppn_id != null) {
+			const sqlPPN = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=\${taxtype_id}`
+			const rowPPN = await tx.one(sqlPPN, { taxtype_id: ppn_id })
+			ppnPercent = rowPPN.taxtype_value
+
+		}
+
+		// cek PPh
+		let pphPercent = 0
+		if (pph_id != null) {
+			const sqlPPh = `select taxtype_value from ${TABLE.taxtype} where taxtype_id=\${taxtype_id}`
+			const rowPPh = await tx.one(sqlPPh, { taxtype_id: pph_id })
+			pphPercent = rowPPh.taxtype_value
+		}
+
+
+		// hitung 
+		const ppnValue = (ppnPercent / 100) * value
+		const pphValue = (pphPercent / 100) * value
+		const bill = value + ppnValue
+		const total = value + ppnValue - pphValue
+
+
+		// update ke header
+		const data = {
+			paymreq_id: paymreq_id,
+			paymreq_value: value,
+			paymreq_ppn: ppnValue,
+			paymreq_pph: pphValue,
+			paymreq_bill: bill,
+			paymreq_total: total
+		}
+		const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
+		await cmd.execute(data)
+
 	} catch (err) {
 		throw err
 	}

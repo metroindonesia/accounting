@@ -90,6 +90,18 @@
 		grid-column: 3 / span 2;
 		
 	}
+	
+	#paymreqtypeHeaderEdit-obj_hasppn-container {
+		grid-row: 8;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_haspph-container {
+		grid-row: 9;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
 		
 
 

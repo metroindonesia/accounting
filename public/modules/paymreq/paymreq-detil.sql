@@ -117,6 +117,21 @@ comment on column public."paymreqdetil".paymreqdetil_value is '';
 
 
 -- =============================================
+-- FIELD: curr_id smallint
+-- =============================================
+-- ADD curr_id
+alter table public."paymreqdetil" add curr_id smallint  ;
+comment on column public."paymreqdetil".curr_id is '';
+
+-- MODIFY curr_id
+alter table public."paymreqdetil"
+	alter column curr_id type smallint,
+	ALTER COLUMN curr_id DROP DEFAULT,
+	ALTER COLUMN curr_id DROP NOT NULL;
+comment on column public."paymreqdetil".curr_id is '';
+
+
+-- =============================================
 -- FIELD: paymreq_id bigint
 -- =============================================
 -- ADD paymreq_id
@@ -197,12 +212,13 @@ comment on column public."paymreqdetil"._modifydate is 'waktu terakhir record di
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$itemclass_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$struct_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$project_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$site_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$unit_id;
-ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$curr_id;
 
 
 -- Add Foreign Key Constraint  
@@ -259,6 +275,17 @@ ALTER TABLE public."paymreqdetil"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$unit_id;
 CREATE INDEX idx_fk$public$paymreqdetil$unit_id ON public."paymreqdetil"(unit_id);	
+
+
+ALTER TABLE public."paymreqdetil"
+	ADD CONSTRAINT fk$public$paymreqdetil$curr_id
+	FOREIGN KEY (curr_id)
+	REFERENCES public."curr"(curr_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$paymreqdetil$curr_id;
+CREATE INDEX idx_fk$public$paymreqdetil$curr_id ON public."paymreqdetil"(curr_id);	
 
 
 ALTER TABLE public."paymreqdetil"

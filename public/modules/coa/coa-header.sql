@@ -27,6 +27,21 @@ comment on column public."coa".coa_isdisabled is '';
 
 
 -- =============================================
+-- FIELD: iscurradj boolean
+-- =============================================
+-- ADD iscurradj
+alter table public."coa" add iscurradj boolean not null default false;
+comment on column public."coa".iscurradj is '';
+
+-- MODIFY iscurradj
+alter table public."coa"
+	alter column iscurradj type boolean,
+	ALTER COLUMN iscurradj SET DEFAULT false,
+	ALTER COLUMN iscurradj SET NOT NULL;
+comment on column public."coa".iscurradj is '';
+
+
+-- =============================================
 -- FIELD: coa_name text
 -- =============================================
 -- ADD coa_name
@@ -181,6 +196,13 @@ comment on column public."coa"._modifydate is 'waktu terakhir record dimodifikas
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$curr_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coagroup_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coarpt_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$agingtype_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE public."coa"
 	ADD CONSTRAINT fk$public$coa$curr_id
@@ -231,6 +253,11 @@ CREATE INDEX idx_fk$public$coa$agingtype_id ON public."coa"(agingtype_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."coa"
+	drop constraint uq$public$coa$coa_name;
+	
+
 -- Add unique index 
 alter table  public."coa"
 	add constraint uq$public$coa$coa_name unique (coa_name); 

@@ -2,9 +2,40 @@ import Context from './paymreq-context.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 import * as ExtHeader from './paymreq-ext-header.mjs'
 
+
+const _paymreqdetil_id = 'paymreqDetilEdit-obj_paymreqdetil_id'
+const _itemclass_id = 'paymreqDetilEdit-obj_itemclass_id'
+const _paymreqdetil_descr = 'paymreqDetilEdit-obj_paymreqdetil_descr'
+const _struct_id = 'paymreqDetilEdit-obj_struct_id'
+const _project_id = 'paymreqDetilEdit-obj_project_id'
+const _site_id = 'paymreqDetilEdit-obj_site_id'
+const _unit_id = 'paymreqDetilEdit-obj_unit_id'
+const _paymreqdetil_value = 'paymreqDetilEdit-obj_paymreqdetil_value'
+const _curr_id = 'paymreqDetilEdit-obj_curr_id'
+
+
 export function init_detil(self, args) {
 }
 
+export async function paymreqDetilEdit_newData(self, datainit, frm, CurrentState) {
+	const paymreqHeaderEdit = self.Modules.paymreqHeaderEdit
+	const frmHeader = paymreqHeaderEdit.getForm()
+
+	const obj_struct_id = frmHeader.Inputs['paymreqHeaderEdit-obj_struct_id']
+	const obj_project_id = frmHeader.Inputs['paymreqHeaderEdit-obj_project_id']
+	const obj_site_id = frmHeader.Inputs['paymreqHeaderEdit-obj_site_id']
+	const obj_unit_id = frmHeader.Inputs['paymreqHeaderEdit-obj_unit_id']
+	const obj_curr_id = frmHeader.Inputs['paymreqHeaderEdit-obj_curr_id']
+
+
+	datainit.struct_id = { value: obj_struct_id.value, text: obj_struct_id.text }
+	datainit.project_id = { value: obj_project_id.value, text: obj_project_id.text }
+	datainit.site_id = { value: obj_site_id.value, text: obj_site_id.text }
+	datainit.unit_id = { value: obj_unit_id.value, text: obj_unit_id.text }
+	datainit.curr_id = { value: obj_curr_id.value, text: obj_curr_id.text }
+
+
+}
 
 export async function paymreqDetilEdit_dataSaved(self, data, frm) {
 	const paymreq_id = data.paymreq_id

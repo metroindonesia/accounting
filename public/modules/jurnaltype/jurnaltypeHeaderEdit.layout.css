@@ -127,6 +127,12 @@
 		
 	}
 	
+	#jurnaltypeHeaderEdit-obj_isheadallowselectcurr-container {
+		grid-row: 12;
+		grid-column: 5 / span 2;
+		
+	}
+	
 	#jurnaltypeHeaderEdit-obj_isheadhaspartner-container {
 		grid-row: 14;
 		grid-column: 1 / span 2;
