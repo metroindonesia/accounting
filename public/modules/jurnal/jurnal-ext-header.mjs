@@ -1,6 +1,7 @@
 import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import { printDocument } from './jurnal-print.mjs'
 
 
 const _jurnal_id = 'jurnalHeaderEdit-obj_jurnal_id'
@@ -85,6 +86,24 @@ export async function init_header(self, args) {
 
 	selectedPeriode.periode_start = Context.setting.currentPeriode.periode_start
 	selectedPeriode.periode_end = Context.setting.currentPeriode.periode_end
+
+
+	// untuk keperluan printing
+	{
+		const origintalTitle = document.title
+		const printContainer = document.getElementById('print-media-container')
+		window.addEventListener('beforeprint', (event) => {
+			printContainer.classList.remove('hidden')
+		});
+
+		window.addEventListener('afterprint', (event) => {
+			document.title = origintalTitle
+			printContainer.classList.add('hidden')
+		})
+	}
+
+
+
 }
 
 export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
@@ -122,6 +141,8 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 		balance_idr
 	} = frm.getOriginalData()
 
+
+	selectedJurnaltype = jurnaltype
 
 	jurnaltype_changed(self, jurnaltype, frm)
 	paymtype_changed(self, paymtype, frm)
@@ -663,11 +684,14 @@ async function btn_actionPrint_click(self, frm, CurrentState, evt) {
 	const jurnal_doc = frm.Inputs[_jurnal_doc].value
 	const iscommit = frm.Inputs[_iscommit].value
 
+	console.log(selectedJurnaltype)
+
+	const { jurnaltype_printout } = selectedJurnaltype
 	if (iscommit) {
-		// await printDocument(self, printArea, paymreq_id)
+		await printDocument(self, printArea, jurnal_id, jurnaltype_printout)
 		window.print();
 	} else {
-		printArea.innerHTML = `document ${jurnal_id} belum di-commit`
+		printArea.innerHTML = `document ${jurnal_doc} belum di-commit`
 	}
 }
 
