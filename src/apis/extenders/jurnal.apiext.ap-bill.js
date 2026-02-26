@@ -9,6 +9,9 @@ const TABLE = {
 	taxtype: "public.taxtype"
 }
 
+
+
+
 export async function processApBill(self, tx, doc_id, jurnalHeader) {
 	const { jurnal_id, paymreq_id } = jurnalHeader
 	const req = self.req
@@ -80,7 +83,8 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 		}
 
 
-		// masukkan PPN
+		// masukkan data ke paymreq_bill
+		console.log(jurnalHeader)
 
 
 	} catch (err) {
