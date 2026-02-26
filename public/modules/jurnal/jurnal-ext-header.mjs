@@ -104,7 +104,16 @@ export async function init_header(self, args) {
 	}
 
 
-
+	// tambahkan legend di bawah table list header
+	{
+		const target = document.getElementById('jurnalHeaderList-foot')
+		const tpl = document.getElementById('tpl-jurnal-status-legend')
+		if (tpl != null) {
+			const clone = tpl.content.cloneNode(true); // salin isi template
+			const divLegend = clone.querySelector('div')
+			target.appendChild(divLegend);
+		}
+	}
 }
 
 export function headerList_initSearchParams(self, SearchParams) {
@@ -155,6 +164,18 @@ export function headerList_addTableEvents(self, tbl) {
 			}
 		}
 
+
+		let unbalance = isUnbalance(data.balance_value, data.balance_idr)
+		if (unbalance) {
+			tr.setAttribute('data-isunbalance', true)
+		} else {
+			tr.removeAttribute('data-isunbalance')
+		}
+
+
+
+
+
 	})
 }
 
@@ -167,7 +188,7 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 		jurnaltype, paymtype, periode, iscommit, ispost,
 		_commitby, _commitdate, _postby, _postdate,
 		isallowposting, isallowunposting,
-		balance_idr
+		balance_value, balance_idr
 	} = frm.getOriginalData()
 
 
@@ -188,7 +209,7 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 	CurrentState.Actions.post.suspend(periode_isclosed || !iscommit || ispost || !isallowposting)
 	CurrentState.Actions.unpost.suspend(periode_isclosed || !ispost || !isallowunposting)
 
-	updateDetilInfo_balance(self, balance_idr)
+	updateDetilInfo_balance(self, balance_value, balance_idr)
 
 }
 
@@ -204,9 +225,14 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 
 	jurnaltype_changed(self, {}, frm)
 	paymtype_changed(self, {}, frm)
-	updateDetilInfo_balance(self, 0)
+	updateDetilInfo_balance(self, 0, 0)
 
-
+	const CurrentState = self.Modules.jurnalHeaderEdit.getCurrentState()
+	CurrentState.Actions.print.suspend(true)
+	CurrentState.Actions.commit.suspend(false)
+	CurrentState.Actions.uncommit.suspend(true)
+	CurrentState.Actions.post.suspend(true)
+	CurrentState.Actions.unpost.suspend(true)
 
 }
 
@@ -254,7 +280,7 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 export async function jurnalHeaderEdit_dataSaved(self, data, frm) {
 	disableJurnaltype(frm, true)  // user tidak bisa memilih jurnaltype untuk data yang sudah disimpan
 	disablePaymreq(frm, true)
-	updateDetilInfo_balance(self, data.balance_idr)
+	updateDetilInfo_balance(self, data.balance_value, data.balance_idr)
 }
 
 export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) {
@@ -442,6 +468,7 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 	const { curr_id } = evt.detail.data
 	frm.Inputs[_coacurr].value = curr_id
 
+
 	if (curr_id != null) {
 		if (frm.Inputs[_curr_id].value != curr_id) {
 			frm.Inputs[_curr_id].clear()
@@ -485,7 +512,7 @@ export async function obj_curr_rate_changed(self, obj_curr_rate, frm, evt) {
 	recalculateCurrency(self, frm)
 }
 
-export function updateDetilInfo_balance(self, balance_idr) {
+export function updateDetilInfo_balance(self, balance_value, balance_idr) {
 	const el_tabdetil = document.getElementById('jurnalHeaderEdit-info-detil-row')
 	const el_datainfo = el_tabdetil.querySelector('div[data-info]')
 	el_datainfo.innerHTML = pageHelper.formatDecimal(balance_idr)
@@ -496,6 +523,10 @@ export function updateDetilInfo_balance(self, balance_idr) {
 	} else {
 		el_datainfo.classList.remove('unbalance-text')
 	}
+}
+
+export function updateList_balance(self, balance_value, balance_idr) {
+	self.Modules.jurnalHeaderList.updateCurrentRow(self, { balance_value, balance_idr })
 }
 
 
@@ -917,7 +948,7 @@ function paymtype_changed(self, paymtype, frm) {
 
 	// set mandatory field yang terpengaruh saat perubahan tipe payment
 	frm.Inputs[_partnerbank_id].markAsRequired(paymtype.ishaspartnerbankselector)
-	frm.Inputs[_payment_bgno].markAsRequired(paymtype.ishasgiro)
+	// frm.Inputs[_payment_bgno].markAsRequired(paymtype.ishasgiro)
 	frm.Inputs[_partnerbank_account].markAsRequired(paymtype.ishasbankaccount)
 	frm.Inputs[_partnerbank_accountname].markAsRequired(paymtype.ishasbankaccountname)
 	frm.Inputs[_partnerbank_bankname].markAsRequired(paymtype.ishasbankname)
@@ -959,4 +990,20 @@ function recalculateCurrency(self, frm) {
 	const idr = value * rate
 
 	frm.Inputs[_jurnal_idr].value = idr
+}
+
+function isUnbalance(balance_value, balance_idr) {
+	if (balance_value !== undefined) {
+		if (balance_value != 0) {
+			return true
+		}
+	}
+
+	if (balance_idr !== undefined) {
+		if (balance_idr != 0) {
+			return true
+		}
+	}
+
+	return false
 }

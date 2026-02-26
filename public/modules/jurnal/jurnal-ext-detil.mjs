@@ -1,3 +1,4 @@
+import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 import outstandingDialog from './jurnal-outstandingdialog.mjs'
@@ -114,8 +115,29 @@ export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {
 }
 
 export async function jurnalDetilList_tableDataLoaded(self, tbl, result) {
-	updateBalance(self, result.balance_idr, result.balance_value)
+	updateBalance(self, result.balance_value, result.balance_idr)
 }
+
+export function jurnalDetilList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', (evt) => {
+		const tr = evt.detail.tr
+		const data = evt.detail.args.data
+
+
+		if (data.jurnaldetil_idr !== undefined) {
+			const jurnaldetil_idr = data.jurnaldetil_idr
+			const tdCoa = tr.querySelector('[data-name="coa_name"]')
+			if (jurnaldetil_idr >= 0) {
+				tdCoa.classList.remove('jurnaldetillist-kredit')
+			} else {
+				tdCoa.classList.add('jurnaldetillist-kredit')
+			}
+		}
+
+
+	})
+}
+
 
 export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState) {
 	const jurnaltype = self.currentJurnaltype
@@ -214,14 +236,14 @@ export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {
 }
 
 export async function jurnalDetilEdit_dataSaved(self, data, frm) {
-	updateBalance(self, data.balance_idr, data.balance_value)
+	updateBalance(self, data.balance_value, data.balance_idr)
 	if (data.updateTotal === true) {
 		updateTotal(self, data.total_idr, data.total_value)
 	}
 }
 
 export async function jurnalDetilEdit_dataDeleted(self, data) {
-	updateBalance(self, data.balance_idr, data.balance_value)
+	updateBalance(self, data.balance_value, data.balance_idr)
 	if (data.updateTotal === true) {
 		updateTotal(self, data.total_idr, data.total_value)
 	}
@@ -247,7 +269,7 @@ export function jurnalDetilEdit_formUnlocked(self, frm) {
 
 
 export async function jurnalDetilList_rowsDeleted(self, data) {
-	updateBalance(self, data.balance_idr, data.balance_value)
+	updateBalance(self, data.balance_value, data.balance_idr)
 	if (data.updateTotal === true) {
 		updateTotal(self, data.total_idr, data.total_value)
 	}
@@ -278,7 +300,12 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 	frm.Inputs[_iscurradj].value = iscurradj
 
 	const obj_curr_id = frm.Inputs[_curr_id]
-	if (curr_id != null) {
+	if (iscurradj) {
+		frm.Inputs[_curr_id].clear()
+		frm.Inputs[_curr_id].setSelected(Context.setting.defaultCurr.id, Context.setting.defaultCurr.name)
+		frm.Inputs[_curr_rate].value = 1
+		frm.Inputs[_jurnaldetil_descr].value = 'selisih kurs'
+	} else if (curr_id != null) {
 		if (obj_curr_id.value != curr_id) {
 			frm.Inputs[_curr_id].clear()
 			frm.Inputs[_curr_id].setSelected(null, '')
@@ -473,24 +500,27 @@ function suspendReferencedEditor(self, frm, suspended = true) {
 
 }
 
-function updateBalance(self, balance_idr, balance_value) {
+function updateBalance(self, balance_value, balance_idr) {
 	// update di list
+	const el_list_balance_value = document.getElementById('jurnalDetilList-balance_value')
 	const el_list_balance_idr = document.getElementById('jurnalDetilList-balance_idr')
+	el_list_balance_value.innerHTML = pageHelper.formatDecimal(balance_value)
 	el_list_balance_idr.innerHTML = pageHelper.formatDecimal(balance_idr)
 
 	// update di form header
 	const extenderHeader = self.Modules.extenderHeader
-	extenderHeader.updateDetilInfo_balance(self, balance_idr)
+	extenderHeader.updateDetilInfo_balance(self, balance_value, balance_idr)
+	extenderHeader.updateList_balance(self, balance_value, balance_idr)
 
-
-	console.log('UPDATE TOTALLLL')
 	// update di current form detil
 	const balContainer = document.getElementById('formdetil-current-balance')
-	const elBalValue = document.getElementById('jurnalDetilEdit-balance_idr')
-	elBalValue.innerHTML = pageHelper.formatDecimal(balance_idr)
+	const elBalValue = document.getElementById('jurnalDetilEdit-balance_value')
+	const elBalIdr = document.getElementById('jurnalDetilEdit-balance_idr')
+	elBalValue.innerHTML = pageHelper.formatDecimal(balance_value)
+	elBalIdr.innerHTML = pageHelper.formatDecimal(balance_idr)
 
 
-	if (balance_idr == 0) {
+	if (balance_idr == 0 && balance_value == 0) {
 		balContainer.removeAttribute('unbalance')
 		el_list_balance_idr.classList.remove('unbalance-text')
 	} else {

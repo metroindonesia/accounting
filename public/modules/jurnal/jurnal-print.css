@@ -223,10 +223,15 @@
 
 
 
-	.jurnal-account-container {
-		display: flex;
-		column-gap: 1mm;
-		flex-wrap: wrap;
+
+	#doc-table-body td[name="account"] {
+		border-left: 1px dashed #aaa;
+	}
+
+	#doc-table-body td[name="value"],
+	#doc-table-body td[name="curr"],
+	#doc-table-body td[name="idr"] {
+		background-color: #e3e3e3;
 	}
 
 	#jurnal-payment-box {
@@ -252,5 +257,23 @@
 	#jurnal-payment-info {
 		display: flex;
 		flex-direction: column;
+	}
+
+
+	.jurnal-subaccount-container {
+		display: flex;
+		column-gap: 1mm;
+		flex-wrap: wrap;
+		margin-bottom: 1mm;
+	}
+
+	.prn-row-account-kredit {
+		padding-left: 5mm;
+		/* border-left: 1px solid #ccc */
+	}
+
+	.prn-row-account-debet {
+		padding-left: 1mm;
+		/* border-left: 1px solid #ccc */
 	}
 }

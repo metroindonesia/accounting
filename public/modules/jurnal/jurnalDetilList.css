@@ -1,5 +1,7 @@
 #jurnalDetilList-tbl [data-name="coa_name"] {
 	width: 250px;
+	border-left: 1px dotted #aaa;
+
 }
 
 #jurnalDetilList-tbl [data-name="jurnaldetil_value"] {
@@ -12,4 +14,13 @@
 
 #jurnalDetilList-tbl [data-name="jurnaldetil_idr"] {
 	width: 120px;
+	border-left: 1px dotted #aaa;
+}
+
+#jurnalDetilList-tbl tfoot tr {
+	background-color: #ccc;
+}
+
+.jurnaldetillist-kredit {
+	padding-left: 30px !important;
 }

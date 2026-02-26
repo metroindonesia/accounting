@@ -2,11 +2,11 @@
 
 
 :root {
-	--color-editmode-bg: rgb(188, 213, 242);
+	--color-editmode-bg: #95bdfa;
 }
 
 body {
-	background-color: #ebebeb !important;
+	background-color: #eff0ff !important;
 }
 
 .fgta5-gridview th {
@@ -27,4 +27,21 @@ body {
 .panel-detil [panel-content] {
 	background-color: #eeeeee;
 	border: 1px solid #ccc;
+}
+
+.panel-action button {
+	padding: 5px 15px 5px 15px;
+	border-radius: 3px;
+	border: 1px solid #9a9cc7;
+
+}
+
+.panel-action button:disabled {
+	border: 1px solid #dedff6;
+}
+
+
+.panel-action button:hover:not(:disabled) {
+	background-color: #8e90b6;
+	cursor: pointer;
 }

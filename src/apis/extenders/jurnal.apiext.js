@@ -4,6 +4,8 @@ import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
 import { processApBill } from './jurnal.apiext.ap-bill.js'
 import { processApPayment } from './jurnal.apiext.ap-payment.js'
 import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
+import { reopen } from './periode.apiext.js'
+import { GEO_REPLY_WITH } from 'redis'
 
 
 const TABLE = {
@@ -98,6 +100,21 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.ispost = 'ispost = ${ispost}'
 	searchMap.jurnaltype_id = 'jurnaltype_id = ${jurnaltype_id}'
+
+	sort = `
+		case when jurnaldetil_value>=0 then 0 else 1 end,
+		case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
+		case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+
+}
+
+export async function headerListRow(self, row, args) {
+	const db = args.db
+	const jurnal_id = row.jurnal_id
+
+	const balance = await getBalance(self, db, jurnal_id)
+	row.balance_idr = balance.balance_idr
+	row.balance_value = balance.balance_value
 
 }
 
@@ -270,6 +287,12 @@ export async function getPrintData(self, db, body) {
 				rowDetil.jurnaldetil_value = sqlUtil.formatDecimal(row.jurnaldetil_value, 0)
 			}
 
+			if (row.jurnaldetil_idr >= 0) {
+				rowDetil.prn_row_account_class = 'prn-row-account-debet'
+			} else {
+				rowDetil.prn_row_account_class = 'prn-row-account-kredit'
+			}
+
 			data.items.push(rowDetil)
 		}
 
@@ -334,15 +357,9 @@ export async function detilList(self, listData, args) {
 	const { db, criteria } = args
 	const { jurnal_id } = criteria
 
-	const sqlBalance = `
-		select 
-		sum(jurnaldetil_idr) as balance_idr ,
-		sum(jurnaldetil_value) as balance_value
-		from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id}`
-	const row = await db.one(sqlBalance, { jurnal_id })
-
-	listData.balance_idr = row.balance_idr
-	listData.balance_value = row.balance_value
+	const balance = await getBalance(self, db, jurnal_id)
+	listData.balance_idr = balance.balance_idr
+	listData.balance_value = balance.balance_value
 }
 
 export async function detilCreating(self, tx, data, seqdata, args) {
@@ -819,11 +836,11 @@ async function processPaymreq(self, tx, doc_id, jurnalHeader) {
 
 async function calculateTotal(self, db, ret) {
 	const jurnal_id = ret.jurnal_id
-	const sql = `select sum(jurnaldetil_value) as balance_value, sum(jurnaldetil_idr) as balance_idr from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id}`
-	const row = await db.oneOrNone(sql, { jurnal_id })
-	if (row != null) {
-		ret.balance_value = row.balance_value
-		ret.balance_idr = row.balance_idr
+
+	const balance = await getBalance(self, db, jurnal_id)
+	if (balance != null) {
+		ret.balance_value = balance.balance_value
+		ret.balance_idr = balance.balance_idr
 	} else {
 		ret.balance_value = 0
 		ret.balance_idr = 0
