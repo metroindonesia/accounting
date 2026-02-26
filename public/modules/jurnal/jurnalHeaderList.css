@@ -19,3 +19,11 @@
 	border-left: 1px dotted #aaa;
 	border-right: 1px dotted #aaa;
 }
+
+#jurnalHeaderList-tbl tr[data-iscommit="true"] {
+	background-color: #bfdfff;
+}
+
+#jurnalHeaderList-tbl tr[data-isposted="true"] {
+	background-color: #cfcfcf;
+}

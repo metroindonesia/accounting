@@ -16,71 +16,73 @@
 
 
 	<% if (fgta5jsDebugMode) { %>
-		<!-- DEBUG MODE -->
+		<!-- DEBUG MODE <%=libDebug%>-->
 		<%- include(libDebug) %>
-			<% } else { %>
-				<!-- PRODUCTION -->
-				<%- include(libProduction) %>
-					<% } %>
+	<% } else { %>
+		<!-- PRODUCTION <%=libProduction%>-->
+		<%- include(libProduction) %>
+	<% } %>
 
-						<!-- WebModule library-->
-						<script src="public/libs/webmodule/module.js"></script>
-						<link rel="stylesheet" href="public/libs/webmodule/module.css" />
 
-						<!-- Container CSS -->
-						<link rel="stylesheet" href="public/modules/container/container.css" />
+	<!-- WebModule library-->
+	<script src="public/libs/webmodule/module.js"></script>
+	<link rel="stylesheet" href="public/libs/webmodule/module.css" />
 
-						<style>
-							#loadingindicator {
-								position: fixed;
-								top: 0;
-								left: 0;
-								right: 0;
-								bottom: 0;
-								display: flex;
-								justify-content: center;
-								align-items: center;
-								background-color: #fff;
-								transition: opacity 0.5s ease, visibility 0.5s ease;
-							}
-						</style>
+	<!-- Container CSS -->
+	<link rel="stylesheet" href="public/modules/container/container.css" />
+	<link rel="stylesheet" href="public/headcolor.css" />
 
-						<style>
-							@import url("public/fonts/karla.css");
+	<style>
+		#loadingindicator {
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			background-color: #fff;
+			transition: opacity 0.5s ease, visibility 0.5s ease;
+		}
+	</style>
 
-							* {
-								font-family: "Karla";
-							}
+	<style>
+		@import url("public/fonts/karla.css");
 
-							input {
-								user-select: text;
-							}
+		* {
+			font-family: "Karla";
+		}
 
-							dialog {
-								outline: none;
-							}
+		input {
+			user-select: text;
+		}
 
-							body {
-								background-color: white;
-								overscroll-behavior-y: contain;
-								user-select: none;
-								padding: 0px;
-								margin: 0px;
-								overscroll-behavior: contain;
-								font-size: 14px;
-							}
+		dialog {
+			outline: none;
+		}
 
-							/* khusus mobile */
-							@media screen and (max-width: 500px) {
+		body {
+			background-color: white;
+			overscroll-behavior-y: contain;
+			user-select: none;
+			padding: 0px;
+			margin: 0px;
+			overscroll-behavior: contain;
+			font-size: 14px;
+		}
 
-								html,
-								body,
-								input,
-								button {
-									font-size: 20px;
-								}
-							}
-						</style>
+		/* khusus mobile */
+		@media screen and (max-width: 500px) {
+
+			html,
+			body,
+			input,
+			button {
+				font-size: 20px;
+			}
+		}
+	</style>
 
 </head>
 

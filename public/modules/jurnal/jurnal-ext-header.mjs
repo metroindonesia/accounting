@@ -146,7 +146,15 @@ export function headerList_addTableEvents(self, tbl) {
 			tr.removeAttribute('data-isposted')
 		}
 
-		console.log(evt)
+		const data = evt.detail.args.data
+		if (data.iscommit !== undefined) {
+			if (data.iscommit === true) {
+				tr.setAttribute('data-iscommit', true)
+			} else {
+				tr.removeAttribute('data-iscommit')
+			}
+		}
+
 	})
 }
 

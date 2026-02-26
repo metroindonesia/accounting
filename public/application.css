@@ -1,0 +1,30 @@
+@import url('./headcolor.css');
+
+
+:root {
+	--color-editmode-bg: rgb(188, 213, 242);
+}
+
+body {
+	background-color: #ebebeb !important;
+}
+
+.fgta5-gridview th {
+	background-color: #2c2f60;
+	color: #fff;
+}
+
+.fgta5-gridview tbody tr {
+	background-color: #fff;
+}
+
+.fgta5-gridview tbody tr[data-currentrow] {
+	background-color: rgb(69 103 255) !important;
+	color: #fff;
+	filter: brightness(90%);
+}
+
+.panel-detil [panel-content] {
+	background-color: #eeeeee;
+	border: 1px solid #ccc;
+}
