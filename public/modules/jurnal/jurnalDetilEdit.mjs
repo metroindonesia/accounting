@@ -498,7 +498,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.curr_id, row.curr_code, row)
+					evt.detail.addRow(row.curr_id, row.curr_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)

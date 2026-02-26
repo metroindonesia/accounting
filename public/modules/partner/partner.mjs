@@ -27,6 +27,21 @@ export default class extends Module {
 		const self = this
 		Context.program = self
 
+		// ambil metadata variance dan id
+		const variance = document.querySelector('meta[name="variance"]').getAttribute('content');
+		const id = document.querySelector('meta[name="id"]').getAttribute('content');
+		Context.variance = variance
+		Context.id = id
+
+
+		// configureModule
+		// gunakan untuk setup context atau args
+		const fn_configureModule_name = 'configureModule'
+		const fn_configureModule = Extender[fn_configureModule_name]
+		if (typeof fn_configureModule === 'function') {
+			fn_configureModule(self, args)
+		}
+
 		// module-module yang di load perlu di pack dulu ke dalam variable
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
@@ -196,10 +211,17 @@ function openDetilSection(self, sectionTargetName, sectionCurrentName) {
 	const sectionId = Context.Sections[sectionTargetName]
 	const section = Crsl.Items[sectionId]
 
+	const moduleHeaderEdit = self.Modules[sectionCurrentName]
+	const frm = moduleHeaderEdit.getForm()
+
+	if (frm.isChanged()) {
+		$fgta5.MessageBox.warning(`simpan data dulu sebelum ke <b>${section.Title}</b>`)
+		return
+	}
+
 	section.setSectionReturn(sectionCurrent)
 	section.show({}, ()=>{
 		const moduleTarget = self.Modules[sectionTargetName]
-		const moduleHeaderEdit = self.Modules[sectionCurrentName]
 		moduleTarget.openList(self, {
 			moduleHeaderEdit
 		})

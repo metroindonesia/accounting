@@ -678,10 +678,10 @@ async function jurnal_detilList(self, body) {
 				const { project_name } = await sqlUtil.lookupdb(db, 'public.project', 'project_id', row.project_id)
 				row.project_name = project_name
 			}
-			// lookup: curr_code dari field curr_code pada table public.curr dimana (public.curr.curr_id = public.jurnal.curr_id)
+			// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.jurnal.curr_id)
 			{
-				const { curr_code } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
-				row.curr_code = curr_code
+				const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', row.curr_id)
+				row.curr_name = curr_name
 			}
 			// lookup: periode_name dari field periode_name pada table public.periode dimana (public.periode.periode_id = public.jurnal.periode_id)
 			{
@@ -776,10 +776,10 @@ async function jurnal_detilOpen(self, body) {
 			const { project_name } = await sqlUtil.lookupdb(db, 'public.project', 'project_id', data.project_id)
 			data.project_name = project_name
 		}
-		// lookup: curr_code dari field curr_code pada table public.curr dimana (public.curr.curr_id = public.jurnal.curr_id)
+		// lookup: curr_name dari field curr_name pada table public.curr dimana (public.curr.curr_id = public.jurnal.curr_id)
 		{
-			const { curr_code } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
-			data.curr_code = curr_code
+			const { curr_name } = await sqlUtil.lookupdb(db, 'public.curr', 'curr_id', data.curr_id)
+			data.curr_name = curr_name
 		}
 		// lookup: periode_name dari field periode_name pada table public.periode dimana (public.periode.periode_id = public.jurnal.periode_id)
 		{

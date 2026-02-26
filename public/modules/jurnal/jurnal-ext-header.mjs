@@ -2,6 +2,7 @@ import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 import { printDocument } from './jurnal-print.mjs'
+import { setupSearchPeriode, setupSearchJurnaltype } from './jurnal-ext-search.mjs'
 
 
 const _jurnal_id = 'jurnalHeaderEdit-obj_jurnal_id'
@@ -106,6 +107,11 @@ export async function init_header(self, args) {
 
 }
 
+export function headerList_initSearchParams(self, SearchParams) {
+	setupSearchPeriode(self, SearchParams['periode_id'])
+	setupSearchJurnaltype(self, SearchParams['jurnaltype_id'])
+}
+
 export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 	CurrentState.Actions.commit.addEventListener('click', (evt) => { btn_actionCommit_click(self, frm, CurrentState, evt) })
 	CurrentState.Actions.uncommit.addEventListener('click', (evt) => { btn_actionUncommit_click(self, frm, CurrentState, evt) })
@@ -127,6 +133,21 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 	} else {
 	}
 
+}
+
+export function headerList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', (evt) => {
+		const tr = evt.detail.tr
+		const tdPost = tr.querySelector('[data-name="ispost"]')
+		const postDataValue = tdPost.getAttribute('data-value')
+		if (postDataValue == 'true') {
+			tr.setAttribute('data-isposted', true)
+		} else {
+			tr.removeAttribute('data-isposted')
+		}
+
+		console.log(evt)
+	})
 }
 
 export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {

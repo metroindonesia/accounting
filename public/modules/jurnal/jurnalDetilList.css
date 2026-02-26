@@ -1,0 +1,15 @@
+#jurnalDetilList-tbl [data-name="coa_name"] {
+	width: 250px;
+}
+
+#jurnalDetilList-tbl [data-name="jurnaldetil_value"] {
+	width: 100px;
+}
+
+#jurnalDetilList-tbl [data-name="curr_name"] {
+	width: 60px;
+}
+
+#jurnalDetilList-tbl [data-name="jurnaldetil_idr"] {
+	width: 120px;
+}

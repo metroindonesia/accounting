@@ -18,12 +18,7 @@ export async function printDocument(self, printArea, jurnal_id, jurnaltype_print
 		const response = await fetch(fileUrl);
 		printArea.innerHTML = await response.text()
 
-		console.log(printArea.innerHTML)
 
-		// set logo
-		const docLogo = document.getElementById('doc-logo')
-		const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
-		docLogo.style.backgroundImage = `url(${logoUrl})`
 
 
 		const doc = {
@@ -32,16 +27,28 @@ export async function printDocument(self, printArea, jurnal_id, jurnaltype_print
 			items: []
 		}
 
-		// mask.setText('preparing document...')
-		// const url = 'paymreq/execute'
-		// const data = await Module.apiCall(url, {
-		// 	fnName: 'getPrintData',
-		// 	paymreq_id: paymreq_id,
-		// })
-
+		mask.setText('preparing document...')
+		const url = 'jurnal/execute'
+		const data = await Module.apiCall(url, {
+			fnName: 'getPrintData',
+			jurnal_id: jurnal_id
+		})
 
 		document.title = doc.headertext
-		// await renderData(data, printArea)
+		Object.assign(doc, data)
+
+
+		// set document title
+		const docTitle = document.getElementById('doc-title')
+		docTitle.innerHTML = doc.title
+
+		// set document logo
+		const docLogo = document.getElementById('doc-logo')
+		const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
+		docLogo.style.backgroundImage = `url(${logoUrl})`
+
+
+		await renderData(doc, printArea)
 	} catch (err) {
 		console.error(err)
 		$fgta5.error(err.message)
@@ -53,6 +60,41 @@ export async function printDocument(self, printArea, jurnal_id, jurnaltype_print
 
 
 async function renderData(doc) {
+	let docHeaderHtml
+	let docFooterHtml
 
+	// render data header
+	const docHeader = document.getElementById('doc-header')
+	const docFooter = document.getElementById('doc-footer')
+	docHeaderHtml = docHeader.innerHTML
+	docFooterHtml = docFooter.innerHTML
+	for (const key in doc) {
+		const varPlaceholder = new RegExp(`{{\\s*${key}\\s*}}`, 'g');  // Buat placeholder yang dicari: {{key}}
+		let value = doc[key]
+		docHeaderHtml = docHeaderHtml.replace(varPlaceholder, value);
+		docFooterHtml = docFooterHtml.replace(varPlaceholder, value);
+	}
+	docHeader.innerHTML = docHeaderHtml
+	docFooter.innerHTML = docFooterHtml
+
+	// render data detil
+	let renderedHtml
+	const docTableBody = document.getElementById('doc-table-body')
+	const rowTemplate = docTableBody.innerHTML
+	docTableBody.innerHTML = '' // kosongkan dulu body sebelum di render
+	for (const row of doc.items) {
+		if (row.jurnaldetil_ishead && doc.jurnaltype_printout == 'jurnal-print-payment.html') {
+			continue
+		}
+
+		renderedHtml = rowTemplate
+		console.log(row)
+		for (const key in row) {
+			const varPlaceholder = new RegExp(`{{\\s*${key}\\s*}}`, 'g');  // Buat placeholder yang dicari: {{key}}
+			let value = row[key]
+			renderedHtml = renderedHtml.replace(varPlaceholder, value);
+		}
+		docTableBody.insertAdjacentHTML('beforeend', renderedHtml);
+	}
 
 }

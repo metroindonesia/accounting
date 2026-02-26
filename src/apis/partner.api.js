@@ -28,13 +28,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await partner_init(this, body) }
 
+	// extender call
+	async execute(body) { return await partner_execute(this, body) }
+
 	// header
 	async headerList(body) { return await partner_headerList(this, body) }
 	async headerOpen(body) { return await partner_headerOpen(this, body) }
 	async headerUpdate(body) { return await partner_headerUpdate(this, body)}
 	async headerCreate(body) { return await partner_headerCreate(this, body)}
 	async headerDelete(body) { return await partner_headerDelete(this, body) }
-	
+
 	
 	// bank	
 	async bankList(body) { return await partner_bankList(this, body) }
@@ -98,6 +101,24 @@ async function partner_init(self, body) {
 }
 
 
+// execute extender function
+async function partner_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, partner_log) {}
+		return await Extender[fnName](self, db, body, partner_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function partner_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -113,6 +134,8 @@ async function partner_log(self, body, startTime, tablename, id, action, data={}
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -138,7 +161,7 @@ async function partner_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -148,7 +171,16 @@ async function partner_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -265,7 +297,7 @@ async function partner_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'PATR' }
+			const args = { section: 'header', doc_id:'PATR' }
 
 			
 			// buat short sequencer	
@@ -393,6 +425,9 @@ async function partner_headerDelete(self, body) {
 				const sql = `select * from ${bankTableName} where partner_id=\${partner_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowbank of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.bankDeleting === 'function') {
 						// export async function bankDeleting(self, tx, rowbank, logMetadata) {}
@@ -421,6 +456,9 @@ async function partner_headerDelete(self, body) {
 				const sql = `select * from ${contactTableName} where partner_id=\${partner_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowcontact of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.contactDeleting === 'function') {
 						// export async function contactDeleting(self, tx, rowcontact, logMetadata) {}
@@ -498,7 +536,7 @@ async function partner_bankList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.bankListCriteria === 'function') {
@@ -508,7 +546,15 @@ async function partner_bankList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -534,13 +580,20 @@ async function partner_bankList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -730,6 +783,7 @@ async function partner_bankDelete(self, body) {
 			const sql = `select * from ${bankTableName} where partnerbank_id=\${partnerbank_id}`
 			const rowbank = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.bankDeleting === 'function') {
@@ -769,6 +823,8 @@ async function partner_bankDeleteRows(self, body) {
 
 
 	try {
+
+		let partner_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -776,7 +832,11 @@ async function partner_bankDeleteRows(self, body) {
 				const dataToRemove = {partnerbank_id: id}
 				const sql = `select * from ${bankTableName} where partnerbank_id=\${partnerbank_id}`
 				const rowbank = await tx.oneOrNone(sql, dataToRemove)
+				partner_id = rowbank.partner_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.bankDeleting === 'function') {
 					// async function bankDeleting(self, tx, rowbank, logMetadata) {}
@@ -797,11 +857,22 @@ async function partner_bankDeleteRows(self, body) {
 				partner_log(self, body, startTime, headerTableName, rowbank.partner_id, 'DELETE ROW BANK', {partnerbank_id: rowbank.partnerbank_id, tablename: bankTableName}, `removed: ${rowbank.partnerbank_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			partner_id: partner_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'bankRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function bankRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -833,7 +904,7 @@ async function partner_contactList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.contactListCriteria === 'function') {
@@ -843,7 +914,15 @@ async function partner_contactList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -869,13 +948,20 @@ async function partner_contactList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -1065,6 +1151,7 @@ async function partner_contactDelete(self, body) {
 			const sql = `select * from ${contactTableName} where partnercontact_id=\${partnercontact_id}`
 			const rowcontact = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.contactDeleting === 'function') {
@@ -1104,6 +1191,8 @@ async function partner_contactDeleteRows(self, body) {
 
 
 	try {
+
+		let partner_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1111,7 +1200,11 @@ async function partner_contactDeleteRows(self, body) {
 				const dataToRemove = {partnercontact_id: id}
 				const sql = `select * from ${contactTableName} where partnercontact_id=\${partnercontact_id}`
 				const rowcontact = await tx.oneOrNone(sql, dataToRemove)
+				partner_id = rowcontact.partner_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.contactDeleting === 'function') {
 					// async function contactDeleting(self, tx, rowcontact, logMetadata) {}
@@ -1132,11 +1225,22 @@ async function partner_contactDeleteRows(self, body) {
 				partner_log(self, body, startTime, headerTableName, rowcontact.partner_id, 'DELETE ROW CONTACT', {partnercontact_id: rowcontact.partnercontact_id, tablename: contactTableName}, `removed: ${rowcontact.partnercontact_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			partner_id: partner_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'contactRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function contactRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

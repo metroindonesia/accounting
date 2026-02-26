@@ -542,11 +542,6 @@ comment on column public."jurnaldetil"._modifydate is 'waktu terakhir record dim
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$coa_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$partner_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$struct_id;
@@ -557,6 +552,11 @@ ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$curr_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaltype_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaldetil_id_ref;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$agingtype_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 
 
 -- Add Foreign Key Constraint  

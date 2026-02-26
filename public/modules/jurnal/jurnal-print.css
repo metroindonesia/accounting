@@ -66,6 +66,12 @@
 		border: 1px solid var(--borderColor);
 		margin-top: 5mm;
 		width: var(--efectiveWidth);
+		min-height: 120mm;
+	}
+
+
+	.prndocsection {
+		padding: 0 3mm 0 3mm;
 	}
 
 	#doc-header {
@@ -101,12 +107,12 @@
 	}
 
 
-	#doc-table {
+	.prntbllist {
 		box-sizing: border-box;
 		width: 100%;
 	}
 
-	#doc-table th {
+	.prntbllist th {
 		font-size: 8pt;
 		font-weight: bold;
 		height: 5mm;
@@ -114,37 +120,44 @@
 		border-bottom: 1px solid;
 		background-color: #ccc;
 		margin-bottom: 1mm;
+		padding: 0.5mm;
 	}
 
-	#doc-table td {
+	.prntbllist td {
 		font-size: 9pt;
-
+		padding: 0.5mm;
+		vertical-align: top;
 	}
 
-	#doc-table-body td {
+	.prntbllist tbody td {
 		border-bottom: 1px dotted #ccc;
 	}
 
-	#doc-table [name="no"] {
+
+	.prntbllist [name="no"] {
 		width: 7mm;
+		text-align: center;
 	}
 
-
-
-	#doc-table [name="descr"] {
+	.prntbllist [name="account"] {
+		width: 45mm;
 		text-align: left;
 	}
 
-	#doc-table [name="value"] {
+	.prntbllist [name="descr"] {
+		text-align: left;
+	}
+
+	.prntbllist [name="value"] {
 		width: 15mm;
 		text-align: right;
 	}
 
-	#doc-table [name="curr"] {
+	.prntbllist [name="curr"] {
 		width: 7mm;
 	}
 
-	#doc-table [name="idr"] {
+	.prntbllist [name="idr"] {
 		width: 20mm;
 		text-align: right;
 	}
@@ -152,26 +165,39 @@
 
 
 
+
+
+
 	#doc-footer {
 		box-sizing: border-box;
-		width: calc(var(--efectiveWidth)-10mm);
-		margin: 10mm 5mm 10mm 5mm;
-
-
-		/* Mencegah elemen terpotong ke halaman berikutnya */
+		width: 100%;
 		break-inside: avoid;
 		-webkit-column-break-inside: avoid;
-		/* Untuk dukungan Chrome/Safari lama */
-
-		/* Tambahan agar lebih aman */
 		page-break-inside: avoid;
+	}
+
+
+	#doc-table-sum {
+		border-top: 1px solid #000;
+		background-color: #ccc;
+	}
+
+	#doc-table-sum td {
+		font-weight: bold;
+	}
+
+	#doc-notes {
+		display: flex;
+		column-gap: 2mm;
+		margin-top: 5mm;
 	}
 
 	#doc-sign {
 		box-sizing: border-box;
-		width: 100%;
+		width: calc(100%-10mm);
 		display: flex;
 		column-gap: 10mm;
+		margin: 5mm;
 	}
 
 
@@ -179,8 +205,8 @@
 		box-sizing: border-box;
 		display: flex;
 		flex-direction: column;
-		min-width: 35mm;
-		height: 2cm;
+		width: 28mm;
+		height: 20mm;
 	}
 
 	#doc-sign [data-sign] {
@@ -189,5 +215,42 @@
 
 	#doc-sign [data-signname] {
 		border-bottom: 1px dotted #ccc;
+
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+
+
+	.jurnal-account-container {
+		display: flex;
+		column-gap: 1mm;
+		flex-wrap: wrap;
+	}
+
+	#jurnal-payment-box {
+		box-sizing: border-box;
+		width: 50mm;
+		min-height: 15mm;
+		padding: 2mm;
+		background-color: #eaeaea;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+	}
+
+	#jurnal-payment-box [data-label] {
+		font-weight: bold;
+	}
+
+	#jurnal-payment-remark {
+		flex-grow: 1;
+		min-height: 15mm;
+		padding: 2mm;
+	}
+
+	#jurnal-payment-info {
+		display: flex;
+		flex-direction: column;
 	}
 }

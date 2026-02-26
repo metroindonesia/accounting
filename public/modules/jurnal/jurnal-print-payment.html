@@ -14,8 +14,18 @@
 		<div data-label style="grid-row: 1; grid-column: 5">Book Date</div>
 		<div data-value style="grid-row: 1; grid-column: 6">{{jurnal_date}}</div>
 		
-		<div data-label class="prn-tbl-label" style="grid-row: 2; grid-column: 1">Descr</div>
+		<div data-label style="grid-row: 2; grid-column: 1">Descr</div>
 		<div data-value style="grid-row: 2; grid-column: 2 / span 5">{{jurnal_descr}}</div>
+
+		<div data-label style="grid-row: 3; grid-column: 1">Account</div>
+		<div data-value style="grid-row: 3; grid-column: 2 / span 2">{{coa_name}}</div>
+		
+		<div data-label style="grid-row: 4; grid-column: 1">Struct</div>
+		<div data-value style="grid-row: 4; grid-column: 2">{{struct_name}}</div>
+		<div data-label style="grid-row: 4; grid-column: 3">Unit</div>
+		<div data-value style="grid-row: 4; grid-column: 4">{{unit_name}}</div>
+		<div data-label style="grid-row: 4; grid-column: 5">Site</div>
+		<div data-value style="grid-row: 4; grid-column: 6">{{site_name}}</div>
 
 	</div>
 
@@ -43,7 +53,7 @@
 							<div style="font-size: 7pt;">{{unit_name}}</div>
 							<div style="font-size: 7pt;">{{site_name}}</div>
 						</div>
-					</td>					
+					</td>
 					<td name="value">{{jurnaldetil_value}}</td>
 					<td name="curr">{{curr_name}}</td>
 					<td name="idr">{{jurnaldetil_idr}}</td>
@@ -60,12 +70,37 @@
 			<tr>
 				<td name="no"></td>
 				<td name="descr"></td>
-				<td name="account" style="text-align: right; padding-right: 5mm;">Balance</td>
-				<td name="value">{{balance_value}}</td>
+				<td name="account" style="text-align: right; padding-right: 5mm;">Total</td>
+				<td name="value">{{total_value}}</td>
 				<td name="curr">{{curr_name}}</td>
-				<td name="idr">{{balance_idr}}</td>
+				<td name="idr">{{total_idr}}</td>
 			</tr>
 		</table>
+
+		<div id="doc-notes" class="prntbllist">
+
+			<div id="jurnal-payment-box">
+				<div data-label>Dibayarkan Kepada</div>
+				<div id="jurnal-payment-info">
+					<div>{{partner_name}}</div>
+					<div style="text-decoration: underline; margin-top: 2mm;">{{paymtype_name}}</div>
+					<div style="font-weight: bold; margin-top: 1mm;">{{payment_bgno}}</div>
+					<div style="font-weight: bold; margin-top: 1mm;">{{partnerbank_account}}</div>
+					<div>{{partnerbank_bankname}}</div>
+					<div>{{partnerbank_accountname}}</div>
+					<div style="margin-top: 3mm">{{partnercontact}}</div>
+				</div>
+			</div>
+			
+			<div id="jurnal-payment-remark">
+				<div style="font-weight: bold;">Remark</div>
+				<div style="height: 5mm; border-bottom: 1px solid #ddd;"></div>
+				<div style="height: 5mm; border-bottom: 1px solid #ddd;"></div>
+				<div style="height: 5mm; border-bottom: 1px solid #ddd;"></div>
+				<div style="height: 5mm; text-align: right; margin-top: 3mm;">. . . . . . . . . . . . . . . . . . ,  {{printdate}}</div>
+
+			</div>
+		</div>
 
 		<div id="doc-sign">
 			<div data-signbox>
@@ -82,9 +117,25 @@
 				<div data-signname></div>
 			</div>
 
+			<div style="flex-grow: 1;"></div>
+
+			<div data-signbox>
+					<div data-caption>Menyetujui</div>
+					<div data-title></div>
+					<div data-sign></div>
+					<div data-signname></div>
+			</div>
+
+			<div data-signbox>
+					<div data-caption>Menyetujui</div>
+					<div data-title></div>
+					<div data-sign></div>
+					<div data-signname></div>
+			</div>
 
 		</div>
 
+		
 	</div>
 
 </div>

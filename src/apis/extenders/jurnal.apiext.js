@@ -17,7 +17,18 @@ const TABLE = {
 	doc: 'core.doc',
 	user: 'core.user',
 	coa: 'public.coa',
-	periode: 'public.periode'
+	periode: 'public.periode',
+	struct: 'public.struct',
+	partner: 'public.partner',
+	partnerbank: 'public.partnerbank',
+	partnercontact: 'public.partnercontact',
+	site: 'public.site',
+	unit: 'public.unit',
+	project: 'public.project',
+	user: 'core.user',
+	auth: 'core.auth',
+	curr: "public.curr",
+	currrate: "public.currrate",
 }
 
 export async function jurnal_init(self, initialData) {
@@ -83,6 +94,7 @@ export async function sequencerSetup(self, tx, sequencer, data, args) {
 }
 
 export async function headerListCriteria(self, db, searchMap, criteria, sort, columns, args) {
+	searchMap.periode_id = 'periode_id = ${periode_id}'
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.ispost = 'ispost = ${ispost}'
 	searchMap.jurnaltype_id = 'jurnaltype_id = ${jurnaltype_id}'
@@ -130,6 +142,143 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 	}
 
 	await calculateTotal(self, tx, ret)
+}
+
+export async function getPrintData(self, db, body) {
+	const { jurnal_id } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+
+	sqlUtil.connect(db)
+
+	const sekarang = new Date();
+	const offset = sekarang.getTimezoneOffset() * 60000; // konversi ke milidetik
+	const waktuLokalISO = new Date(sekarang - offset).toISOString().slice(0, -1);
+
+	try {
+		const header = await sqlUtil.lookupdb(db, TABLE.jurnal, 'jurnal_id', jurnal_id)
+		const struct = await sqlUtil.lookupdb(db, TABLE.struct, 'struct_id', header.struct_id)
+		const jurnaltype = await sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', header.jurnaltype_id)
+		const curr = await sqlUtil.lookupdb(db, TABLE.curr, 'curr_id', header.curr_id)
+		const coa = await sqlUtil.lookupdb(db, TABLE.coa, 'coa_id', header.coa_id)
+		const site = await sqlUtil.lookupdb(db, TABLE.site, 'site_id', header.site_id)
+		const unit = await sqlUtil.lookupdb(db, TABLE.unit, 'unit_id', header.unit_id)
+		const partner = await sqlUtil.lookupdb(db, TABLE.partner, 'partner_id', header.partner_id)
+		const partnercontact = await sqlUtil.lookupdb(db, TABLE.partnercontact, 'partnercontact_id', header.partnercontact_id)
+		const project = await sqlUtil.lookupdb(db, TABLE.project, 'project_id', header.project_id)
+		const user = await sqlUtil.lookupdb(db, TABLE.user, 'user_id', header._createby)
+		const paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', header.paymtype_id)
+
+
+		const sqlBalance = `
+			select 
+			sum(jurnaldetil_value) as balance_value, sum(jurnaldetil_idr) as balance_idr
+			from public.jurnaldetil
+			where jurnal_id=\${jurnal_id}`
+
+		const rowBalance = await db.one(sqlBalance, { jurnal_id })
+		const balance_value = rowBalance.balance_value
+		const balance_idr = rowBalance.balance_idr
+
+		const data = {
+			title: jurnaltype.jurnaltype_title,
+			headertext: header.jurnal_doc + ' - ' + header.jurnal_descr,
+			jurnaltype_printout: jurnaltype.jurnaltype_printout,
+			printdate: sqlUtil.formatISODate(waktuLokalISO, 'dd/mm/yyyy'),
+			jurnal_doc: header.jurnal_doc,
+			jurnal_version: header.jurnal_version,
+			jurnal_date: sqlUtil.formatISODate(header.jurnal_date, 'dd/mm/yyyy'),
+			jurnal_datedue: sqlUtil.formatISODate(header.jurnal_datedue, 'dd/mm/yyyy'),
+			jurnal_descr: header.jurnal_descr,
+			dibuat_nama: user.user_fullname,
+			coa_name: coa.coa_name,
+			site_name: site.site_name,
+			unit_name: unit.unit_name,
+			struct_name: struct.struct_name,
+			partner_name: partner.partner_name,
+			paymtype_name: paymtype.paymtype_name,
+			payment_bgno: header.payment_bgno,
+			partnerbank_account: header.partnerbank_account,
+			partnerbank_bankname: header.partnerbank_bankname,
+			partnerbank_accountname: header.partnerbank_accountname,
+			partnercontact: '',
+			total_idr: sqlUtil.formatDecimal(header.jurnal_idr, 0),
+			balance_idr: sqlUtil.formatDecimal(balance_idr, 0),
+
+			items: []
+		}
+
+		if (header.curr_id == 1) {
+			data.total_value = ''
+			data.balance_value = ''
+			data.curr_name = ''
+		} else {
+			data.total_value = sqlUtil.formatDecimal(header.jurnal_value, 0)
+			data.balance_value = sqlUtil.formatDecimal(balance_value, 0)
+			data.curr_name = curr.curr_name
+		}
+
+
+
+		// detil
+		const sqlDetil = `
+			select * from ${TABLE.jurnaldetil} 
+			where jurnal_id = \${jurnal_id}
+			order by
+				case when jurnaldetil_value>=0 then 0 else 1 end,
+				case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
+				case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+
+
+		const rowsDetil = await db.any(sqlDetil, { jurnal_id: jurnal_id })
+		let i = 0
+		for (let row of rowsDetil) {
+			i++
+
+			const curr = await sqlUtil.lookupdb(db, TABLE.curr, 'curr_id', row.curr_id)
+			const coa = await sqlUtil.lookupdb(db, TABLE.coa, 'coa_id', row.coa_id)
+			const site = await sqlUtil.lookupdb(db, TABLE.site, 'site_id', row.site_id)
+			const unit = await sqlUtil.lookupdb(db, TABLE.unit, 'unit_id', row.unit_id)
+			const struct = await sqlUtil.lookupdb(db, TABLE.struct, 'struct_id', row.struct_id)
+
+			const rowDetil = {
+				no: i,
+				jurnaldetil_descr: row.jurnaldetil_descr,
+				coa_name: coa.coa_name,
+				jurnaldetil_idr: sqlUtil.formatDecimal(row.jurnaldetil_idr, 0),
+				jurnaldetil_ishead: row.jurnaldetil_ishead
+			}
+
+			if (row.site_id != null) {
+				rowDetil.site_name = '<b>site:</b> ' + site.site_name
+			}
+
+			if (row.unit_id != null) {
+				rowDetil.unit_name = '<b>unit:</b> ' + unit.unit_name
+			}
+
+			if (row.struct_id != null) {
+				rowDetil.struct_name = struct.struct_name
+			}
+
+			if (row.curr_id == 1) {
+				rowDetil.curr_name = ''
+				rowDetil.jurnaldetil_value = ''
+			} else {
+				rowDetil.curr_name = curr.curr_name
+				rowDetil.jurnaldetil_value = sqlUtil.formatDecimal(row.jurnaldetil_value, 0)
+			}
+
+			data.items.push(rowDetil)
+		}
+
+
+
+		return data
+	} catch (err) {
+		throw err
+	}
 }
 
 
