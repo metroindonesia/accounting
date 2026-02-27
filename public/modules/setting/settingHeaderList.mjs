@@ -95,6 +95,9 @@ export async function loadData(self) {
 	tbl_loadData(self)
 }
 
+export function getCurrentState(self) {
+	return CurrentState
+}
 
 export function getGrid(self) {
 	return tbl

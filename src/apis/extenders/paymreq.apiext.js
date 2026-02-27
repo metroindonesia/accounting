@@ -85,11 +85,15 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	} else if (reqBillProcess.includes(jurnaltype.paymreqprocess)) {
 		// AP Payment
 		// tampilkan PR yang sudah dijurnal AP
-		columns.push('B.*')
+		columns.push('B.*', 'A.outstanding_value as outstanding_value')
 		args.tablename = `
-			paymreq_bill A left join paymreq B on B.paymreq_id = A.paymreq_id 
+			public.paymreq_bill A left join public.paymreq B on B.paymreq_id = A.paymreq_id 
+			               left join public.jurnal C on C.jurnal_id = A.jurnal_id 
 		`
-		searchMap.isapproved = 'isapproved = ${isapproved}'
+
+		criteria.ispost = true
+
+		searchMap.ispost = 'C.ispost = ${ispost}'
 		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
 
 

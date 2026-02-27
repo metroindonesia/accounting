@@ -167,7 +167,7 @@ async function jurnal_headerList(self, body) {
 			tablename: args.tablename, 
 			columns, 
 			whereClause, 
-			sort, 
+			sort: args.sqlSort ?? sort,
 			limit:max_rows+1, 
 			offset, 
 			queryParams
@@ -634,7 +634,7 @@ async function jurnal_detilList(self, body) {
 			tablename: args.tablename, 
 			columns, 
 			whereClause, 
-			sort, 
+			sort: args.sqlSort ?? sort, 
 			limit:max_rows+1, 
 			offset, 
 			queryParams

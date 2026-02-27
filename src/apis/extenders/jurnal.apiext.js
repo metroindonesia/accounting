@@ -101,10 +101,7 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	searchMap.ispost = 'ispost = ${ispost}'
 	searchMap.jurnaltype_id = 'jurnaltype_id = ${jurnaltype_id}'
 
-	sort = `
-		case when jurnaldetil_value>=0 then 0 else 1 end,
-		case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
-		case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+
 
 }
 
@@ -352,6 +349,13 @@ export async function headerOpen(self, db, data) {
 }
 
 
+
+export async function detilListCriteria(self, db, searchMap, criteria, sort, columns, args) {
+	args.sqlSort = `
+		case when jurnaldetil_value>=0 then 0 else 1 end,
+		case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
+		case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+}
 
 export async function detilList(self, listData, args) {
 	const { db, criteria } = args
@@ -775,7 +779,8 @@ async function createDetilFromHeader(self, tx, ret, param) {
 		const cmdHead = sqlUtil.createUpdateCommand(TABLE.jurnal, headdata, ['jurnal_id'])
 		await cmdHead.execute(headdata)
 
-
+		// tambahkan jurnaldetil_id_link untuk diambil pada proses berikutnya
+		ret.jurnaldetil_id_link = headdata.jurnaldetil_id_link
 
 		// berikutnya cek process pada paymentrequest jika memenuhi syarat 
 		await processPaymreq(self, tx, doc_id, ret)

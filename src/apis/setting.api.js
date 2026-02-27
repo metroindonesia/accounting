@@ -25,13 +25,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await setting_init(this, body) }
 
+	// extender call
+	async execute(body) { return await setting_execute(this, body) }
+
 	// header
 	async headerList(body) { return await setting_headerList(this, body) }
 	async headerOpen(body) { return await setting_headerOpen(this, body) }
 	async headerUpdate(body) { return await setting_headerUpdate(this, body)}
 	async headerCreate(body) { return await setting_headerCreate(this, body)}
 	async headerDelete(body) { return await setting_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -79,6 +82,24 @@ async function setting_init(self, body) {
 }
 
 
+// execute extender function
+async function setting_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, setting_log) {}
+		return await Extender[fnName](self, db, body, setting_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function setting_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -94,6 +115,8 @@ async function setting_log(self, body, startTime, tablename, id, action, data={}
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -119,7 +142,7 @@ async function setting_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -129,7 +152,16 @@ async function setting_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -236,7 +268,7 @@ async function setting_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'' }
+			const args = { section: 'header', doc_id:'' }
 
 				
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

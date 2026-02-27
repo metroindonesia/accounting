@@ -1,12 +1,14 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
+import serveFavicon from 'serve-favicon'
 
 
 const TABLE = {
 	paymreq: "public.paymreq",
 	paymreqdetil: "public.paymreqdetil",
 	jurnaldetil: "public.jurnaldetil",
-	taxtype: "public.taxtype"
+	taxtype: "public.taxtype",
+	paymreq_bill: "public.paymreq_bill"
 }
 
 
@@ -84,7 +86,8 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 
 
 		// masukkan data ke paymreq_bill
-		console.log(jurnalHeader)
+		await insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader)
+
 
 
 	} catch (err) {
@@ -109,7 +112,7 @@ async function setPPN(self, tx, paymreq, rows, jurnalHeader) {
 		site_id: jurnalHeader.site_id,
 		struct_id: jurnalHeader.struct_id,
 		project_id: jurnalHeader.project_id,
-		partner_id: null, // partner pajak,
+		partner_id: jurnalHeader.partner_id, // partner pajak,
 		taxmodel: 'PPN'
 	})
 }
@@ -117,6 +120,12 @@ async function setPPN(self, tx, paymreq, rows, jurnalHeader) {
 async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
 	if (paymreq.pph_id == null) {
 		return
+	}
+
+	const req = self.req
+	const partner_id = req.app.locals.appConfig.TAX_PARTNER_ID
+	if (partner_id == null) {
+		throw new Error('TAX_PARTNER_ID belum di set di setting')
 	}
 
 	const taxtype = await sqlUtil.lookupdb(tx, TABLE.taxtype, "taxtype_id", paymreq.pph_id)
@@ -129,7 +138,35 @@ async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
 		site_id: jurnalHeader.site_id,
 		struct_id: jurnalHeader.struct_id,
 		project_id: jurnalHeader.project_id,
-		partner_id: null, // partner pajak,
+		partner_id: partner_id,
 		taxmodel: 'PPh'
 	})
+}
+
+
+async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
+	const bill = {
+		paymreq_id: paymreq.paymreq_id,
+		paymreqtype_id: paymreq.paymreqtype_id,
+		jurnal_id: jurnalHeader.jurnal_id,
+		jurnaldetil_id: jurnalHeader.jurnaldetil_id_link,
+		jurnaltype_id: jurnalHeader.jurnaltype_id,
+		jurnal_date: jurnalHeader.jurnal_date,
+		jurnal_datedue: jurnalHeader.jurnal_datedue,
+		jurnaldetil_value: jurnalHeader.jurnal_value,
+		jurnaldetil_idr: jurnalHeader.jurnal_idr,
+		outstanding_value: jurnalHeader.jurnal_value,
+		outstanding_idr: jurnalHeader.jurnal_idr,
+		curr_id: jurnalHeader.curr_id,
+		curr_rate: jurnalHeader.curr_rate,
+		coa_id: jurnalHeader.coa_id,
+		struct_id: jurnalHeader.struct_id,
+		site_id: jurnalHeader.site_id,
+		unit_id: jurnalHeader.unit_id,
+		project_id: jurnalHeader.project_id,
+		partner_id: jurnalHeader.partner_id
+	}
+
+	const cmd = sqlUtil.createInsertCommand(TABLE.paymreq_bill, bill)
+	await cmd.execute(bill)
 }

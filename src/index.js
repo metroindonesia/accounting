@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
 import { createWebApplication, createDefaultAppConfig } from '@agung_dhewe/webapps'
-import { getApplicationSetting, authorizeRequest } from '@agung_dhewe/webapps/src/startup.js'
+import { getApplicationSetting, requireSetting, authorizeRequest } from '@agung_dhewe/webapps/src/startup.js'
 import { createRouter } from './router.js'
 import db from '@agung_dhewe/webapps/src/db.js'
 import bucket from '@agung_dhewe/webapps/src/bucket.js'
@@ -46,7 +46,7 @@ async function main() {
 
 	// ambil setting system
 	const applicationSetting = await getApplicationSetting(db, 'core."setting"')
-
+	await settingInit(db, applicationSetting)
 
 	// variabel local konfigurasi yang bisa diakses dari api/router
 	const appConfig = {
@@ -92,3 +92,34 @@ async function main() {
 		}
 	})
 }
+
+
+
+
+async function settingInit(db, setting) {
+	const results = await Promise.allSettled([
+		requireSetting(db, setting, 'COMPANY_CODE', 'kode perusahaan, 2 digit numerik, untuk keperluan konsolidasi bisa sistem dipakai di beberapa anak perusahaan'),
+		requireSetting(db, setting, 'COMPANY_ADDR1', ''),
+		requireSetting(db, setting, 'COMPANY_NAME', ''),
+		requireSetting(db, setting, 'COMPANY_ADDR2', ''),
+		requireSetting(db, setting, 'COMPANY_ADDR3', ''),
+		requireSetting(db, setting, 'COMPANY_PHONE', ''),
+		requireSetting(db, setting, 'COMPANY_PRINTLOGO', 'path url untuk logo yang dicetak di report, misalnya /public/images/logo.svg'),
+		requireSetting(db, setting, 'COMPANY_PARTNER_ID', 'kode partner yang menunjuk ke diri sendiri '),
+		requireSetting(db, setting, 'TAX_PARTNER_ID', 'kode partner untuk kas negara'),
+		requireSetting(db, setting, 'RE_COA_ID', 'kode coa untuk retain earning'),
+		requireSetting(db, setting, 'COA_LENGTH', 'panjang coa'),
+	])
+
+	const errors = results
+		.filter(result => result.status === "rejected")
+		.map((result, index) => `Setting ke-${index} gagal: ${result.reason}`);
+
+
+	if (errors.length > 0) {
+		// Gabungkan semua pesan error menjadi satu string
+		throw new Error("Setting belum didefinisikan:\n" + errors.join("\n"));
+	}
+}
+
+
