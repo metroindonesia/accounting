@@ -1,0 +1,58 @@
+@import url('./headcolor.css');
+
+
+:root {
+	--color-editmode-bg: #95bdfa;
+}
+
+body {
+	background-color: #eff0ff !important;
+}
+
+
+.fgta5-app-head {
+	background-color: #171940;
+}
+
+
+.fgta5-gridview th {
+	background-color: #2c2f60;
+	color: #fff;
+}
+
+.fgta5-gridview tbody tr {
+	background-color: #fff;
+}
+
+.fgta5-gridview tbody tr[data-currentrow] {
+	background-color: rgb(69 103 255) !important;
+	color: #fff;
+	filter: brightness(90%);
+}
+
+
+.panel-detil [panel-content] {
+	background-color: #eeeeee;
+	border: 1px solid #ccc;
+}
+
+.panel-detil [panel-title] {
+	background-color: #2c2f60;
+}
+
+.panel-action button {
+	padding: 5px 15px 5px 15px;
+	border-radius: 3px;
+	border: 1px solid #9a9cc7;
+
+}
+
+.panel-action button:disabled {
+	border: 1px solid #dedff6;
+}
+
+
+.panel-action button:hover:not(:disabled) {
+	background-color: #8e90b6;
+	cursor: pointer;
+}
