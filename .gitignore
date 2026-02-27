@@ -141,4 +141,4 @@ vite.config.ts.timestamp-*
 
 
 # custom css untuk keperluan theme
-public/application.css
+# public/application.css
