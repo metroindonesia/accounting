@@ -61,16 +61,6 @@
 
 
 
-#jurnalDetilList-tbl td {
-	vertical-align: top;
-}
-
-#jurnalDetilList-tbl tfoot td {
-	font-weight: bold;
-	font-size: 1.2em;
-	padding-top: 5px;
-	border-top: 2px solid #666;
-}
 
 
 
@@ -89,25 +79,30 @@
 
 
 
+.paymreq-row {
+	display: flex !important;
+	padding-right: 10px;
+	align-items: flex-start;
+}
 
 .paymreq-row-doc {
-	width: 160px;
+	min-width: 130px;
 }
 
 .paymreq-row-descr {
 	flex-grow: 1;
+	margin-left: 5px;
+	margin-right: 5px;
 }
 
 .paymreq-row-value {
-	align-self: flex-end;
 	text-align: right;
-	width: 200px;
+	min-width: 200px;
 }
 
 .paymreq-row-value[name="curr_id"] {
-	align-self: flex-end;
 	text-align: center;
-	width: 80px;
+	min-width: 50px;
 }
 
 

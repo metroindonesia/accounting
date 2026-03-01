@@ -1,3 +1,16 @@
+#jurnalDetilList-tbl td {
+	vertical-align: top;
+}
+
+#jurnalDetilList-tbl tfoot td {
+	font-weight: bold;
+	font-size: 1.2em;
+	padding-top: 5px;
+	border-top: 2px solid #666;
+}
+
+
+
 #jurnalDetilList-tbl [data-name="coa_name"] {
 	width: 250px;
 	border-left: 1px dotted #aaa;

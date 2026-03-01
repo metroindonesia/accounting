@@ -387,15 +387,15 @@ comment on column public."jurnal".curr_id is '';
 
 
 -- =============================================
--- FIELD: jurnal_value decimal(13, 2)
+-- FIELD: jurnal_value decimal(18, 2)
 -- =============================================
 -- ADD jurnal_value
-alter table public."jurnal" add jurnal_value decimal(13, 2) not null default 0;
+alter table public."jurnal" add jurnal_value decimal(18, 2) not null default 0;
 comment on column public."jurnal".jurnal_value is '';
 
 -- MODIFY jurnal_value
 alter table public."jurnal"
-	alter column jurnal_value type decimal(13, 2),
+	alter column jurnal_value type decimal(18, 2),
 	ALTER COLUMN jurnal_value SET DEFAULT 0,
 	ALTER COLUMN jurnal_value SET NOT NULL;
 comment on column public."jurnal".jurnal_value is '';
@@ -602,10 +602,6 @@ comment on column public."jurnal"._modifydate is 'waktu terakhir record dimodifi
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$site_id;
-ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$unit_id;
-ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$project_id;
-ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$curr_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$jurnaltype_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$paymreq_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$periode_id;
@@ -615,6 +611,10 @@ ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$partnerbank_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$partnercontact_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$coa_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$struct_id;
+ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$site_id;
+ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$unit_id;
+ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$project_id;
+ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$curr_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$jurnaldetil_id_link;
 
 

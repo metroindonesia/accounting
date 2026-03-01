@@ -115,6 +115,12 @@
 		
 	}
 	
+	#jurnalDetilEdit-obj_blockorder-container {
+		grid-row: 9;
+		grid-column: 1;
+		
+	}
+	
 	#jurnalDetilEdit-obj_paymreq_id-container {
 		grid-row: 8;
 		grid-column: 2 / span 2;
@@ -141,6 +147,12 @@
 	
 	#jurnalDetilEdit-obj_iscurradj-container {
 		grid-row: 10;
+		grid-column: 6 / span 2;
+		
+	}
+	
+	#jurnalDetilEdit-obj_ismanuallink-container {
+		grid-row: 11;
 		grid-column: 6 / span 2;
 		
 	}

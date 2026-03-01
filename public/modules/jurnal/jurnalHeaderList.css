@@ -1,3 +1,10 @@
+/* Format kolom */
+
+#jurnalHeaderList-tbl td {
+	vertical-align: top;
+}
+
+
 #jurnalHeaderList-tbl [data-name="jurnal_doc"] {
 	width: 120px;
 	border-left: 1px dotted #aaa;
@@ -20,6 +27,12 @@
 	border-right: 1px dotted #aaa;
 }
 
+
+
+
+
+/*  Status Baris */
+
 #jurnalHeaderList-tbl tr[data-isunbalance="true"] {
 	background-color: #ffbfbf;
 }
@@ -29,7 +42,7 @@
 }
 
 #jurnalHeaderList-tbl tr[data-isposted="true"] {
-	background-color: #aeaeae;
+	background-color: #cfcfcf;
 }
 
 

@@ -49,55 +49,75 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	const user_id = req.session.user.userId
 
 	// criteria.user_id = user_id
-	const current_jurnal_id = criteria.current_jurnal_id
-	delete criteria.current_jurnal_id
+
 
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.isapproved = 'isapproved = ${isapproved}'
 	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	searchMap.struct_id = 'struct_id = ${struct_id}'
-	// searchMap.jurnaltype_id = 'paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
-
-	const jurnaltype = await sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', criteria.jurnaltype_id)
 
 
-	if (reqOutstandingProcess.includes(jurnaltype.paymreqprocess)) {
-		// AP Bill dan Advance Payment
-		// tampilkan data PR yang belum diproses
-		columns.push('B.*')
-		args.tablename = `
+	// jika paymreq ditarik dari jurnal
+	if (criteria.jurnaltype_id != null) {
+
+		const current_jurnal_id = criteria.current_jurnal_id
+		delete criteria.current_jurnal_id
+
+
+		const jurnaltype = await sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', criteria.jurnaltype_id)
+		if (reqOutstandingProcess.includes(jurnaltype.paymreqprocess)) {
+
+			// AP Bill dan Advance Payment
+			// tampilkan data PR yang belum diproses
+			columns.push(
+				"B.*",
+				"B.paymreq_total as outstanding_value",
+				"B.paymreq_doc as outstanding_doc",
+				"(case when B.paymreq_invoice<>'' then '[' || B.paymreq_invoice || '] ' else '' end) || B.paymreq_descr as outstanding_descr"
+			)
+			args.tablename = `
 			paymreq_outstanding A left join paymreq B on B.paymreq_id = A.paymreq_id 
 						left join public.jurnal C on C.paymreq_id = B.paymreq_id 
 		`
 
-		if (current_jurnal_id != null) {
-			criteria.jurnal_id = current_jurnal_id
-			searchMap.jurnal_id = '(C.jurnal_id is null or C.jurnal_id=${jurnal_id})'
-		} else {
-			criteria.jurnal_id = 1
-			searchMap.jurnal_id = 'C.jurnal_id is null'
-		}
+			if (current_jurnal_id != null) {
+				criteria.jurnal_id = current_jurnal_id
+				searchMap.jurnal_id = '(C.jurnal_id is null or C.jurnal_id=${jurnal_id})'
+			} else {
+				criteria.jurnal_id = 1
+				searchMap.jurnal_id = 'C.jurnal_id is null'
+			}
 
-		searchMap.isapproved = 'isapproved = ${isapproved}'
-		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+			searchMap.isapproved = 'isapproved = ${isapproved}'
+			searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
 
 
-	} else if (reqBillProcess.includes(jurnaltype.paymreqprocess)) {
-		// AP Payment
-		// tampilkan PR yang sudah dijurnal AP
-		columns.push('B.*', 'A.outstanding_value as outstanding_value')
-		args.tablename = `
+		} else if (reqBillProcess.includes(jurnaltype.paymreqprocess)) {
+			// Pembayaran: AP
+			// tampilkan PR yang sudah dijurnal AP
+			columns.push(
+				'B.*',
+				'A.outstanding_value as outstanding_value',
+				"B.paymreq_doc as outstanding_doc",
+				"'payment of ' || C.jurnal_doc || ' : ' || C.jurnal_descr as outstanding_descr"
+			)
+			args.tablename = `
 			public.paymreq_bill A left join public.paymreq B on B.paymreq_id = A.paymreq_id 
 			               left join public.jurnal C on C.jurnal_id = A.jurnal_id 
 		`
 
-		criteria.ispost = true
+			criteria.ispost = true
+			criteria.isoutstanding = true
 
-		searchMap.ispost = 'C.ispost = ${ispost}'
-		searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
+			searchMap.isoutstanding = 'A.outstanding_value > 0'
+			searchMap.ispost = 'C.ispost = ${ispost}'
+			searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
 
+
+		}
 
 	}
+
 
 
 }
@@ -126,7 +146,7 @@ export async function headerListRow(self, row, args) {
 	const db = args.db
 	const curr_id = row.curr_id
 
-	const sql = `select * from ${TABLE.currrate} where curr_id=\${curr_id} and currrate_date<=now() order by currrate_date desc limit 1`
+	const sql = `select * from ${TABLE.currrate} where curr_id=\${curr_id} and currrate_date<=CURRENT_DATE order by currrate_date desc limit 1`
 	const data = await db.oneOrNone(sql, { curr_id })
 
 	row.curr_rate = data.currrate_value

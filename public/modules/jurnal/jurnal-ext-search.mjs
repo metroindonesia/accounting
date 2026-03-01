@@ -63,4 +63,14 @@ export function setupSearchJurnaltype(self, obj_search_jurnaltype) {
 		}
 
 	})
+
+
+	obj_search_jurnaltype.addEventListener('selected', async (evt) => {
+		if (!obj_search_jurnaltype.isSelectedChanged()) {
+			return
+		}
+
+		const jurnaltype = evt.detail.data
+		self.Modules.extenderHeader.setSelectedJurnaltype(jurnaltype)
+	})
 }

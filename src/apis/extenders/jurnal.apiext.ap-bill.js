@@ -1,6 +1,6 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
-import serveFavicon from 'serve-favicon'
+
 
 
 const TABLE = {
@@ -8,7 +8,9 @@ const TABLE = {
 	paymreqdetil: "public.paymreqdetil",
 	jurnaldetil: "public.jurnaldetil",
 	taxtype: "public.taxtype",
-	paymreq_bill: "public.paymreq_bill"
+	paymreq_bill: "public.paymreq_bill",
+	coa: "public.coa",
+	itemclass: "public.itemclass"
 }
 
 
@@ -39,7 +41,9 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 
 		for (let row of rows) {
 			const paymreqdetil_id = row.paymreqdetil_id
-			// cek apakah baris sudah ada
+
+
+			// cek apakah baris detil sudah ada
 			const sqlCek = `select jurnaldetil_id from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and paymreqdetil_id=\${paymreqdetil_id}`
 			const rowExists = await tx.oneOrNone(sqlCek, { jurnal_id, paymreqdetil_id })
 			if (rowExists != null) {
@@ -47,6 +51,7 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 				// data yang sudah ada tidak perlu diubah lagi, karna bisa jadi sudah dimodif user
 				continue
 			}
+
 
 			const sequencer = createSequencerLine(tx, {})
 			const seqdata = await sequencer.increment(doc_id)
@@ -60,6 +65,7 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 				jurnaldetil_value: row.paymreqdetil_value,
 				jurnaldetil_idr: row.paymreqdetil_value * jurnalHeader.curr_rate,
 				coa_id: row.coa_id ?? null,
+				blockorder: row.blockorder ?? 0,
 				partner_id: row.partner_id ?? company_partner_id,
 				unit_id: row.unit_id,
 				site_id: row.site_id,
@@ -76,6 +82,40 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 				_createby: user_id,
 				_createdate: _createdate
 			}
+
+
+
+			// ambil coacurr
+			if (jurnalDetil.coa_id != null) {
+				const coa = await sqlUtil.lookupdb(tx, TABLE.coa, 'coa_id', jurnalDetil.coa_id)
+				const { curr_id, agingtype_id } = coa
+				jurnalDetil.agingtype_id = agingtype_id
+				jurnalDetil.coacurr = curr_id
+			}
+
+
+			// // cek apakah baris tax sudah ada
+			if (row.taxmodel == 'PPN' || row.taxmodel == 'PPh') {
+				// cek dulu di apakah sudah dijurnal
+				const sqlTaxCek = `select jurnaldetil_id from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and tag_paymreq_data=\${tag_paymreq_data}`
+				const rowTaxExists = await tx.oneOrNone(sqlTaxCek, {
+					jurnal_id,
+					tag_paymreq_data: row.taxmodel
+				})
+				if (rowTaxExists != null) {
+					// skip, lanjutkan baris berikut
+					// data yang sudah ada tidak perlu diubah lagi, karna bisa jadi sudah dimodif user
+					continue
+				}
+
+				// tambahkan data tag paymreq pada jurnalDetil
+				jurnalDetil.tag_paymreq_data = row.taxmodel
+			} else {
+				// set coa, selain baris pajak
+				jurnalDetil.coa_id = await getCoaOfItemclass(self, tx, row.itemclass_id)
+			}
+
+
 
 
 
@@ -113,7 +153,8 @@ async function setPPN(self, tx, paymreq, rows, jurnalHeader) {
 		struct_id: jurnalHeader.struct_id,
 		project_id: jurnalHeader.project_id,
 		partner_id: jurnalHeader.partner_id, // partner pajak,
-		taxmodel: 'PPN'
+		taxmodel: 'PPN',
+		blockorder: 10,
 	})
 }
 
@@ -139,7 +180,8 @@ async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
 		struct_id: jurnalHeader.struct_id,
 		project_id: jurnalHeader.project_id,
 		partner_id: partner_id,
-		taxmodel: 'PPh'
+		taxmodel: 'PPh',
+		blockorder: 10,
 	})
 }
 
@@ -147,8 +189,11 @@ async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
 async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
 	const bill = {
 		paymreq_id: paymreq.paymreq_id,
+		paymreq_doc: paymreq.paymreq_doc,
 		paymreqtype_id: paymreq.paymreqtype_id,
 		jurnal_id: jurnalHeader.jurnal_id,
+		jurnal_doc: jurnalHeader.jurnal_doc,
+		jurnal_descr: jurnalHeader.jurnal_descr,
 		jurnaldetil_id: jurnalHeader.jurnaldetil_id_link,
 		jurnaltype_id: jurnalHeader.jurnaltype_id,
 		jurnal_date: jurnalHeader.jurnal_date,
@@ -167,6 +212,24 @@ async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
 		partner_id: jurnalHeader.partner_id
 	}
 
-	const cmd = sqlUtil.createInsertCommand(TABLE.paymreq_bill, bill)
-	await cmd.execute(bill)
+	// cek dahulu apakah sudah ada
+	const sqlCek = `
+		select paymreq_id 
+		from ${TABLE.paymreq_bill} 
+		where paymreq_id=\${paymreq_id}`
+	const rowCek = await tx.oneOrNone(sqlCek, { paymreq_id: paymreq.paymreq_id })
+	if (rowCek != null) {
+		const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq_bill, bill, ['paymreq_id'])
+		await cmd.execute(bill)
+	} else {
+		const cmd = sqlUtil.createInsertCommand(TABLE.paymreq_bill, bill)
+		await cmd.execute(bill)
+	}
+
+
+}
+
+async function getCoaOfItemclass(self, tx, itemclass_id) {
+	const itemclass = await sqlUtil.lookupdb(tx, TABLE.itemclass, 'itemclass_id', itemclass_id)
+	return 12021003
 }

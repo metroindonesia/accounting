@@ -102,15 +102,15 @@ comment on column public."paymreqdetil".unit_id is '';
 
 
 -- =============================================
--- FIELD: paymreqdetil_value decimal(15, 2)
+-- FIELD: paymreqdetil_value decimal(18, 2)
 -- =============================================
 -- ADD paymreqdetil_value
-alter table public."paymreqdetil" add paymreqdetil_value decimal(15, 2) not null default 0;
+alter table public."paymreqdetil" add paymreqdetil_value decimal(18, 2) not null default 0;
 comment on column public."paymreqdetil".paymreqdetil_value is '';
 
 -- MODIFY paymreqdetil_value
 alter table public."paymreqdetil"
-	alter column paymreqdetil_value type decimal(15, 2),
+	alter column paymreqdetil_value type decimal(18, 2),
 	ALTER COLUMN paymreqdetil_value SET DEFAULT 0,
 	ALTER COLUMN paymreqdetil_value SET NOT NULL;
 comment on column public."paymreqdetil".paymreqdetil_value is '';
@@ -212,13 +212,13 @@ comment on column public."paymreqdetil"._modifydate is 'waktu terakhir record di
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$itemclass_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$struct_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$project_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$site_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$unit_id;
 ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$curr_id;
+ALTER TABLE public."paymreqdetil" DROP CONSTRAINT fk$public$paymreqdetil$paymreq_id;
 
 
 -- Add Foreign Key Constraint  

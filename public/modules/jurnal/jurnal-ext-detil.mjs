@@ -25,6 +25,7 @@ const _paymreq_id = 'jurnalDetilEdit-obj_paymreq_id'
 const _isdebet = 'jurnalDetilEdit-obj_isdebet'
 const _iskredit = 'jurnalDetilEdit-obj_iskredit'
 const _iscurradj = 'jurnalDetilEdit-obj_iscurradj'
+const _ismanuallink = 'jurnalDetilEdit-obj_ismanuallink'
 const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 
@@ -186,7 +187,10 @@ export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState)
 
 export async function jurnalDetilEdit_formOpened(self, frm, CurrentState) {
 	const jurnaltype = self.currentJurnaltype
+	const { coa } = frm.getOriginalData()
+
 	jurnaltype_changed(self, jurnaltype, frm)
+	coa_changed(self, coa, frm)
 
 	const obj_jurnaldetil_id_ref = frm.Inputs[_jurnaldetil_id_ref]
 	if (obj_jurnaldetil_id_ref.value != '') {
@@ -208,21 +212,51 @@ export async function jurnalDetilEdit_dataSaving(self, dataToSave, frm, args) {
 	// cek posisi debet/kredit
 	const isdebet = frm.Inputs[_isdebet].value
 	const iskredit = frm.Inputs[_iskredit].value
-	const idr = frm.Inputs[_jurnaldetil_idr].value
-	const value = frm.Inputs[_jurnaldetil_value].value
+	const jurnaldetil_idr = frm.Inputs[_jurnaldetil_idr].value
+	const jurnaldetil_value = frm.Inputs[_jurnaldetil_value].value
 
 
 	try {
+		// cek mata uang
+		const curr_id = frm.Inputs[_curr_id].value
+		const coacur = frm.Inputs[_coacurr].value
+		if (coacur != '') {
+			if (curr_id != coacur) {
+				throw new Error('currency tidak sesuai dengan account yang dipilih')
+			}
+		}
+
+
+		// cek posisi debet - kredit
 		if (isdebet != iskredit) {
 			// perlu cek debet kredit
 			if (isdebet) {
-				if (value < 0 || idr < 0) {
+				if (jurnaldetil_value < 0 || jurnaldetil_idr < 0) {
 					throw new Error('akun ditandai dengan debet, posisi value ada di kredit')
 				}
 			} else if (iskredit) {
-				if (value > 0 || idr > 0) {
+				if (jurnaldetil_value > 0 || jurnaldetil_idr > 0) {
 					throw new Error('akun ditandai dengan kredit, posisi value ada di debet')
 				}
+			}
+		}
+
+		// cek coa aging
+
+		const jurnaldetil_id_ref = frm.Inputs[_jurnaldetil_id_ref].value
+		const agingtype_id = frm.Inputs[_agingtype_id].value
+		if (agingtype_id == 1) {
+			// aging AR
+			// jika nilainya minus, harus punya referensi
+			if ((jurnaldetil_value < 0 || jurnaldetil_idr < 0) && jurnaldetil_id_ref == '') {
+				throw new Error('entri jurnal AR di kolom kredit harus berdasar referensi')
+			}
+
+		} else if (agingtype_id == 2) {
+			// aging AP
+			// jika nilainya plus, harus punya referensi
+			if ((jurnaldetil_value > 0 || jurnaldetil_idr > 0) && jurnaldetil_id_ref == '') {
+				throw new Error('entri jurnal AP di kolom debet harus berdasar referensi')
 			}
 		}
 
@@ -300,14 +334,13 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 	frm.Inputs[_iscurradj].value = iscurradj
 
 	const obj_curr_id = frm.Inputs[_curr_id]
+	frm.Inputs[_curr_id].clear()
 	if (iscurradj) {
-		frm.Inputs[_curr_id].clear()
 		frm.Inputs[_curr_id].setSelected(Context.setting.defaultCurr.id, Context.setting.defaultCurr.name)
 		frm.Inputs[_curr_rate].value = 1
 		frm.Inputs[_jurnaldetil_descr].value = 'selisih kurs'
 	} else if (curr_id != null) {
 		if (obj_curr_id.value != curr_id) {
-			frm.Inputs[_curr_id].clear()
 			frm.Inputs[_curr_id].setSelected(null, '')
 			frm.Inputs[_curr_rate].value = 1
 		}
@@ -318,22 +351,20 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 
 	iscurradj_changed(self, iscurradj, frm)
 
+	const coa = evt.detail.data
+	coa_changed(self, coa, frm)
+
 }
 
 
 export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {
-	// const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit
-	// const frmHeader = jurnalHeaderEdit.getForm()
+	const coacur = frm.Inputs[_coacurr].value
+	if (coacur != '') {
+		criteria.curr_id = coacur
+	} else {
+		criteria.curr_id = null
+	}
 
-	// const curr_id = frm.Inputs[_coacurr].value
-	// const bookdate = frmHeader.Inputs['jurnalHeaderEdit-obj_jurnal_date'].value
-	// criteria.curr_date = bookdate
-
-	// if (curr_id != '') {
-	// 	criteria.curr_id = curr_id
-	// }
-
-	// sort.curr_code = 'asc'
 }
 
 export async function obj_curr_id_populating(self, obj_curr_id, frm, evt) {
@@ -420,6 +451,27 @@ async function jurnaltype_changed(self, jurnaltype, frm) {
 
 }
 
+async function coa_changed(self, coa, frm) {
+	if (coa == null) {
+		coa = {}
+	}
+
+	const agingtype_id = coa.agingtype_id
+	const obj_partner_id = frm.Inputs[_partner_id]
+	if (agingtype_id == 1 || agingtype_id == 2) {
+		// partner harus diisi
+		obj_partner_id.disabled = false
+		obj_partner_id.markAsRequired(true)
+		pageHelper.setVisibility(`${_partner_id}-container`, true)
+	} else {
+		// sesuaikan dengan jurnaltype
+		const jurnaltype = self.currentJurnaltype
+		obj_partner_id.disabled = !jurnaltype.isdetilallowselectpartner
+		obj_partner_id.markAsRequired(jurnaltype.isdetilpartnermandatory)
+		pageHelper.setVisibility(`${_partner_id}-container`, jurnaltype.isdetilhaspartner)
+	}
+}
+
 async function outstandingSelected(self, data, evt) {
 	console.log(data)
 
@@ -439,6 +491,7 @@ async function outstandingSelected(self, data, evt) {
 	const obj_jurnaldetil_idr = frm.Inputs[_jurnaldetil_idr]
 	const obj_jurnaldetil_id_ref = frm.Inputs[_jurnaldetil_id_ref]
 	const obj_agingtype_id = frm.Inputs[_agingtype_id]
+	const obj_ismanuallink = frm.Inputs[_ismanuallink]
 
 	// nilai data hasil tarikan adalah negasi dari value data referensinya
 	const idrChanged = obj_jurnaldetil_idr.value != -Number(data.jurnaldetil_idr)
@@ -472,6 +525,7 @@ async function outstandingSelected(self, data, evt) {
 	obj_jurnaldetil_idr.value = -data.jurnaldetil_idr
 	obj_jurnaldetil_id_ref.value = data.jurnaldetil_id
 	obj_agingtype_id.value = data.agingtype_id
+	obj_ismanuallink.value = true
 
 	suspendReferencedEditor(self, frm)
 }

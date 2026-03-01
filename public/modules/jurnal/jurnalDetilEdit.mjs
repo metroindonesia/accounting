@@ -48,11 +48,13 @@ const obj_jurnaldetil_id_ref = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_id_re
 const obj_coacurr = frm.Inputs['jurnalDetilEdit-obj_coacurr']
 const obj_jurnaldetil_ishead = frm.Inputs['jurnalDetilEdit-obj_jurnaldetil_ishead']
 const obj_agingtype_id = frm.Inputs['jurnalDetilEdit-obj_agingtype_id']
+const obj_blockorder = frm.Inputs['jurnalDetilEdit-obj_blockorder']
 const obj_paymreq_id = frm.Inputs['jurnalDetilEdit-obj_paymreq_id']
 const obj_paymreqdetil_id = frm.Inputs['jurnalDetilEdit-obj_paymreqdetil_id']
 const obj_isdebet = frm.Inputs['jurnalDetilEdit-obj_isdebet']
 const obj_iskredit = frm.Inputs['jurnalDetilEdit-obj_iskredit']
 const obj_iscurradj = frm.Inputs['jurnalDetilEdit-obj_iscurradj']
+const obj_ismanuallink = frm.Inputs['jurnalDetilEdit-obj_ismanuallink']
 const obj_jurnal_id = frm.Inputs['jurnalDetilEdit-obj_jurnal_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -903,6 +905,7 @@ async function btn_new_click(self, evt) {
 			jurnaldetil_value: 0,
 			curr_rate: 1,
 			jurnaldetil_idr: 0,
+			blockorder: 0,
 		}
 
 

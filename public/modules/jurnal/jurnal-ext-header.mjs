@@ -39,7 +39,10 @@ const _coacurr = 'jurnalHeaderEdit-obj_coacurr'
 
 
 let selectedPeriode = { periode_start: null, periode_end: null }
-let selectedJurnaltype = {}
+let selectedJurnaltype = {
+	jurnaltype_id: null,
+	jurnaltype_name: ''
+}
 
 
 export async function init_header(self, args) {
@@ -85,8 +88,11 @@ export async function init_header(self, args) {
 		}
 	*/
 
-	selectedPeriode.periode_start = Context.setting.currentPeriode.periode_start
-	selectedPeriode.periode_end = Context.setting.currentPeriode.periode_end
+
+	if (Context.setting.currentPeriode != null) {
+		selectedPeriode.periode_start = Context.setting.currentPeriode.periode_start
+		selectedPeriode.periode_end = Context.setting.currentPeriode.periode_end
+	}
 
 
 	// untuk keperluan printing
@@ -146,16 +152,10 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 
 export function headerList_addTableEvents(self, tbl) {
 	tbl.addEventListener('rowrender', (evt) => {
-		const tr = evt.detail.tr
-		const tdPost = tr.querySelector('[data-name="ispost"]')
-		const postDataValue = tdPost.getAttribute('data-value')
-		if (postDataValue == 'true') {
-			tr.setAttribute('data-isposted', true)
-		} else {
-			tr.removeAttribute('data-isposted')
-		}
 
+		const tr = evt.detail.tr
 		const data = evt.detail.args.data
+
 		if (data.iscommit !== undefined) {
 			if (data.iscommit === true) {
 				tr.setAttribute('data-iscommit', true)
@@ -164,6 +164,13 @@ export function headerList_addTableEvents(self, tbl) {
 			}
 		}
 
+		if (data.ispost !== undefined) {
+			if (data.ispost === true) {
+				tr.setAttribute('data-isposted', true)
+			} else {
+				tr.removeAttribute('data-isposted')
+			}
+		}
 
 		let unbalance = isUnbalance(data.balance_value, data.balance_idr)
 		if (unbalance) {
@@ -171,11 +178,6 @@ export function headerList_addTableEvents(self, tbl) {
 		} else {
 			tr.removeAttribute('data-isunbalance')
 		}
-
-
-
-
-
 	})
 }
 
@@ -223,7 +225,10 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 		datainit.periode_id = { value: Context.setting.currentPeriode.value, text: Context.setting.currentPeriode.text }
 	}
 
-	jurnaltype_changed(self, {}, frm)
+	// jurnaltype_changed(self, {}, frm)
+	datainit.jurnaltype_id = { value: selectedJurnaltype.jurnaltype_id, text: selectedJurnaltype.jurnaltype_name }
+	jurnaltype_changed(self, selectedJurnaltype, frm)
+
 	paymtype_changed(self, {}, frm)
 	updateDetilInfo_balance(self, 0, 0)
 
@@ -247,18 +252,26 @@ export async function jurnalHeaderEdit_dataSaving(self, dataToSave, frm, args) {
 	try {
 
 
+		const obj_jurnal_datedue = frm.Inputs[_jurnal_datedue]
 		const elDuedate = document.getElementById(`${_jurnal_datedue}-container`)
-		const cekDuedate = elDuedate.classList.contains('hidden')
-		if (cekDuedate) {
+		const hasDuedate = !elDuedate.classList.contains('hidden')
+
+		if (hasDuedate) {
 			if (jurnal_datedue < jurnal_date) {
 				// 'due date tidak boleh lebih lampau dari jurnal date'
-				// konfirmasi ke user
-				const res = await $fgta5.MessageBox.confirm('Due date lebih lampau dari book date!<br>Lanjutkan?')
-				if (res != 'ok') {
-					args.cancelSave = true
-					return
-				}
+				throw new Error('due date tidak boleh lebih lampau dari jurnal date')
+
+				// const res = await $fgta5.MessageBox.confirm('Due date lebih lampau dari book date!<br>Lanjutkan?')
+				// if (res != 'ok') {
+				// 	args.cancelSave = true
+				// 	return
+				// }
 			}
+		} else {
+			// jika tidak punya duedate, nilai duedate disamakan dengan bookdate
+			obj_jurnal_datedue.value = jurnal_date
+			dataToSave.jurnal_datedue = jurnal_date
+
 		}
 
 
@@ -327,19 +340,18 @@ export async function obj_paymreq_id_populating(self, obj_paymreq_id, frm, evt) 
 	const { tr, data, text } = evt.detail
 
 	const td = tr.querySelector('td')
-	td.style.display = 'flex'
-	td.style.paddingRight = '10px'
+	td.classList.add('paymreq-row')
 
 	const divDoc = document.createElement('div')
-	divDoc.innerHTML = data.paymreq_doc
+	divDoc.innerHTML = data.outstanding_doc
 	divDoc.classList.add('paymreq-row-doc')
 
 	const divDescr = document.createElement('div')
-	divDescr.innerHTML = text
+	divDescr.innerHTML = data.outstanding_descr
 	divDescr.classList.add('paymreq-row-descr')
 
 	const divValue = document.createElement('div')
-	divValue.innerHTML = pageHelper.formatNumber(data.paymreq_total)
+	divValue.innerHTML = pageHelper.formatNumber(data.outstanding_value)
 	divValue.classList.add('paymreq-row-value')
 
 	const divCurr = document.createElement('div')
@@ -529,6 +541,16 @@ export function updateList_balance(self, balance_value, balance_idr) {
 	self.Modules.jurnalHeaderList.updateCurrentRow(self, { balance_value, balance_idr })
 }
 
+export function setSelectedJurnaltype(jurnaltype) {
+	selectedJurnaltype = jurnaltype
+
+	paymtype_changed(self, {}, frm)
+
+	// reset paymreq
+	const obj_paymreq_id = frm.Inputs[_paymreq_id]
+	obj_paymreq_id.clear()
+	obj_paymreq_id.setSelected(null)
+}
 
 async function btn_actionCommit_click(self, frm, CurrentState, evt) {
 	const jurnal_id = frm.Inputs[_jurnal_id].value
@@ -864,12 +886,7 @@ function paymreq_changed(self, paymreq, frm) {
 
 
 	// descr
-	let descr = paymreq.paymreq_invoice?.trim()
-	if (descr) {
-		descr = `[${descr}]`
-	}
-	descr = `${descr} ${paymreq.paymreq_descr}`
-	frm.Inputs[_jurnal_descr].value = descr
+	frm.Inputs[_jurnal_descr].value = paymreq.outstanding_descr
 
 
 	// partner
@@ -921,7 +938,7 @@ function paymreq_changed(self, paymreq, frm) {
 	frm.Inputs[_curr_id].setSelected(paymreq.curr_id, paymreq.curr_name)
 
 	// value
-	const value = paymreq.paymreq_total
+	const value = paymreq.outstanding_value
 	const rate = paymreq.curr_rate
 	const idr = value * rate
 	frm.Inputs[_jurnal_value].value = value

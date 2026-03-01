@@ -46,8 +46,9 @@ export async function jurnal_init(self, initialData) {
 		const sqlPaymtype = `
 			select 
 				paymtype_id, 
-				ishaspartnercontact, ishaspartnerbankselector , ishasbankaccount, 
-				ishasbankaccountname, ishasbankname, ishasgiro
+				ishaspartnercontact, ishaspartnerbankselector , 
+				ishasbankaccount, ishasbankaccountname, 
+				ishasbankname, ishasgiro
 			from ${TABLE.paymtype}`
 
 		const rowsPaymtype = await db.any(sqlPaymtype)
@@ -57,15 +58,24 @@ export async function jurnal_init(self, initialData) {
 		}
 		initialData.setting.paymtype = paymtype
 
+		// cek data
+		// debugger
+		const rowTimezone = await db.one(`SELECT CURRENT_DATE, NOW(), current_setting('timezone')`);
+
+
 		/* ambil data current periode_id */
 		const sqlCurrentPeriode = `
 			select 
-				periode_id, periode_name, periode_start, periode_end 
+				periode_id, periode_name, periode_start, periode_end
 			from ${TABLE.periode}
-			where periode_start <= now() and periode_end >=now() and periode_isclosed=false
+			where 
+				    periode_start <= CURRENT_DATE
+				and periode_end >= CURRENT_DATE
+				and periode_isclosed=false
 			limit 1
 		`
-		const rowPeriode = await db.one(sqlCurrentPeriode)
+
+		const rowPeriode = await db.oneOrNone(sqlCurrentPeriode)
 		if (rowPeriode != null) {
 			initialData.setting.currentPeriode = {
 				value: rowPeriode.periode_id,
@@ -76,6 +86,7 @@ export async function jurnal_init(self, initialData) {
 		} else {
 			initialData.setting.currentPeriode = null
 		}
+
 
 	} catch (err) {
 		throw err
@@ -132,14 +143,30 @@ export async function headerCreated(self, tx, ret, data, logMetadata, args) {
 }
 
 export async function headerUpdating(self, tx, data) {
+	const { jurnal_id } = data
+
 	excludeNonEditableHeader(data) 	// buang data yang tidak boleh dimodif user
+
+	await cekJurnalForModification(self, tx, jurnal_id)
 }
 
 export async function headerDeleting(self, tx, dataToRemove) {
-	// sebelum header dihapus, unset dahulu jurnaldetil_id_link
 	const { jurnal_id } = dataToRemove
+
+	await cekJurnalForModification(self, tx, jurnal_id)
+
+
+	// sebelum header dihapus, unset dahulu jurnaldetil_id_link
 	const sqlUnlinkDetil = `update ${TABLE.jurnal} set jurnaldetil_id_link=null where jurnal_id=\${jurnal_id}`
 	await tx.none(sqlUnlinkDetil, { jurnal_id })
+
+	// lakukan pre-cleanup
+	const sqlCleanup = `call public.jurnal_precleanup(\${jurnal_id})`
+	await tx.none(sqlCleanup, { jurnal_id })
+
+}
+
+export async function headerDeleted(self, tx, deletedRow, logMetadata) {
 }
 
 export async function headerUpdated(self, tx, ret, data, logMetadata) {
@@ -240,9 +267,10 @@ export async function getPrintData(self, db, body) {
 			select * from ${TABLE.jurnaldetil} 
 			where jurnal_id = \${jurnal_id}
 			order by
-				case when jurnaldetil_value>=0 then 0 else 1 end,
-				case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
-				case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+				(case when jurnaldetil_value>=0 then 0 else 1 end),
+				blockorder ASC,
+				(case when jurnaldetil_value>=0 then jurnaldetil_value end) DESC,
+				(case when jurnaldetil_value<0 then jurnaldetil_value end) ASC`
 
 
 		const rowsDetil = await db.any(sqlDetil, { jurnal_id: jurnal_id })
@@ -261,7 +289,8 @@ export async function getPrintData(self, db, body) {
 				jurnaldetil_descr: row.jurnaldetil_descr,
 				coa_name: coa.coa_name,
 				jurnaldetil_idr: sqlUtil.formatDecimal(row.jurnaldetil_idr, 0),
-				jurnaldetil_ishead: row.jurnaldetil_ishead
+				jurnaldetil_ishead: row.jurnaldetil_ishead,
+				tag_paymreq_data: row.tag_paymreq_data
 			}
 
 			if (row.site_id != null) {
@@ -349,12 +378,28 @@ export async function headerOpen(self, db, data) {
 }
 
 
+export async function detilOpen(self, db, data) {
+	const { coa_id } = data;
+
+	sqlUtil.connect(db);
+
+	const [
+		coa,
+	] = await Promise.all([
+		sqlUtil.lookupdb(db, TABLE.coa, 'coa_id', coa_id),
+	]);
+
+	Object.assign(data, {
+		coa
+	})
+}
 
 export async function detilListCriteria(self, db, searchMap, criteria, sort, columns, args) {
 	args.sqlSort = `
-		case when jurnaldetil_value>=0 then 0 else 1 end,
-		case when jurnaldetil_value>=0 then jurnaldetil_value end DESC,
-		case when jurnaldetil_value<0 then jurnaldetil_value end asc`
+		(case when jurnaldetil_value>=0 then 0 else 1 end),
+		blockorder ASC,
+		(case when jurnaldetil_value>=0 then jurnaldetil_value end) DESC,
+		(case when jurnaldetil_value<0 then jurnaldetil_value end) ASC`
 }
 
 export async function detilList(self, listData, args) {
@@ -380,7 +425,9 @@ export async function detilCreated(self, tx, ret, data, logMetadata, args) {
 }
 
 export async function detilUpdating(self, tx, data) {
+	const { jurnal_id } = data
 	excludeNonEditableDetil(data)
+	await cekJurnalForModification(self, tx, jurnal_id)
 }
 
 export async function detilUpdated(self, tx, ret, data, logMetadata) {
@@ -391,6 +438,13 @@ export async function detilUpdated(self, tx, ret, data, logMetadata) {
 
 	await updateHeaderValue(self, tx, ret, jurnal_id)
 }
+
+export async function detilDeleting(self, tx, rowdetil, logMetadata) {
+	const { jurnal_id } = rowdetil
+	await cekJurnalForModification(self, tx, jurnal_id)
+}
+
+
 
 export async function detilDeleted(self, tx, deletedRow, logMetadata) {
 	const { jurnal_id } = deletedRow
@@ -941,4 +995,20 @@ async function updateHeaderValue(self, db, ret, jurnal_id) {
 	} catch (err) {
 		throw err
 	}
+}
+
+
+async function cekJurnalForModification(self, tx, jurnal_id) {
+	const sqlCek = `select jurnal_doc, ispost, iscommit from public.jurnal where jurnal_id=\${jurnal_id}`
+	const rowCek = await tx.one(sqlCek, { jurnal_id })
+	const { jurnal_doc, ispost, iscommit } = rowCek
+
+	if (iscommit) {
+		throw new Error(`jurnal ${jurnal_doc} tidak bisa dimodifikasi, status jurnal: <b>commit</b>`)
+	}
+
+	if (ispost) {
+		throw new Error(`jurnal ${jurnal_doc} tidak bisa dimodifikasi, status jurnal: <b>posted`)
+	}
+
 }

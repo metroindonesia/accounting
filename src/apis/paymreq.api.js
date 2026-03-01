@@ -135,7 +135,7 @@ async function paymreq_headerList(self, body) {
 	const tablename = headerTableName
 	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
-		searchtext: `paymreq_doc = \${searchtext}`,
+		searchtext: `paymreq_doc = \${searchtext} OR paymreq_descr ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
@@ -167,7 +167,7 @@ async function paymreq_headerList(self, body) {
 			tablename: args.tablename, 
 			columns, 
 			whereClause, 
-			sort, 
+			sort: args.sqlSort ?? sort,
 			limit:max_rows+1, 
 			offset, 
 			queryParams
@@ -597,8 +597,8 @@ async function paymreq_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log
@@ -654,7 +654,7 @@ async function paymreq_detilList(self, body) {
 			tablename: args.tablename, 
 			columns, 
 			whereClause, 
-			sort, 
+			sort: args.sqlSort ?? sort, 
 			limit:max_rows+1, 
 			offset, 
 			queryParams

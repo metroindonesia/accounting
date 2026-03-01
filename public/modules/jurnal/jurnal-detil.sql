@@ -132,15 +132,15 @@ comment on column public."jurnaldetil".curr_id is '';
 
 
 -- =============================================
--- FIELD: jurnaldetil_value decimal(13, 2)
+-- FIELD: jurnaldetil_value decimal(18, 2)
 -- =============================================
 -- ADD jurnaldetil_value
-alter table public."jurnaldetil" add jurnaldetil_value decimal(13, 2) not null default 0;
+alter table public."jurnaldetil" add jurnaldetil_value decimal(18, 2) not null default 0;
 comment on column public."jurnaldetil".jurnaldetil_value is '';
 
 -- MODIFY jurnaldetil_value
 alter table public."jurnaldetil"
-	alter column jurnaldetil_value type decimal(13, 2),
+	alter column jurnaldetil_value type decimal(18, 2),
 	ALTER COLUMN jurnaldetil_value SET DEFAULT 0,
 	ALTER COLUMN jurnaldetil_value SET NOT NULL;
 comment on column public."jurnaldetil".jurnaldetil_value is '';
@@ -252,6 +252,21 @@ comment on column public."jurnaldetil".agingtype_id is '';
 
 
 -- =============================================
+-- FIELD: blockorder smallint
+-- =============================================
+-- ADD blockorder
+alter table public."jurnaldetil" add blockorder smallint not null default 0;
+comment on column public."jurnaldetil".blockorder is '';
+
+-- MODIFY blockorder
+alter table public."jurnaldetil"
+	alter column blockorder type smallint,
+	ALTER COLUMN blockorder SET DEFAULT 0,
+	ALTER COLUMN blockorder SET NOT NULL;
+comment on column public."jurnaldetil".blockorder is '';
+
+
+-- =============================================
 -- FIELD: paymreq_id bigint
 -- =============================================
 -- ADD paymreq_id
@@ -297,6 +312,21 @@ comment on column public."jurnaldetil".tag_paymreq_id is 'untuk penanda bahwa ba
 
 
 -- =============================================
+-- FIELD: tag_paymreq_data text
+-- =============================================
+-- ADD tag_paymreq_data
+alter table public."jurnaldetil" add tag_paymreq_data text  ;
+comment on column public."jurnaldetil".tag_paymreq_data is '';
+
+-- MODIFY tag_paymreq_data
+alter table public."jurnaldetil"
+	alter column tag_paymreq_data type text,
+	ALTER COLUMN tag_paymreq_data DROP DEFAULT,
+	ALTER COLUMN tag_paymreq_data DROP NOT NULL;
+comment on column public."jurnaldetil".tag_paymreq_data is '';
+
+
+-- =============================================
 -- FIELD: isdebet boolean
 -- =============================================
 -- ADD isdebet
@@ -339,6 +369,21 @@ alter table public."jurnaldetil"
 	ALTER COLUMN iscurradj SET DEFAULT false,
 	ALTER COLUMN iscurradj SET NOT NULL;
 comment on column public."jurnaldetil".iscurradj is '';
+
+
+-- =============================================
+-- FIELD: ismanuallink boolean
+-- =============================================
+-- ADD ismanuallink
+alter table public."jurnaldetil" add ismanuallink boolean not null default false;
+comment on column public."jurnaldetil".ismanuallink is '';
+
+-- MODIFY ismanuallink
+alter table public."jurnaldetil"
+	alter column ismanuallink type boolean,
+	ALTER COLUMN ismanuallink SET DEFAULT false,
+	ALTER COLUMN ismanuallink SET NOT NULL;
+comment on column public."jurnaldetil".ismanuallink is '';
 
 
 -- =============================================
@@ -542,6 +587,8 @@ comment on column public."jurnaldetil"._modifydate is 'waktu terakhir record dim
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$coa_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$partner_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$struct_id;
@@ -555,8 +602,6 @@ ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$agingtype
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 
 
 -- Add Foreign Key Constraint  
