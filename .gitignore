@@ -145,3 +145,7 @@ public/application.css
 public/icons/icon-logo-*
 
 public/local
+
+production.config.js
+
+run-prod.sh
