@@ -1,6 +1,6 @@
 import Context from './paymreq-context.mjs'
 import * as Ext from './paymreq-ext.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderDetil ?? Ext
 
