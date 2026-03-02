@@ -25,13 +25,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await txrowtype_init(this, body) }
 
+	// extender call
+	async execute(body) { return await txrowtype_execute(this, body) }
+
 	// header
 	async headerList(body) { return await txrowtype_headerList(this, body) }
 	async headerOpen(body) { return await txrowtype_headerOpen(this, body) }
 	async headerUpdate(body) { return await txrowtype_headerUpdate(this, body)}
 	async headerCreate(body) { return await txrowtype_headerCreate(this, body)}
 	async headerDelete(body) { return await txrowtype_headerDelete(this, body) }
-	
+
 			
 }	
 
@@ -79,6 +82,24 @@ async function txrowtype_init(self, body) {
 }
 
 
+// execute extender function
+async function txrowtype_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, txrowtype_log) {}
+		return await Extender[fnName](self, db, body, txrowtype_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function txrowtype_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -94,6 +115,8 @@ async function txrowtype_log(self, body, startTime, tablename, id, action, data=
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -119,7 +142,7 @@ async function txrowtype_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -129,7 +152,16 @@ async function txrowtype_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort,
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -352,8 +384,8 @@ async function txrowtype_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log

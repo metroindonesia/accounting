@@ -156,7 +156,7 @@ async function paymreqtype_headerList(self, body) {
 			tablename: args.tablename, 
 			columns, 
 			whereClause, 
-			sort, 
+			sort: args.sqlSort ?? sort,
 			limit:max_rows+1, 
 			offset, 
 			queryParams
@@ -394,8 +394,8 @@ async function paymreqtype_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log

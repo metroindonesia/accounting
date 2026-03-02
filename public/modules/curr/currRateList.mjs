@@ -98,15 +98,22 @@ export async function openList(self, params) {
 
 	const currRateEdit = self.Modules.currRateEdit
 	const btn_addrow = currRateEdit.getCurrentState().Actions.newdata
-	const btn_edit = currRateEdit.getCurrentState().Actions.edit
 	
-	if (CurrentState.headerFormLocked) {
+
+
+	// walaupun CurrentState.headerFormLocked, tapi kalau header edit tidak di suspend tetap bisa add/remove row di detil
+	const suspended = self.Modules.currHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+	if (suspended) {
  		btn_addrow.disabled = true
 		btn_delrow.disabled = true
 	} else {
 		btn_addrow.disabled = false
 		btn_delrow.disabled = false
 	}
+}
+
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getGrid(self) {

@@ -182,6 +182,7 @@ comment on column public."coagroup"._modifydate is 'waktu terakhir record dimodi
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."coagroup" DROP CONSTRAINT fk$public$coagroup$coarpt_id;
 ALTER TABLE public."coagroup" DROP CONSTRAINT fk$public$coagroup$coagroup_parent;
 
 

@@ -1,15 +1,15 @@
 import Context from './user-context.mjs'
 import * as Ext from './user-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderGroup ?? Ext
 
 
-const CurrentState = {}
 const Crsl =  Context.Crsl
 const CurrentSectionId = Context.Sections.userGroupEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
+const CurrentState = {}
 
 const TitleWhenNew = 'New Group'
 const TitleWhenView = 'View Group'
@@ -151,8 +151,10 @@ export async function openSelectedData(self, params) {
 
 		
 
+		const suspended = self.Modules.userHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+
+		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
@@ -619,11 +621,11 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function userGroupEdit_dataSaved(self, data, frm) {}
 		const fn_datasaved_name = 'userGroupEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			await fn_datasaved(self, data, frm)
+			// export async function userGroupEdit_dataSaved(self, data, frm) {}
+			await fn_datasaved(self, result, frm)
 		}
 
 
@@ -677,11 +679,38 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function userGroupEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'userGroupEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
+		
+
+		// Extender Delete
+		// export async function userGroupEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'userGroupEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
 		// hapus current row yang dipilih di list
 		self.Modules.userGroupList.removeCurrentRow(self)
-		
+
 		// kembali ke list
 		self.Modules.userGroupList.Section.show()
 

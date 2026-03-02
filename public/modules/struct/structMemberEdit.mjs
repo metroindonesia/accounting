@@ -1,15 +1,15 @@
 import Context from './struct-context.mjs'
 import * as Ext from './struct-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderMember ?? Ext
 
 
-const CurrentState = {}
 const Crsl =  Context.Crsl
 const CurrentSectionId = Context.Sections.structMemberEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
+const CurrentState = {}
 
 const TitleWhenNew = 'New Members'
 const TitleWhenView = 'View Members'
@@ -151,8 +151,10 @@ export async function openSelectedData(self, params) {
 
 		
 
+		const suspended = self.Modules.structHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+
+		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
@@ -619,11 +621,11 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function structMemberEdit_dataSaved(self, data, frm) {}
 		const fn_datasaved_name = 'structMemberEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			await fn_datasaved(self, data, frm)
+			// export async function structMemberEdit_dataSaved(self, data, frm) {}
+			await fn_datasaved(self, result, frm)
 		}
 
 

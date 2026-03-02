@@ -106,6 +106,10 @@ comment on column core."userlogin"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."userlogin" DROP CONSTRAINT fk$core$userlogin$user_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."userlogin"
 	ADD CONSTRAINT fk$core$userlogin$user_id
@@ -123,6 +127,11 @@ CREATE INDEX idx_fk$core$userlogin$user_id ON core."userlogin"(user_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."userlogin"
+	drop constraint uq$core$userlogin$userlogin_name;
+	
+
 -- Add unique index 
 alter table  core."userlogin"
 	add constraint uq$core$userlogin$userlogin_name unique (userlogin_name); 

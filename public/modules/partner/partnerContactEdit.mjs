@@ -1,6 +1,6 @@
 import Context from './partner-context.mjs'
 import * as Ext from './partner-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderContact ?? Ext
 

@@ -121,6 +121,11 @@ comment on column core."groupprogram"._modifydate is 'waktu terakhir record dimo
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."groupprogram" DROP CONSTRAINT fk$core$groupprogram$program_id;
+ALTER TABLE core."groupprogram" DROP CONSTRAINT fk$core$groupprogram$group_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."groupprogram"
 	ADD CONSTRAINT fk$core$groupprogram$program_id
@@ -149,6 +154,11 @@ CREATE INDEX idx_fk$core$groupprogram$group_id ON core."groupprogram"(group_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."groupprogram"
+	drop constraint uq$core$groupprogram$groupprogram_pair;
+	
+
 -- Add unique index 
 alter table  core."groupprogram"
 	add constraint uq$core$groupprogram$groupprogram_pair unique (group_id, program_id); 

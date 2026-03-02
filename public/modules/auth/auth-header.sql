@@ -214,6 +214,14 @@ CREATE INDEX idx_fk$core$auth$delegate_user_id ON core."auth"(delegate_user_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."auth"
+	drop constraint uq$core$auth$auth_name;
+
+alter table core."auth"
+	drop constraint uq$core$auth$auth_label;
+	
+
 -- Add unique index 
 alter table  core."auth"
 	add constraint uq$core$auth$auth_name unique (auth_name); 

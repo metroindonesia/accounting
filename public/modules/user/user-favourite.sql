@@ -106,6 +106,11 @@ comment on column core."userfavouriteprogram"._modifydate is 'waktu terakhir rec
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$program_id;
+ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$user_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."userfavouriteprogram"
 	ADD CONSTRAINT fk$core$userfavouriteprogram$program_id
@@ -134,6 +139,11 @@ CREATE INDEX idx_fk$core$userfavouriteprogram$user_id ON core."userfavouriteprog
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."userfavouriteprogram"
+	drop constraint uq$core$userfavouriteprogram$userfavouriteprogram_pair;
+	
+
 -- Add unique index 
 alter table  core."userfavouriteprogram"
 	add constraint uq$core$userfavouriteprogram$userfavouriteprogram_pair unique (userfavouriteprogram_id, program_id); 

@@ -27,13 +27,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await group_init(this, body) }
 
+	// extender call
+	async execute(body) { return await group_execute(this, body) }
+
 	// header
 	async headerList(body) { return await group_headerList(this, body) }
 	async headerOpen(body) { return await group_headerOpen(this, body) }
 	async headerUpdate(body) { return await group_headerUpdate(this, body)}
 	async headerCreate(body) { return await group_headerCreate(this, body)}
 	async headerDelete(body) { return await group_headerDelete(this, body) }
-	
+
 	
 	// program	
 	async programList(body) { return await group_programList(this, body) }
@@ -89,6 +92,24 @@ async function group_init(self, body) {
 }
 
 
+// execute extender function
+async function group_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, group_log) {}
+		return await Extender[fnName](self, db, body, group_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function group_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -104,6 +125,8 @@ async function group_log(self, body, startTime, tablename, id, action, data={}, 
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -129,7 +152,7 @@ async function group_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -139,7 +162,16 @@ async function group_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort,
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -246,7 +278,7 @@ async function group_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'GRUP' }
+			const args = { section: 'header', doc_id:'GRUP' }
 
 			
 			// buat short sequencer	
@@ -374,6 +406,9 @@ async function group_headerDelete(self, body) {
 				const sql = `select * from ${programTableName} where group_id=\${group_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowprogram of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.programDeleting === 'function') {
 						// export async function programDeleting(self, tx, rowprogram, logMetadata) {}
@@ -408,8 +443,8 @@ async function group_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log
@@ -451,7 +486,7 @@ async function group_programList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.programListCriteria === 'function') {
@@ -461,7 +496,15 @@ async function group_programList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -492,13 +535,20 @@ async function group_programList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -693,6 +743,7 @@ async function group_programDelete(self, body) {
 			const sql = `select * from ${programTableName} where groupprogram_id=\${groupprogram_id}`
 			const rowprogram = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.programDeleting === 'function') {
@@ -732,6 +783,8 @@ async function group_programDeleteRows(self, body) {
 
 
 	try {
+
+		let group_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -739,7 +792,11 @@ async function group_programDeleteRows(self, body) {
 				const dataToRemove = {groupprogram_id: id}
 				const sql = `select * from ${programTableName} where groupprogram_id=\${groupprogram_id}`
 				const rowprogram = await tx.oneOrNone(sql, dataToRemove)
+				group_id = rowprogram.group_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.programDeleting === 'function') {
 					// async function programDeleting(self, tx, rowprogram, logMetadata) {}
@@ -760,11 +817,22 @@ async function group_programDeleteRows(self, body) {
 				group_log(self, body, startTime, headerTableName, rowprogram.group_id, 'DELETE ROW PROGRAM', {groupprogram_id: rowprogram.groupprogram_id, tablename: programTableName}, `removed: ${rowprogram.groupprogram_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			group_id: group_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'programRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function programRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

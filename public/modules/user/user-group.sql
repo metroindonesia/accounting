@@ -121,6 +121,11 @@ comment on column core."usergroup"._modifydate is 'waktu terakhir record dimodif
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."usergroup" DROP CONSTRAINT fk$core$usergroup$group_id;
+ALTER TABLE core."usergroup" DROP CONSTRAINT fk$core$usergroup$user_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."usergroup"
 	ADD CONSTRAINT fk$core$usergroup$group_id

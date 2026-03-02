@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function groupList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'groupList_addTableEvents'
+	// export function userGroupList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'userGroupList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -103,15 +103,22 @@ export async function openList(self, params) {
 
 	const userGroupEdit = self.Modules.userGroupEdit
 	const btn_addrow = userGroupEdit.getCurrentState().Actions.newdata
-	const btn_edit = userGroupEdit.getCurrentState().Actions.edit
 	
-	if (CurrentState.headerFormLocked) {
+
+
+	// walaupun CurrentState.headerFormLocked, tapi kalau header edit tidak di suspend tetap bisa add/remove row di detil
+	const suspended = self.Modules.userHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+	if (suspended) {
  		btn_addrow.disabled = true
 		btn_delrow.disabled = true
 	} else {
 		btn_addrow.disabled = false
 		btn_delrow.disabled = false
 	}
+}
+
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getGrid(self) {
@@ -241,11 +248,11 @@ async function listRows(self, criteria, offset, limit, sort) {
 	const url = `/${Context.moduleName}/group-list`
 	const evt = { url, limit }
 
-	// export function groupList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'groupList_dataLoad'
+	// export async function userGroupList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'userGroupList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
-		fn_dataLoad(self, criteria, sort, evt)
+		await fn_dataLoad(self, criteria, sort, evt)
 	}
 
 	try {
@@ -270,6 +277,14 @@ async function deleteRows(self, data) {
 		
 		const result = await Module.apiCall(url, { data }) 
 		if (result.deleted) {
+
+			// export async function userGroupList_rowsDeleted(self, data) {}
+			const fn_name = 'userGroupList_rowsDeleted'
+			const fn = Extender[fn_name]
+			if (typeof fn === 'function') {
+				await fn(self, result)
+			}
+
 			return true
 		} else {
 			throw new Error(result.message)
@@ -323,11 +338,11 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export function groupList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'groupList_tableDataLoaded'
+		// export async function userGroupList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'userGroupList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
-			fn(self, tbl, result)
+			await fn(self, tbl, result)
 		}
 
 

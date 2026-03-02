@@ -33,8 +33,8 @@ export async function init(self, args) {
 
 	// tambahkan event lain di extender: rowrender, rowremoving
 	// dapatkan parameternya di evt.detail
-	// export function favouriteList_addTableEvents(self, tbl) {}
-	const fn_addTableEvents_name = 'favouriteList_addTableEvents'
+	// export function userFavouriteList_addTableEvents(self, tbl) {}
+	const fn_addTableEvents_name = 'userFavouriteList_addTableEvents'
 	const fn_addTableEvents = Extender[fn_addTableEvents_name]
 	if (typeof fn_addTableEvents === 'function') {
 		fn_addTableEvents(self, tbl)
@@ -103,15 +103,22 @@ export async function openList(self, params) {
 
 	const userFavouriteEdit = self.Modules.userFavouriteEdit
 	const btn_addrow = userFavouriteEdit.getCurrentState().Actions.newdata
-	const btn_edit = userFavouriteEdit.getCurrentState().Actions.edit
 	
-	if (CurrentState.headerFormLocked) {
+
+
+	// walaupun CurrentState.headerFormLocked, tapi kalau header edit tidak di suspend tetap bisa add/remove row di detil
+	const suspended = self.Modules.userHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+	if (suspended) {
  		btn_addrow.disabled = true
 		btn_delrow.disabled = true
 	} else {
 		btn_addrow.disabled = false
 		btn_delrow.disabled = false
 	}
+}
+
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getGrid(self) {
@@ -241,11 +248,11 @@ async function listRows(self, criteria, offset, limit, sort) {
 	const url = `/${Context.moduleName}/favourite-list`
 	const evt = { url, limit }
 
-	// export function favouriteList_dataLoad(self, criteria, sort, evt) {}
-	const fn_dataLoad_name = 'favouriteList_dataLoad'
+	// export async function userFavouriteList_dataLoad(self, criteria, sort, evt) {}
+	const fn_dataLoad_name = 'userFavouriteList_dataLoad'
 	const fn_dataLoad = Extender[fn_dataLoad_name]
 	if (typeof fn_dataLoad === 'function') {
-		fn_dataLoad(self, criteria, sort, evt)
+		await fn_dataLoad(self, criteria, sort, evt)
 	}
 
 	try {
@@ -270,6 +277,14 @@ async function deleteRows(self, data) {
 		
 		const result = await Module.apiCall(url, { data }) 
 		if (result.deleted) {
+
+			// export async function userFavouriteList_rowsDeleted(self, data) {}
+			const fn_name = 'userFavouriteList_rowsDeleted'
+			const fn = Extender[fn_name]
+			if (typeof fn === 'function') {
+				await fn(self, result)
+			}
+
 			return true
 		} else {
 			throw new Error(result.message)
@@ -323,11 +338,11 @@ async function tbl_loadData(self, params={}) {
 		tbl.setNext(result.nextoffset, result.limit)
 
 
-		// export function favouriteList_tableDataLoaded(self, tbl, result) {}
-		const fn_name = 'favouriteList_tableDataLoaded'
+		// export async function userFavouriteList_tableDataLoaded(self, tbl, result) {}
+		const fn_name = 'userFavouriteList_tableDataLoaded'
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
-			fn(self, tbl, result)
+			await fn(self, tbl, result)
 		}
 
 

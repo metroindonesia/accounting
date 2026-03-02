@@ -97,6 +97,11 @@ comment on column public."txrowtype"._modifydate is 'waktu terakhir record dimod
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."txrowtype"
+	drop constraint uq$public$txrowtype$txrowtype_name;
+	
+
 -- Add unique index 
 alter table  public."txrowtype"
 	add constraint uq$public$txrowtype$txrowtype_name unique (txrowtype_name); 

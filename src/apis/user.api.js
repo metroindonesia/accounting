@@ -30,13 +30,16 @@ export default class extends Api {
 	//         header-open-data
 	async init(body) { return await user_init(this, body) }
 
+	// extender call
+	async execute(body) { return await user_execute(this, body) }
+
 	// header
 	async headerList(body) { return await user_headerList(this, body) }
 	async headerOpen(body) { return await user_headerOpen(this, body) }
 	async headerUpdate(body) { return await user_headerUpdate(this, body)}
 	async headerCreate(body) { return await user_headerCreate(this, body)}
 	async headerDelete(body) { return await user_headerDelete(this, body) }
-	
+
 	
 	// login	
 	async loginList(body) { return await user_loginList(this, body) }
@@ -116,6 +119,24 @@ async function user_init(self, body) {
 }
 
 
+// execute extender function
+async function user_execute(self, body) {
+	const { fnName } = body
+
+	if (fnName==null || fnName=='') {
+		throw new Error('fnName belum didefinisikan di api call') 
+	}
+
+	if (typeof Extender[fnName] === 'function') {
+		// export async function [fnName](self, db, body, user_log) {}
+		return await Extender[fnName](self, db, body, user_log)
+	} else {
+		// api function extender tidak ditemukan
+		throw new Error(`${fnName} tidak ditmukan di extender`)
+	}
+}
+
+
 // data logging
 async function user_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
@@ -131,6 +152,8 @@ async function user_log(self, body, startTime, tablename, id, action, data={}, r
 	const ret = await logger.log(logdata)
 	return ret
 }
+
+
 
 
 
@@ -156,7 +179,7 @@ async function user_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -166,7 +189,16 @@ async function user_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort,
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -273,7 +305,7 @@ async function user_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', prefix:'USER' }
+			const args = { section: 'header', doc_id:'USER' }
 
 			
 			// buat short sequencer	
@@ -401,6 +433,9 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${loginTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowlogin of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.loginDeleting === 'function') {
 						// export async function loginDeleting(self, tx, rowlogin, logMetadata) {}
@@ -429,6 +464,9 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${propTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowprop of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.propDeleting === 'function') {
 						// export async function propDeleting(self, tx, rowprop, logMetadata) {}
@@ -457,6 +495,9 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${groupTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowgroup of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.groupDeleting === 'function') {
 						// export async function groupDeleting(self, tx, rowgroup, logMetadata) {}
@@ -485,6 +526,9 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${favouriteTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowfavourite of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.favouriteDeleting === 'function') {
 						// export async function favouriteDeleting(self, tx, rowfavourite, logMetadata) {}
@@ -519,8 +563,8 @@ async function user_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log
@@ -562,7 +606,7 @@ async function user_loginList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.loginListCriteria === 'function') {
@@ -572,7 +616,15 @@ async function user_loginList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -598,13 +650,20 @@ async function user_loginList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -794,6 +853,7 @@ async function user_loginDelete(self, body) {
 			const sql = `select * from ${loginTableName} where userlogin_id=\${userlogin_id}`
 			const rowlogin = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.loginDeleting === 'function') {
@@ -833,6 +893,8 @@ async function user_loginDeleteRows(self, body) {
 
 
 	try {
+
+		let user_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -840,7 +902,11 @@ async function user_loginDeleteRows(self, body) {
 				const dataToRemove = {userlogin_id: id}
 				const sql = `select * from ${loginTableName} where userlogin_id=\${userlogin_id}`
 				const rowlogin = await tx.oneOrNone(sql, dataToRemove)
+				user_id = rowlogin.user_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.loginDeleting === 'function') {
 					// async function loginDeleting(self, tx, rowlogin, logMetadata) {}
@@ -861,11 +927,22 @@ async function user_loginDeleteRows(self, body) {
 				user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', {userlogin_id: rowlogin.userlogin_id, tablename: loginTableName}, `removed: ${rowlogin.userlogin_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			user_id: user_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'loginRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function loginRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -897,7 +974,7 @@ async function user_propList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.propListCriteria === 'function') {
@@ -907,7 +984,15 @@ async function user_propList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -933,13 +1018,20 @@ async function user_propList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -1129,6 +1221,7 @@ async function user_propDelete(self, body) {
 			const sql = `select * from ${propTableName} where userprop_id=\${userprop_id}`
 			const rowprop = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.propDeleting === 'function') {
@@ -1168,6 +1261,8 @@ async function user_propDeleteRows(self, body) {
 
 
 	try {
+
+		let user_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1175,7 +1270,11 @@ async function user_propDeleteRows(self, body) {
 				const dataToRemove = {userprop_id: id}
 				const sql = `select * from ${propTableName} where userprop_id=\${userprop_id}`
 				const rowprop = await tx.oneOrNone(sql, dataToRemove)
+				user_id = rowprop.user_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.propDeleting === 'function') {
 					// async function propDeleting(self, tx, rowprop, logMetadata) {}
@@ -1196,11 +1295,22 @@ async function user_propDeleteRows(self, body) {
 				user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', {userprop_id: rowprop.userprop_id, tablename: propTableName}, `removed: ${rowprop.userprop_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			user_id: user_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'propRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function propRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -1232,7 +1342,7 @@ async function user_groupList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.groupListCriteria === 'function') {
@@ -1242,7 +1352,15 @@ async function user_groupList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -1273,13 +1391,20 @@ async function user_groupList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -1474,6 +1599,7 @@ async function user_groupDelete(self, body) {
 			const sql = `select * from ${groupTableName} where usergroup_id=\${usergroup_id}`
 			const rowgroup = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.groupDeleting === 'function') {
@@ -1513,6 +1639,8 @@ async function user_groupDeleteRows(self, body) {
 
 
 	try {
+
+		let user_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1520,7 +1648,11 @@ async function user_groupDeleteRows(self, body) {
 				const dataToRemove = {usergroup_id: id}
 				const sql = `select * from ${groupTableName} where usergroup_id=\${usergroup_id}`
 				const rowgroup = await tx.oneOrNone(sql, dataToRemove)
+				user_id = rowgroup.user_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.groupDeleting === 'function') {
 					// async function groupDeleting(self, tx, rowgroup, logMetadata) {}
@@ -1541,11 +1673,22 @@ async function user_groupDeleteRows(self, body) {
 				user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', {usergroup_id: rowgroup.usergroup_id, tablename: groupTableName}, `removed: ${rowgroup.usergroup_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			user_id: user_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'groupRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function groupRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err
@@ -1577,7 +1720,7 @@ async function user_favouriteList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.favouriteListCriteria === 'function') {
@@ -1587,7 +1730,15 @@ async function user_favouriteList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -1618,13 +1769,20 @@ async function user_favouriteList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -1819,6 +1977,7 @@ async function user_favouriteDelete(self, body) {
 			const sql = `select * from ${favouriteTableName} where userfavouriteprogram_id=\${userfavouriteprogram_id}`
 			const rowfavourite = await tx.oneOrNone(sql, dataToRemove)
 
+			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 			if (typeof Extender.favouriteDeleting === 'function') {
@@ -1858,6 +2017,8 @@ async function user_favouriteDeleteRows(self, body) {
 
 
 	try {
+
+		let user_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1865,7 +2026,11 @@ async function user_favouriteDeleteRows(self, body) {
 				const dataToRemove = {userfavouriteprogram_id: id}
 				const sql = `select * from ${favouriteTableName} where userfavouriteprogram_id=\${userfavouriteprogram_id}`
 				const rowfavourite = await tx.oneOrNone(sql, dataToRemove)
+				user_id = rowfavourite.user_id
 
+				const logMetadata = {}
+
+				
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.favouriteDeleting === 'function') {
 					// async function favouriteDeleting(self, tx, rowfavourite, logMetadata) {}
@@ -1886,11 +2051,22 @@ async function user_favouriteDeleteRows(self, body) {
 				user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName}, `removed: ${rowfavourite.userfavouriteprogram_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
+			user_id: user_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'favouriteRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function favouriteRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

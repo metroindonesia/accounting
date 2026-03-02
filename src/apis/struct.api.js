@@ -28,7 +28,7 @@ export default class extends Api {
 	async init(body) { return await struct_init(this, body) }
 
 	// extender call
-	async execute(body) { return await paymreq_execute(this, body) }
+	async execute(body) { return await struct_execute(this, body) }
 
 	// header
 	async headerList(body) { return await struct_headerList(this, body) }
@@ -152,7 +152,7 @@ async function struct_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -162,7 +162,16 @@ async function struct_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort,
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -427,6 +436,9 @@ async function struct_headerDelete(self, body) {
 				const sql = `select * from ${memberTableName} where struct_id=\${struct_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowmember of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.memberDeleting === 'function') {
 						// export async function memberDeleting(self, tx, rowmember, logMetadata) {}
@@ -461,8 +473,8 @@ async function struct_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log
@@ -504,7 +516,7 @@ async function struct_memberList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.memberListCriteria === 'function') {
@@ -514,7 +526,15 @@ async function struct_memberList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -545,13 +565,20 @@ async function struct_memberList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -820,12 +847,22 @@ async function struct_memberDeleteRows(self, body) {
 				struct_log(self, body, startTime, headerTableName, rowmember.struct_id, 'DELETE ROW MEMBER', {structmember_id: rowmember.structmember_id, tablename: memberTableName}, `removed: ${rowmember.structmember_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			struct_id: struct_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'memberRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function memberRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

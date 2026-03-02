@@ -121,6 +121,10 @@ comment on column core."userprop"._modifydate is 'waktu terakhir record dimodifi
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."userprop" DROP CONSTRAINT fk$core$userprop$user_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."userprop"
 	ADD CONSTRAINT fk$core$userprop$user_id
@@ -138,6 +142,11 @@ CREATE INDEX idx_fk$core$userprop$user_id ON core."userprop"(user_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."userprop"
+	drop constraint uq$core$userprop$userprop_name;
+	
+
 -- Add unique index 
 alter table  core."userprop"
 	add constraint uq$core$userprop$userprop_name unique (userprop_id, userprop_name); 

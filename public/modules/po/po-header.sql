@@ -112,7 +112,3 @@ comment on column public."po"._modifydate is 'waktu terakhir record dimodifikasi
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
--- Drop existing unique index 
-alter table public."po"
-	drop constraint uq$public$po$po_doc;
-	

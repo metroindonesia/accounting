@@ -28,7 +28,7 @@ export default class extends Api {
 	async init(body) { return await curr_init(this, body) }
 
 	// extender call
-	async execute(body) { return await paymreq_execute(this, body) }
+	async execute(body) { return await curr_execute(this, body) }
 
 	// header
 	async headerList(body) { return await curr_headerList(this, body) }
@@ -152,7 +152,7 @@ async function curr_headerList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.headerListCriteria === 'function') {
@@ -162,7 +162,16 @@ async function curr_headerList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort,
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -381,6 +390,9 @@ async function curr_headerDelete(self, body) {
 				const sql = `select * from ${rateTableName} where curr_id=\${curr_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowrate of rows) {
+					
+					const logMetadata = {}
+					
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.rateDeleting === 'function') {
 						// export async function rateDeleting(self, tx, rowrate, logMetadata) {}
@@ -415,8 +427,8 @@ async function curr_headerDelete(self, body) {
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender headerDeleted
 			if (typeof Extender.headerDeleted === 'function') {
-				// export async function headerDeleted(self, tx, ret, logMetadata) {}
-				await Extender.headerDeleted(self, tx, ret, logMetadata)
+				// export async function headerDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.headerDeleted(self, tx, deletedRow, logMetadata)
 			}
 
 			// record log
@@ -458,7 +470,7 @@ async function curr_rateList(self, body) {
 			}
 		}
 
-		const args = { db, criteria }
+		const args = { db, criteria, tablename }
 
 		// apabila ada keperluan untuk recompose criteria
 		if (typeof Extender.rateListCriteria === 'function') {
@@ -468,7 +480,15 @@ async function curr_rateList(self, body) {
 
 		var max_rows = limit==0 ? 10 : limit
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
-		const sql = sqlUtil.createSqlSelect({tablename, columns, whereClause, sort, limit:max_rows+1, offset, queryParams})
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
 		const rows = await db.any(sql, queryParams);
 
 		
@@ -494,13 +514,20 @@ async function curr_rateList(self, body) {
 			nextoffset = offset+max_rows
 		}
 
-		return {
+
+		const listData = {
 			criteria: criteria,
 			limit:  max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
 
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
 	} catch (err) {
 		throw err
 	}
@@ -764,12 +791,22 @@ async function curr_rateDeleteRows(self, body) {
 				curr_log(self, body, startTime, headerTableName, rowrate.curr_id, 'DELETE ROW RATE', {currrate_id: rowrate.currrate_id, tablename: rateTableName}, `removed: ${rowrate.currrate_id}`)
 			}
 		})
+		
 
 		const res = {
 			deleted: true,
 			curr_id: curr_id,
 			message: ''
 		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'rateRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function rateRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
 		return res
 	} catch (err) {
 		throw err

@@ -1,15 +1,15 @@
 import Context from './curr-context.mjs'
 import * as Ext from './curr-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderRate ?? Ext
 
 
-const CurrentState = {}
 const Crsl =  Context.Crsl
 const CurrentSectionId = Context.Sections.currRateEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
+const CurrentState = {}
 
 const TitleWhenNew = 'New Rate'
 const TitleWhenView = 'View Rate'
@@ -96,8 +96,10 @@ export async function openSelectedData(self, params) {
 
 		
 
+		const suspended = self.Modules.currHeaderEdit.getCurrentState().Actions.edit.isSuspended()
+
+		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
 		
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
@@ -566,11 +568,11 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		// export async function currRateEdit_dataSaved(self, data, frm) {}
 		const fn_datasaved_name = 'currRateEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			await fn_datasaved(self, data, frm)
+			// export async function currRateEdit_dataSaved(self, data, frm) {}
+			await fn_datasaved(self, result, frm)
 		}
 
 
