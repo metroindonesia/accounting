@@ -84,7 +84,7 @@ async function main() {
 		appConfig,
 		router,
 		allowedOrigins: [
-			/^https:\/\/[a-z0-9.-]+\.transfashion\.id(:\d+)?$/,
+			/^https:\/\/[a-z0-9.-]+\.transfirstluxury\.com(:\d+)?$/,
 			/^http:\/\/localhost:3003(:\d+)?$/
 		],
 		fnParseModuleRequest: async (req) => {
