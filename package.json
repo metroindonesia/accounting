@@ -11,13 +11,13 @@
     "clean": "kill -9 $(lsof -t -i :3003)"
   },
   "author": "Agung Nugroho",
-  "license": "GPL-3.0-or-later",
+  "license": "BSD-3-Clause",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@agung_dhewe/pgsqlc": "^1.1.5",
-    "@rollup/plugin-terser": "^0.4.4",
+    "@agung_dhewe/pgsqlc": "^1.1.6",
+    "@agung_dhewe/webapps": "^1.2.0",
     "bcrypt": "^6.0.0",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
@@ -35,8 +35,7 @@
     "ws": "^8.18.3"
   },
   "devDependencies": {
-    "@agung_dhewe/webapps": "file:../../agungdhewe/webapps",
-    "@rollup/plugin-terser": "0.4.4",
+    "@rollup/plugin-terser": "^0.1.0",
     "kill-port": "^2.0.1",
     "rollup": "^4.46.2"
   }
