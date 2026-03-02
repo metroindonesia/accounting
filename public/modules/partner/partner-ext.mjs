@@ -1,6 +1,10 @@
 import Context from './partner-context.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
+export const extenderHeader = null
+export const extenderBank = null
+export const extenderContact = null
+
 
 export async function init(self, args) {
 	console.log('initializing partnerExtender ...')
@@ -8,13 +12,13 @@ export async function init(self, args) {
 
 export async function obj_partnertype_id_selected(self, obj_partnertype_id, frm, evt) {
 	if (!evt.detail.changed) {
-		return 
+		return
 	}
 
 	const isEmployee = evt.detail.data.partnertype_isemployee
 	const obj_partner_isemployee = frm.Inputs['partnerHeaderEdit-obj_partner_isemployee']
 	obj_partner_isemployee.value = isEmployee
-	
+
 	partnertypeChanged(frm, {
 		isEmployee
 	})
@@ -29,7 +33,7 @@ export async function partnerHeaderEdit_formOpened(self, frm, CurrentState) {
 	})
 
 	isnonpkpChanged(frm, {
-		isNonPkp: frm.Inputs['partnerHeaderEdit-obj_partner_isnonpkp'].value	
+		isNonPkp: frm.Inputs['partnerHeaderEdit-obj_partner_isnonpkp'].value
 	})
 }
 
@@ -39,13 +43,13 @@ export async function partnerHeaderEdit_newData(self, datainit, frm) {
 	})
 
 	isnonpkpChanged(frm, {
-		isNonPkp: frm.Inputs['partnerHeaderEdit-obj_partner_isnonpkp'].value	
+		isNonPkp: frm.Inputs['partnerHeaderEdit-obj_partner_isnonpkp'].value
 	})
 }
 
 export async function obj_partner_isnonpkp_changed(self, obj_partner_isnonpkp, frm, evt) {
 	isnonpkpChanged(frm, {
-		isNonPkp: evt.detail.checked 
+		isNonPkp: evt.detail.checked
 	})
 }
 
@@ -53,7 +57,7 @@ export async function obj_partner_isnonpkp_changed(self, obj_partner_isnonpkp, f
 
 
 function partnertypeChanged(frm, partnertype) {
-	const {isEmployee} = partnertype
+	const { isEmployee } = partnertype
 	const obj_employee_nip = frm.Inputs['partnerHeaderEdit-obj_employee_nip']
 
 	// jika tipe partner adalah karyawan,

@@ -4,7 +4,8 @@ import * as ExtCoa from './jurnaltype-ext-coa.mjs'
 
 export const extenderHeader = ExtHeader
 export const extenderCoa = ExtCoa
-
+export const extenderPaymreqtype = null
+export const extenderUser = null
 
 
 export async function init(self, args) {

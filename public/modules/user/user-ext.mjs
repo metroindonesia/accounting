@@ -1,5 +1,11 @@
 import Context from './user-context.mjs'
 
+export const extenderHeader = null
+export const extenderFavourite = null
+export const extenderLogin = null
+export const extenderGroup = null
+export const extenderProp = null
+
 
 const _user_name = 'userHeaderEdit-obj_user_name'
 
@@ -13,24 +19,24 @@ export async function init(self, args) {
 	frm.addEventListener('locked', (evt) => { frm_locked(self, evt) });
 	frm.addEventListener('unlocked', (evt) => { frm_unlocked(self, evt) });
 
-	const passwordInput = frm.Inputs['userHeaderEdit-obj_user_password']	
+	const passwordInput = frm.Inputs['userHeaderEdit-obj_user_password']
 
 	// tambahkan content dari template extender
 	{
 		// const target = secRec.querySelector('#fRecord-section div[name="column"][exteder]')
 		const target = document.body
 		const tpl = document.querySelector('template[name="dialog-change-password"]')
-		if (tpl!=null) {
+		if (tpl != null) {
 			const clone = tpl.content.cloneNode(true); // salin isi template
 			// tambahkan di paling bawah
 			target.prepend(clone)
 		}
 	}
-	
+
 
 
 	// tambahkan tombol di user password
-	setTimeout(()=>{
+	setTimeout(() => {
 		const dialog = document.getElementById('myDialog')
 		const btnChangePassword = document.getElementById('btnChangePassword')
 		const btnCancel = document.getElementById('btnCancel')
@@ -43,16 +49,16 @@ export async function init(self, args) {
 		btn.setAttribute('href', 'javascript:void(0)')
 		btn.innerHTML = 'reset password'
 		btn.classList.add('hidden')
-		btn.addEventListener('click', (evt)=>{
+		btn.addEventListener('click', (evt) => {
 			// console.log('reset password')
 			// tampilkan dialog untuk reset password
 			newPassword.value = ''
 			dialog.showModal();
 		})
 
-		btnChangePassword.addEventListener('click', evt=>{
+		btnChangePassword.addEventListener('click', evt => {
 			const newpass = newPassword.value.trim()
-			if (newpass=='') {
+			if (newpass == '') {
 				$fgta5.MessageBox.warning('password tidak boleh kosong')
 				return
 			}
@@ -60,13 +66,13 @@ export async function init(self, args) {
 			dialog.close();
 		})
 
-		btnCancel.addEventListener('click', evt=>{
+		btnCancel.addEventListener('click', evt => {
 			dialog.close();
 		})
 
 		cntPass.appendChild(btn)
 	}, 1000)
-	
+
 }
 
 
