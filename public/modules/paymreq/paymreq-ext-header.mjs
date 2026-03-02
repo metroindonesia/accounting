@@ -1,6 +1,6 @@
 import Context from './paymreq-context.mjs'
 import { printDocument } from './paymreq-print.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 
 const VAR_APPROVAL = 'approval'

@@ -1,6 +1,6 @@
 import Context from './curr-context.mjs'
 import * as Ext from './curr-ext.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderRate ?? Ext
 

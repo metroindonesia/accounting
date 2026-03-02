@@ -1,0 +1,59 @@
+@import url('./module-list.css');
+@import url('./module-edit.css');
+@import url('./module-footer.css');
+@import url('./module-print.css');
+
+:root {
+	--max-mobile-width: 500px;
+	--min-desktop-width: 501px;
+}
+
+
+
+body {
+	overflow-x: hidden;
+
+}
+
+#fRecord-section [name="value"] {
+	user-select: text;
+}
+
+
+#fRecord-section [name="panel"] {
+	display: flex;
+	margin-bottom: 15px;
+}
+
+
+#fRecord-section [name="row"] {
+	display: flex;
+	margin-bottom: 5px;
+}
+
+#fRecord-section [name="column"] div:nth-child(even) {
+	margin-bottom: 15px;
+}
+
+#fRecord-section [name="caption"] {
+	width: 120px;
+	text-align: right;
+	padding-right: 10px;
+	font-weight: bold;
+	font-size: 0.8rem;
+}
+
+
+.logcell {
+	padding: 4px 8px 5px 8px;
+	border-bottom: 1px solid #e7e7e7;
+	font-size: 0.7rem;
+}
+
+.logheader {
+	padding: 4px 8px 6px 8px;
+	font-weight: bold;
+	border-bottom: 1px solid #8d8d8d;
+	font-size: 0.8rem;
+
+}

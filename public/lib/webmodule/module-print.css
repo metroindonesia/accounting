@@ -1,0 +1,28 @@
+@media screen {
+	#print-media-container {
+		background-color: #fff;
+		border: 2px solid #666;
+		visibility: hidden;
+	}
+}
+
+@media print {
+	body * {
+		visibility: hidden;
+	}
+
+	/* 2. Tampilkan kembali (visibility: visible) hanya div yang ingin dicetak */
+	#print-media-container,
+	#print-media-container * {
+		visibility: visible;
+	}
+
+	/* 3. Posisikan div cetak agar menempati seluruh halaman cetak */
+	#print-media-container {
+		border: 0px;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+}

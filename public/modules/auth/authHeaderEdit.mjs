@@ -1,6 +1,6 @@
 import Context from './auth-context.mjs'
 import * as Ext from './auth-ext.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 

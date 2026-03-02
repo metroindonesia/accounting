@@ -1,0 +1,22 @@
+.footer-buttons-container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+
+}
+
+@media screen and (max-width: 500px) {
+	.footer-buttons-container {
+		padding-left: 5px;
+		padding-right: 5px;
+	}
+
+
+}
+
+@media screen and (min-width: 501px) {
+	.footer-buttons-container {
+		padding-left: 50px;
+		padding-right: 50px;
+	}
+}

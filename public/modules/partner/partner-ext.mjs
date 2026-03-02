@@ -1,5 +1,5 @@
 import Context from './partner-context.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 
 export async function init(self, args) {

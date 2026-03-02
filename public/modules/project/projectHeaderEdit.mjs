@@ -1,6 +1,6 @@
 import Context from './project-context.mjs'
 import * as Ext from './project-ext.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 

@@ -1,6 +1,6 @@
 import Context from './jurnalmodel-context.mjs'
 import * as Ext from './jurnalmodel-ext.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 

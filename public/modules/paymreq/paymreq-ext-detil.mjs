@@ -1,5 +1,5 @@
 import Context from './paymreq-context.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 import * as ExtHeader from './paymreq-ext-header.mjs'
 
 

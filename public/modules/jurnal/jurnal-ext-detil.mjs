@@ -1,6 +1,6 @@
 import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
-import * as pageHelper from '/public/libs/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 import outstandingDialog from './jurnal-outstandingdialog.mjs'
 
 
