@@ -1,17 +1,34 @@
 body {
-  margin: 0;
-  height: 100vh;
-  display: flex;
-  justify-content: center; /* horizontal */
-  align-items: center;     /* vertical */
+	margin: 0;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	/* horizontal */
+	align-items: center;
+	/* vertical */
 }
 
 
+.container {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: repeat(2, auto);
+	justify-items: center;
+	align-items: center;
+	column-gap: 30px;
+}
+
+.box-image {
+	height: 70px;
+	display: flex;
+	/* border: 1px solid #000; */
+}
 
 .loginbox {
 	margin: 10px;
 	width: 200px;
 	height: 300px;
+	grid-column: 1 / span 2;
 }
 
 .loginbox h1 {
