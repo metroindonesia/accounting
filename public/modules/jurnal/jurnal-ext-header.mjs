@@ -38,7 +38,8 @@ const _copyto = 'jurnalHeaderEdit-obj_copyto'
 const _coacurr = 'jurnalHeaderEdit-obj_coacurr'
 
 
-let selectedPeriode = { periode_start: null, periode_end: null }
+let currentPeriode = { periode_id: null, periode_name: null, periode_start: null, periode_end: null }
+let selectedPeriode = {}
 let selectedJurnaltype = {
 	jurnaltype_id: null,
 	jurnaltype_name: ''
@@ -90,8 +91,11 @@ export async function init_header(self, args) {
 
 
 	if (Context.setting.currentPeriode != null) {
-		selectedPeriode.periode_start = Context.setting.currentPeriode.periode_start
-		selectedPeriode.periode_end = Context.setting.currentPeriode.periode_end
+		currentPeriode.periode_id = Context.setting.currentPeriode.periode_id
+		currentPeriode.periode_name = Context.setting.currentPeriode.periode_name
+		currentPeriode.periode_start = Context.setting.currentPeriode.periode_start
+		currentPeriode.periode_end = Context.setting.currentPeriode.periode_end
+		Object.assign(selectedPeriode, currentPeriode)
 	}
 
 
@@ -221,8 +225,9 @@ export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 
 	// set default currency
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
-	if (Context.setting.currentPeriode != null) {
-		datainit.periode_id = { value: Context.setting.currentPeriode.value, text: Context.setting.currentPeriode.text }
+	if (currentPeriode.periode_id != null) {
+		datainit.periode_id = { value: currentPeriode.periode_id, text: currentPeriode.periode_name }
+		Object.assign(selectedPeriode, currentPeriode)
 	}
 
 	// jurnaltype_changed(self, {}, frm)

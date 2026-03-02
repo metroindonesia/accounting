@@ -17,8 +17,8 @@ export async function init(self, args) {
 	Context.setTitle(pageTitle);  // set judul di browser
 
 	// set datebox tanggal otomatis jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptLedger_tgl").value = today;
+	// let today = new Date().toISOString().split("T")[0];
+	// document.getElementById("rptLedger_tgl").value = today;
 
 
 	if (rowTemplate == null) {

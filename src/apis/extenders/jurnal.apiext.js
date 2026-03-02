@@ -78,8 +78,8 @@ export async function jurnal_init(self, initialData) {
 		const rowPeriode = await db.oneOrNone(sqlCurrentPeriode)
 		if (rowPeriode != null) {
 			initialData.setting.currentPeriode = {
-				value: rowPeriode.periode_id,
-				text: rowPeriode.periode_name,
+				periode_id: rowPeriode.periode_id,
+				periode_name: rowPeriode.periode_name,
 				periode_start: rowPeriode.periode_start,
 				periode_end: rowPeriode.periode_end
 			}

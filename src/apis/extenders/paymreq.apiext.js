@@ -103,13 +103,14 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 			)
 			args.tablename = `
 			public.paymreq_bill A left join public.paymreq B on B.paymreq_id = A.paymreq_id 
-			               left join public.jurnal C on C.jurnal_id = A.jurnal_id 
+			               left join public.jurnal C on C.jurnal_id = A.jurnal_id
+						   left join public.jurnaldetil D on D.jurnaldetil_id_ref=A.jurnaldetil_id 
 		`
 
 			criteria.ispost = true
 			criteria.isoutstanding = true
 
-			searchMap.isoutstanding = 'A.outstanding_value > 0'
+			searchMap.isoutstanding = 'A.outstanding_value > 0 and D.jurnaldetil_id is null'
 			searchMap.ispost = 'C.ispost = ${ispost}'
 			searchMap.jurnaltype_id = 'B.paymreqtype_id IN (select paymreqtype_id from public.jurnaltypepaymreqtype where jurnaltype_id=${jurnaltype_id})'
 

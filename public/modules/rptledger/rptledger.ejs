@@ -1,26 +1,37 @@
 <section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
 
-	<div id="ledgerHeader">
-		<!-- <div style="flex-grow: 1;"> -->
-		<div id="filter-container">Type :
-			<select id="isytd">
-				<option value="true">Buku besar YTD - all</option>
-				<option value="false">Buku besar MTD - all</option>
-			</select>
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Dept</option>
-			</select>
+	<div id="report-control">
+		<div id="filter-container">
 
-			<input type="date" id="rptLedger_tgl">
-			<button id="btnLoad">Load</button>
+			<div style="margin-bottom: 4px; display:flex; column-gap: 5px;">
+				<!-- <div style="width: 40px; display: inline-block; text-align: right; margin-right: 4px;">Type</div>
+				<select id="isytd">
+					<option value="true">Buku besar YTD - all</option>
+					<option value="false">Buku besar MTD - all</option>
+				</select> -->
+
+				<div style="width: 250px">
+					<input id="obj_reporttype" fgta5-component="Combobox" placeholder="select report type" autocomplete="off" spellcheck="false" 
+						binding="periode_id"
+						data-display="periode_name">
+				</div>
+
+				<div style="width: 135px">
+					<input id="obj_date" fgta5-component="Datepicker" placeholder="date" autocomplete="off" spellcheck="false" 
+						binding="jurnal_date">
+				</div>
+
+				<button id="btnLoad">Load</button>	
+			</div>
+			<!-- <div>
+				<div style="width: 40px; display: inline-block; text-align: right; margin-right: 4px;">per</div>
+				<input type="date" id="rptLedger_tgl">
+				<button id="btnLoad">Load</button>
+			</div> -->
 		</div>
-		<!-- </div> -->
 
 
-		<div id="btn">
+		<div id="filter-buttons">
 			<button id="btnDownload">Download</button>
 			<button id="btnPrint">Cetak</button>
 		</div>
