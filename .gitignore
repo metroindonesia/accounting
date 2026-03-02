@@ -149,4 +149,4 @@ public/local
 production.config.js
 
 run-prod.sh
-package-lock.json
+

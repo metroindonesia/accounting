@@ -75,6 +75,8 @@ async function main() {
 		}
 	}
 
+
+	const escapedDomain = sessionDomain.replace(/\./g, '\\.')
 	const rootDir = path.join(__dirname, '..')
 	webapp.setRootDirectory(rootDir)
 	webapp.start({
@@ -84,7 +86,8 @@ async function main() {
 		appConfig,
 		router,
 		allowedOrigins: [
-			/^https:\/\/[a-z0-9.-]+\.transfirstluxury\.com(:\d+)?$/,
+			// /^https:\/\/[a-z0-9.-]+\.transfashion\.id(:\d+)?$/,
+			new RegExp(`^https?://[a-z0-9.-]*${escapedDomain}(:\\d+)?$`),
 			/^http:\/\/localhost:3003(:\d+)?$/
 		],
 		fnParseModuleRequest: async (req) => {
