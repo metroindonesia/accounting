@@ -11,61 +11,108 @@
 
  
 import terser from '@rollup/plugin-terser';
+import postcss from 'rollup-plugin-postcss';
+import cssnano from 'cssnano';
+import atImport from 'postcss-import';
+import del from 'rollup-plugin-delete';
+
 import { writeFileSync } from 'fs';
 import { readFile, unlink, access } from 'fs/promises';
 import { join } from 'path';
 import { constants } from 'fs';
 
+
+const moduleName = 'agingtype'
+const moduleDirPath = `public/modules/${moduleName}`
+const filename = `version.txt`;
+const filepath = join(moduleDirPath, filename);
+
 const currentdate = (new Date()).toISOString().split('T')[0]
-const banner = `agingtype
+const banner = `${moduleName}
 *
 * build at ${currentdate}
 `
 
-const filename = `version.txt`;
-const filepath = join('public/modules/agingtype', filename);
+
 
 /* Hapus versi sebelumnya */
 if (await isExists(filepath)) {
 	const previousVersionNumber = await readFile(filepath, 'utf8');
-	const previousFile = `public/modules/agingtype/agingtype-${previousVersionNumber}.min.mjs`
-	await unlink(previousFile);
+	const previousMjsFile = join(moduleDirPath, `${moduleName}-${previousVersionNumber}.min.mjs`)
+	const previousCssFile = join(moduleDirPath, `${moduleName}-${previousVersionNumber}.min.css`)
+
+	await Promise.all([
+		remove(previousMjsFile),
+		remove(previousCssFile)
+	])
 }
+
+const cssFiles = await getCssFiles()
+
 
 /* Create New Version */
 const newVersionNumber = getTimestampYYMMDDHHII()
+
 
 
 // Simpan ke file
 writeFileSync(filepath, newVersionNumber, 'utf8')
 
 
-export default {
-	input: "public/modules/agingtype/agingtype.mjs", // File utama yang menjadi entry point
-	output: {
-		file: `public/modules/agingtype/agingtype-${newVersionNumber}.min.mjs`, // Lokasi output file hasil bundle
-		format: "esm", // Format modul ECMAScript
-		banner: `/*! ${banner}*/`,
-		// manualChunks: (id) => {
-		// 	console.log('Chunking:', id);
-		// 	if (id.includes('module.mjs')  || id.includes('-ext.mjs') || id.includes('public/libs/webmodule')) return null;
-		// }
-	},
-	external: (id) => {
- 		return id.includes('module.mjs') || id === '$fgta5' || id.includes('public/libs/webmodule');
-	},
-	
-	preserveEntrySignatures: 'strict',
+export default [
+	{
+		input: join(moduleDirPath, `${moduleName}.mjs`), // File utama yang menjadi entry point
+		output: {
+			file: join(moduleDirPath, `${moduleName}-${newVersionNumber}.min.mjs`), // Lokasi output file hasil bundle
+			format: "esm", // Format modul ECMAScript
+			banner: `/*! ${banner}*/`,
+		},
+		external: (id) => {
+			return id.includes('module.mjs') || id === '$fgta5' || id.includes('public/libs/webmodule');
+		},
 
-    plugins: [
-		terser({
-			compress: {
-				pure_funcs: ['console.log', 'console.warn'] // hanya log dan warn dihilangkan, sedangkan error tidak
-				// drop_console: true // hapus console
-			}
-		})
-	]
-}
+		preserveEntrySignatures: 'strict',
+
+		plugins: [
+			terser({
+				compress: {
+					pure_funcs: ['console.log', 'console.warn'] // hanya log dan warn dihilangkan, sedangkan error tidak
+					// drop_console: true // hapus console
+				}
+			})
+		]
+	},
+
+	{
+		input: cssFiles,
+		output: {
+			dir: moduleDirPath
+		},
+		plugins: [
+
+			// Konfigurasi PostCSS untuk CSS
+			postcss({
+				extract: `${moduleName}-${newVersionNumber}.min.css`, // Nama file output CSS
+				minimize: true, // Aktifkan minifikasi
+				plugins: [
+					atImport(), // 1. Gabungkan semua @import menjadi satu file
+					cssnano() // Plugin untuk optimasi CSS
+				]
+			}),
+			del({
+				targets: [
+					join(moduleDirPath, `${moduleName}.js`),
+					join(moduleDirPath, `${moduleName}.layout.js`),
+				],
+				hook: 'closeBundle' // Jalankan setelah semua proses selesai
+			})
+		]
+	}
+
+]
+
+
+
 
 
 function getTimestampYYMMDDHHII() {
@@ -77,6 +124,30 @@ function getTimestampYYMMDDHHII() {
 	const ii = String(now.getMinutes()).padStart(2, '0');
 	return `${yy}${mm}${dd}${hh}${ii}`;
 };
+
+
+async function remove(filepath) {
+	if (await isExists(filepath)) {
+		await unlink(filepath)
+	}
+}
+
+
+async function getCssFiles() {
+	const cssFiles = []
+	const cssMainFile = join(moduleDirPath, `${moduleName}.css`)
+	const cssLayoutFile = join(moduleDirPath, `${moduleName}.layout.css`)
+
+	if (await isExists(cssMainFile)) {
+		cssFiles.push(cssMainFile)
+	}
+
+	if (await isExists(cssLayoutFile)) {
+		cssFiles.push(cssLayoutFile)
+	}
+
+	return cssFiles;
+}
 
 
 async function isExists(filepath) {
