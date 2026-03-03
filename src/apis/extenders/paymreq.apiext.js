@@ -22,7 +22,7 @@ const TABLE = {
 
 }
 
-const reqOutstandingProcess = ['ap-bill', 'advance-payment']
+const reqOutstandingProcess = ['ap-bill', 'advance-payment', 'direct-payment']
 const reqBillProcess = ['ap-payment']
 
 
@@ -358,21 +358,6 @@ export async function approve(self, db, body, paymreq_log) {
 			user_id: user_id
 		})
 
-
-		// const result = await db.tx(async tx => {
-		// 	sqlUtil.connect(tx)
-
-		// 	const data = {
-		// 		paymreq_id,
-		// 		isapproved: true,
-		// 		_approveby: user_id,
-		// 		_approvedate: (new Date()).toISOString()
-		// 	}
-
-		// 	const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
-		// 	const ret = await cmd.execute(data)
-		// })
-
 		// cek hasil approval
 		const sql = `
 			select isapproved, _approveby, _approvedate 
@@ -430,20 +415,6 @@ export async function reject(self, db, body, paymreq_log) {
 			user_id: user_id
 		})
 
-		// const result = await db.tx(async tx => {
-		// 	sqlUtil.connect(tx)
-
-		// 	const data = {
-		// 		paymreq_id,
-		// 		isapproved: false,
-		// 		_approveby: null,
-		// 		_approvedate: null
-		// 	}
-
-		// 	const cmd = sqlUtil.createUpdateCommand(TABLE.paymreq, data, ['paymreq_id'])
-		// 	const ret = await cmd.execute(data)
-		// })
-
 		// cek hasil approval
 		const sql = `
 			select isapproved, _approveby, _approvedate 
@@ -489,10 +460,10 @@ export async function getPrintData(self, db, body) {
 		const auth = await sqlUtil.lookupdb(db, TABLE.auth, 'auth_id', struct.auth_id)
 		const authuser = await sqlUtil.lookupdb(db, TABLE.user, 'user_id', auth.user_id)
 		const paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', header.paymtype_id)
-
+		const paymreqtype = await sqlUtil.lookupdb(db, TABLE.paymreqtype, 'paymreqtype_id', header.paymreqtype_id)
 
 		const data = {
-			title: 'Advance Request',
+			title: paymreqtype.paymreqtype_title,
 			header: {
 				printdate: sqlUtil.formatISODate(waktuLokalISO, 'dd/mm/yyyy'),
 

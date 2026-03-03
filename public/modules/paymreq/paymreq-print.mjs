@@ -20,6 +20,7 @@ export async function printDocument(self, printArea, paymreq_id) {
 		printArea.innerHTML = await response.text()
 
 		//set logo
+		const docTitle = document.getElementById('doc-title')
 		const docLogo = document.getElementById('doc-logo')
 		const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
 		docLogo.style.backgroundImage = `url(${logoUrl})`
@@ -33,6 +34,7 @@ export async function printDocument(self, printArea, paymreq_id) {
 		})
 
 
+		docTitle.innerHTML = data.title
 
 		await renderData(data, printArea)
 	} catch (err) {

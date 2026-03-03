@@ -7,6 +7,11 @@ body {
 }
 
 
+input::selection {
+	color: #fff;
+	background-color: #2b31ad;
+}
+
 .fgta5-app-head {
 	background-color: #171940;
 }

@@ -9,6 +9,7 @@ const TABLE = {
 	jurnaldetil: "public.jurnaldetil",
 	taxtype: "public.taxtype",
 	paymreq_bill: "public.paymreq_bill",
+	paymreq_paid: "public.paymreq_paid",
 	coa: "public.coa",
 	itemclass: "public.itemclass"
 }
@@ -16,7 +17,7 @@ const TABLE = {
 
 
 
-export async function processApBill(self, tx, doc_id, jurnalHeader) {
+export async function processDirectPayment(self, tx, doc_id, jurnalHeader) {
 	const { jurnal_id, paymreq_id } = jurnalHeader
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -25,6 +26,7 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 	sqlUtil.connect(tx)
 	try {
 		const paymreq = await sqlUtil.lookupdb(tx, TABLE.paymreq, "paymreq_id", paymreq_id)
+
 
 		// jika paymreq sebelumnya diganti, hapus dulu data lama
 		const sqlRemovePrev = `delete from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and tag_paymreq_id is not null and tag_paymreq_id<>\${paymreq_id}`
@@ -66,7 +68,7 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 				jurnaldetil_idr: row.paymreqdetil_value * jurnalHeader.curr_rate,
 				coa_id: row.coa_id ?? null,
 				blockorder: row.blockorder ?? 0,
-				partner_id: row.partner_id ?? company_partner_id,
+				partner_id: row.partner_id ?? jurnalHeader.partner_id,
 				unit_id: row.unit_id,
 				site_id: row.site_id,
 				struct_id: row.struct_id,
@@ -116,18 +118,14 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 			}
 
 
-
-
-
 			const cmd = sqlUtil.createInsertCommand(TABLE.jurnaldetil, jurnalDetil)
 			await cmd.execute(jurnalDetil)
 
 		}
 
-
 		// masukkan data ke paymreq_bill
 		await insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader)
-
+		await insertPaymreqPaid(self, tx, jurnalHeader)
 
 
 	} catch (err) {
@@ -135,6 +133,8 @@ export async function processApBill(self, tx, doc_id, jurnalHeader) {
 	}
 
 }
+
+
 
 
 async function setPPN(self, tx, paymreq, rows, jurnalHeader) {
@@ -186,6 +186,7 @@ async function setPPh(self, tx, paymreq, rows, jurnalHeader) {
 }
 
 
+
 async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
 	const bill = {
 		paymreq_id: paymreq.paymreq_id,
@@ -200,8 +201,8 @@ async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
 		jurnal_datedue: jurnalHeader.jurnal_datedue,
 		jurnaldetil_value: jurnalHeader.jurnal_value,
 		jurnaldetil_idr: jurnalHeader.jurnal_idr,
-		outstanding_value: jurnalHeader.jurnal_value,
-		outstanding_idr: jurnalHeader.jurnal_idr,
+		outstanding_value: 0, // outstanding langsung di set 0 karena direct payment (langsung dibayar)
+		outstanding_idr: 0, // outstanding langsung di set 0 karena direct payment (langsung dibayar)
 		curr_id: jurnalHeader.curr_id,
 		curr_rate: jurnalHeader.curr_rate,
 		coa_id: jurnalHeader.coa_id,
@@ -229,7 +230,36 @@ async function insertPaymreqBill(self, tx, paymreq, rows, jurnalHeader) {
 
 }
 
+async function insertPaymreqPaid(self, tx, jurnalHeader) {
+	const { jurnal_id, paymreq_id, jurnaldetil_id_link } = jurnalHeader
+
+
+	const sqlPaid = `
+		insert into ${TABLE.paymreq_paid}
+		(paid_jurnaldetil_id, paid_jurnal_id, paymreq_id, paid_value, paid_idr, curr_id, curr_rate)
+		values 
+		(\${paid_jurnaldetil_id}, \${paid_jurnal_id}, \${paymreq_id}, \${paid_value}, \${paid_idr}, \${curr_id}, \${curr_rate})
+		on conflict (paid_jurnaldetil_id)
+		do update set
+			paid_value = EXCLUDED.paid_value,
+			paid_idr = EXCLUDED.paid_idr,
+			curr_id = EXCLUDED.curr_id,
+			curr_rate = EXCLUDED.curr_rate;`
+	await tx.none(sqlPaid, {
+		paymreq_id: paymreq_id,
+		paid_jurnal_id: jurnal_id,
+		paid_jurnaldetil_id: jurnaldetil_id_link,
+		paid_value: jurnalHeader.jurnal_value,
+		paid_idr: jurnalHeader.jurnal_idr,
+		curr_id: jurnalHeader.curr_id,
+		curr_rate: jurnalHeader.curr_rate
+	})
+
+}
+
+
 async function getCoaOfItemclass(self, tx, itemclass_id) {
 	const itemclass = await sqlUtil.lookupdb(tx, TABLE.itemclass, 'itemclass_id', itemclass_id)
 	return null
 }
+

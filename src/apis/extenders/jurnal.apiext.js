@@ -4,6 +4,7 @@ import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
 import { processApBill } from './jurnal.apiext.ap-bill.js'
 import { processApPayment } from './jurnal.apiext.ap-payment.js'
 import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
+import { processDirectPayment } from './jurnal.apiext.direct-payment.js'
 import { reopen } from './periode.apiext.js'
 import { GEO_REPLY_WITH } from 'redis'
 
@@ -425,9 +426,11 @@ export async function detilCreated(self, tx, ret, data, logMetadata, args) {
 }
 
 export async function detilUpdating(self, tx, data) {
-	const { jurnal_id } = data
+	const { jurnaldetil_id } = data
+	const jurnal = await sqlUtil.lookupdb(tx, TABLE.jurnaldetil, 'jurnaldetil_id', jurnaldetil_id)
+
 	excludeNonEditableDetil(data)
-	await cekJurnalForModification(self, tx, jurnal_id)
+	await cekJurnalForModification(self, tx, jurnal.jurnal_id)
 }
 
 export async function detilUpdated(self, tx, ret, data, logMetadata) {
@@ -440,8 +443,10 @@ export async function detilUpdated(self, tx, ret, data, logMetadata) {
 }
 
 export async function detilDeleting(self, tx, rowdetil, logMetadata) {
-	const { jurnal_id } = rowdetil
-	await cekJurnalForModification(self, tx, jurnal_id)
+	const { jurnaldetil_id } = rowdetil
+	const jurnal = await sqlUtil.lookupdb(tx, TABLE.jurnaldetil, 'jurnaldetil_id', jurnaldetil_id)
+
+	await cekJurnalForModification(self, tx, jurnal.jurnal_id)
 }
 
 
@@ -886,6 +891,8 @@ async function processPaymreq(self, tx, doc_id, jurnalHeader) {
 			await processApPayment(self, tx, doc_id, jurnalHeader)
 		} else if (paymreqprocess == 'advance-payment') {
 			await processAdvancePayment(self, tx, doc_id, jurnalHeader)
+		} else if (paymreqprocess == 'direct-payment') {
+			await processDirectPayment(self, tx, doc_id, jurnalHeader)
 		}
 	} catch (err) {
 		throw err
