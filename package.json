@@ -33,5 +33,10 @@
     "redis": "^5.5.6",
     "serve-favicon": "^2.5.0",
     "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "kill-port": "^2.0.1",
+    "rollup": "^4.59.0"
   }
 }
