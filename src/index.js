@@ -35,6 +35,8 @@ async function main() {
 	const notifierSocket = process.env.NOTIFIER_SOCKET
 	const notifierServer = process.env.NOTIFIER_SERVER
 
+	const disableApiCache = process.env.DISABLE_API_CACHE === 'true'
+
 	const fgta5jsDebugMode = process.env.DEBUG_MODE_FGTA5JS === 'true'
 	const fgta5jsVersion = process.env.FGTA5JS_VERSION || ''
 	const appDebugMode = process.env.DEBUG_MODE_APP === 'true'
@@ -81,6 +83,7 @@ async function main() {
 	webapp.setRootDirectory(rootDir)
 	webapp.start({
 		port,
+		disableApiCache,
 		startingMessage,
 		redisUrl,
 		appConfig,
