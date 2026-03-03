@@ -16,8 +16,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@agung_dhewe/pgsqlc": "^1.1.7",
     "@agung_dhewe/webapps": "^1.2.1",
+    "@agung_dhewe/pgsqlc": "^1.1.8",
     "bcrypt": "^6.0.0",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",
