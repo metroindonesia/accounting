@@ -546,7 +546,7 @@ export function updateList_balance(self, balance_value, balance_idr) {
 	self.Modules.jurnalHeaderList.updateCurrentRow(self, { balance_value, balance_idr })
 }
 
-export function setSelectedJurnaltype(jurnaltype) {
+export function setSelectedJurnaltype(jurnaltype, frm) {
 	selectedJurnaltype = jurnaltype
 
 	paymtype_changed(self, {}, frm)

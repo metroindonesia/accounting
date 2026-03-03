@@ -70,7 +70,9 @@ export function setupSearchJurnaltype(self, obj_search_jurnaltype) {
 			return
 		}
 
+		const headerList = self.Modules.jurnalHeaderEdit
+		const frmHeader = headerList.getForm()
 		const jurnaltype = evt.detail.data
-		self.Modules.extenderHeader.setSelectedJurnaltype(jurnaltype)
+		self.Modules.extenderHeader.setSelectedJurnaltype(jurnaltype, frmHeader)
 	})
 }
