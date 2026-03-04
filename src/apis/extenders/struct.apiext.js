@@ -12,6 +12,10 @@ const HIERARCHY_PARAM = {
 	field_isparent: `${entityname}_isparent`
 }
 
+const TABLE = {
+	itemclassstruct: 'public.itemclassstruct'
+}
+
 
 
 export async function headerCreated(self, tx, ret, data, logMetadata) {
@@ -24,12 +28,26 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 
 export function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
 	searchMap.struct_isdisabled = 'struct_isdisabled=${struct_isdisabled}'
-	searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
-	searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
-	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 
 
-	sort[`${entityname}_path`] = 'asc'
+	if (criteria.selectForItemclassMember) {
+		// untuk memilih structur saat di itemclass
+		const itemclass_id = criteria.itemclass_id
+
+		delete criteria.itemclass_id
+		delete criteria.selectForItemclassMember
+
+		searchMap.exclude_struct_id = 'struct_id <> ${exclude_struct_id}'
+		searchMap.include_struct_id = `struct_id=\${include_struct_id} or struct_id not in (select struct_id from ${TABLE.itemclassstruct} where itemclass_id=${itemclass_id})`
+
+	} else {
+
+		searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
+		searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
+		searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
+		sort[`${entityname}_path`] = 'asc'
+
+	}
 }
 
 

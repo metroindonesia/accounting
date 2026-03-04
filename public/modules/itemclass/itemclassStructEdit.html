@@ -1,0 +1,82 @@
+<div id="itemclassStructEdit-head">
+	<div id="itemclassStructEdit-head-title" class="section-detil-title"></div>
+	<div id="itemclassStructEdit-head-descr" class="section-detil-descr"></div>
+</div>
+
+<form id="itemclassStructEdit-frm" class="module-form" locked="true" autoid="true" primarykey="itemclassStructEdit-obj_itemclassstruct">
+
+	<!-- Textbox: itemclassstruct_id-->	
+	<div id="itemclassStructEdit-obj_itemclassstruct-container" class="input-field hidden" field="itemclassStructEdit-obj_itemclassstruct">
+		<label for="itemclassStructEdit-obj_itemclassstruct">Itemclassstruct</label>
+		<input id="itemclassStructEdit-obj_itemclassstruct"  fgta5-component="Textbox" placeholder="itemclassstruct" autocomplete="off" spellcheck="false" 
+			binding="itemclassstruct_id"
+			data-tabindex="1" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+		>
+	</div>
+
+
+	<!-- Combobox: struct_id-->	
+	<div id="itemclassStructEdit-obj_struct_id-container" class="input-field" field="itemclassStructEdit-obj_struct_id">
+		<label for="itemclassStructEdit-obj_struct_id">Structure</label>
+		<input id="itemclassStructEdit-obj_struct_id"  fgta5-component="Combobox" placeholder="structure" autocomplete="off" spellcheck="false" 
+			binding="struct_id"
+			data-tabindex="2" 
+			data-display="struct_name" 
+		>
+	</div>
+
+
+	<!-- Checkbox: itemclassstruct_isdisabled-->	
+	<div id="itemclassStructEdit-obj_itemclassstruct_isdisabled-container" class="input-field" field="itemclassStructEdit-obj_itemclassstruct_isdisabled">
+		<label for="itemclassStructEdit-obj_itemclassstruct_isdisabled">Disabled</label>
+		<input id="itemclassStructEdit-obj_itemclassstruct_isdisabled"  fgta5-component="Checkbox" placeholder="" autocomplete="off" spellcheck="false" 
+			binding="itemclassstruct_isdisabled"
+			data-tabindex="3" 
+			type="checkbox" 
+		>
+	</div>
+
+
+	<!-- Textbox: itemclass_id-->	
+	<div id="itemclassStructEdit-obj_itemclass_id-container" class="input-field hidden" field="itemclassStructEdit-obj_itemclass_id">
+		<label for="itemclassStructEdit-obj_itemclass_id">ID</label>
+		<input id="itemclassStructEdit-obj_itemclass_id"  fgta5-component="Textbox" placeholder="itemclass_id" autocomplete="off" spellcheck="false" 
+			binding="itemclass_id"
+			data-tabindex="4" 
+			autocomplete="off" spellcheck="false" 
+			maxlength="30" 
+			disabled 
+		>
+	</div>
+	
+
+
+	<div id="itemclassStructEdit-footer"></div>
+
+</form>
+
+
+
+<div class="panel-recordbar" data-view="nodetil">
+	<div><a id="itemclassStruct-btn_recordstatus" href="javascript:void(0)" tabindex="-1">Record Status</a></div>
+	<div><a id="itemclassStruct-btn_logs" href="javascript:void(0)" tabindex="-1">Logs</a></div>
+</div>
+
+
+<div class="footer-buttons-container hidden">
+	<div>
+		<button id="itemclassStructEdit-btn_prev"><span>&laquo;&laquo;</span></button>
+	</div>
+	<div>
+		<button id="itemclassStructEdit-btn_save">Save</button>
+		<button id="itemclassStructEdit-btn_edit">Edit</button>
+		<button id="itemclassStructEdit-btn_new" data-action="itemclassStruct-addrow">New</button>
+		<button id="itemclassStructEdit-btn_reset">Reset</button>
+		<button id="itemclassStructEdit-btn_delete">Delete</button>
+	</div>
+	<div>
+		<button id="itemclassStructEdit-btn_next"><span>&raquo;&raquo;</span></button>
+	</div>
+</div>

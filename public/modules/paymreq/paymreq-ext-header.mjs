@@ -24,6 +24,7 @@ const _paymreq_invoice = 'paymreqHeaderEdit-obj_paymreq_invoice'
 const _ffl_id = 'paymreqHeaderEdit-obj_ffl_id'
 const _po_id = 'paymreqHeaderEdit-obj_po_id'
 const _bc_id = 'paymreqHeaderEdit-obj_bc_id'
+const _struct_id = 'paymreqHeaderEdit-obj_struct_id'
 const _partner_id = 'paymreqHeaderEdit-obj_partner_id'
 const _partnerbank_id = 'paymreqHeaderEdit-obj_partnerbank_id'
 const _partnercontact_id = 'paymreqHeaderEdit-obj_partnercontact_id'
@@ -242,7 +243,9 @@ export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {
 
 export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
+	const obj_struct_id = frm.Inputs[_struct_id]
 	obj_paymreqtype_id.disabled = true
+	obj_struct_id.disabled = true
 
 	const { paymtype, paymreqtype } = frm.getOriginalData()
 	paymreqtype_changed(paymreqtype, frm)
@@ -285,16 +288,20 @@ export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 
 
 export async function paymreqHeaderEdit_newData(self, datainit, frm) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = false
+	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
+	const obj_struct_id = frm.Inputs[_struct_id]
+	obj_paymreqtype_id.disabled = false
+	obj_struct_id.disabled = false
 
 	// console.log(Context.setting)
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
 }
 
 export async function paymreqHeaderEdit_dataSaved(self, data, frm) {
-	const obj = frm.Inputs[_paymreqtype_id]
-	obj.disabled = true
+	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
+	const obj_struct_id = frm.Inputs[_struct_id]
+	obj_paymreqtype_id.disabled = true
+	obj_struct_id.disabled = true
 }
 
 

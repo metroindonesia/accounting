@@ -1,23 +1,22 @@
 import Context from './itemclass-context.mjs'
+import * as ExtHeader from './itemclass-ext-header.mjs'
+import * as ExtStruct from './itemclass-ext-struct.mjs'
 
-export const extenderHeader = null
+export const extenderHeader = ExtHeader
+export const extenderStruct = ExtStruct
+
 
 export async function init(self, args) {
 	console.log('initializing itemclassExtender ...')
 
 	// tambahkan extender inisiasi module itemclass
+	self.Modules.extenderHeader = extenderHeader
+	self.Modules.extenderStruct = extenderStruct
 
-
-	/* // contoh menambahkan content dari template extender
-	{
-		const target = secRec.querySelector('#fRecord-section div[name="column"][exteder]')
-		const tpl = document.getElementById('tpl-record-panel')
-		if (tpl!=null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			target.prepend(clone)
-		}
-	}
-	*/
+	await Promise.all([
+		ExtHeader.init_header(self, args),
+		ExtStruct.init_struct(self, args),
+	])
 
 
 

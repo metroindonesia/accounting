@@ -2,53 +2,49 @@ import Context from './itemclass-context.mjs'
 import * as Ext from './itemclass-ext.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
-const Extender = Ext.extenderHeader ?? Ext
+const Extender = Ext.extenderStruct ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.itemclassHeaderEdit
+const CurrentSectionId = Context.Sections.itemclassStructEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New Item Classification'
-const TitleWhenView = 'View Item Classification'
-const TitleWhenEdit = 'Edit Item Classification'
+const TitleWhenNew = 'New Shared to Structure'
+const TitleWhenView = 'View Shared to Structure'
+const TitleWhenEdit = 'Edit Shared to Structure'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('itemclassHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('itemclassHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('itemclassHeaderEdit-btn_new', 'itemclassHeader-new')
-const btn_del = new $fgta5.ActionButton('itemclassHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('itemclassHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('itemclassHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('itemclassHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('itemclassHeader-btn_recordstatus')
-const btn_logs = document.getElementById('itemclassHeader-btn_logs')
-const btn_about = document.getElementById('itemclassHeader-btn_about')
+const btn_edit = new $fgta5.ActionButton('itemclassStructEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('itemclassStructEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('itemclassStructEdit-btn_new', 'itemclassStruct-addrow')
+const btn_del = new $fgta5.ActionButton('itemclassStructEdit-btn_delete', 'itemclassStruct-delrow')
+const btn_reset = new $fgta5.ActionButton('itemclassStructEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('itemclassStructEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('itemclassStructEdit-btn_next')
 
-const frm = new $fgta5.Form('itemclassHeaderEdit-frm');
-const obj_itemclass_id = frm.Inputs['itemclassHeaderEdit-obj_itemclass_id']
-const obj_itemclass_isdisabled = frm.Inputs['itemclassHeaderEdit-obj_itemclass_isdisabled']
-const obj_itemclass_name = frm.Inputs['itemclassHeaderEdit-obj_itemclass_name']
-const obj_itemclass_descr = frm.Inputs['itemclassHeaderEdit-obj_itemclass_descr']
-const obj_owner_struct_id = frm.Inputs['itemclassHeaderEdit-obj_owner_struct_id']	
+const btn_recordstatus = document.getElementById('itemclassStruct-btn_recordstatus')
+const btn_logs = document.getElementById('itemclassStruct-btn_logs')
+
+const frm = new $fgta5.Form('itemclassStructEdit-frm');
+const obj_itemclassstruct = frm.Inputs['itemclassStructEdit-obj_itemclassstruct']
+const obj_struct_id = frm.Inputs['itemclassStructEdit-obj_struct_id']
+const obj_itemclassstruct_isdisabled = frm.Inputs['itemclassStructEdit-obj_itemclassstruct_isdisabled']
+const obj_itemclass_id = frm.Inputs['itemclassStructEdit-obj_itemclass_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
 const rec_modifydate = document.getElementById('fRecord-section-modifydate')
 const rec_id = document.getElementById('fRecord-section-id')
 
-
 export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing itemclassHeaderEdit ...')
-	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 		backToList(self, evt)
@@ -60,45 +56,40 @@ export async function init(self, args) {
 
 	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
 	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt)})
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt)})
+	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
 	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
 	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
 	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-
+	
 
 	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
 	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
-	btn_about.addEventListener('click', evt=>{ btn_about_click(self, evt) })
 
-	// set actions
+	CurrentState.headerFormLocked = true 
+	CurrentState.editDisabled = false
+
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
-	}
-	
-	// export async function itemclassHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'itemclassHeaderEdit_init'
-	const fn_init = Extender[fn_init_name]
-	if (typeof fn_init === 'function') {
-		await fn_init(self, CurrentState)
+		edit: btn_edit,
 	}
 
+	CurrentState.getHeaderForm = () => {
+		const itemclassHeaderEdit = self.Modules.itemclassHeaderEdit
+		const frmHeader = itemclassHeaderEdit.getHeaderForm()
+		return frmHeader
+	}
+
 
 	
-
-	
-	// Combobox: obj_owner_struct_id
-	obj_owner_struct_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_owner_struct_id_selecting'
+	// Combobox: obj_struct_id
+	obj_struct_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_struct_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_owner_struct_id_selecting(self, obj_owner_struct_id, frm, evt) {}
-			fn_selecting(self, obj_owner_struct_id, frm, evt)
+			// export async function obj_struct_id_selecting(self, obj_struct_id, frm, evt) {}
+			fn_selecting(self, obj_struct_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
@@ -111,13 +102,14 @@ export async function init(self, args) {
 			}
 
 			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
 			
 			// buat function di extender:
-			// export function obj_owner_struct_id_selecting_criteria(self, obj_owner_struct_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_owner_struct_id_selecting_criteria'
+			// export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_struct_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_owner_struct_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -143,31 +135,35 @@ export async function init(self, args) {
 			
 		}		
 	})
-	
 		
-	
 }
+
 
 export async function openSelectedData(self, params) {
 	console.log('openSelectedData')
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_owner_struct_id.clear()
-					
+		obj_struct_id.clear()
+		
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
 		
 
-		CurrentState.currentOpenedId = id
+		const suspended = self.Modules.itemclassHeaderEdit.getCurrentState().Actions.edit.isSuspended()
 
-		// export async function itemclassHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'itemclassHeaderEdit_isEditDisabled'
-		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
-		if (typeof fn_iseditdisabled === 'function') {
-			const editDisabled = fn_iseditdisabled(self, data)
-			CurrentState.editDisabled = editDisabled
+		CurrentState.editDisabled = suspended
+		CurrentState.currentOpenedId = id
+		
+		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
+		if (!CurrentState.headerFormLocked) {
+			const fn_iseditdisabled_name = 'itemclassStructEdit_isEditDisabled'
+			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
+			if (typeof fn_iseditdisabled === 'function') {
+				const editDisabled = fn_iseditdisabled(self, data)
+				CurrentState.editDisabled = editDisabled
+			}
 		}
 
 		// disable primary key
@@ -175,14 +171,15 @@ export async function openSelectedData(self, params) {
 
 		// isi form dengan data
 		frm.setData(data)
-
+	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function itemclassHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'itemclassHeaderEdit_formOpened'
+		// export function itemclassStructEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'itemclassStructEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
-			await fn_formopened(self, frm, CurrentState)
+			fn_formopened(self, frm, CurrentState)
 		}
+
 
 		// finally, accept changes dan lock form
 		frm.acceptChanges()
@@ -197,22 +194,44 @@ export async function openSelectedData(self, params) {
 	}
 }
 
-
-
-export function getHeaderForm(self) {
-	return frm
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getForm(self) {
 	return frm
 }
 
-export function getCurrentState(self) {
-	return CurrentState
-}
-
 export function clearForm(self, text) {
 	frm.clear(text)
+}
+
+export function headerLocked(self) {
+	CurrentState.headerFormLocked = true
+	CurrentState.editDisabled = true
+	btn_new.disabled = true
+
+	// Extender untuk event Locked
+	// export function itemclassStructEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'itemclassStructEdit_formLocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
+}
+
+export function headerUnlocked(self) {
+	CurrentState.headerFormLocked = false
+	CurrentState.editDisabled = false
+	btn_new.disabled = false
+
+	// Extender untuk event Unlocked
+	// export function itemclassStructEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'itemclassStructEdit_formUnlocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
 }
 
 export function disableNextButton(self, disabled=true) {
@@ -258,8 +277,9 @@ async function newData(self, datainit) {
 	}
 }
 
+
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/header-open`
+	const url = `/${Context.moduleName}/struct-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -269,7 +289,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-create`
+	const url = `/${Context.moduleName}/struct-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -278,9 +298,8 @@ async function createData(self, data, formData) {
 	} 	
 }
 
-
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-update`
+	const url = `/${Context.moduleName}/struct-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -289,9 +308,8 @@ async function updateData(self, data, formData) {
 	} 
 }
 
-
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/header-delete`
+	const url = `/${Context.moduleName}/struct-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -319,16 +337,21 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.itemclassHeaderList
+		const listId =  Context.Sections.itemclassStructList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
 }
 
+
 async function  frm_locked(self, evt) {
+	console.log('frm_locked')
+
 	CurrentSection.Title = TitleWhenView
 
 	btn_edit.setText(EditModeText)
+
+	//  todo: cek dulu apakah boleh add/remove rows 
 
 	btn_edit.disabled = false
 	btn_save.disabled = true
@@ -338,32 +361,30 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
-	
+
 	// Extender untuk event locked
-	// export function itemclassHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'itemclassHeaderEdit_formLocked'
+	// export function itemclassStructEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'itemclassStructEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}
+	}	
 
+	// jika heder form dalam kondisi lock,
+	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
-		// jika karena suatu kondisi data mengharuskan data tidak boleh diedit
 		btn_edit.disabled = true
-	}
-
-	
-	// trigger lock event di struct
-	self.Modules.itemclassStructList.headerLocked(self)
-	self.Modules.itemclassStructEdit.headerLocked(self)
-		
+		btn_new.disabled = true
+	} 
 
 }
 
 async function  frm_unlocked(self, evt) {
+	console.log('frm_unlocked')
+
 	if (frm.isNew()) {
 		CurrentSection.Title = TitleWhenNew
+
 	} else {
 		CurrentSection.Title = TitleWhenEdit
 	}
@@ -378,21 +399,13 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
-
 	// Extender untuk event Unlocked
-	// export function itemclassHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'itemclassHeaderEdit_formUnlocked'
+	// export function itemclassStructEdit_formUnlocked(self, frm) {}
+	const fn_name = 'itemclassStructEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
-		fn(self, frm, CurrentState)
+		fn(self, frm)
 	}
-
-	
-	// trigger unlock event di struct
-	self.Modules.itemclassStructList.headerUnlocked(self)
-	self.Modules.itemclassStructEdit.headerUnlocked(self)	
-		
 }
 
 async function setPrimaryKeyState(self, opt) {
@@ -423,16 +436,18 @@ async function btn_edit_click(self, evt) {
 	}
 }
 
+
 async function btn_new_click(self, evt) {
-	console.log('btn_new_click')
+	console.log('new')
 	const sourceSection = evt.target.getAttribute('data-sectionsource') 
 
-	const itemclassHeaderList = self.Modules.itemclassHeaderList
-	const listsecid = itemclassHeaderList.Section.Id
+	const itemclassStructList = self.Modules.itemclassStructList
+	const listsecid = itemclassStructList.Section.Id
 	const fromListSection = sourceSection===listsecid
+
 	if (fromListSection) {
-		// klik new dari list (tidak perlu cek ada perubahan data)
-		// tampilkan dulu form
+		console.log('tambahkan row baru')
+		CurrentSection.setSectionReturn(itemclassStructList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -453,21 +468,30 @@ async function btn_new_click(self, evt) {
 	} else {
 		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
 	}
-
+	
+	
 	try {
+	
+		// ambil id header
+		const itemclassHeaderEdit = self.Modules.itemclassHeaderEdit
+		const frmHeader = itemclassHeaderEdit.getHeaderForm()
+		const header_pk = frmHeader.getPrimaryInput()
+		const itemclass_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
+			itemclass_id,
 		}
 
 
 		// jika perlu modifikasi data initial,
-		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'itemclassHeaderEdit_newData'
+		// atau dialog untuk opsi data baru, 
+		// dapat dibuat di Extender.newData
+		// export async function itemclassStructEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'itemclassStructEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function itemclassHeaderEdit_newData(self, datainit, frm) {}
-			await fn_newdata(self, datainit, frm)
+			await fn_newdata(self, datainit, frm, CurrentState)
 		}
 
 		// buat data baru
@@ -475,10 +499,6 @@ async function btn_new_click(self, evt) {
 
 		// buka lock, agar user bisa edit
 		frm.lock(false)
-
-		// jika edit di suspend, enable dulu
-		btn_edit.suspend(false)
-
 
 		// matikan tombol edit dan del saat kondisi form adalah data baru 
 		btn_edit.disabled = true
@@ -488,17 +508,18 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.itemclassHeaderList.Section.show()
+			self.Modules.itemclassStructList.Section.show()
 		}
 	}
 }
 
+
 async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
-
 	// Extender Autofill
-	const fn_autofill_name = 'itemclassHeaderEdit_autofill'
+	// export async function itemclassStructEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'itemclassStructEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -534,8 +555,7 @@ async function btn_save_click(self, evt) {
 		dataToSave = frm.getData()		
 	}
 
-
-
+	
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
@@ -549,9 +569,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function itemclassHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function itemclassStructEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'itemclassHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'itemclassStructEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -562,7 +582,7 @@ async function btn_save_click(self, evt) {
 		console.log('save is canceled')
 		return
 	}
-	
+
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -601,10 +621,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'itemclassHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'itemclassStructEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function itemclassHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function itemclassStructEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -620,10 +640,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.itemclassHeaderList.addNewRow(self, data)
+			self.Modules.itemclassStructList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.itemclassHeaderList.updateCurrentRow(self, data)
+			self.Modules.itemclassStructList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -659,13 +679,40 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function itemclassStructEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'itemclassStructEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
-		// hapus current row yang dipilih di list
-		self.Modules.itemclassHeaderList.removeCurrentRow(self)
 		
+
+		// Extender Delete
+		// export async function itemclassStructEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'itemclassStructEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
+		// hapus current row yang dipilih di list
+		self.Modules.itemclassStructList.removeCurrentRow(self)
+
 		// kembali ke list
-		self.Modules.itemclassHeaderList.Section.show()
+		self.Modules.itemclassStructList.Section.show()
 
 
 		// lock kembali form
@@ -678,9 +725,7 @@ async function btn_del_click(self, evt) {
 		mask.close()
 		mask = null
 	}
-
 }
-
 
 async function btn_reset_click(self, evt) {
 	console.log('btn_reset_click')
@@ -705,19 +750,18 @@ async function btn_reset_click(self, evt) {
 			console.log('tidak ada perubahan data, reset data tidak dieksekusi')
 		}
 	}
-
 }
+
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.itemclassHeaderList.selectPreviousRow(self)
+	self.Modules.itemclassStructList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.itemclassHeaderList.selectNextRow(self)
+	self.Modules.itemclassStructList.selectNextRow(self)
 }
-
 
 
 
@@ -749,10 +793,15 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'itemclassHeaderEdit_addRecordInfo'
+
+			// jika mau menambah beberapa informasi mengenai record,
+			// misalnya commit by, postby, dll
+			// melalui extender itemclassStructEdit_addRecordInfo
+			// export async function itemclassStructEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'itemclassStructEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self, data)
+				await fn_addrecordinfo(self,  data)
 			}
 
 		} catch (err) {
@@ -787,11 +836,12 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
+
 			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.itemclass',
+				table: 'public.itemclassstruct',
 				id: id
 			}
 
@@ -810,37 +860,5 @@ async function btn_logs_click(self, evt) {
 			mask = null
 		}
 
-	})
-}
-
-async function btn_about_click(self, evt) {
-	const params = {
-		Context,
-		sectionReturn: CurrentSection
-	}
-	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
-		
-		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Item Classification'
-
-		const section = document.getElementById('fAbout-section')
-
-		if ( document.getElementById('fAbout-section-fdescr') == null) {
-			const divDescr = document.createElement('div')
-			divDescr.setAttribute('id', 'fAbout-section-fdescr')
-			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
-			const divTopbar = section.querySelector('div[data-topbar]')
-			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
-		}
-
-		if ( document.getElementById('fAbout-section-footer') == null) {
-			const divFooter = document.createElement('div')
-			divFooter.setAttribute('id', 'fAbout-section-footer')
-			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator at 4 Mar 2026 13:01'
-			section.appendChild(divFooter)
-		}
-		
 	})
 }

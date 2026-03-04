@@ -52,7 +52,14 @@ export async function paymreqDetilList_rowsDeleted(self, data) {
 	await updateHeaderValues(self, paymreq_id)
 }
 
+export function obj_itemclass_id_selecting_criteria(self, obj_itemclass_id, frm, criteria, sort, evt) {
+	const paymreqHeaderEdit = self.Modules.paymreqHeaderEdit
+	const frmHeader = paymreqHeaderEdit.getForm()
+	const obj_struct_id = frmHeader.Inputs['paymreqHeaderEdit-obj_struct_id']
+	const struct_id = obj_struct_id.value
 
+	criteria.visible_by_struct_id = struct_id
+}
 
 
 async function updateHeaderValues(self, paymreq_id) {
