@@ -30,27 +30,10 @@
 		display: none;
 	}
 
-
-	#report-logo {
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
-		height: 15mm;
-		width: 60mm;
-	}
-
 }
 
 
-@media screen {
-	#report-logo {
-		background-size: cover;
-		background-position: center;
-		background-repeat: no-repeat;
-		height: 32px;
-		width: 128px;
-	}
-}
+@media screen {}
 
 
 #judul-laporan {
@@ -74,7 +57,7 @@
 	text-align: center;
 }
 
-#tbl-report tr [ data-colname="saldo"] {
+#tbl-report tr [ data-colname="saldoawal_idr"] {
 	width: 200px;
 	text-align: right;
 }
@@ -99,18 +82,23 @@
 	padding-bottom: 5px;
 }
 
+#ledgerHeader {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	/* grid-auto-rows: auto; */
+	gap: 0px;
+	width: 100%;
+	margin-bottom: 10px;
 
+}
 
+#filter-container {
+	grid-row: 1;
+	grid-column: 1 / span 8;
+}
 
-
-.reportrow {
-	border-bottom: 1px dotted #ddd;
-
-	white-space: nowrap;
-	/* Mencegah teks turun ke baris baru */
-	overflow: hidden;
-	/* Menyembunyikan teks yang keluar dari div */
-	text-overflow: ellipsis;
-	/* Menambahkan simbol ... */
-	border-bottom: 1px #ccc dotted;
+#btn {
+	grid-row: 1;
+	grid-column: 11 / span 2;
+	text-align: right;
 }

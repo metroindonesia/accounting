@@ -8,9 +8,6 @@ const btnLoad = document.getElementById('btnLoad')
 const btnPrint = document.getElementById('btnPrint')
 const btnDownload = document.getElementById('btnDownload')
 
-const obj_reporttype = new $fgta5.Combobox('obj_reporttype')
-const obj_date = new $fgta5.Datepicker('obj_date')
-
 
 export default class extends Module {
 	constructor() {
@@ -36,7 +33,7 @@ export default class extends Module {
 				Context.sid = result.sid
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
-				Context.setting = result.setting
+
 
 
 			} catch (err) {

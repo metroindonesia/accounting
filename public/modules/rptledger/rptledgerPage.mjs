@@ -17,17 +17,13 @@ export async function init(self, args) {
 	Context.setTitle(pageTitle);  // set judul di browser
 
 	// set datebox tanggal otomatis jadi today
-	// let today = new Date().toISOString().split("T")[0];
-	// document.getElementById("rptLedger_tgl").value = today;
+	let today = new Date().toISOString().split("T")[0];
+	document.getElementById("rptLedger_tgl").value = today;
 
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
 	}
-
-	const docLogo = document.getElementById('report-logo')
-	const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
-	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
 export function getParams() {
@@ -63,11 +59,6 @@ function formatNumber(num) {
 export function renderRow(self, row) {
 	let renderedHtml = rowTemplateString
 
-	console.log(row)
-	if (row.isgroup) {
-		row.coa_id = ''
-	}
-
 	for (const key in row) {
 		if (row.hasOwnProperty(key)) {
 
@@ -76,8 +67,6 @@ export function renderRow(self, row) {
 			renderedHtml = renderedHtml.replace(placeholder, value);  // Ganti placeholder dengan nilai data
 		}
 	}
-
-
 
 	const tempContainer = document.createElement('tbody');
 	tempContainer.innerHTML = renderedHtml;
