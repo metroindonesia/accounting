@@ -115,6 +115,13 @@ async function reportviewer_fetch(self, body) {
 
 		console.log(`query for ${cache_id} by offset ${rowOffset}`)
 		const rows = await db.any(sql, { cache_id, rowOffset, rowLimit })
+
+		for (var row of rows) {
+			if (row.isgroup) {
+				row.coa_id = '';
+			}
+		}
+
 		return rows;
 	} catch (err) {
 		throw err

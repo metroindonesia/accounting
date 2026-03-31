@@ -20,8 +20,10 @@ https://github.com/linways/table-to-excel
 				<th data-colname="rowid" data-fill-color="CCCCCC" data-f-bold="true">No</td>
 				<th data-colname="coa_id" data-fill-color="CCCCCC" data-f-bold="true">ID</td>
 				<th data-colname="coa_name" data-fill-color="CCCCCC" data-f-bold="true">COA</td>
-				<th data-colname="saldo_awal" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Saldo Awal
-					</td>
+				<th class="value-col" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Saldo Awal</td>
+				<th class="value-col" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Debet</th>
+				<th class="value-col" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Kredit</th>
+				<th class="value-col" data-fill-color="CCCCCC" data-f-bold="true" data-a-h="right">Saldo Akhir</th>					
 
 					<!-- hanya muncul di spreadsheet -->
 				<th style="display: none;" data-fill-color="CCCCCC" data-f-bold="true">IsGroup</td>
@@ -46,9 +48,22 @@ https://github.com/linways/table-to-excel
 			<td data-colname="coa_id" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}">{{coa_id}}</td>
 			<td data-colname="coa_name" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}"
 				data-a-indent="{{coa_level}}">{{coa_name}}</td>
-			<td data-colname="saldoawal_idr" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+			
+			<td class="value-col" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
 				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{saldoawal_idr}}">
 				{{saldoawal_idr}}</td>
+
+			<td class="value-col" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{debet_idr}}">
+				{{debet_idr}}</td>
+
+			<td class="value-col" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{kredit_idr}}">
+				{{kredit_idr}}</td>
+				
+			<td class="value-col" data-f-bold="{{isgroup}}" data-istotal="{{istotal}}" data-t="n"
+				data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@" format="decimal" value="{{saldoakhir_idr}}">
+				{{saldoakhir_idr}}</td>				
 
 			<!-- hanya muncul di spreadsheet -->
 			<td style="display: none;" data-a-h="center">{{isgroup}}</td>

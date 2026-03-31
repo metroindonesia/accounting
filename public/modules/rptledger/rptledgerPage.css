@@ -38,9 +38,19 @@
 
 #judul-laporan {
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 1.2rem;
 	margin-bottom: 5px;
 }
+
+#tbl-report * {
+	font-size: 0.7rem;
+}
+
+#tbl-report .value-col {
+	width: 100px;
+	text-align: right;
+}
+
 
 #tbl-report th {
 	background-color: #ccc;
@@ -53,15 +63,20 @@
 }
 
 #tbl-report tr [ data-colname="coa_id"] {
+	min-width: 80px;
 	width: 100px;
 	text-align: center;
 }
 
-#tbl-report tr [ data-colname="saldoawal_idr"] {
+#tbl-report tr [ data-colname="coa_name"] {
+	min-width: 150px;
 	width: 200px;
-	text-align: right;
+	text-overflow: ellipsis;
 }
 
+#tbl-report tr td {
+	border-bottom: 1px dotted #ccc;
+}
 
 #tbl-report td[data-isgroup="true"][data-colname="coa_id"] {
 	color: #fff;
