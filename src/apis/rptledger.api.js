@@ -117,7 +117,7 @@ async function reportviewer_fetch(self, body) {
 		const rows = await db.any(sql, { cache_id, rowOffset, rowLimit })
 
 		for (var row of rows) {
-			if (row.isgroup) {
+			if (row.isgroup == true) {
 				row.coa_id = '';
 			}
 		}
