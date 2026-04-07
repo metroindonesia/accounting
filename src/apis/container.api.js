@@ -27,7 +27,14 @@ async function container_init(self, body) {
 	const req = self.req
 	req.session.sid = req.sessionID
 
-	const baseUrl = `${req.protocol}://${req.get('host')}`;
+	let baseOrigin = `${req.protocol}://${req.get('host')}`;
+	const b = new URL(baseOrigin);
+	if (b.hostname != 'localhost') {
+		baseOrigin = null   // baseOrigin=null, berarti tidak ada penggantian origin
+	}
+
+
+
 	try {
 		return {
 			title: 'Accounting & Finance',
@@ -37,7 +44,7 @@ async function container_init(self, body) {
 			sid: req.session.sid,
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
-			programs: await getAllProgram(self, req.session.user.userId, baseUrl),
+			programs: await getAllProgram(self, req.session.user.userId, baseOrigin),
 			favourites: await getUserFavourites(self, req.session.user.userId),
 			iconMenuUrl: req.app.locals.appConfig.iconMenuUrl,
 		}
@@ -63,11 +70,11 @@ async function getUserFavourites(self, user_id) {
 	}
 }
 
-async function getAllProgram(self, user_id, baseUrl) {
+async function getAllProgram(self, user_id, baseOrigin) {
 	try {
 		const sql = 'select * from core.get_user_programs (${user_id})'
 		const rows = await db.any(sql, { user_id })
-		const programs = composeMenuProgram(baseUrl, rows)
+		const programs = composeMenuProgram(baseOrigin, rows)
 		return programs
 	} catch (err) {
 		throw err
@@ -75,29 +82,52 @@ async function getAllProgram(self, user_id, baseUrl) {
 }
 
 
-function composeMenuProgram(baseUrl, rows, parent = null) {
+function changeOrigin(stringUrl, newOrigin) {
+	// tidak perlu ada penggantian origin jika newOrigin berisi null
+	if (newOrigin == null) {
+		return stringUrl
+	}
+
+	const u = new URL(stringUrl);
+	const newU = new URL(newOrigin);
+
+	if (u.origin !== newU.origin) {
+		u.protocol = newU.protocol;
+		u.hostname = newU.hostname;
+		u.port = newU.port;
+	}
+
+	return u.toString();
+}
+
+
+function composeMenuProgram(baseOrigin, rows, parent = null) {
 	const programs = []
 	const rowLevel = rows.filter(row => row.parent == parent)
 	for (let row of rowLevel) {
+
+		let iconUrl = row.icon == '' ? null : row.icon
+		if (iconUrl != null) {
+			iconUrl = changeOrigin(iconUrl, baseOrigin)
+		}
+
 		if (row.type === 'program') {
 			// program
-
-
-			console.log(row)
+			const programUrl = changeOrigin(row.url, baseOrigin)
 			programs.push({
 				type: 'program',
 				name: row.id,
 				title: row.title,
-				icon: row.icon == '' ? null : row.icon,
-				url: row.url
+				icon: iconUrl,
+				url: programUrl
 			})
 		} else {
 			// directory
 			programs.push({
 				title: row.title,
-				icon: row.icon == '' ? null : row.icon,
+				icon: iconUrl,
 				border: (row.icon == '' || row.icon == null) ? false : true,
-				items: composeMenuProgram(baseUrl, rows, row.id)
+				items: composeMenuProgram(baseOrigin, rows, row.id)
 			})
 		}
 	}
