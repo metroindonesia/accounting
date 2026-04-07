@@ -173,6 +173,9 @@ export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState)
 	const header_project_id = header_obj_project_id.value
 	const header_project_name = header_obj_project_id.text
 
+	const header_obj_jurnal_descr = frmHeader.Inputs['jurnalHeaderEdit-obj_jurnal_descr']
+	const header_jurnal_descr = header_obj_jurnal_descr.value
+
 
 	// set default data saat new
 	datainit.jurnaltype_id = jurnaltype.jurnaltype_id
@@ -182,6 +185,7 @@ export async function jurnalDetilEdit_newData(self, datainit, frm, CurrentState)
 	datainit.unit_id = { value: header_unit_id, text: header_unit_name }
 	datainit.struct_id = { value: header_struct_id, text: header_struct_name }
 	datainit.project_id = { value: header_project_id, text: header_project_name }
+	datainit.jurnaldetil_descr = header_jurnal_descr
 
 }
 

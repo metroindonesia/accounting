@@ -73,7 +73,8 @@ async function main() {
 
 			iconMenuUrl,
 
-			defaultCurr: { id: 1, name: 'IDR' }
+			defaultCurr: { id: 1, name: 'IDR' },
+			localCurr: { id: 1, name: 'IDR' }
 		}
 	}
 

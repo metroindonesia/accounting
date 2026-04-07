@@ -48,6 +48,10 @@ export async function processApPayment(self, tx, doc_id, jurnalHeader) {
 		sisa = sisa + Number(rowExclude.paid_value)
 	}
 
+	const selisih = bayar - sisa
+
+
+
 	if (bayar > sisa) {
 		// pembayaran melebihi total outstanding
 		// batalkan
