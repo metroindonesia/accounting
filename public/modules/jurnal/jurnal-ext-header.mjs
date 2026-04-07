@@ -847,6 +847,10 @@ function jurnaltype_changed(self, jurnaltype, frm) {
 	pageHelper.setVisibility(`${_curr_rate}-container`, jurnaltype.isheadhasvalue)
 	pageHelper.setVisibility(`${_coacurr}-container`, jurnaltype.isheadhasvalue)
 
+	if (!jurnaltype.isheadhasvalue) {
+		obj_curr_id.setSelected(null)
+	}
+
 
 
 

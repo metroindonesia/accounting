@@ -27,6 +27,7 @@ async function container_init(self, body) {
 	const req = self.req
 	req.session.sid = req.sessionID
 
+	const baseUrl = `${req.protocol}://${req.get('host')}`;
 	try {
 		return {
 			title: 'Accounting & Finance',
@@ -36,7 +37,7 @@ async function container_init(self, body) {
 			sid: req.session.sid,
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
-			programs: await getAllProgram(self, req.session.user.userId),
+			programs: await getAllProgram(self, req.session.user.userId, baseUrl),
 			favourites: await getUserFavourites(self, req.session.user.userId),
 			iconMenuUrl: req.app.locals.appConfig.iconMenuUrl,
 		}
@@ -62,11 +63,11 @@ async function getUserFavourites(self, user_id) {
 	}
 }
 
-async function getAllProgram(self, user_id) {
+async function getAllProgram(self, user_id, baseUrl) {
 	try {
 		const sql = 'select * from core.get_user_programs (${user_id})'
 		const rows = await db.any(sql, { user_id })
-		const programs = composeMenuProgram(rows)
+		const programs = composeMenuProgram(baseUrl, rows)
 		return programs
 	} catch (err) {
 		throw err
@@ -74,12 +75,15 @@ async function getAllProgram(self, user_id) {
 }
 
 
-function composeMenuProgram(rows, parent = null) {
+function composeMenuProgram(baseUrl, rows, parent = null) {
 	const programs = []
 	const rowLevel = rows.filter(row => row.parent == parent)
 	for (let row of rowLevel) {
 		if (row.type === 'program') {
 			// program
+
+
+			console.log(row)
 			programs.push({
 				type: 'program',
 				name: row.id,
@@ -93,7 +97,7 @@ function composeMenuProgram(rows, parent = null) {
 				title: row.title,
 				icon: row.icon == '' ? null : row.icon,
 				border: (row.icon == '' || row.icon == null) ? false : true,
-				items: composeMenuProgram(rows, row.id)
+				items: composeMenuProgram(baseUrl, rows, row.id)
 			})
 		}
 	}
