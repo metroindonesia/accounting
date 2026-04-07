@@ -352,7 +352,7 @@ async function cboCurr_selecting(self, evt) {
 	const cbo = evt.detail.sender
 	const dialog = evt.detail.dialog
 	const searchtext = evt.detail.searchtext != null ? evt.detail.searchtext : ''
-	const url = `${Context.appsUrls.ent.url}/curr/header-list`
+	const url = `curr/header-list`
 	const sort = {}
 	const criteria = {
 		searchtext: searchtext,
