@@ -18,12 +18,12 @@ async function main(param) {
 		let agingtype_id
 
 		switch (param.typelap) {
-			case 'ar_his':
+			case 'ar_detil':
 				procedureName = 'public.aging_idr';
 				agingtype_id = 1;
 				break;
 
-			case 'ap_his':
+			case 'ap_detil':
 				procedureName = 'public.aging_idr';
 				agingtype_id = 2;
 				break;
