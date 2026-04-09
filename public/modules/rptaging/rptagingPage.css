@@ -95,7 +95,7 @@
 }
 
 #tbl-report tr[data-rowblock="2"] td {
-	/* border-bottom: 1px dashed #ddd; */
+	border-bottom: 1px dashed #ddd;
 }
 
 #tbl-report tr[data-rowblock="2"] td[data-colname="descr"] {
