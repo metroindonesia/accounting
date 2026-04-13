@@ -75,19 +75,24 @@
 }
 
 
-
 #tbl-report td[data-isgroup="true"][data-colname="coa_id"] {
 	color: #fff;
 }
 
+#tbl-report td[data-colname="jurnal_datedue"],
+#tbl-report td[data-colname="jurnal_date"] {
+    width: 100px;
+    text-align: center;
+}
+
 
 #tbl-report tr[data-rowblock="0"] td {
-	font-weight: bold;
+	/* font-weight: bold; */
 	padding-top: 10px;
 }
 
 #tbl-report tr[data-rowblock="1"] td {
-	border-bottom: 1px dotted #ccc;
+	/* border-bottom: 1px dotted #ccc; */
 }
 
 #tbl-report tr[data-rowblock="1"] td[data-colname="descr"] {
@@ -95,11 +100,41 @@
 }
 
 #tbl-report tr[data-rowblock="2"] td {
-	border-bottom: 1px dashed #ddd;
+	/* border-bottom: 1px solid #ddd; */
 }
 
 #tbl-report tr[data-rowblock="2"] td[data-colname="descr"] {
 	padding-left: 40px; 
+	/* width: 200px; */
+}
+
+#tbl-report .col-hidden {
+    display: none;
+}
+
+#tbl-report.mode-summary .col-detail {
+    display: none;
+}
+
+/* normal row (tidak bold) */
+#tbl-report tr.row-normal td {
+	font-weight: normal;
+	border-bottom : 1px dotted #ccc;
+}
+
+/* subtotal (bold + garis bawah) */
+#tbl-report tr.row-subtotal td {
+	font-weight: bold;
+	/* border-bottom: 2px solid #000; */
+}
+
+/* total (bold + garis atas + background) */
+#tbl-report tr.row-total td {
+	font-weight: bold;
+	border-top: 2px solid #000;
+	background-color: #ccc;
+	padding-bottom: 10px;
+	
 }
 
 #agingHeader {
