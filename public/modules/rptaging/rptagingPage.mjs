@@ -82,33 +82,55 @@ export function renderRow(self, row) {
 
 	// data-a-indent="{{indent}}"
 
+	// atur tampilan berdasarkan typelap
+	const typelap = document.getElementById("typelap").value;
+	const table = document.getElementById("tbl-report");
+
+	if (typelap === 'ap_detil' || typelap === 'ar_detil') {
+		table.classList.remove('mode-summary');
+	} else {
+		table.classList.add('mode-summary');
+	}
+	
 	// isi descr
 	const tdDescr = trElement.querySelector('td[data-colname="descr"]')
-
-	if (row.block == 0) {
-		tdDescr.innerHTML = row.partner_name
-
-	} else {
-		// tdDescr.innerHTML = row.jurnaldetil_descr
-		// tdDescr.setAttribute('data-a-indent', 2)
-
-		if (row.jurnaldetil_descr != null) {
-			tdDescr.innerHTML = row.jurnaldetil_descr
-			tdDescr.setAttribute('data-a-indent', 2)
+	const tdJurnalDoc = trElement.querySelector('td[data-colname="jurnal_doc"]')
+	const tdJurnalDate = trElement.querySelector('td[data-colname="jurnal_date"]')
+	const tdJurnalDue = trElement.querySelector('td[data-colname="jurnal_datedue"]')
+		if (row.block == 0) {
+			tdDescr.innerHTML = row.partner_name
+			// set isi agar kosong tidak muncul "null" di cell
+			tdJurnalDoc.innerHTML = ''
+			tdJurnalDate.innerHTML = ''
+			tdJurnalDue.innerHTML = ''
 		} else {
-			tdDescr.innerHTML = row.coa_name
-			tdDescr.setAttribute('data-a-indent', 2)
+
+			if (row.jurnaldetil_descr != null) {
+				tdDescr.innerHTML = row.jurnaldetil_descr
+				tdDescr.setAttribute('data-a-indent', 3)
+
+			} else {
+				tdDescr.innerHTML = row.coa_name
+				// set isi agar kosong tidak muncul "null" di cell
+				tdJurnalDoc.innerHTML = ''
+				tdJurnalDate.innerHTML = ''
+				tdJurnalDue.innerHTML = ''
+				tdDescr.setAttribute('data-a-indent', 2)
+			}
 		}
-	}
+		
+		//Atur tampilan berdasarkan flag istotal, issubtotal, isrow
+		// reset class dulu biar tidak numpuk
+		trElement.classList.remove('row-normal', 'row-subtotal', 'row-total')
 
-	//ubah format tulisan block 0 jadi plan
-	// let typelap = document.getElementById("typelap").value
-	// // console.log(typelap)
-
-	// if (typelap == 'ar_part' || typelap == 'ap_part') {
-	// 	// tdDescr.setAttribute('data-rowblock', 1)
-	// 	row.block = '1'
-	// }
+		// kondisi styling berdasarkan flag database
+		if (row.istotal == 1) {
+			trElement.classList.add('row-total')
+		} else if (row.issubtotal == 1) {
+			trElement.classList.add('row-subtotal')
+		} else if (row.isrow == 1) {
+			trElement.classList.add('row-normal')
+		}
 
 	// format descimal
 	const colsDecimals = trElement.querySelectorAll("td[data-format=\"decimal\"]")
