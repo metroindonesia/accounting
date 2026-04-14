@@ -142,10 +142,10 @@ async function btnLoad_click(self) {
 		btnDownload.disabled = false
 
 
-		if (typelap == 'ar_his' || typelap == 'ar_part' || typelap == 'ar_partcoa') {
+		if (typelap == 'ar_detil' || typelap == 'ar_part' || typelap == 'ar_partcoa') {
 			document.getElementById("judul-laporan").innerHTML = "Aging Receivable"
-			if (typelap == 'ar_his') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding History"
+			if (typelap == 'ar_detil') {
+				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Detail"
 				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
 			} else if (typelap == 'ar_part') {
 				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Partner"
@@ -155,10 +155,10 @@ async function btnLoad_click(self) {
 				document.getElementById("subjudul-laporan").innerHTML = "Outstanding COA"
 				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
 			}
-		} else if (typelap == 'ap_his' || typelap == 'ap_part' || typelap == 'ap_partcoa') {
+		} else if (typelap == 'ap_detil' || typelap == 'ap_part' || typelap == 'ap_partcoa') {
 			document.getElementById("judul-laporan").innerHTML = "Aging Payable"
-			if (typelap == 'ap_his') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding History"
+			if (typelap == 'ap_detil') {
+				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Detail"
 				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
 			} else if (typelap == 'ap_part') {
 				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Partner"
