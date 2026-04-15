@@ -1,5 +1,5 @@
-import Context from './rptaging-context.mjs'  // todo: sesuaikan
-import * as reportPage from './rptagingPage.mjs'  // todo: sesuaikan
+import Context from './rptfullaccount-context.mjs'  // todo: sesuaikan
+import * as reportPage from './rptfullaccountPage.mjs'  // todo: sesuaikan
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -115,7 +115,7 @@ async function btnLoad_click(self) {
 	let mask = $fgta5.Modal.createMask()
 	let typelap = document.getElementById('typelap').value
 	// let text = typelap.options[typelap.selectedIndex].text;
-	let tgl = document.getElementById('rptaging_tgl').value
+	let tgl = document.getElementById('rptfullaccount_enddate').value
 	try {
 		btnLoad.disabled = true
 		btnPrint.disabled = true
@@ -142,31 +142,13 @@ async function btnLoad_click(self) {
 		btnDownload.disabled = false
 
 
-		if (typelap == 'ar_detil' || typelap == 'ar_part' || typelap == 'ar_partcoa') {
-			document.getElementById("judul-laporan").innerHTML = "Aging Receivable"
-			if (typelap == 'ar_detil') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Detail"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-			} else if (typelap == 'ar_part') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Partner"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-
-			} else if (typelap == 'ar_partcoa') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding COA"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-			}
-		} else if (typelap == 'ap_detil' || typelap == 'ap_part' || typelap == 'ap_partcoa') {
-			document.getElementById("judul-laporan").innerHTML = "Aging Payable"
-			if (typelap == 'ap_detil') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Detail"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-			} else if (typelap == 'ap_part') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding Partner"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-			} else if (typelap == 'ap_partcoa') {
-				document.getElementById("subjudul-laporan").innerHTML = "Outstanding COA"
-				document.getElementById("tgl_cetak").innerHTML = "pertanggal : <b>" + tgl + "</b>";
-			}
+		if (typelap == 'fa_mtd') {
+			document.getElementById("judul-laporan").innerHTML = "FullAccount MTD"
+			document.getElementById("tgl_cetak").innerHTML = "End Date : <b>" + tgl + "</b>";
+			
+		}else{
+			document.getElementById("judul-laporan").innerHTML = "FullAccount YTD"
+			document.getElementById("tgl_cetak").innerHTML = "End Date : <b>" + tgl + "</b>";
 		}
 
 		mask.close()
