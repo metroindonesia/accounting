@@ -1,0 +1,39 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="agingHeader">
+		<!-- <div style="flex-grow: 1;"> -->
+		<div id="filter-container">Type:
+			<select id="typelap">
+				<option value="fa_mtd">FullAccount MTD</option>
+				<option value="fa_ytd">FullAccount YTD</option>
+			</select>
+
+			<!-- Filter -->
+			Filter :
+			<select id="filter" disabled style="width: 200px;">
+				<option value="">Filter by</option>
+				<option value="">Site</option>
+				<option value="">Unit</option>
+			</select>
+
+			End Date: <input type="date" id="rptfullaccount_enddate">
+			<button id="btnLoad">Load</button>
+		</div>
+
+		<!-- </div> -->
+
+
+		<div id="btn">
+			<button id="btnDownload">Download</button>
+			<button id="btnPrint">Cetak</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptfullaccountPage.html`) %>
+	</div>
+</section>

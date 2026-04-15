@@ -1,0 +1,78 @@
+<!-- 
+manual format excel:
+https://github.com/linways/table-to-excel 
+-->
+
+<div id="print-area">
+
+	<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+		<div>
+			<div id="judul-laporan">Laporan FullAccount</div>
+			<div id="subjudul-laporan"></div>
+			<div id="tgl_cetak" style="margin-bottom:15px;"></div>
+		</div>
+		<div id="report-logo"></div>
+	</div>
+
+	<table id="tbl-report" width="100%" data-cols-width="5,20,8,8,8,8,8,8,8,8,8,8">
+		<thead>
+			<tr>
+				<th data-colname="no">No</th>
+				<th data-colname="">Periode</th>
+				<th data-colname="coa_id">COA ID</th>
+				<th data-colname="">COA Name</th>
+				<th data-colname="">COA RPT Name</th>
+				<th data-colname="">Currency</th>
+				<th data-colname="jurnal_doc">Jurnal Doc</th>
+				<th data-colname="jurnal_date">Jurnal Date</th>
+				<th data-colname="jurnal_datedue">Jurnal Duedate</th>
+				<th data-colname="">Jurnal Descr</th>
+				<th data-colname="">Site Name</th>
+				<th data-colname="">Struct Name</th>
+				<th data-colname="">Unit Name</th>
+				<th data-colname="">Project Name</th>
+				<th data-colname="">Partner Name</th>
+				<th data-colname="">Saldo Awal IDR</th>
+				<th data-colname="">Saldo Awal Value</th>
+				<th data-colname="">Mutasi IDR</th>
+				<th data-colname="">Mutasi Value</th>
+			</tr>
+		</thead>
+
+		<tbody>
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td>
+					<div id="tbl-infoloader" style="position: absolute;"><!-- Report Loader Info --></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+	<template name="template-report-row">
+		<tr>
+			<td data-colname="rowid">{{rowid}}</td>
+			<td data-colname="descr">{{periode_id}}</td>
+			<td data-colname="">{{coa_id}}</td>
+			<td data-colname="">{{coa_name}}</td>
+			<td data-colname="coarpt_name">{{coarpt_name}}</td>
+			<td data-colname="">{{curr_code}}</td>
+			<td data-colname="jurnal_doc">{{jurnal_doc}}</td>
+			<td data-colname="jurnal_date">{{jurnal_date}}</td>
+			<td data-colname="jurnal_datedue">{{jurnal_datedue}}</td>
+			<td data-colname="jurnaldetil_descr">{{jurnaldetil_descr}}</td>
+			<td data-colname="site_name">{{site_name}}</td>
+			<td data-colname="struct_name">{{struct_name}}</td>
+			<td data-colname="unit_name">{{unit_name}}</td>
+			<td data-colname="project_name">{{project_name}}</td>
+			<td data-colname="partner_name">{{partner_name}}</td>
+			<td data-format="decimal" data-t="n" data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@">{{saldoawal_idr}}</td>
+			<td data-format="decimal" data-t="n" data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@">{{saldoawal_value}}</td>
+			<td data-format="decimal" data-t="n" data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@">{{mutasi_idr}}</td>
+			<td data-format="decimal" data-t="n" data-a-h="right" data-num-fmt="#,##0;#,##0;#,##0;@">{{mutasi_value}}</td>
+		</tr>
+	</template>
+
+</div>
