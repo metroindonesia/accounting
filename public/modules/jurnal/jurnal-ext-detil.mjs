@@ -498,8 +498,8 @@ async function outstandingSelected(self, data, evt) {
 	const obj_ismanuallink = frm.Inputs[_ismanuallink]
 
 	// nilai data hasil tarikan adalah negasi dari value data referensinya
-	const idrChanged = obj_jurnaldetil_idr.value != -Number(data.jurnaldetil_idr)
-	const valueChanged = obj_jurnaldetil_value.value != -Number(data.jurnaldetil_value)
+	const idrChanged = obj_jurnaldetil_idr.value != -Number(data.outstanding_idr)
+	const valueChanged = obj_jurnaldetil_value.value != -Number(data.outstanding_value)
 	const refChanged = obj_jurnaldetil_id_ref.value != data.jurnaldetil_id
 
 
@@ -522,11 +522,11 @@ async function outstandingSelected(self, data, evt) {
 	obj_site_id.setSelected(data.site_id, data.site_name)
 	obj_unit_id.setSelected(data.unit_id, data.unit_name)
 	obj_project_id.setSelected(data.project_id, data.project_name)
-	obj_curr_id.setSelected(data.curr_id, data.curr_code)
+	obj_curr_id.setSelected(data.curr_id, data.curr_name)
 	obj_curr_rate.value = data.curr_rate
 	obj_jurnaldetil_descr.value = data.jurnaldetil_descr
-	obj_jurnaldetil_value.value = -data.jurnaldetil_value
-	obj_jurnaldetil_idr.value = -data.jurnaldetil_idr
+	obj_jurnaldetil_value.value = -data.outstanding_value
+	obj_jurnaldetil_idr.value = -data.outstanding_idr
 	obj_jurnaldetil_id_ref.value = data.jurnaldetil_id
 	obj_agingtype_id.value = data.agingtype_id
 	obj_ismanuallink.value = true

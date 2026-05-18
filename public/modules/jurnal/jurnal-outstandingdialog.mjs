@@ -384,6 +384,8 @@ async function dialog_rowselected(self, tr) {
 	const dlg = self.dialog;
 	const jurnaldetil_id = tr.getAttribute('data-value')
 
+
+
 	// ambil data 
 	try {
 		const url = '/jurnal/detil-open'
@@ -394,6 +396,12 @@ async function dialog_rowselected(self, tr) {
 		const data = await Module.apiCall(url, apiParam)
 
 		const detail = { data, cancelSelect: false }
+
+		detail.data.outstanding_idr = tr.querySelector('td[data-name="outstanding_idr"]').getAttribute("value")
+		detail.data.outstanding_value = tr.querySelector('td[data-name="outstanding_value"]').getAttribute("value")
+
+
+
 		self.eventListener.dispatchEvent(SelectedEvent({
 			detail: detail
 		}))
