@@ -27,18 +27,18 @@ comment on column public."po".po_doc is '';
 
 
 -- =============================================
--- FIELD: pos_descr text
+-- FIELD: po_descr text
 -- =============================================
--- ADD pos_descr
-alter table public."po" add pos_descr text  ;
-comment on column public."po".pos_descr is '';
+-- ADD po_descr
+alter table public."po" add po_descr text  ;
+comment on column public."po".po_descr is '';
 
--- MODIFY pos_descr
+-- MODIFY po_descr
 alter table public."po"
-	alter column pos_descr type text,
-	ALTER COLUMN pos_descr DROP DEFAULT,
-	ALTER COLUMN pos_descr DROP NOT NULL;
-comment on column public."po".pos_descr is '';
+	alter column po_descr type text,
+	ALTER COLUMN po_descr DROP DEFAULT,
+	ALTER COLUMN po_descr DROP NOT NULL;
+comment on column public."po".po_descr is '';
 
 
 -- =============================================
