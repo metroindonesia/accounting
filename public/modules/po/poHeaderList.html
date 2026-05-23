@@ -3,17 +3,33 @@
 
 <div class="search-container">
 	<div id="poHeaderList-pnl_search" class="search-parameters">
-		<input id="poHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+		<input id="poHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off"
+			spellcheck="false" binding="searchtext" data-searchinput>
 	</div>
-	<button id="poHeaderList-btn_gridload">Load</button>
+	<button id="poHeaderList-btn_gridload" class="action-button button-load">
+		<span class="action-button-icon">
+			<img src="public/icons/button-load.svg">
+		</span>
+		<span class="action-button-text">LOAD</span>
+	</button>
 </div>
 
 <table id="poHeaderList-tbl" fgta5-component="Gridview">
 	<thead>
 		<tr data-header key="po_id">
-			<th data-name="po_id" binding="po_id" >ID</th>
-			<th data-name="po_doc" binding="po_doc" >ID</th>
-			<th data-name="po_descr" binding="po_descr" >Descr</th>
+			
+				<th data-name="po_id" binding="po_id" >
+					ID
+				</th>
+				
+				<th data-name="po_doc" binding="po_doc" >
+					ID
+				</th>
+				
+				<th data-name="po_descr" binding="po_descr" >
+					Descr
+				</th>
+				
 		</tr>
 	</thead>
 </table>
@@ -24,7 +40,13 @@
 <div class="footer-buttons-container">
 	<div></div>
 	<div>
-		<button id="poHeaderList-btn_new" data-action="poHeader-new" data-sectionsource="poHeaderList-section">New</button>
+		<button id="poHeaderList-btn_new" data-action="poHeader-new"
+			data-sectionsource="poHeaderList-section" class="action-button button-withtext button-new" >
+			<span class="action-button-icon">
+				<img src="public/icons/button-new.svg">
+			</span>
+			<span class="action-button-text">New</span>		
+		</button>
 	</div>
 	<div></div>
 </div>

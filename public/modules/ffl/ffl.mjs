@@ -1,6 +1,8 @@
 import Context from './ffl-context.mjs'  
 import * as fflHeaderList from './fflHeaderList.mjs' 
 import * as fflHeaderEdit from './fflHeaderEdit.mjs' 
+import * as fflDetilList from './fflDetilList.mjs' 
+import * as fflDetilEdit from './fflDetilEdit.mjs' 
 import * as Extender from './ffl-ext.mjs'
 
 const app = Context.app
@@ -44,6 +46,8 @@ export default class extends Module {
 		self.Modules = { 
 			fflHeaderList, 
 			fflHeaderEdit, 
+			fflDetilList, 
+			fflDetilEdit, 
 		}
 
 		try {
@@ -66,6 +70,8 @@ export default class extends Module {
 			await Promise.all([ 
 				fflHeaderList.init(self, args), 
 				fflHeaderEdit.init(self, args), 
+				fflDetilList.init(self, args), 
+				fflDetilEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -77,7 +83,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['fflHeaderEdit']
+			const modNameList = ['fflHeaderEdit', 'fflDetilEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

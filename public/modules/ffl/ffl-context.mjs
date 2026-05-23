@@ -10,9 +10,13 @@ export default {
 	Sections: { 
 		fflHeaderList: 'fflHeaderList-section', 
 		fflHeaderEdit: 'fflHeaderEdit-section', 
+		fflDetilList: 'fflDetilList-section', 
+		fflDetilEdit: 'fflDetilEdit-section', 
 	},
 	SectionMap: { 
 		'fflHeaderList-section' : 'fflHeaderList', 
 		'fflHeaderEdit-section' : 'fflHeaderEdit', 
+		'fflDetilList-section' : 'fflDetilList', 
+		'fflDetilEdit-section' : 'fflDetilEdit', 
 	}
 }

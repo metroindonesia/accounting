@@ -2,50 +2,48 @@ import Context from './ffl-context.mjs'
 import * as Ext from './ffl-ext.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
-const Extender = Ext.extenderHeader ?? Ext
+const Extender = Ext.extenderDetil ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.fflHeaderEdit
+const CurrentSectionId = Context.Sections.fflDetilEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New Order Fulfillment'
-const TitleWhenView = 'View Order Fulfillment'
-const TitleWhenEdit = 'Edit Order Fulfillment'
+const TitleWhenNew = 'New Detil'
+const TitleWhenView = 'View Detil'
+const TitleWhenEdit = 'Edit Detil'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('fflHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('fflHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('fflHeaderEdit-btn_new', 'fflHeader-new')
-const btn_del = new $fgta5.ActionButton('fflHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('fflHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('fflHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('fflHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('fflHeader-btn_recordstatus')
-const btn_logs = document.getElementById('fflHeader-btn_logs')
-const btn_about = document.getElementById('fflHeader-btn_about')
+const btn_edit = new $fgta5.ActionButton('fflDetilEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('fflDetilEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('fflDetilEdit-btn_new', 'fflDetil-addrow')
+const btn_del = new $fgta5.ActionButton('fflDetilEdit-btn_delete', 'fflDetil-delrow')
+const btn_reset = new $fgta5.ActionButton('fflDetilEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('fflDetilEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('fflDetilEdit-btn_next')
 
-const frm = new $fgta5.Form('fflHeaderEdit-frm');
-const obj_ffl_id = frm.Inputs['fflHeaderEdit-obj_ffl_id']
-const obj_ffl_descr = frm.Inputs['fflHeaderEdit-obj_ffl_descr']	
+const btn_recordstatus = document.getElementById('fflDetil-btn_recordstatus')
+const btn_logs = document.getElementById('fflDetil-btn_logs')
+
+const frm = new $fgta5.Form('fflDetilEdit-frm');
+const obj_ffldetil_id = frm.Inputs['fflDetilEdit-obj_ffldetil_id']
+const obj_ffldetil_data = frm.Inputs['fflDetilEdit-obj_ffldetil_data']
+const obj_ffl_id = frm.Inputs['fflDetilEdit-obj_ffl_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
 const rec_modifydate = document.getElementById('fRecord-section-modifydate')
 const rec_id = document.getElementById('fRecord-section-id')
 
-
 export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing fflHeaderEdit ...')
-	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 		backToList(self, evt)
@@ -57,56 +55,59 @@ export async function init(self, args) {
 
 	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
 	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt)})
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt)})
+	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
 	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
 	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
 	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-
+	
 
 	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
 	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
-	btn_about.addEventListener('click', evt=>{ btn_about_click(self, evt) })
 
-	// set actions
+	CurrentState.headerFormLocked = true 
+	CurrentState.editDisabled = false
+
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
-	}
-	
-	// export async function fflHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'fflHeaderEdit_init'
-	const fn_init = Extender[fn_init_name]
-	if (typeof fn_init === 'function') {
-		await fn_init(self, CurrentState)
+		edit: btn_edit,
 	}
 
+	CurrentState.getHeaderForm = () => {
+		const fflHeaderEdit = self.Modules.fflHeaderEdit
+		const frmHeader = fflHeaderEdit.getHeaderForm()
+		return frmHeader
+	}
 
-	
 
 		
-	
 }
+
 
 export async function openSelectedData(self, params) {
 	console.log('openSelectedData')
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-					
+		
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
 		
 
-		CurrentState.currentOpenedId = id
+		const suspended = self.Modules.fflHeaderEdit.getCurrentState().Actions.edit.isSuspended()
 
-		// export async function fflHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'fflHeaderEdit_isEditDisabled'
-		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
-		if (typeof fn_iseditdisabled === 'function') {
-			const editDisabled = fn_iseditdisabled(self, data)
-			CurrentState.editDisabled = editDisabled
+		CurrentState.editDisabled = suspended
+		CurrentState.currentOpenedId = id
+		
+		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
+		if (!CurrentState.headerFormLocked) {
+			const fn_iseditdisabled_name = 'fflDetilEdit_isEditDisabled'
+			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
+			if (typeof fn_iseditdisabled === 'function') {
+				const editDisabled = fn_iseditdisabled(self, data)
+				CurrentState.editDisabled = editDisabled
+			}
 		}
 
 		// disable primary key
@@ -114,14 +115,15 @@ export async function openSelectedData(self, params) {
 
 		// isi form dengan data
 		frm.setData(data)
-
+	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function fflHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'fflHeaderEdit_formOpened'
+		// export function fflDetilEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'fflDetilEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
-			await fn_formopened(self, frm, CurrentState)
+			fn_formopened(self, frm, CurrentState)
 		}
+
 
 		// finally, accept changes dan lock form
 		frm.acceptChanges()
@@ -136,22 +138,44 @@ export async function openSelectedData(self, params) {
 	}
 }
 
-
-
-export function getHeaderForm(self) {
-	return frm
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getForm(self) {
 	return frm
 }
 
-export function getCurrentState(self) {
-	return CurrentState
-}
-
 export function clearForm(self, text) {
 	frm.clear(text)
+}
+
+export function headerLocked(self) {
+	CurrentState.headerFormLocked = true
+	CurrentState.editDisabled = true
+	btn_new.disabled = true
+
+	// Extender untuk event Locked
+	// export function fflDetilEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'fflDetilEdit_formLocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
+}
+
+export function headerUnlocked(self) {
+	CurrentState.headerFormLocked = false
+	CurrentState.editDisabled = false
+	btn_new.disabled = false
+
+	// Extender untuk event Unlocked
+	// export function fflDetilEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'fflDetilEdit_formUnlocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
 }
 
 export function disableNextButton(self, disabled=true) {
@@ -197,8 +221,9 @@ async function newData(self, datainit) {
 	}
 }
 
+
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/header-open`
+	const url = `/${Context.moduleName}/detil-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -208,7 +233,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-create`
+	const url = `/${Context.moduleName}/detil-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -217,9 +242,8 @@ async function createData(self, data, formData) {
 	} 	
 }
 
-
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-update`
+	const url = `/${Context.moduleName}/detil-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -228,9 +252,8 @@ async function updateData(self, data, formData) {
 	} 
 }
 
-
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/header-delete`
+	const url = `/${Context.moduleName}/detil-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -258,14 +281,18 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.fflHeaderList
+		const listId =  Context.Sections.fflDetilList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
 }
 
+
 async function  frm_locked(self, evt) {
+	console.log('frm_locked')
+
 	CurrentSection.Title = TitleWhenView
+
 
 	const content = `
 		<span class="action-button-icon">
@@ -274,8 +301,11 @@ async function  frm_locked(self, evt) {
 		<span class="action-button-text">${EditModeText}</span>	
 	`
 
+
 	btn_edit.setText(content)
 	btn_edit.setAttribute('data-state', 'unlocked')
+
+	//  todo: cek dulu apakah boleh add/remove rows 
 
 	btn_edit.disabled = false
 	btn_save.disabled = true
@@ -285,32 +315,30 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
-	
+
 	// Extender untuk event locked
-	// export function fflHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'fflHeaderEdit_formLocked'
+	// export function fflDetilEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'fflDetilEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}
+	}	
 
+	// jika heder form dalam kondisi lock,
+	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
-		// jika karena suatu kondisi data mengharuskan data tidak boleh diedit
 		btn_edit.disabled = true
-	}
-
-	
-	// trigger lock event di detil
-	self.Modules.fflDetilList.headerLocked(self)
-	self.Modules.fflDetilEdit.headerLocked(self)
-		
+		btn_new.disabled = true
+	} 
 
 }
 
 async function  frm_unlocked(self, evt) {
+	console.log('frm_unlocked')
+
 	if (frm.isNew()) {
 		CurrentSection.Title = TitleWhenNew
+
 	} else {
 		CurrentSection.Title = TitleWhenEdit
 	}
@@ -324,7 +352,7 @@ async function  frm_unlocked(self, evt) {
 
 	btn_edit.setText(content)
 	btn_edit.setAttribute('data-state', 'locked')
-
+	
 
 	btn_edit.disabled = false
 	btn_save.disabled = false
@@ -334,21 +362,13 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
-
 	// Extender untuk event Unlocked
-	// export function fflHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'fflHeaderEdit_formUnlocked'
+	// export function fflDetilEdit_formUnlocked(self, frm) {}
+	const fn_name = 'fflDetilEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
-		fn(self, frm, CurrentState)
+		fn(self, frm)
 	}
-
-	
-	// trigger unlock event di detil
-	self.Modules.fflDetilList.headerUnlocked(self)
-	self.Modules.fflDetilEdit.headerUnlocked(self)	
-		
 }
 
 async function setPrimaryKeyState(self, opt) {
@@ -379,16 +399,18 @@ async function btn_edit_click(self, evt) {
 	}
 }
 
+
 async function btn_new_click(self, evt) {
-	console.log('btn_new_click')
+	console.log('new')
 	const sourceSection = evt.currentTarget.getAttribute('data-sectionsource') 
 
-	const fflHeaderList = self.Modules.fflHeaderList
-	const listsecid = fflHeaderList.Section.Id
+	const fflDetilList = self.Modules.fflDetilList
+	const listsecid = fflDetilList.Section.Id
 	const fromListSection = sourceSection===listsecid
+
 	if (fromListSection) {
-		// klik new dari list (tidak perlu cek ada perubahan data)
-		// tampilkan dulu form
+		console.log('tambahkan row baru')
+		CurrentSection.setSectionReturn(fflDetilList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -409,21 +431,30 @@ async function btn_new_click(self, evt) {
 	} else {
 		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
 	}
-
+	
+	
 	try {
+	
+		// ambil id header
+		const fflHeaderEdit = self.Modules.fflHeaderEdit
+		const frmHeader = fflHeaderEdit.getHeaderForm()
+		const header_pk = frmHeader.getPrimaryInput()
+		const ffl_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
+			ffl_id,
 		}
 
 
 		// jika perlu modifikasi data initial,
-		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'fflHeaderEdit_newData'
+		// atau dialog untuk opsi data baru, 
+		// dapat dibuat di Extender.newData
+		// export async function fflDetilEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'fflDetilEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function fflHeaderEdit_newData(self, datainit, frm) {}
-			await fn_newdata(self, datainit, frm)
+			await fn_newdata(self, datainit, frm, CurrentState)
 		}
 
 		// buat data baru
@@ -431,10 +462,6 @@ async function btn_new_click(self, evt) {
 
 		// buka lock, agar user bisa edit
 		frm.lock(false)
-
-		// jika edit di suspend, enable dulu
-		btn_edit.suspend(false)
-
 
 		// matikan tombol edit dan del saat kondisi form adalah data baru 
 		btn_edit.disabled = true
@@ -444,17 +471,18 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.fflHeaderList.Section.show()
+			self.Modules.fflDetilList.Section.show()
 		}
 	}
 }
 
+
 async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
-
 	// Extender Autofill
-	const fn_autofill_name = 'fflHeaderEdit_autofill'
+	// export async function fflDetilEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'fflDetilEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -490,8 +518,7 @@ async function btn_save_click(self, evt) {
 		dataToSave = frm.getData()		
 	}
 
-
-
+	
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
@@ -505,9 +532,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function fflHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function fflDetilEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'fflHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'fflDetilEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -518,7 +545,7 @@ async function btn_save_click(self, evt) {
 		console.log('save is canceled')
 		return
 	}
-	
+
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -557,10 +584,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'fflHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'fflDetilEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function fflHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function fflDetilEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -576,10 +603,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.fflHeaderList.addNewRow(self, data)
+			self.Modules.fflDetilList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.fflHeaderList.updateCurrentRow(self, data)
+			self.Modules.fflDetilList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -615,13 +642,40 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function fflDetilEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'fflDetilEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
-		// hapus current row yang dipilih di list
-		self.Modules.fflHeaderList.removeCurrentRow(self)
 		
+
+		// Extender Delete
+		// export async function fflDetilEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'fflDetilEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
+		// hapus current row yang dipilih di list
+		self.Modules.fflDetilList.removeCurrentRow(self)
+
 		// kembali ke list
-		self.Modules.fflHeaderList.Section.show()
+		self.Modules.fflDetilList.Section.show()
 
 
 		// lock kembali form
@@ -634,9 +688,7 @@ async function btn_del_click(self, evt) {
 		mask.close()
 		mask = null
 	}
-
 }
-
 
 async function btn_reset_click(self, evt) {
 	console.log('btn_reset_click')
@@ -661,19 +713,18 @@ async function btn_reset_click(self, evt) {
 			console.log('tidak ada perubahan data, reset data tidak dieksekusi')
 		}
 	}
-
 }
+
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.fflHeaderList.selectPreviousRow(self)
+	self.Modules.fflDetilList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.fflHeaderList.selectNextRow(self)
+	self.Modules.fflDetilList.selectNextRow(self)
 }
-
 
 
 
@@ -705,10 +756,15 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'fflHeaderEdit_addRecordInfo'
+
+			// jika mau menambah beberapa informasi mengenai record,
+			// misalnya commit by, postby, dll
+			// melalui extender fflDetilEdit_addRecordInfo
+			// export async function fflDetilEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'fflDetilEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self, data)
+				await fn_addrecordinfo(self,  data)
 			}
 
 		} catch (err) {
@@ -743,11 +799,12 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
+
 			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.ffl',
+				table: 'public.ffldetil',
 				id: id
 			}
 
@@ -766,37 +823,5 @@ async function btn_logs_click(self, evt) {
 			mask = null
 		}
 
-	})
-}
-
-async function btn_about_click(self, evt) {
-	const params = {
-		Context,
-		sectionReturn: CurrentSection
-	}
-	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
-		
-		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Order Fulfillment'
-
-		const section = document.getElementById('fAbout-section')
-
-		if ( document.getElementById('fAbout-section-fdescr') == null) {
-			const divDescr = document.createElement('div')
-			divDescr.setAttribute('id', 'fAbout-section-fdescr')
-			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
-			const divTopbar = section.querySelector('div[data-topbar]')
-			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
-		}
-
-		if ( document.getElementById('fAbout-section-footer') == null) {
-			const divFooter = document.createElement('div')
-			divFooter.setAttribute('id', 'fAbout-section-footer')
-			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator.'
-			section.appendChild(divFooter)
-		}
-		
 	})
 }

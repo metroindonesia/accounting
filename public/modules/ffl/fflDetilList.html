@@ -1,0 +1,38 @@
+<div id="fflDetilList-head">
+	<div id="fflDetilList-head-title" class="section-detil-title"></div>
+	<div id="fflDetilList-head-descr" class="section-detil-descr"></div>
+</div>
+
+
+<table id="fflDetilList-tbl" fgta5-component="Gridview">
+	<thead>
+		<tr data-header key="ffldetil_id">
+			<th rowselector></th>
+			<th data-name="ffldetil_id" binding="ffldetil_id" >ID</th>
+			<th data-name="ffldetil_data" binding="ffldetil_data" >Ffldetil_data</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="fflDetilList-foot">
+
+</div>
+
+<div class="footer-buttons-container hidden">
+	<div></div>
+	<div style="display: flex; column-gap: 5px; align-items: center;">
+		<button id="fflDetilList-btn_addrow" data-action="fflDetil-addrow" data-sectionsource="fflDetilList-section" class="action-button button-rowadd">
+			<span class="action-button-icon">
+				<img src="public/icons/button-rowadd.svg">
+			</span>
+			<span class="action-button-text">Add</span>	
+		</button>
+		<button id="fflDetilList-btn_delrow" class="action-button button-rowremove">
+			<span class="action-button-icon">
+				<img src="public/icons/button-rowremove.svg">
+			</span>
+			<span class="action-button-text">Remove</span>	
+		</button>
+	</div>
+	<div></div>
+</div>

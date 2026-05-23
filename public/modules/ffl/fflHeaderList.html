@@ -3,16 +3,29 @@
 
 <div class="search-container">
 	<div id="fflHeaderList-pnl_search" class="search-parameters">
-		<input id="fflHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off" spellcheck="false" binding="searchtext" data-searchinput>
+		<input id="fflHeaderList-txt_searchtext" fgta5-component="Textbox" placeholder="search" autocomplete="off"
+			spellcheck="false" binding="searchtext" data-searchinput>
 	</div>
-	<button id="fflHeaderList-btn_gridload">Load</button>
+	<button id="fflHeaderList-btn_gridload" class="action-button button-load">
+		<span class="action-button-icon">
+			<img src="public/icons/button-load.svg">
+		</span>
+		<span class="action-button-text">LOAD</span>
+	</button>
 </div>
 
 <table id="fflHeaderList-tbl" fgta5-component="Gridview">
 	<thead>
 		<tr data-header key="ffl_id">
-			<th data-name="ffl_id" binding="ffl_id" >Ffl_id</th>
-			<th data-name="ffl_descr" binding="ffl_descr" >Ffl_descr</th>
+			
+				<th data-name="ffl_id" binding="ffl_id" >
+					Ffl_id
+				</th>
+				
+				<th data-name="ffl_descr" binding="ffl_descr" >
+					Ffl_descr
+				</th>
+				
 		</tr>
 	</thead>
 </table>
@@ -22,8 +35,14 @@
 
 <div class="footer-buttons-container">
 	<div></div>
-	<div>
-		<button id="fflHeaderList-btn_new" data-action="fflHeader-new" data-sectionsource="fflHeaderList-section">New</button>
+	<div style="display: flex; column-gap: 5px; align-items: center;">
+		<button id="fflHeaderList-btn_new" data-action="fflHeader-new"
+			data-sectionsource="fflHeaderList-section" class="action-button button-withtext button-new">
+			<span class="action-button-icon">
+				<img src="public/icons/button-new.svg">
+			</span>
+			<span class="action-button-text">New</span>		
+		</button>
 	</div>
 	<div></div>
 </div>
