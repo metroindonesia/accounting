@@ -167,7 +167,7 @@ export function headerList_addTableEvents(self, tbl) {
 		const tdStatus = tr.querySelector('[binding="ispost"]')
 		tdStatus.innerHTML = `
 			<div class="status-label" name="unbalance">unbalance</div>
-			<div class="status-label" name="commit">commit</div>
+			<div class="status-label" name="commit">commited</div>
 			<div class="status-label" name="posted">posted</div>
 		`
 
