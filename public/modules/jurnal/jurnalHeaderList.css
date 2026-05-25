@@ -32,7 +32,7 @@
 
 
 /*  Status Baris */
-
+/*
 #jurnalHeaderList-tbl tr[data-isunbalance="true"] {
 	background-color: #ffbfbf;
 }
@@ -44,7 +44,57 @@
 #jurnalHeaderList-tbl tr[data-isposted="true"] {
 	background-color: #cfcfcf;
 }
+*/
 
+.status-label {
+	display: inline-block;
+	width: 3rem;
+	font-size: 0.5rem;
+	font-weight: bold;
+	padding: 3px;
+	border-radius: 4px;
+	background-color: #cfcfcf;
+}
+
+.row-draft td[binding="ispost"] div,
+.row-unbalance td[binding="ispost"] div,
+.row-commit td[binding="ispost"] div,
+.row-posted td[binding="ispost"] div {
+	display: none;
+}
+
+
+.row-unbalance td[binding="ispost"] div[name="unbalance"] {
+	display: inline-block;
+	background-color: #e45656 !important;
+	color: #fff !important;
+}
+
+.row-commit td[binding="ispost"] div[name="commit"] {
+	display: inline-block;
+	background-color: #d9e0f8 !important;
+	border: 1px solid #5677e4;
+	color: #5677e4 !important;
+}
+
+
+
+.row-posted {
+	background-color: #cfcfcf !important;
+}
+
+.row-posted td[binding="ispost"] {
+	& div[name="commit"] {
+		display: none;
+	}
+
+	& div[name="posted"] {
+		display: inline-block;
+		background-color: #000 !important;
+		color: #fff !important;
+		border: 1px solid #4e4e4e
+	}
+}
 
 
 

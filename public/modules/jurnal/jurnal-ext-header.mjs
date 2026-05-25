@@ -114,16 +114,20 @@ export async function init_header(self, args) {
 	}
 
 
+	const tblHeader = document.getElementById('jurnalHeaderList-tbl')
+	const tdStatus = tblHeader.querySelector('th[data-name="ispost"]')
+	tdStatus.innerHTML = "Status"
+
 	// tambahkan legend di bawah table list header
-	{
-		const target = document.getElementById('jurnalHeaderList-foot')
-		const tpl = document.getElementById('tpl-jurnal-status-legend')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divLegend = clone.querySelector('div')
-			target.appendChild(divLegend);
-		}
-	}
+	// {
+	// 	const target = document.getElementById('jurnalHeaderList-foot')
+	// 	const tpl = document.getElementById('tpl-jurnal-status-legend')
+	// 	if (tpl != null) {
+	// 		const clone = tpl.content.cloneNode(true); // salin isi template
+	// 		const divLegend = clone.querySelector('div')
+	// 		target.appendChild(divLegend);
+	// 	}
+	// }
 }
 
 export function headerList_initSearchParams(self, SearchParams) {
@@ -160,28 +164,55 @@ export function headerList_addTableEvents(self, tbl) {
 		const tr = evt.detail.tr
 		const data = evt.detail.args.data
 
+		const tdStatus = tr.querySelector('[binding="ispost"]')
+		tdStatus.innerHTML = `
+			<div class="status-label" name="unbalance">unbalance</div>
+			<div class="status-label" name="commit">commit</div>
+			<div class="status-label" name="posted">posted</div>
+		`
+
+
+		let isDraft = true
+		let unbalance = isUnbalance(data.balance_value, data.balance_idr)
+		if (unbalance) {
+			tr.setAttribute('data-isunbalance', true)
+			tr.classList.add('row-unbalance')
+		} else {
+			tr.removeAttribute('data-isunbalance')
+			tr.classList.remove('row-unbalance')
+		}
+
 		if (data.iscommit !== undefined) {
 			if (data.iscommit === true) {
 				tr.setAttribute('data-iscommit', true)
+				tr.classList.add('row-commit')
+				isDraft = false
 			} else {
 				tr.removeAttribute('data-iscommit')
+				tr.classList.remove('row-commit')
 			}
 		}
 
 		if (data.ispost !== undefined) {
 			if (data.ispost === true) {
 				tr.setAttribute('data-isposted', true)
+				tr.classList.add('row-posted')
+				isDraft = false
 			} else {
 				tr.removeAttribute('data-isposted')
+				tr.classList.remove('row-posted')
 			}
 		}
 
-		let unbalance = isUnbalance(data.balance_value, data.balance_idr)
-		if (unbalance) {
-			tr.setAttribute('data-isunbalance', true)
+		if (isDraft) {
+			tr.setAttribute('data-isdraft', true)
+			tr.classList.add('row-draft')
 		} else {
-			tr.removeAttribute('data-isunbalance')
+			tr.removeAttribute('data-isdraft')
+			tr.classList.remove('row-draft')
 		}
+
+
 	})
 }
 
