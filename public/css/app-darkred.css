@@ -1,0 +1,73 @@
+:root {
+	--color-editmode-bg: #cbbc7d;
+}
+
+
+
+body {
+	background-color: #e2e1db !important;
+}
+
+
+input::selection {
+	color: #fff;
+	background-color: #2b31ad;
+}
+
+
+/* Header Application */
+.fgta5-app-head {
+	/* background-color: #5d1919; */
+	background: linear-gradient(to bottom, #75261a, #591810);
+}
+
+/* Header untuk tabel gridview */
+.fgta5-gridview th {
+	/* buat gradasi warna untuk background, dari atas ke bawah */
+	background: linear-gradient(to bottom, #661f14, #450d0d);
+	color: #fff;
+}
+
+.fgta5-gridview tbody tr {
+	background-color: #fff;
+}
+
+.fgta5-gridview tbody tr[data-currentrow] {
+	background-color: #fff945 !important;
+	color: #494949;
+	filter: brightness(90%);
+}
+
+.fgta5-gridview tbody tr:hover {
+	background-color: #bd9400 !important;
+	color: #fff
+}
+
+
+
+
+.panel-detil [panel-content] {
+	background-color: #efeee3;
+	border: 1px solid #ccc;
+}
+
+.panel-detil [panel-title] {
+	background-color: #602c2c;
+}
+
+.panel-action button {
+	padding: 5px 15px 5px 15px;
+	border-radius: 3px;
+	border: 1px solid #9a9cc7;
+
+}
+
+.panel-action button:disabled {
+	border: 1px solid #dedff6;
+}
+
+
+.panel-action button:hover:not(:disabled) {
+	background-color: #8e90b6;
+	cursor: pointer;
+}
