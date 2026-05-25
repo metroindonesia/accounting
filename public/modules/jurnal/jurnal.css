@@ -8,6 +8,22 @@
 	.detil-info {
 		display: none;
 	}
+
+	.search-container {
+		flex-direction: column;
+		row-gap: 5px;
+	}
+
+	.search-parameters {
+		flex-wrap: wrap;
+		row-gap: 5px;
+	}
+
+
+	#jurnalHeaderList-btn_gridload {
+		margin-top: 10px;
+		margin-bottom: 20px;
+	}
 }
 
 @media screen and (min-width: 501px) {

@@ -1,6 +1,7 @@
 import Context from './curr-context.mjs'
 
 export const extenderHeader = null
+export const extenderRate = null
 
 export async function init(self, args) {
 	console.log('initializing currExtender ...')
