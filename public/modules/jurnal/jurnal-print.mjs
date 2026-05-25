@@ -83,9 +83,9 @@ async function renderData(doc) {
 	const rowTemplate = docTableBody.innerHTML
 	docTableBody.innerHTML = '' // kosongkan dulu body sebelum di render
 	for (const row of doc.items) {
-		if (row.tag_paymreq_data == 'payment' && doc.jurnaltype_printout == 'jurnal-print-payment.html') {
-			continue
-		}
+		// if (row.tag_paymreq_data == 'payment' && doc.jurnaltype_printout == 'jurnal-print-payment.html') {
+		// 	continue
+		// }
 
 		renderedHtml = rowTemplate
 		console.log(row)

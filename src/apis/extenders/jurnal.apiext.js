@@ -223,6 +223,28 @@ export async function getPrintData(self, db, body) {
 		const balance_value = rowBalance.balance_value
 		const balance_idr = rowBalance.balance_idr
 
+
+		// hitung total nilai jurnal
+		let total_value = header.jurnal_value
+		let total_idr = header.jurnal_idr
+
+		// apabila coa di header dipilih (!=null, makan nilai total ambil dari detil yang sesuai dengan header)
+		const coa_id = header.coa_id
+		if (coa_id != null) {
+			const sqlTotal = `
+				select 
+				sum(jurnaldetil_value) as total_value, sum(jurnaldetil_idr) as total_idr
+				from public.jurnaldetil
+				where 
+					jurnal_id=\${jurnal_id}
+				and coa_id=\${coa_id}`
+
+			const rowTotal = await db.one(sqlTotal, { jurnal_id, coa_id })
+			total_value = rowTotal.total_value
+			total_idr = rowTotal.total_idr
+		}
+
+
 		const data = {
 			title: jurnaltype.jurnaltype_title,
 			headertext: header.jurnal_doc + ' - ' + header.jurnal_descr,
@@ -245,7 +267,7 @@ export async function getPrintData(self, db, body) {
 			partnerbank_bankname: header.partnerbank_bankname,
 			partnerbank_accountname: header.partnerbank_accountname,
 			partnercontact: '',
-			total_idr: sqlUtil.formatDecimal(header.jurnal_idr, 0),
+			total_idr: sqlUtil.formatDecimal(total_idr, 0),
 			balance_idr: sqlUtil.formatDecimal(balance_idr, 0),
 
 			items: []
@@ -256,7 +278,7 @@ export async function getPrintData(self, db, body) {
 			data.balance_value = ''
 			data.curr_name = ''
 		} else {
-			data.total_value = sqlUtil.formatDecimal(header.jurnal_value, 0)
+			data.total_value = sqlUtil.formatDecimal(total_value, 0)
 			data.balance_value = sqlUtil.formatDecimal(balance_value, 0)
 			data.curr_name = curr.curr_name
 		}
