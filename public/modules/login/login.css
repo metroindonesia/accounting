@@ -75,3 +75,23 @@ body {
 	font-size: 16px;
 	z-index: 10;
 }
+
+
+
+
+.login-logo-left,
+.login-logo-right {
+	width: 150px;
+	height: 63px;
+	background-repeat: no-repeat;
+}
+
+.login-logo-left {
+	background-image: url('/public/images/kalista-accounting-400x170.svg');
+	background-size: 100% 100%;
+}
+
+.login-logo-right {
+	background-image: url('/public/local/logo-128x32.svg');
+	background-size: 100% 100%;
+}
