@@ -58,3 +58,28 @@ input::selection {
 	background-color: #8e90b6;
 	cursor: pointer;
 }
+
+
+
+
+
+
+.action-button.button-load,
+.action-button.button-prev,
+.action-button.button-next,
+.action-button.button-save,
+.action-button.button-edit,
+.action-button.button-new,
+.action-button.button-rowadd {
+	background-color: rgb(63, 81, 174);
+}
+
+
+.action-button.button-reset {
+	background-color: rgb(174, 113, 63);
+}
+
+.action-button.button-rowremove,
+.action-button.button-delete {
+	background-color: rgb(174, 63, 63);
+}
