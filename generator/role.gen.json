@@ -1,21 +1,21 @@
 {
   "appname": "accounting",
-  "name": "permission",
+  "name": "role",
   "directory": "/home/ubuntu/Development/metroindonesia/accounting",
-  "title": "Permission",
-  "description": "daftar permission yang dipunyai user",
+  "title": "Role",
+  "description": "daftar role yang dipunyai user",
   "icon": "",
-  "primary_entity_id": "en-mpm9frut-f7bc9",
+  "primary_entity_id": "en-mpqojrtw-ktpu0",
   "primary_entity_name": "header",
   "actions": [],
   "entities": {
     "header": {
-      "id": "en-mpm9frut-f7bc9",
+      "id": "en-mpqojrtw-ktpu0",
       "name": "header",
       "isheader": true,
-      "title": "permission",
-      "table": "core.permission",
-      "pk": "permission_id",
+      "title": "Role",
+      "table": "core.role",
+      "pk": "role_id",
       "descr": "",
       "skipRegenerateTable": false,
       "formGridLayout": true,
@@ -28,13 +28,13 @@
       "identifierPrefix": "",
       "identifierBlock": "3",
       "identifierLength": "6",
-      "bindHeadTitle": "",
-      "bindHeadDescr": "",
+      "bindHeadTitle": "role_name",
+      "bindHeadDescr": "role_descr",
       "Items": {
-        "permission_id": {
+        "role_id": {
           "component": "Textbox",
-          "data_fieldname": "permission_id",
-          "name": "permission_id",
+          "data_fieldname": "role_id",
+          "name": "role_id",
           "data_type": "int",
           "data_length": "30",
           "data_precision": "0",
@@ -42,7 +42,7 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_permission_id",
+          "input_name": "obj_role_id",
           "input_index": "0",
           "input_label": "ID",
           "input_placeholder": "id",
@@ -97,10 +97,10 @@
             "loadingdata": false
           }
         },
-        "permission_name": {
+        "role_name": {
           "component": "Textbox",
-          "data_fieldname": "permission_name",
-          "name": "permission_name",
+          "data_fieldname": "role_name",
+          "name": "role_name",
           "data_type": "text",
           "data_length": "30",
           "data_precision": "0",
@@ -108,7 +108,7 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_permission_name",
+          "input_name": "obj_role_name",
           "input_index": "0",
           "input_label": "Name",
           "input_placeholder": "name",
@@ -123,7 +123,7 @@
           "input_dposrow": "1",
           "input_dposrowspan": "",
           "input_dposcol": "1",
-          "input_dposcolspan": "3",
+          "input_dposcolspan": "2",
           "input_dposstyle": "",
           "grid_formatter": "",
           "grid_css": "",
@@ -136,7 +136,7 @@
             "Minimum": "",
             "Maximum": "30",
             "messageDefault": "",
-            "messageRequired": "nama permission harus diisi",
+            "messageRequired": "nama role harus diisi",
             "messageMinimum": "",
             "messageMaximum": "",
             "hasCustomValidator": false,
@@ -163,10 +163,10 @@
             "loadingdata": false
           }
         },
-        "permission_isdisabled": {
+        "role_isdisabled": {
           "component": "Checkbox",
-          "data_fieldname": "permission_isdisabled",
-          "name": "permission_isdisabled",
+          "data_fieldname": "role_isdisabled",
+          "name": "role_isdisabled",
           "data_type": "boolean",
           "data_length": 0,
           "data_precision": 0,
@@ -174,7 +174,7 @@
           "input_multiline": false,
           "data_defaultvalue": 0,
           "description": "",
-          "input_name": "obj_permission_isdisabled",
+          "input_name": "obj_role_isdisabled",
           "input_index": "0",
           "input_label": "Disabled",
           "input_placeholder": "",
@@ -188,7 +188,7 @@
           "showInForm": true,
           "input_dposrow": "1",
           "input_dposrowspan": "",
-          "input_dposcol": "4",
+          "input_dposcol": "2",
           "input_dposcolspan": "2",
           "input_dposstyle": "",
           "grid_formatter": "checkmark(value)",
@@ -229,10 +229,10 @@
             "loadingdata": false
           }
         },
-        "permission_descr": {
+        "role_descr": {
           "component": "Textbox",
-          "data_fieldname": "permission_descr",
-          "name": "permission_descr",
+          "data_fieldname": "role_descr",
+          "name": "role_descr",
           "data_type": "text",
           "data_length": "30",
           "data_precision": "0",
@@ -240,10 +240,10 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_permission_descr",
+          "input_name": "obj_role_descr",
           "input_index": "0",
           "input_label": "Descr",
-          "input_placeholder": "deskripsi",
+          "input_placeholder": "description",
           "input_caption": "",
           "input_information": "",
           "input_containercss": "",
@@ -294,34 +294,71 @@
             "populating": false,
             "loadingdata": false
           }
-        },
-        "permission_defaultvalue": {
+        }
+      },
+      "Uniques": {
+        "role_name": {
+          "name": "role_name",
+          "fields": "role_name"
+        }
+      },
+      "Search": {
+        "searchtext": {
+          "name": "searchtext",
+          "label": "Search",
+          "fields": "%role_name, %role_descr"
+        }
+      }
+    },
+    "permission": {
+      "id": "en-mpqoqb7e-930ed",
+      "name": "permission",
+      "isheader": false,
+      "title": "Permission",
+      "table": "core.rolepermission",
+      "pk": "rolepermission_id",
+      "descr": "",
+      "skipRegenerateTable": false,
+      "formGridLayout": true,
+      "allowFormNew": true,
+      "allowFormEdit": true,
+      "allowRowAdd": true,
+      "allowRowRemove": true,
+      "allowRowEdit": true,
+      "identifierMethod": "manual",
+      "identifierPrefix": "",
+      "identifierBlock": "3",
+      "identifierLength": "6",
+      "bindHeadTitle": "",
+      "bindHeadDescr": "",
+      "Items": {
+        "rolepermission_id": {
           "component": "Textbox",
-          "data_fieldname": "permission_defaultvalue",
-          "name": "permission_defaultvalue",
-          "data_type": "text",
+          "data_fieldname": "rolepermission_id",
+          "name": "rolepermission_id",
+          "data_type": "bigint",
           "data_length": "30",
           "data_precision": "0",
           "data_allownull": true,
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_permission_defaultvalue",
+          "input_name": "obj_rolepermission_id",
           "input_index": "0",
-          "input_label": "Default",
-          "input_placeholder": "default value",
+          "input_label": "Rolepermission_id",
+          "input_placeholder": "rolepermission_id",
           "input_caption": "",
           "input_information": "",
-          "input_containercss": "",
+          "input_containercss": "hidden",
           "input_inlinestyle": "",
           "input_charcase": "normal",
           "input_disabled": false,
           "showInGrid": false,
           "showInForm": true,
-          "input_dposrow": "3",
+          "input_dposrow": "auto",
           "input_dposrowspan": "",
           "input_dposcol": "1",
-          "input_dposcolspan": "3",
+          "input_dposcolspan": "2",
           "input_dposstyle": "",
           "grid_formatter": "",
           "grid_css": "",
@@ -360,21 +397,147 @@
             "populating": false,
             "loadingdata": false
           }
+        },
+        "permission_id": {
+          "component": "Combobox",
+          "data_fieldname": "permission_id",
+          "name": "permission_id",
+          "data_type": "int",
+          "data_length": "30",
+          "data_precision": "0",
+          "data_allownull": true,
+          "input_multiline": false,
+          "data_defaultvalue": "",
+          "description": "",
+          "input_name": "obj_permission_id",
+          "input_index": "0",
+          "input_label": "Permission",
+          "input_placeholder": "permission",
+          "input_caption": "",
+          "input_information": "",
+          "input_containercss": "",
+          "input_inlinestyle": "",
+          "input_charcase": "normal",
+          "input_disabled": false,
+          "showInGrid": true,
+          "showInForm": true,
+          "input_dposrow": "1",
+          "input_dposrowspan": "",
+          "input_dposcol": "1",
+          "input_dposcolspan": "3",
+          "input_dposstyle": "",
+          "grid_formatter": "",
+          "grid_css": "",
+          "grid_inlinestyle": "",
+          "grid_sorting": false,
+          "Validation": {
+            "isRequired": true,
+            "isMinimum": false,
+            "isMaximum": false,
+            "Minimum": null,
+            "Maximum": null,
+            "messageDefault": "",
+            "messageRequired": "",
+            "messageMinimum": null,
+            "messageMaximum": null,
+            "hasCustomValidator": false,
+            "customValidator": ""
+          },
+          "Reference": {
+            "table": "core.permission",
+            "pk": "permission_id",
+            "bindingValue": "permission_id",
+            "bindingText": "permission_name",
+            "bindingDisplay": "",
+            "loaderApiModule": "/",
+            "loaderApiPath": "permission/header-list"
+          },
+          "Handle": {
+            "changed": false,
+            "input": false,
+            "keydown": false,
+            "checked": false,
+            "unchecked": false,
+            "selected": false,
+            "selecting": true,
+            "populating": false,
+            "loadingdata": false
+          }
+        },
+        "permission_value": {
+          "component": "Textbox",
+          "data_fieldname": "permission_value",
+          "name": "permission_value",
+          "data_type": "text",
+          "data_length": "30",
+          "data_precision": "0",
+          "data_allownull": true,
+          "input_multiline": false,
+          "data_defaultvalue": "",
+          "description": "",
+          "input_name": "obj_permission_value",
+          "input_index": "0",
+          "input_label": "Value",
+          "input_placeholder": "value",
+          "input_caption": "",
+          "input_information": "",
+          "input_containercss": "",
+          "input_inlinestyle": "",
+          "input_charcase": "normal",
+          "input_disabled": false,
+          "showInGrid": true,
+          "showInForm": true,
+          "input_dposrow": "2",
+          "input_dposrowspan": "",
+          "input_dposcol": "1",
+          "input_dposcolspan": "4",
+          "input_dposstyle": "",
+          "grid_formatter": "",
+          "grid_css": "",
+          "grid_inlinestyle": "",
+          "grid_sorting": false,
+          "Validation": {
+            "isRequired": true,
+            "isMinimum": false,
+            "isMaximum": true,
+            "Minimum": "",
+            "Maximum": "30",
+            "messageDefault": "",
+            "messageRequired": "value harus diisi",
+            "messageMinimum": "",
+            "messageMaximum": "",
+            "hasCustomValidator": false,
+            "customValidator": ""
+          },
+          "Reference": {
+            "table": "",
+            "pk": "",
+            "bindingValue": "",
+            "bindingText": null,
+            "bindingDisplay": null,
+            "loaderApiModule": null,
+            "loaderApiPath": null
+          },
+          "Handle": {
+            "changed": false,
+            "input": false,
+            "keydown": false,
+            "checked": false,
+            "unchecked": false,
+            "selected": false,
+            "selecting": false,
+            "populating": false,
+            "loadingdata": false
+          }
         }
       },
       "Uniques": {
-        "permission_name": {
-          "name": "permission_name",
-          "fields": "permission_name"
+        "rolepermission_pair": {
+          "name": "rolepermission_pair",
+          "fields": "role_id, permission_id"
         }
       },
-      "Search": {
-        "searchtext": {
-          "name": "searchtext",
-          "label": "Search",
-          "fields": "%permission_name, %permission_descr"
-        }
-      }
+      "Search": {}
     }
   },
   "uniques": {},

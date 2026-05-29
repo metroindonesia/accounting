@@ -3,20 +3,12 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-import Context from './user-context.mjs'  
-import * as userHeaderList from './userHeaderList.mjs' 
-import * as userHeaderEdit from './userHeaderEdit.mjs' 
-import * as userLoginList from './userLoginList.mjs' 
-import * as userLoginEdit from './userLoginEdit.mjs' 
-import * as userPropList from './userPropList.mjs' 
-import * as userPropEdit from './userPropEdit.mjs' 
-import * as userGroupList from './userGroupList.mjs' 
-import * as userGroupEdit from './userGroupEdit.mjs' 
-import * as userFavouriteList from './userFavouriteList.mjs' 
-import * as userFavouriteEdit from './userFavouriteEdit.mjs' 
-import * as userRoleList from './userRoleList.mjs' 
-import * as userRoleEdit from './userRoleEdit.mjs' 
-import * as Extender from './user-ext.mjs'
+import Context from './role-context.mjs'  
+import * as roleHeaderList from './roleHeaderList.mjs' 
+import * as roleHeaderEdit from './roleHeaderEdit.mjs' 
+import * as rolePermissionList from './rolePermissionList.mjs' 
+import * as rolePermissionEdit from './rolePermissionEdit.mjs' 
+import * as Extender from './role-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -30,7 +22,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('User')
+		app.setTitle('Role')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -57,18 +49,10 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			userHeaderList, 
-			userHeaderEdit, 
-			userLoginList, 
-			userLoginEdit, 
-			userPropList, 
-			userPropEdit, 
-			userGroupList, 
-			userGroupEdit, 
-			userFavouriteList, 
-			userFavouriteEdit, 
-			userRoleList, 
-			userRoleEdit, 
+			roleHeaderList, 
+			roleHeaderEdit, 
+			rolePermissionList, 
+			rolePermissionEdit, 
 		}
 
 		try {
@@ -89,18 +73,10 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				userHeaderList.init(self, args), 
-				userHeaderEdit.init(self, args), 
-				userLoginList.init(self, args), 
-				userLoginEdit.init(self, args), 
-				userPropList.init(self, args), 
-				userPropEdit.init(self, args), 
-				userGroupList.init(self, args), 
-				userGroupEdit.init(self, args), 
-				userFavouriteList.init(self, args), 
-				userFavouriteEdit.init(self, args), 
-				userRoleList.init(self, args), 
-				userRoleEdit.init(self, args), 
+				roleHeaderList.init(self, args), 
+				roleHeaderEdit.init(self, args), 
+				rolePermissionList.init(self, args), 
+				rolePermissionEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -112,7 +88,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['userHeaderEdit', 'userLoginEdit', 'userPropEdit', 'userGroupEdit', 'userFavouriteEdit', 'userRoleEdit']
+			const modNameList = ['roleHeaderEdit', 'rolePermissionEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -143,7 +119,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/user/user.svg')
+		Crsl.setIconUrl('')
 
 
 		// Set listener untuk section carousel
@@ -212,7 +188,7 @@ async function render(self) {
 		});
 
 		
-		// user-ext.mjs, export function extendPage(self) {} 
+		// role-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {

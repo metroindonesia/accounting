@@ -23,6 +23,8 @@ export default {
 		userGroupEdit: 'userGroupEdit-section', 
 		userFavouriteList: 'userFavouriteList-section', 
 		userFavouriteEdit: 'userFavouriteEdit-section', 
+		userRoleList: 'userRoleList-section', 
+		userRoleEdit: 'userRoleEdit-section', 
 	},
 	SectionMap: { 
 		'userHeaderList-section' : 'userHeaderList', 
@@ -35,5 +37,7 @@ export default {
 		'userGroupEdit-section' : 'userGroupEdit', 
 		'userFavouriteList-section' : 'userFavouriteList', 
 		'userFavouriteEdit-section' : 'userFavouriteEdit', 
+		'userRoleList-section' : 'userRoleList', 
+		'userRoleEdit-section' : 'userRoleEdit', 
 	}
 }

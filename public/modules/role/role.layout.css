@@ -3,9 +3,5 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-@import url('userHeaderEdit.layout.css');
-@import url('userLoginEdit.layout.css');
-@import url('userPropEdit.layout.css');
-@import url('userGroupEdit.layout.css');
-@import url('userFavouriteEdit.layout.css');
-@import url('userRoleEdit.layout.css');
+@import url('roleHeaderEdit.layout.css');
+@import url('rolePermissionEdit.layout.css');

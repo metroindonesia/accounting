@@ -20,7 +20,8 @@ const headerTableName = 'core.user'
 const loginTableName = 'core.userlogin'  
 const propTableName = 'core.userprop'  
 const groupTableName = 'core.usergroup'  
-const favouriteTableName = 'core.userfavouriteprogram'  	
+const favouriteTableName = 'core.userfavouriteprogram'  
+const roleTableName = 'core.userrole'  	
 
 // api: account
 export default class extends Api {
@@ -77,6 +78,14 @@ export default class extends Api {
 	async favouriteCreate(body) { return await user_favouriteCreate(this, body) }
 	async favouriteDelete(body) { return await user_favouriteDelete(this, body) }
 	async favouriteDeleteRows(body) { return await user_favouriteDeleteRows(this, body) }
+	
+	// role	
+	async roleList(body) { return await user_roleList(this, body) }
+	async roleOpen(body) { return await user_roleOpen(this, body) }
+	async roleUpdate(body) { return await user_roleUpdate(this, body)}
+	async roleCreate(body) { return await user_roleCreate(this, body) }
+	async roleDelete(body) { return await user_roleDelete(this, body) }
+	async roleDeleteRows(body) { return await user_roleDeleteRows(this, body) }
 			
 }	
 
@@ -552,6 +561,37 @@ async function user_headerDelete(self, body) {
 
 					user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', {rowdata: deletedRow})
 					user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName}, `removed: ${rowfavourite.userfavouriteprogram_id}`)
+
+
+				}	
+			}
+
+			// hapus data role
+			{
+				const sql = `select * from ${roleTableName} where user_id=\${user_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowrole of rows) {
+					
+					const logMetadata = {}
+					
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.roleDeleting === 'function') {
+						// export async function roleDeleting(self, tx, rowrole, logMetadata) {}
+						await Extender.roleDeleting(self, tx, rowrole, logMetadata)
+					}
+
+					const param = {userrole_id: rowrole.userrole_id}
+					const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.roleDeleted === 'function') {
+						// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
+					user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
 
 
 				}	
@@ -2069,6 +2109,384 @@ async function user_favouriteDeleteRows(self, body) {
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
 			// export async function favouriteRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
+
+
+// role	
+
+async function user_roleList(self, body) {
+	const tablename = roleTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.userrole_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria, tablename }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.roleListCriteria === 'function') {
+			// export async function roleListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.roleListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			// lookup: role_name dari field role_name pada table core.role dimana (core.role.role_id = core.user.role_id)
+			{
+				const { role_name } = await sqlUtil.lookupdb(db, 'core.role', 'role_id', row.role_id)
+				row.role_name = role_name
+			}
+			
+
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+
+		const listData = {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
+	} catch (err) {
+		throw err
+	}
+}
+
+async function user_roleOpen(self, body) {
+	const tablename = roleTableName
+
+	try {
+		const { id } = body 
+		const criteria = { userrole_id: id }
+		const searchMap = { userrole_id: `userrole_id = \${userrole_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		// lookup: role_name dari field role_name pada table core.role dimana (core.role.role_id = core.user.role_id)
+		{
+			const { role_name } = await sqlUtil.lookupdb(db, 'core.role', 'role_id', data.role_id)
+			data.role_name = role_name
+		}
+		
+
+		// lookup data createby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		{
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function roleOpen(self, db, data) {}
+		if (typeof Extender.roleOpen === 'function') {
+			// export async function roleOpen(self, db, data) {}
+			await Extender.roleOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function user_roleCreate(self, body) {
+	const { source='user', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = roleTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._createby = user_id
+		data._createdate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'role', 
+				prefix: 'USER'	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.prefix)
+			data.userrole_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.roleCreating === 'function') {
+				// export async function roleCreating(self, tx, data, seqdata, args) {}
+				await Extender.roleCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.roleCreated === 'function') {
+				// export async function roleCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.roleCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			user_log(self, body, startTime, tablename, ret.userrole_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function user_roleUpdate(self, body) {
+	const { source='user', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = roleTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+
+		data._modifyby = user_id
+		data._modifydate = (new Date()).toISOString()
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.roleUpdating === 'function') {
+				// export async function roleUpdating(self, tx, data) {}
+				await Extender.roleUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['userrole_id'])
+			const ret = await cmd.execute(data)
+			
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.roleUpdated === 'function') {
+				// export async function roleUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.roleUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			user_log(self, body, startTime, tablename, data.userrole_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function user_roleDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = roleTableName
+
+	try {
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {userrole_id: id}
+			const sql = `select * from ${roleTableName} where userrole_id=\${userrole_id}`
+			const rowrole = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.roleDeleting === 'function') {
+				// export async function roleDeleting(self, tx, rowrole, logMetadata) {}
+				await Extender.roleDeleting(self, tx, rowrole, logMetadata)
+			}
+
+			const param = {userrole_id: rowrole.userrole_id}
+			const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
+			const deletedRow = await cmd.execute(param)
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.roleDeleted === 'function') {
+				// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
+			user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function user_roleDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = roleTableName
+
+
+	try {
+
+		let user_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {userrole_id: id}
+				const sql = `select * from ${roleTableName} where userrole_id=\${userrole_id}`
+				const rowrole = await tx.oneOrNone(sql, dataToRemove)
+				user_id = rowrole.user_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.roleDeleting === 'function') {
+					// async function roleDeleting(self, tx, rowrole, logMetadata) {}
+					await Extender.roleDeleting(self, tx, rowrole, logMetadata)
+				}
+
+				const param = {userrole_id: rowrole.userrole_id}
+				const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.roleDeleted === 'function') {
+					// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
+				user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
+			}
+		})
+		
+
+		const res = {
+			deleted: true,
+			user_id: user_id,
+			message: ''
+		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'roleRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function roleRowsDeleted(self, db, res) {}
 			await fn(self, db, res)
 		}
 

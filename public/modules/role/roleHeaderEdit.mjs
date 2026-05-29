@@ -3,44 +3,43 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-import Context from './permission-context.mjs'
-import * as Ext from './permission-ext.mjs'
+import Context from './role-context.mjs'
+import * as Ext from './role-ext.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.permissionHeaderEdit
+const CurrentSectionId = Context.Sections.roleHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New permission'
-const TitleWhenView = 'View permission'
-const TitleWhenEdit = 'Edit permission'
+const TitleWhenNew = 'New Role'
+const TitleWhenView = 'View Role'
+const TitleWhenEdit = 'Edit Role'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('permissionHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('permissionHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('permissionHeaderEdit-btn_new', 'permissionHeader-new')
-const btn_del = new $fgta5.ActionButton('permissionHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('permissionHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('permissionHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('permissionHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('roleHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('roleHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('roleHeaderEdit-btn_new', 'roleHeader-new')
+const btn_del = new $fgta5.ActionButton('roleHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('roleHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('roleHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('roleHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('permissionHeader-btn_recordstatus')
-const btn_logs = document.getElementById('permissionHeader-btn_logs')
-const btn_about = document.getElementById('permissionHeader-btn_about')
+const btn_recordstatus = document.getElementById('roleHeader-btn_recordstatus')
+const btn_logs = document.getElementById('roleHeader-btn_logs')
+const btn_about = document.getElementById('roleHeader-btn_about')
 
-const frm = new $fgta5.Form('permissionHeaderEdit-frm');
-const obj_permission_id = frm.Inputs['permissionHeaderEdit-obj_permission_id']
-const obj_permission_name = frm.Inputs['permissionHeaderEdit-obj_permission_name']
-const obj_permission_isdisabled = frm.Inputs['permissionHeaderEdit-obj_permission_isdisabled']
-const obj_permission_descr = frm.Inputs['permissionHeaderEdit-obj_permission_descr']
-const obj_permission_defaultvalue = frm.Inputs['permissionHeaderEdit-obj_permission_defaultvalue']	
+const frm = new $fgta5.Form('roleHeaderEdit-frm');
+const obj_role_id = frm.Inputs['roleHeaderEdit-obj_role_id']
+const obj_role_name = frm.Inputs['roleHeaderEdit-obj_role_name']
+const obj_role_isdisabled = frm.Inputs['roleHeaderEdit-obj_role_isdisabled']
+const obj_role_descr = frm.Inputs['roleHeaderEdit-obj_role_descr']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -52,7 +51,7 @@ export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing permissionHeaderEdit ...')
+	console.log('initializing roleHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -82,8 +81,8 @@ export async function init(self, args) {
 		edit: btn_edit,	
 	}
 	
-	// export async function permissionHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'permissionHeaderEdit_init'
+	// export async function roleHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'roleHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -109,8 +108,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function permissionHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'permissionHeaderEdit_isEditDisabled'
+		// export async function roleHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'roleHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -124,8 +123,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function permissionHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'permissionHeaderEdit_formOpened'
+		// export async function roleHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'roleHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -266,7 +265,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.permissionHeaderList
+		const listId =  Context.Sections.roleHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -296,8 +295,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function permissionHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'permissionHeaderEdit_formLocked'
+	// export function roleHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'roleHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -308,6 +307,10 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
+	
+	// trigger lock event di permission
+	self.Modules.rolePermissionList.headerLocked(self)
+	self.Modules.rolePermissionEdit.headerLocked(self)
 		
 
 }
@@ -341,13 +344,17 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function permissionHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'permissionHeaderEdit_formUnlocked'
+	// export function roleHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'roleHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
 	}
 
+	
+	// trigger unlock event di permission
+	self.Modules.rolePermissionList.headerUnlocked(self)
+	self.Modules.rolePermissionEdit.headerUnlocked(self)	
 		
 }
 
@@ -383,8 +390,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.currentTarget.getAttribute('data-sectionsource') 
 
-	const permissionHeaderList = self.Modules.permissionHeaderList
-	const listsecid = permissionHeaderList.Section.Id
+	const roleHeaderList = self.Modules.roleHeaderList
+	const listsecid = roleHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -419,10 +426,10 @@ async function btn_new_click(self, evt) {
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'permissionHeaderEdit_newData'
+		const fn_newdata_name = 'roleHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function permissionHeaderEdit_newData(self, datainit, frm) {}
+			// export async function roleHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -444,7 +451,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.permissionHeaderList.Section.show()
+			self.Modules.roleHeaderList.Section.show()
 		}
 	}
 }
@@ -454,7 +461,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'permissionHeaderEdit_autofill'
+	const fn_autofill_name = 'roleHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -505,9 +512,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function permissionHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function roleHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'permissionHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'roleHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -557,10 +564,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'permissionHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'roleHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function permissionHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function roleHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -576,10 +583,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.permissionHeaderList.addNewRow(self, data)
+			self.Modules.roleHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.permissionHeaderList.updateCurrentRow(self, data)
+			self.Modules.roleHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -618,10 +625,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.permissionHeaderList.removeCurrentRow(self)
+		self.Modules.roleHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.permissionHeaderList.Section.show()
+		self.Modules.roleHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -666,12 +673,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.permissionHeaderList.selectPreviousRow(self)
+	self.Modules.roleHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.permissionHeaderList.selectNextRow(self)
+	self.Modules.roleHeaderList.selectNextRow(self)
 }
 
 
@@ -705,7 +712,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'permissionHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'roleHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -747,7 +754,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'core.permission',
+				table: 'core.role',
 				id: id
 			}
 
@@ -777,7 +784,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About permission'
+		AboutSection.Title = 'About Role'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -785,7 +792,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = 'daftar permission yang dipunyai user'
+			divDescr.innerHTML = 'daftar role yang dipunyai user'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}

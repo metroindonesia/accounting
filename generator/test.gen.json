@@ -1,0 +1,40 @@
+{
+  "appname": "accounting",
+  "name": "test",
+  "directory": "/home/ubuntu/Development/metroindonesia/accounting",
+  "title": "test",
+  "description": "",
+  "icon": "",
+  "primary_entity_id": "en-mpqf6011-a9cjs",
+  "primary_entity_name": "header",
+  "actions": [],
+  "entities": {
+    "header": {
+      "id": "en-mpqf6011-a9cjs",
+      "name": "header",
+      "isheader": true,
+      "title": "programtitle",
+      "table": "schema.tablename",
+      "pk": "pk",
+      "descr": "",
+      "skipRegenerateTable": false,
+      "formGridLayout": true,
+      "allowFormNew": true,
+      "allowFormEdit": true,
+      "allowRowAdd": true,
+      "allowRowRemove": true,
+      "allowRowEdit": true,
+      "identifierMethod": "manual",
+      "identifierPrefix": "",
+      "identifierBlock": "3",
+      "identifierLength": "6",
+      "bindHeadTitle": "",
+      "bindHeadDescr": "",
+      "Items": {},
+      "Uniques": {},
+      "Search": {}
+    }
+  },
+  "uniques": {},
+  "search": {}
+}

@@ -57,6 +57,21 @@ comment on column core."permission".permission_descr is '';
 
 
 -- =============================================
+-- FIELD: permission_defaultvalue text
+-- =============================================
+-- ADD permission_defaultvalue
+alter table core."permission" add permission_defaultvalue text  ;
+comment on column core."permission".permission_defaultvalue is '';
+
+-- MODIFY permission_defaultvalue
+alter table core."permission"
+	alter column permission_defaultvalue type text,
+	ALTER COLUMN permission_defaultvalue DROP DEFAULT,
+	ALTER COLUMN permission_defaultvalue DROP NOT NULL;
+comment on column core."permission".permission_defaultvalue is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby
@@ -127,6 +142,11 @@ comment on column core."permission"._modifydate is 'waktu terakhir record dimodi
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."permission"
+	drop constraint uq$core$permission$permission_name;
+	
+
 -- Add unique index 
 alter table  core."permission"
 	add constraint uq$core$permission$permission_name unique (permission_name); 
