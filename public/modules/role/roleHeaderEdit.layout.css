@@ -41,6 +41,12 @@
 		grid-column: 1 / span 6;
 		
 	}
+	
+	#roleHeaderEdit-obj_role_priority-container {
+		grid-row: 3;
+		grid-column: 1 / span 2;
+		
+	}
 		
 
 

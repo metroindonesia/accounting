@@ -57,6 +57,21 @@ comment on column core."role".role_descr is '';
 
 
 -- =============================================
+-- FIELD: role_priority int
+-- =============================================
+-- ADD role_priority
+alter table core."role" add role_priority int not null default 0;
+comment on column core."role".role_priority is '';
+
+-- MODIFY role_priority
+alter table core."role"
+	alter column role_priority type int,
+	ALTER COLUMN role_priority SET DEFAULT 0,
+	ALTER COLUMN role_priority SET NOT NULL;
+comment on column core."role".role_priority is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby

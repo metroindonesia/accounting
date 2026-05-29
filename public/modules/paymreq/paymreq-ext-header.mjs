@@ -83,6 +83,9 @@ export function headerList_initSearchParams(self, SearchParams) {
 
 		cbo.wait()
 		try {
+			// cek apakah user punya role PAYMREQ
+
+
 			const result = await Module.apiCall(url, {
 				sort,
 				criteria,

@@ -39,7 +39,8 @@ const frm = new $fgta5.Form('roleHeaderEdit-frm');
 const obj_role_id = frm.Inputs['roleHeaderEdit-obj_role_id']
 const obj_role_name = frm.Inputs['roleHeaderEdit-obj_role_name']
 const obj_role_isdisabled = frm.Inputs['roleHeaderEdit-obj_role_isdisabled']
-const obj_role_descr = frm.Inputs['roleHeaderEdit-obj_role_descr']	
+const obj_role_descr = frm.Inputs['roleHeaderEdit-obj_role_descr']
+const obj_role_priority = frm.Inputs['roleHeaderEdit-obj_role_priority']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -421,6 +422,7 @@ async function btn_new_click(self, evt) {
 
 		// inisiasi data baru
 		const datainit = {
+			role_priority: 0,
 		}
 
 
