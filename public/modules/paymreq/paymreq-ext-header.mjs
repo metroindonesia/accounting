@@ -1,5 +1,6 @@
 import Context from './paymreq-context.mjs'
 import { printDocument } from './paymreq-print.mjs'
+import * as permission from './paymreq.permission.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 
@@ -80,7 +81,7 @@ export function headerList_initSearchParams(self, SearchParams) {
 		if (onApproval || onEntry || onView) {
 			criteria.user_id = Context.userId
 			if (onView) {
-				criteria.check_permission = 'PAYMREQ_LIST_ALLSTRUCT'
+				criteria.check_permission = permission.LIST_ALLSTRUCT
 			}
 		}
 
