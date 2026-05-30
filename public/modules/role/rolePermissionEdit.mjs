@@ -38,7 +38,6 @@ const btn_logs = document.getElementById('rolePermission-btn_logs')
 const frm = new $fgta5.Form('rolePermissionEdit-frm');
 const obj_rolepermission_id = frm.Inputs['rolePermissionEdit-obj_rolepermission_id']
 const obj_permission_id = frm.Inputs['rolePermissionEdit-obj_permission_id']
-const obj_permission_value = frm.Inputs['rolePermissionEdit-obj_permission_value']
 const obj_role_id = frm.Inputs['rolePermissionEdit-obj_role_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')

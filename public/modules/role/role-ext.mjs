@@ -1,6 +1,9 @@
 import Context from './role-context.mjs'
 
 
+export const extenderHeader = null
+export const extenderPermission = null
+
 const _role_name = 'roleHeaderEdit-obj_role_name'
 
 

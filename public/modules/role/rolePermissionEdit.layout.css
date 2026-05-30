@@ -30,12 +30,6 @@
 		
 	}
 	
-	#rolePermissionEdit-obj_permission_value-container {
-		grid-row: 2;
-		grid-column: 1 / span 4;
-		
-	}
-	
 	#rolePermissionEdit-obj_role_id-container {
 		grid-row: auto;
 		grid-column: 1 / span 2;

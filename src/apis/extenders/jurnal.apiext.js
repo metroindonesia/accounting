@@ -1,12 +1,14 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import db from '@agung_dhewe/webapps/src/db.js'
 import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
+import { getUserPermission } from '@agung_dhewe/webapps/src/permission.js'
 import { processApBill } from './jurnal.apiext.ap-bill.js'
 import { processApPayment } from './jurnal.apiext.ap-payment.js'
 import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
 import { processDirectPayment } from './jurnal.apiext.direct-payment.js'
 import { reopen } from './periode.apiext.js'
 import { GEO_REPLY_WITH } from 'redis'
+import * as PERMISSION from '../../../public/modules/jurnal/jurnal.permission.mjs'
 
 
 const TABLE = {
@@ -33,6 +35,7 @@ const TABLE = {
 	curr: "public.curr",
 	currrate: "public.currrate",
 }
+
 
 export async function jurnal_init(self, initialData) {
 	const req = self.req
@@ -152,7 +155,16 @@ export async function headerUpdating(self, tx, data) {
 }
 
 export async function headerDeleting(self, tx, dataToRemove) {
+	const { userId } = self.req.session.user;
 	const { jurnal_id } = dataToRemove
+
+
+	// apakah user boleh menghapus jurnal
+	const allowed = await getUserPermission(tx, userId, PERMISSION.DELETE)
+	if (!allowed) {
+		throw new Error('tidak ada permission untuk menghapus jurnal')
+	}
+
 
 	await cekJurnalForModification(self, tx, jurnal_id)
 
@@ -637,10 +649,17 @@ export async function uncommit(self, db, body, jurnal_log) {
 export async function post(self, db, body, jurnal_log) {
 	const { jurnal_id } = body
 	const req = self.req
-	const user_id = req.session.user.userId
+	const { userId } = self.req.session.user;
 	const startTime = process.hrtime.bigint()
 
 	try {
+
+		// cek apakah user beleh melakukan unpost
+		const allowed = await getUserPermission(db, userId, PERMISSION.POSTING)
+		if (!allowed) {
+			throw new Error('tidak ada permission untuk posting jurnal')
+		}
+
 
 		const sqlCurent = `
 			select periode_id, iscommit, ispost 
@@ -707,10 +726,16 @@ export async function post(self, db, body, jurnal_log) {
 export async function unpost(self, db, body, jurnal_log) {
 	const { jurnal_id, upostMessage } = body
 	const req = self.req
-	const user_id = req.session.user.userId
+	const { userId } = self.req.session.user;
 	const startTime = process.hrtime.bigint()
 
 	try {
+
+		// cek apakah user beleh melakukan unpost
+		const allowed = await getUserPermission(db, userId, PERMISSION.UNPOSTING)
+		if (!allowed) {
+			throw new Error('tidak ada permission untuk posting jurnal')
+		}
 
 		const sqlCurent = `
 			select iscommit, ispost 

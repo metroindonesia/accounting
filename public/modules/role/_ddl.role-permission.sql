@@ -27,21 +27,6 @@ comment on column core."rolepermission".permission_id is '';
 
 
 -- =============================================
--- FIELD: permission_value text
--- =============================================
--- ADD permission_value
-alter table core."rolepermission" add permission_value text  ;
-comment on column core."rolepermission".permission_value is '';
-
--- MODIFY permission_value
-alter table core."rolepermission"
-	alter column permission_value type text,
-	ALTER COLUMN permission_value DROP DEFAULT,
-	ALTER COLUMN permission_value DROP NOT NULL;
-comment on column core."rolepermission".permission_value is '';
-
-
--- =============================================
 -- FIELD: role_id int
 -- =============================================
 -- ADD role_id
