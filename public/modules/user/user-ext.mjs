@@ -5,6 +5,7 @@ export const extenderFavourite = null
 export const extenderLogin = null
 export const extenderGroup = null
 export const extenderProp = null
+export const extenderRole = null
 
 
 const _user_name = 'userHeaderEdit-obj_user_name'

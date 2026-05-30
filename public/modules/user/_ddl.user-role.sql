@@ -106,6 +106,11 @@ comment on column core."userrole"._modifydate is 'waktu terakhir record dimodifi
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$role_id;
+ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$user_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE core."userrole"
 	ADD CONSTRAINT fk$core$userrole$role_id
@@ -134,6 +139,11 @@ CREATE INDEX idx_fk$core$userrole$user_id ON core."userrole"(user_id);
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."userrole"
+	drop constraint uq$core$userrole$userrole_pair;
+	
+
 -- Add unique index 
 alter table  core."userrole"
 	add constraint uq$core$userrole$userrole_pair unique (user_id, role_id); 

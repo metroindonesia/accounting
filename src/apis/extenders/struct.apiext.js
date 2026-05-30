@@ -1,3 +1,6 @@
+import { getUserPermission } from '@agung_dhewe/webapps/src/permission.js'
+
+
 const tablename = 'public.struct'
 const entityname = 'struct'
 const HIERARCHY_PARAM = {
@@ -55,31 +58,9 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 		// kemungkinan struct harus diquery sesuai dengan struct yang dimiliki oleh user 
 		// kecuali jika ada permission yang membolehkan untuk mengambil semua
 
-		let limit_struct_form_member = true
-		permissionBlock: {
-			if (check_permission != null) {
-
-				// cek permission
-				const sqlCekPermission = 'select * from core.get_user_permission(${user_id}, ${permission})'
-				const rows = await db.any(sqlCekPermission, {
-					user_id: user_id,
-					permission: check_permission
-				});
-
-
-				if (rows.length == 0) {
-					break permissionBlock
-				}
-
-				const permission_value = `${rows[0].permission_value}`
-				if (permission_value.toLowerCase() == 'true') {
-					limit_struct_form_member = false
-				}
-			}
-		}
-
-
-		if (limit_struct_form_member) {
+		// apakah ada permission khusus
+		const allow_all_structure = await getUserPermission(db, user_id, check_permission)
+		if (!allow_all_structure) {
 			searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
 			searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
 			searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
@@ -89,12 +70,6 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 			// user_id tidak digunakan, hapus dari criteria
 			delete criteria.user_id
 		}
-
-
-
-
-
-
 
 	}
 }
