@@ -1,0 +1,3 @@
+export const DELETE = 'JURNAL_DELETE'
+export const POSTING = 'JURNAL_POSTING'
+export const UNPOSTING = 'JURNAL_UNPOSTING'
