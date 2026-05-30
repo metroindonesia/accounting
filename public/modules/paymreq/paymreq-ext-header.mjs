@@ -3,9 +3,9 @@ import { printDocument } from './paymreq-print.mjs'
 import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
 
 
-const VAR_APPROVAL = 'approval'
-const VAR_REJECTION = 'reject'
-const VAR_VIEW = 'view'
+const APPROVAL_VARIANCE = 'approval'
+const REJECTION_VARIANCE = 'reject'
+const VIEW_VARIANCE = 'view'
 
 
 /* untuk keperluan debug & testing */
@@ -64,9 +64,9 @@ export function init_header(self, args) {
 
 export function headerList_initSearchParams(self, SearchParams) {
 
-	const onApproval = Context.variance == VAR_APPROVAL
-	const onRejection = Context.variance == VAR_REJECTION
-	const onView = Context.variance == VAR_VIEW
+	const onApproval = Context.variance == APPROVAL_VARIANCE
+	const onRejection = Context.variance == REJECTION_VARIANCE
+	const onView = Context.variance == VIEW_VARIANCE
 	const onEntry = Context.variance == ''
 
 	// Structure
@@ -77,15 +77,16 @@ export function headerList_initSearchParams(self, SearchParams) {
 		const sort = { struct_name: 'desc' }
 		const criteria = {}
 
-		if (onApproval || onEntry) {
+		if (onApproval || onEntry || onView) {
 			criteria.user_id = Context.userId
+			if (onView) {
+				criteria.check_permission = 'PAYMREQ_LIST_ALLSTRUCT'
+			}
 		}
 
 		cbo.wait()
 		try {
 			// cek apakah user punya role PAYMREQ
-
-
 			const result = await Module.apiCall(url, {
 				sort,
 				criteria,
@@ -113,7 +114,7 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 	}
 
 
-	if (Context.variance == VAR_APPROVAL) {
+	if (Context.variance == APPROVAL_VARIANCE) {
 		criteria.iscommit = true
 		criteria.isapproved = false
 		criteria.user_id = Context.userId
@@ -121,14 +122,16 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 		sort.isapproved = 'ASC'
 		sort.paymreq_date = 'DESC'
 
-	} else if (Context.variance == VAR_REJECTION) {
+	} else if (Context.variance == REJECTION_VARIANCE) {
 		criteria.iscommit = true
 		criteria.isapproved = true
 
 		sort.isapproved = 'DESC'
 		sort.paymreq_date = 'DESC'
 
-	} else if (Context.variance == VAR_VIEW) {
+	} else if (Context.variance == VIEW_VARIANCE) {
+		criteria.user_id = Context.userId
+		criteria.check_permission = 'PAYMREQ_LIST_ALLSTRUCT'
 		sort.paymreq_date = 'DESC'
 
 	} else {
@@ -271,9 +274,9 @@ export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	const iscommit = frm.Inputs[_iscommit].value
 	const isapproved = frm.Inputs[_isapproved].value
 
-	const onApproval = Context.variance == VAR_APPROVAL
-	const onRejection = Context.variance == VAR_REJECTION
-	const onView = Context.variance == VAR_VIEW
+	const onApproval = Context.variance == APPROVAL_VARIANCE
+	const onRejection = Context.variance == REJECTION_VARIANCE
+	const onView = Context.variance == VIEW_VARIANCE
 	const onEntry = Context.variance == ''
 
 
@@ -332,9 +335,9 @@ export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 	CurrentState.Actions.print.addEventListener('click', (evt) => { btn_actionPrint_click(self, frm, CurrentState, evt) })
 
 
-	const onApproval = Context.variance == VAR_APPROVAL
-	const onRejection = Context.variance == VAR_REJECTION
-	const onView = Context.variance == VAR_VIEW
+	const onApproval = Context.variance == APPROVAL_VARIANCE
+	const onRejection = Context.variance == REJECTION_VARIANCE
+	const onView = Context.variance == VIEW_VARIANCE
 	const onEntry = Context.variance == ''
 
 	CurrentState.Actions.newdata.suspend(onApproval || onRejection | onView)

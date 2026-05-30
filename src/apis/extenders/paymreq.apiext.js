@@ -48,13 +48,52 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	const req = self.req
 	const user_id = req.session.user.userId
 
-	// criteria.user_id = user_id
+
+	// ambil data criteria
+	const check_permission = criteria.check_permission;
+
+
+	// hapus parameter di criteria, karena tidak diapakai di query
+	delete criteria.check_permission
+
+
+
+	// cek apakah user diperbolehkan melihat seluruh dept
+	let limit_struct_form_member = true
+	permissionBlock: {
+		if (check_permission != null) {
+
+			// cek permission
+			const sqlCekPermission = 'select * from core.get_user_permission(${user_id}, ${permission})'
+			const rows = await db.any(sqlCekPermission, {
+				user_id: user_id,
+				permission: check_permission
+			});
+
+
+			if (rows.length == 0) {
+				break permissionBlock
+			}
+
+			const permission_value = `${rows[0].permission_value}`
+			if (permission_value.toLowerCase() == 'true') {
+				limit_struct_form_member = false
+			}
+		}
+	}
 
 
 	searchMap.iscommit = 'iscommit = ${iscommit}'
 	searchMap.isapproved = 'isapproved = ${isapproved}'
-	searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	searchMap.struct_id = 'struct_id = ${struct_id}'
+
+
+	if (limit_struct_form_member) {
+		searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
+	} else {
+		// user_id tidak digunakan di query, hapus dari criteria
+		delete criteria.user_id
+	}
 
 
 	// jika paymreq ditarik dari jurnal

@@ -26,26 +26,75 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 	await updateHierarchy(self, tx, ret, HIERARCHY_PARAM)
 }
 
-export function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
+export async function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
 	searchMap.struct_isdisabled = 'struct_isdisabled=${struct_isdisabled}'
 
 
-	if (criteria.selectForItemclassMember) {
-		// untuk memilih structur saat di itemclass
-		const itemclass_id = criteria.itemclass_id
+	// ambil data yang dikirimkan dari criteria
+	const itemclass_id = criteria.itemclass_id
+	const selectForItemclassMember = criteria.selectForItemclassMember
+	const user_id = criteria.user_id
+	const check_permission = criteria.check_permission;
 
-		delete criteria.itemclass_id
-		delete criteria.selectForItemclassMember
+
+	// hapus parameter di criteria, karena tidak diapakai di query
+	delete criteria.itemclass_id
+	delete criteria.selectForItemclassMember
+	delete criteria.check_permission
+
+
+
+	if (selectForItemclassMember) {
 
 		searchMap.exclude_struct_id = 'struct_id <> ${exclude_struct_id}'
 		searchMap.include_struct_id = `struct_id=\${include_struct_id} or struct_id not in (select struct_id from ${TABLE.itemclassstruct} where itemclass_id=${itemclass_id})`
 
-	} else {
+	} else if (user_id) {
 
-		searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
-		searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
-		searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
-		sort[`${entityname}_path`] = 'asc'
+		// jika ada user yang dikirim, 
+		// kemungkinan struct harus diquery sesuai dengan struct yang dimiliki oleh user 
+		// kecuali jika ada permission yang membolehkan untuk mengambil semua
+
+		let limit_struct_form_member = true
+		permissionBlock: {
+			if (check_permission != null) {
+
+				// cek permission
+				const sqlCekPermission = 'select * from core.get_user_permission(${user_id}, ${permission})'
+				const rows = await db.any(sqlCekPermission, {
+					user_id: user_id,
+					permission: check_permission
+				});
+
+
+				if (rows.length == 0) {
+					break permissionBlock
+				}
+
+				const permission_value = `${rows[0].permission_value}`
+				if (permission_value.toLowerCase() == 'true') {
+					limit_struct_form_member = false
+				}
+			}
+		}
+
+
+		if (limit_struct_form_member) {
+			searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
+			searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`
+			searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
+			sort[`${entityname}_path`] = 'asc'
+
+		} else {
+			// user_id tidak digunakan, hapus dari criteria
+			delete criteria.user_id
+		}
+
+
+
+
+
+
 
 	}
 }
