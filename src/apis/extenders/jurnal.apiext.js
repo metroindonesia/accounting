@@ -155,12 +155,12 @@ export async function headerUpdating(self, tx, data) {
 }
 
 export async function headerDeleting(self, tx, dataToRemove) {
-	const { userId } = self.req.session.user;
+	const user_id = self.req.session.user.userId;
 	const { jurnal_id } = dataToRemove
 
 
 	// apakah user boleh menghapus jurnal
-	const allowed = await getUserPermission(tx, userId, PERMISSION.DELETE)
+	const allowed = await getUserPermission(tx, user_id, PERMISSION.DELETE)
 	if (!allowed) {
 		throw new Error('tidak ada permission untuk menghapus jurnal')
 	}
@@ -649,13 +649,13 @@ export async function uncommit(self, db, body, jurnal_log) {
 export async function post(self, db, body, jurnal_log) {
 	const { jurnal_id } = body
 	const req = self.req
-	const { userId } = self.req.session.user;
+	const user_id = self.req.session.user.userId;
 	const startTime = process.hrtime.bigint()
 
 	try {
 
 		// cek apakah user beleh melakukan unpost
-		const allowed = await getUserPermission(db, userId, PERMISSION.POSTING)
+		const allowed = await getUserPermission(db, user_id, PERMISSION.POSTING)
 		if (!allowed) {
 			throw new Error('tidak ada permission untuk posting jurnal')
 		}
@@ -726,13 +726,13 @@ export async function post(self, db, body, jurnal_log) {
 export async function unpost(self, db, body, jurnal_log) {
 	const { jurnal_id, upostMessage } = body
 	const req = self.req
-	const { userId } = self.req.session.user;
+	const user_id = self.req.session.user.userId;
 	const startTime = process.hrtime.bigint()
 
 	try {
 
 		// cek apakah user beleh melakukan unpost
-		const allowed = await getUserPermission(db, userId, PERMISSION.UNPOSTING)
+		const allowed = await getUserPermission(db, user_id, PERMISSION.UNPOSTING)
 		if (!allowed) {
 			throw new Error('tidak ada permission untuk posting jurnal')
 		}
