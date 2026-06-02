@@ -1,1 +1,26 @@
-ini program profile
+<h1>Profile</h1>
+<section>
+	<form id="user-profile-form" locked="true">
+		<div id="userHeaderEdit-obj_user_name-container" class="input-field" field="userHeaderEdit-obj_user_name" style="width: 300px;">
+			<label for="userHeaderEdit-obj_user_name">username</label>
+			<input id="userHeaderEdit-obj_user_name" fgta5-component="Textbox"
+				placeholder="username" autocomplete="off" spellcheck="false"
+				binding="user_name" 
+				data-tabindex="2"
+				character-case="lowercase"
+				disabled
+				autocomplete="off" spellcheck="false"
+				maxlength="30">
+		</div>
+
+
+		<div id="user-change-password">
+			<h3>Change Password</h3>
+			<div><input type="password" placeholder="enter new password"></div>
+			<div><input type="password" placeholder="re-enter new password"></div>
+			<div>
+				<button type="button">Change Password</button>
+			</div>
+		</div>
+	</form>
+</section>
