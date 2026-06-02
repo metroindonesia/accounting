@@ -72,18 +72,18 @@ comment on column public."coa".curr_id is '';
 
 
 -- =============================================
--- FIELD: curr_descr text
+-- FIELD: coa_descr text
 -- =============================================
--- ADD curr_descr
-alter table public."coa" add curr_descr text  ;
-comment on column public."coa".curr_descr is '';
+-- ADD coa_descr
+alter table public."coa" add coa_descr text  ;
+comment on column public."coa".coa_descr is '';
 
--- MODIFY curr_descr
+-- MODIFY coa_descr
 alter table public."coa"
-	alter column curr_descr type text,
-	ALTER COLUMN curr_descr DROP DEFAULT,
-	ALTER COLUMN curr_descr DROP NOT NULL;
-comment on column public."coa".curr_descr is '';
+	alter column coa_descr type text,
+	ALTER COLUMN coa_descr DROP DEFAULT,
+	ALTER COLUMN coa_descr DROP NOT NULL;
+comment on column public."coa".coa_descr is '';
 
 
 -- =============================================
