@@ -62,33 +62,6 @@ export async function init_header(self, args) {
 	frm.Inputs[_partnerbank_accountname].markAsRequired(false)
 	frm.Inputs[_coa_id].markAsRequired(false)
 
-	/*	
-		const btnUnpost = document.getElementById('jurnalHeaderEdit-btn_actionUnpost')
-		const btnPost = document.getElementById('jurnalHeaderEdit-btn_actionPost')
-		const CurrentState = jurnalHeaderEdit.getCurrentState()
-		const variance = Context.variance
-		if (variance == 'posting') {
-			CurrentState.Actions.commit.hide(true)
-			CurrentState.Actions.uncommit.hide(true)
-			CurrentState.Actions.post.hide(false)
-			CurrentState.Actions.unpost.hide(true)
-			btnPost.style.marginLeft = 'auto';
-			btnPost.style.order = '5';
-		} else if (variance == 'unposting') {
-			CurrentState.Actions.commit.hide(true)
-			CurrentState.Actions.uncommit.hide(true)
-			CurrentState.Actions.post.hide(true)
-			CurrentState.Actions.unpost.hide(false)
-			btnUnpost.style.marginLeft = 'auto';
-			btnUnpost.style.order = '5';
-		} else {
-			CurrentState.Actions.commit.hide(false)
-			CurrentState.Actions.uncommit.hide(false)
-			CurrentState.Actions.post.hide(true)
-			CurrentState.Actions.unpost.hide(true)
-		}
-	*/
-
 
 	if (Context.setting.currentPeriode != null) {
 		currentPeriode.periode_id = Context.setting.currentPeriode.periode_id
@@ -431,6 +404,10 @@ export function obj_periode_id_selecting_criteria(self, obj_periode_id, frm, cri
 }
 
 
+export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {
+	criteria.partner_isdisabled = false
+}
+
 export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 	if (!obj_partner_id.isSelectedChanged()) {
 		return
@@ -463,6 +440,7 @@ export function obj_partnercontact_id_selecting_criteria(self, obj_partnercontac
 
 export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
 	criteria.struct_isdisabled = false
+	criteria.struct_isparent = false
 }
 
 export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {

@@ -360,6 +360,22 @@ export async function obj_coa_id_selected(self, obj_coa_id, frm, evt) {
 
 }
 
+export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {
+	criteria.partner_isdisabled = false
+}
+
+export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
+	criteria.struct_isdisabled = false
+	criteria.struct_isparent = false
+}
+
+export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {
+	criteria.unit_isdisabled = false
+}
+
+export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {
+	criteria.site_isdisabled = false
+}
 
 export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {
 	const coacur = frm.Inputs[_coacurr].value
