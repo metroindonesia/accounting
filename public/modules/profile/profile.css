@@ -1,3 +1,19 @@
-.user-change-password {
+#user-change-password {
 	margin-top: 60px;
+	display: flex;
+	row-gap: 8px;
+	flex-direction: column;
+}
+
+
+#user-change-password input {
+	padding: 3px;
+	width: 200px;
+}
+
+
+#user-change-password button {
+	padding: 3px 18px;
+	margin-top: 8px;
+	cursor: pointer;
 }
