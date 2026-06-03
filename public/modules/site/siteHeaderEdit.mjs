@@ -37,6 +37,7 @@ const btn_about = document.getElementById('siteHeader-btn_about')
 
 const frm = new $fgta5.Form('siteHeaderEdit-frm');
 const obj_site_id = frm.Inputs['siteHeaderEdit-obj_site_id']
+const obj_site_code = frm.Inputs['siteHeaderEdit-obj_site_code']
 const obj_site_isdisabled = frm.Inputs['siteHeaderEdit-obj_site_isdisabled']
 const obj_site_name = frm.Inputs['siteHeaderEdit-obj_site_name']
 const obj_site_namereport = frm.Inputs['siteHeaderEdit-obj_site_namereport']
