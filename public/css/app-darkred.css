@@ -53,6 +53,10 @@ input::selection {
 	height: 40px;
 }
 
+.fgta5-gridview tfoot tr {
+	height: 44px;
+}
+
 .fgta5-gridview tbody tr[data-currentrow] {
 	background-color: #FFF0C2 !important;
 	color: #494949;
@@ -151,9 +155,13 @@ input::selection {
 
 .action-button.button-reset {
 	background-color: rgb(174, 113, 63);
+	border-radius: 4px;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 .action-button.button-rowremove,
 .action-button.button-delete {
 	background-color: rgb(174, 63, 63);
+	border-radius: 4px;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.08);
 }

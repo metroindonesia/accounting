@@ -54,6 +54,10 @@ input::selection {
 	border: 0;
 }
 
+.fgta5-gridview tfoot tr {
+	height: 44px;
+}
+
 .fgta5-gridview tbody tr[data-currentrow] {
 	/* background-color: rgb(69 103 255) !important; */
 	background-color: #d9e2ff !important;
