@@ -1,11 +1,12 @@
 :root {
-	--color-editmode-bg: #cbbc7d;
+	--color-editmode-bg: #e2d6a6;
 }
 
 
 
 body {
-	background-color: #e2e1db !important;
+	/* background-color: #e2e1db !important; */
+	background-color: #F8F9FA !important;
 }
 
 
@@ -21,38 +22,95 @@ input::selection {
 	background: linear-gradient(to bottom, #75261a, #591810);
 }
 
+.fgta5-gridview {
+	border-radius: 8px;
+	overflow: hidden;
+	border-collapse: separate;
+	border-spacing: 0;
+
+	border: 1px solid #E5E7EB;
+	/* Abu-abu tipis agar tabel punya struktur */
+
+	/* 3. Soft Shadow dengan sentuhan Merah Tua */
+	/* Menggunakan RGBA dari merah tua (misal #800000 -> rgb(128, 0, 0)) dengan opasitas hanya 6% */
+	box-shadow: 0 4px 6px -1px rgba(128, 0, 0, 0.06),
+		0 2px 4px -1px rgba(128, 0, 0, 0.04);
+
+	/* background-color: #FFFFFF; */
+	/* Memastikan background tabel tetap putih */
+}
+
 /* Header untuk tabel gridview */
 .fgta5-gridview th {
 	/* buat gradasi warna untuk background, dari atas ke bawah */
 	background: linear-gradient(to bottom, #661f14, #450d0d);
 	color: #fff;
+	height: 44px;
 }
 
 .fgta5-gridview tbody tr {
 	background-color: #fff;
+	height: 40px;
 }
 
 .fgta5-gridview tbody tr[data-currentrow] {
-	background-color: #fff945 !important;
+	background-color: #FFF0C2 !important;
 	color: #494949;
 	filter: brightness(90%);
 }
 
 .fgta5-gridview tbody tr:hover {
-	background-color: #bd9400 !important;
-	color: #fff
+	background-color: #FFEAA7 !important;
+	color: #424242
+}
+
+.fgta5-gridview td[data-nextoffset] a {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	background-color: rgb(255, 255, 255);
+	color: rgb(96, 44, 44);
+	border: 1.5px solid rgb(96, 44, 44);
+	padding: 8px 16px 8px 36px;
+	border-radius: 4px;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 12px;
+	background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiM2MDJjMmMiIHN0cm9rZS13aWR0aD0iMi41IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxwYXRoIGQ9Ik0xMiA1djE0TTUgMTJsNyA3IDctNyIvPjwvc3ZnPg==);
+	background-repeat: no-repeat;
+	background-position: 12px center;
+	background-size: 16px 16px;
+	cursor: pointer;
+	transition: 0.2s;
 }
 
 
-
+.panel-detil {
+	box-shadow: 0 4px 6px -1px rgba(128, 0, 0, 0.06),
+		0 2px 4px -1px rgba(128, 0, 0, 0.04);
+}
 
 .panel-detil [panel-content] {
-	background-color: #efeee3;
-	border: 1px solid #ccc;
+	/* background-color: #efeee3; */
+	background-color: #f3f2f1;
+	border: 1px solid #ddd;
+	border-radius: 0 0 8px 8px;
+	min-height: 50px;
 }
 
 .panel-detil [panel-title] {
 	background-color: #602c2c;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	border-radius: 8px 8px 0 0;
+
+	background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMiIgcj0iMTAiPjwvY2lyY2xlPjxsaW5lIHgxPSIxMiIgeTE9IjE2IiB4Mj0iMTIiIHkyPSIxMiI+PC9saW5lPjxsaW5lIHgxPSIxMiIgeTE9IjgiIHgyPSIxMi4wMSIgeTI9IjgiPjwvbGluZT48L3N2Zz4=");
+	background-repeat: no-repeat;
+	background-position: 12px center;
+	background-size: 18px 18px;
+	padding-left: 40px;
+
 }
 
 .panel-action button {
@@ -86,6 +144,8 @@ input::selection {
 .action-button.button-new,
 .action-button.button-rowadd {
 	background-color: rgb(83, 8, 8);
+	border-radius: 4px;
+	box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.12), 0 1px 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 
