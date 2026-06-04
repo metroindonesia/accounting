@@ -167,3 +167,43 @@ input::selection {
 .fgta5-entry-input[changed=true] {
 	border-left: 4px solid #2c435c;
 }
+
+.fgta5-checkbox-input[changed=true] {
+	border-left: 2px solid #2c435c;
+}
+
+.fgta5-entry-container {
+	border-radius: 4px;
+	border-collapse: separate;
+	overflow: hidden;
+	position: relative;
+	height: auto !important;
+	min-height: min-content;
+	/* align-items: flex-start; */
+}
+
+.fgta5-checkbox-input {
+	border-radius: 4px;
+}
+
+.fgta5-entry-error>div {
+	width: unset;
+}
+
+.input-field {
+	align-self: flex-start;
+}
+
+.fgta5-checkbox {
+	margin-top: 4px;
+}
+
+.fgta5-entry-input-wrapper {
+	border-radius: 4px;
+}
+
+
+.fgta5-entry-display[editmode=true][invalid]:not([disabled]),
+.fgta5-entry-input[editmode=true][invalid]:not([disabled]) {
+	border-radius: 4px;
+}
