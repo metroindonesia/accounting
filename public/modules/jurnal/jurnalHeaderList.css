@@ -7,7 +7,6 @@
 
 #jurnalHeaderList-tbl [data-name="jurnal_doc"] {
 	width: 120px;
-	border-left: 1px dotted #aaa;
 	border-right: 1px dotted #aaa;
 }
 
@@ -24,7 +23,6 @@
 #jurnalHeaderList-tbl [data-name="jurnal_idr"] {
 	width: 100px;
 	border-left: 1px dotted #aaa;
-	border-right: 1px dotted #aaa;
 }
 
 
@@ -81,6 +79,7 @@
 
 .row-posted {
 	background-color: #cfcfcf !important;
+	color: #000 !important;
 }
 
 .row-posted td[binding="ispost"] {

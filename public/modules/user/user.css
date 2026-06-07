@@ -72,3 +72,29 @@
 .btn-yellow {
 	background: #f7c20f;
 }
+
+
+/* big screen */
+@media screen and (min-width: 501px) {
+
+	#userHeaderEdit-obj_user_isdev-container .fgta5-checkbox-caption,
+	#userHeaderEdit-obj_user_isshowallprogram-container .fgta5-checkbox-caption {
+		display: block;
+	}
+
+
+	#userHeaderEdit-obj_user_isdev-container .fgta5-checkbox,
+	#userHeaderEdit-obj_user_isshowallprogram-container .fgta5-checkbox {
+		margin-top: 0;
+	}
+}
+
+
+/* small screen */
+@media screen and (max-width: 500px) {
+
+	#userHeaderEdit-obj_user_isdev-container .fgta5-checkbox,
+	#userHeaderEdit-obj_user_isshowallprogram-container .fgta5-checkbox {
+		margin-top: 10px;
+	}
+}

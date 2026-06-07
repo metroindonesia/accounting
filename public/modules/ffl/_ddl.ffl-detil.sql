@@ -106,10 +106,6 @@ comment on column public."ffldetil"._modifydate is 'waktu terakhir record dimodi
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."ffldetil" DROP CONSTRAINT fk$public$ffldetil$ffl_id;
-
-
 -- Add Foreign Key Constraint  
 ALTER TABLE public."ffldetil"
 	ADD CONSTRAINT fk$public$ffldetil$ffl_id

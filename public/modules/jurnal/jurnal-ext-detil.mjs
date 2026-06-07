@@ -29,6 +29,8 @@ const _ismanuallink = 'jurnalDetilEdit-obj_ismanuallink'
 const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 
+
+
 const refButtons = {}
 
 export async function init_detil(self, args) {
@@ -594,12 +596,29 @@ function updateBalance(self, balance_value, balance_idr) {
 	elBalIdr.innerHTML = pageHelper.formatDecimal(balance_idr)
 
 
+	// icon
+	const iconBalanceValid = document.getElementById('balance-valid')
+	const iconBalanceInvalid = document.getElementById('balance-invalid')
+
+
+
 	if (balance_idr == 0 && balance_value == 0) {
 		balContainer.removeAttribute('unbalance')
 		el_list_balance_idr.classList.remove('unbalance-text')
+
+		// sudah balance
+		iconBalanceValid.classList.remove('hidden')
+		iconBalanceInvalid.classList.add('hidden')
+
+
 	} else {
 		balContainer.setAttribute('unbalance', true)
 		el_list_balance_idr.classList.add('unbalance-text')
+
+		// belum balance
+		iconBalanceValid.classList.add('hidden')
+		iconBalanceInvalid.classList.remove('hidden')
+
 	}
 
 

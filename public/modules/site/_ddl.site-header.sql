@@ -172,6 +172,14 @@ comment on column public."site"._modifydate is 'waktu terakhir record dimodifika
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table public."site"
+	drop constraint uq$public$site$site_code;
+
+alter table public."site"
+	drop constraint uq$public$site$site_name;
+	
+
 -- Add unique index 
 alter table  public."site"
 	add constraint uq$public$site$site_name unique (site_name); 
