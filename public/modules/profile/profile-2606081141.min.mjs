@@ -1,0 +1,5 @@
+/*! profile
+*
+* build at 2026-06-08
+*/
+const e=new $fgta5.Application("mainapp"),a=new $fgta5.Form("user-profile-form").Inputs.obj_user_name,s=document.getElementById("btn_changepassword"),t=document.getElementById("txt_pass1"),n=document.getElementById("txt_pass2");class o extends Module{constructor(){super()}async main(o={}){e.setTitle("Profile"),e.finalize(),s.addEventListener("click",()=>{!async function(){try{const e=t.value;if(e!=n.value)return void $fgta5.MessageBox.warning("Password invalid, pastikan password diketik sama");if(""==e.trim())return;const a={newPassword:e};if(!await Module.apiCall("/profile/change-password",a))throw new Error("ada kesalahan saat penggantian password");t.value="",n.value="",$fgta5.MessageBox.info("Password has changed")}catch(e){console.error(e.message),$fgta5.MessageBox.error(e.message)}}()});try{const e=await Module.apiCall("/profile/init",{});a.value=e.user_name}catch(e){console.error(e),$fgta5.MessageBox.error(e.message)}}}export{o as default};

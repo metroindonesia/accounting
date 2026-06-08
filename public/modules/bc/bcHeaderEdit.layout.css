@@ -7,7 +7,7 @@
 
 	#bcHeaderEdit-frm {
 		display: grid;
-		grid-template-columns: repeat(6, 1fr);
+		grid-template-columns: repeat(6, 141.6px);
 		grid-auto-rows: auto;
 		gap: 0;
 		width: 850px;
