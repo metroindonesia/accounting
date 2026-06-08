@@ -34,6 +34,10 @@ input::selection {
 }
 
 
+.fgta5-gridview tbody tr:hover {
+	background-color: #FFEAA7 !important;
+	color: #424242
+}
 
 
 .fgta5-gridview-nextbutton {
