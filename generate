@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# usage:
+#           ./generate --module <namamodule>
+#           ./generate --all
+#
+
+GENERATE_ALL=false
+MODULE_NAME=""
+
+# 1. Ambil argumen menggunakan flag
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        --module) MODULE_NAME="$2"; shift ;;
+        --all) GENERATE_ALL=true ;;
+        *) echo "Argumen tidak dikenal: $1"; exit 1 ;;
+    esac
+    shift
+done
+
+# 2. Logika Eksekusi
+if [ "$GENERATE_ALL" = true ]; then
+    echo "Menjalankan generate untuk semua module..."
+    npm run generate all
+elif [ -n "$MODULE_NAME" ]; then
+    echo "Menjalankan generate untuk module: $MODULE_NAME..."
+    npm run generate "$MODULE_NAME"
+else
+    # Jika tidak ada argumen yang valid
+    echo "Error: Gunakan --module <namamodule> atau --all"
+    echo "Cara pakai: ./generate --module <namamodule>"
+    echo "            ./generate --all"
+    exit 1
+fi
+
