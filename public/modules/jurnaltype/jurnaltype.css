@@ -16,6 +16,7 @@
 	#lblHead {
 		grid-row: 11;
 		grid-column: 1;
+		margin-top: 5px;
 	}
 
 	#spcDetil {
@@ -26,6 +27,7 @@
 	#lblDetil {
 		grid-row: 20;
 		grid-column: 1;
+		margin-top: 5px;
 
 	}
 

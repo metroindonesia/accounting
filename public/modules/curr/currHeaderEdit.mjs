@@ -5,7 +5,7 @@
 
 import Context from './curr-context.mjs'
 import * as Ext from './curr-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 

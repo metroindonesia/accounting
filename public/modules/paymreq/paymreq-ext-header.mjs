@@ -1,7 +1,7 @@
 import Context from './paymreq-context.mjs'
 import { printDocument } from './paymreq-print.mjs'
 import * as permission from './paymreq.permission.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 
 const APPROVAL_VARIANCE = 'approval'

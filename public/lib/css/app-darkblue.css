@@ -1,0 +1,76 @@
+:root {
+	--color-editmode-bg: #d9e2ff;
+}
+
+body {
+	/* background-color: #eff0ff !important; */
+	background-color: #f8f9fc !important;
+
+}
+
+
+input::selection {
+	color: #fff;
+	background-color: #2b31ad;
+}
+
+
+/* Header Application */
+.fgta5-app-head {
+	background-color: #2c435c;
+
+}
+
+.fgta5-gridview th {
+	background: linear-gradient(180deg, #35506e 0%, #2c435c 100%) !important;
+	color: #fff;
+}
+
+
+.fgta5-gridview tbody tr[data-currentrow] {
+	background-color: #d9e2ff !important;
+	color: #333333;
+	filter: brightness(90%);
+}
+
+
+.fgta5-gridview tbody tr:hover {
+	background-color: #FFEAA7 !important;
+	color: #424242
+}
+
+
+.fgta5-gridview-nextbutton {
+	border-color: #2c435c72;
+	color: #2c435c;
+}
+
+
+.panel-detil [panel-title] {
+	background-color: #2c435c;
+}
+
+
+.panel-detil [panel-content] {
+	background-color: #eeeeef;
+}
+
+.action-button {
+	background-color: #2c435c;
+}
+
+
+
+.action-button.button-reset {
+	background-color: rgb(174, 113, 63);
+}
+
+.action-button.button-rowremove,
+.action-button.button-delete {
+	background-color: rgb(174, 63, 63);
+}
+
+
+.logtable th {
+	color: #2c435c;
+}

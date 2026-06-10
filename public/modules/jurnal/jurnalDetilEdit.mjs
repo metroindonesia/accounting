@@ -5,7 +5,7 @@
 
 import Context from './jurnal-context.mjs'
 import * as Ext from './jurnal-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 const Extender = Ext.extenderDetil ?? Ext
 

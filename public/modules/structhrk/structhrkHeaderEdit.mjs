@@ -5,7 +5,7 @@
 
 import Context from './structhrk-context.mjs'
 import * as Ext from './structhrk-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 

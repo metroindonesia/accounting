@@ -7,6 +7,8 @@ export const extenderHeader = ExtHeader;
 export const extenderDetil = ExtDetil;
 
 
+
+
 export async function init(self, args) {
 	console.log('initializing jurnalExtender ...')
 

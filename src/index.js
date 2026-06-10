@@ -6,7 +6,7 @@ import { createWebApplication, createDefaultAppConfig } from '@agung_dhewe/webap
 import { getApplicationSetting, requireSetting, authorizeRequest } from '@agung_dhewe/webapps/src/startup.js'
 import { createRouter } from './router.js'
 import db from '@agung_dhewe/webapps/src/db.js'
-import bucket from '@agung_dhewe/webapps/src/bucket.js'
+// import bucket from '@agung_dhewe/webapps/src/bucket.js'
 
 
 dotenv.config();

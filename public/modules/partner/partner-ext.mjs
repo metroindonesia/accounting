@@ -1,5 +1,5 @@
 import Context from './partner-context.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 export const extenderHeader = null
 export const extenderBank = null

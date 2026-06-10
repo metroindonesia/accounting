@@ -1,4 +1,4 @@
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 
 export function coa_id_populating(self, obj_coa_id, frm, evt, sectionSource) {

@@ -1,5 +1,5 @@
 import Context from './periode-context.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 
 const _periode_id = 'periodeHeaderEdit-obj_periode_id'

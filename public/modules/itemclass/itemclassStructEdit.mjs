@@ -1,11 +1,11 @@
 import Context from './itemclass-context.mjs'
 import * as Ext from './itemclass-ext.mjs'
-import * as pageHelper from '/public/lib/webmodule/pagehelper.mjs'
+import * as pageHelper from '/public/lib/webmodule/fgta5js-app-pagehelper.mjs'
 
 const Extender = Ext.extenderStruct ?? Ext
 
 
-const Crsl =  Context.Crsl
+const Crsl = Context.Crsl
 const CurrentSectionId = Context.Sections.itemclassStructEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
@@ -34,7 +34,7 @@ const frm = new $fgta5.Form('itemclassStructEdit-frm');
 const obj_itemclassstruct = frm.Inputs['itemclassStructEdit-obj_itemclassstruct']
 const obj_struct_id = frm.Inputs['itemclassStructEdit-obj_struct_id']
 const obj_itemclassstruct_isdisabled = frm.Inputs['itemclassStructEdit-obj_itemclassstruct_isdisabled']
-const obj_itemclass_id = frm.Inputs['itemclassStructEdit-obj_itemclass_id']	
+const obj_itemclass_id = frm.Inputs['itemclassStructEdit-obj_itemclass_id']
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -46,7 +46,7 @@ export const Section = CurrentSection
 
 export async function init(self, args) {
 
-	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
+	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt) => {
 		backToList(self, evt)
 	})
 
@@ -54,19 +54,19 @@ export async function init(self, args) {
 	frm.addEventListener('unlocked', (evt) => { frm_unlocked(self, evt) });
 	frm.render()
 
-	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
-	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
-	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
-	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
-	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-	
+	btn_edit.addEventListener('click', (evt) => { btn_edit_click(self, evt) })
+	btn_save.addEventListener('click', (evt) => { btn_save_click(self, evt) })
+	btn_new.addEventListener('click', (evt) => { btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt) => { btn_del_click(self, evt) })
+	btn_reset.addEventListener('click', (evt) => { btn_reset_click(self, evt) })
+	btn_prev.addEventListener('click', (evt) => { btn_prev_click(self, evt) })
+	btn_next.addEventListener('click', (evt) => { btn_next_click(self, evt) })
 
-	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
-	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
 
-	CurrentState.headerFormLocked = true 
+	btn_recordstatus.addEventListener('click', evt => { btn_recordstatus_click(self, evt) })
+	btn_logs.addEventListener('click', evt => { btn_logs_click(self, evt) })
+
+	CurrentState.headerFormLocked = true
 	CurrentState.editDisabled = false
 
 	CurrentState.Actions = {
@@ -81,9 +81,9 @@ export async function init(self, args) {
 	}
 
 
-	
+
 	// Combobox: obj_struct_id
-	obj_struct_id.addEventListener('selecting', async (evt)=>{
+	obj_struct_id.addEventListener('selecting', async (evt) => {
 		const fn_selecting_name = 'obj_struct_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
@@ -94,16 +94,16 @@ export async function init(self, args) {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const searchtext = evt.detail.searchtext != null ? evt.detail.searchtext : ''
 			const url = 'struct/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
 			}
 
-			evt.detail.url = url 
+			evt.detail.url = url
 			evt.detail.CurrentState = CurrentState
-			
+
 			// buat function di extender:
 			// export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {}
 			const fn_selecting_criteria_name = 'obj_struct_id_selecting_criteria'
@@ -119,7 +119,7 @@ export async function init(self, args) {
 					criteria,
 					offset: evt.detail.offset,
 					limit: evt.detail.limit,
-				}) 
+				})
 
 				for (var row of result.data) {
 					evt.detail.addRow(row.struct_id, row.struct_name, row)
@@ -132,10 +132,10 @@ export async function init(self, args) {
 				cbo.wait(false)
 			}
 
-			
-		}		
+
+		}
 	})
-		
+
 }
 
 
@@ -145,17 +145,17 @@ export async function openSelectedData(self, params) {
 	let mask = $fgta5.Modal.createMask()
 	try {
 		obj_struct_id.clear()
-		
+
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
-		
+
 
 		const suspended = self.Modules.itemclassHeaderEdit.getCurrentState().Actions.edit.isSuspended()
 
 		CurrentState.editDisabled = suspended
 		CurrentState.currentOpenedId = id
-		
+
 		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
 		if (!CurrentState.headerFormLocked) {
 			const fn_iseditdisabled_name = 'itemclassStructEdit_isEditDisabled'
@@ -167,11 +167,11 @@ export async function openSelectedData(self, params) {
 		}
 
 		// disable primary key
-		setPrimaryKeyState(self, {disabled:true})
+		setPrimaryKeyState(self, { disabled: true })
 
 		// isi form dengan data
 		frm.setData(data)
-	
+
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
 		// export function itemclassStructEdit_formOpened(self, frm, CurrentState) {}
 		const fn_formopened_name = 'itemclassStructEdit_formOpened'
@@ -217,7 +217,7 @@ export function headerLocked(self) {
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}	
+	}
 }
 
 export function headerUnlocked(self) {
@@ -231,37 +231,37 @@ export function headerUnlocked(self) {
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}	
+	}
 }
 
-export function disableNextButton(self, disabled=true) {
+export function disableNextButton(self, disabled = true) {
 	btn_next.disabled = disabled
 }
 
-export function disablePrevButton(self, disabled=true) {
+export function disablePrevButton(self, disabled = true) {
 	btn_prev.disabled = disabled
 }
 
 export function keyboardAction(self, actionName) {
-	if (actionName=='save') {
+	if (actionName == 'save') {
 		frm.acceptInput()
 		btn_save.click()
-	} else if (actionName=='new') {
+	} else if (actionName == 'new') {
 		frm.acceptInput()
 		btn_new.click()
-	} else if (actionName=='escape') {
+	} else if (actionName == 'escape') {
 		frm.acceptInput()
 		if (frm.isLocked() || frm.isNew()) {
 			backToList(self)
 		} else {
 			btn_edit.click() // untuk lock data
 		}
-	} else if (actionName=='togleEdit') {
+	} else if (actionName == 'togleEdit') {
 		frm.acceptInput()
 		btn_edit.click()
-	} else if (actionName=='right') {
+	} else if (actionName == 'right') {
 		btn_next.click()
-	} else if (actionName=='left') {
+	} else if (actionName == 'left') {
 		btn_prev.click()
 	}
 }
@@ -281,41 +281,41 @@ async function newData(self, datainit) {
 async function openData(self, id) {
 	const url = `/${Context.moduleName}/struct-open`
 	try {
-		const result = await Module.apiCall(url, { id }) 
-		return result 
+		const result = await Module.apiCall(url, { id })
+		return result
 	} catch (err) {
-		throw err	
-	} 	
+		throw err
+	}
 }
 
 async function createData(self, data, formData) {
 	const url = `/${Context.moduleName}/struct-create`
 	try {
-		const result = await Module.apiCall(url, { data, source: Source }, formData) 
-		return result 
+		const result = await Module.apiCall(url, { data, source: Source }, formData)
+		return result
 	} catch (err) {
-		throw err	
-	} 	
+		throw err
+	}
 }
 
 async function updateData(self, data, formData) {
 	const url = `/${Context.moduleName}/struct-update`
 	try {
-		const result = await Module.apiCall(url, { data, source: Source }, formData) 
-		return result 
+		const result = await Module.apiCall(url, { data, source: Source }, formData)
+		return result
 	} catch (err) {
-		throw err	
-	} 
+		throw err
+	}
 }
 
 async function deleteData(self, id) {
 	const url = `/${Context.moduleName}/struct-delete`
 	try {
-		const result = await Module.apiCall(url, { id, source: Source }) 
-		return result 
+		const result = await Module.apiCall(url, { id, source: Source })
+		return result
 	} catch (err) {
-		throw err	
-	} 
+		throw err
+	}
 }
 
 
@@ -325,7 +325,7 @@ async function backToList(self, evt) {
 	if (frm.isChanged()) {
 		// ada perubahan data, konfirmasi apakah mau lanjut back
 		var ret = await $fgta5.MessageBox.confirm(Module.BACK_CONFIRM)
-		if (ret=='ok') {
+		if (ret == 'ok') {
 			// user melanjutkan back, walaupun data berubah
 			// reset dahulu data form
 			frm.reset()
@@ -337,14 +337,14 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.itemclassStructList
+		const listId = Context.Sections.itemclassStructList
 		const listSection = Crsl.Items[listId]
-		listSection.show({direction: 1})
+		listSection.show({ direction: 1 })
 	}
 }
 
 
-async function  frm_locked(self, evt) {
+async function frm_locked(self, evt) {
 	console.log('frm_locked')
 
 	CurrentSection.Title = TitleWhenView
@@ -368,18 +368,18 @@ async function  frm_locked(self, evt) {
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}	
+	}
 
 	// jika heder form dalam kondisi lock,
 	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
 		btn_edit.disabled = true
 		btn_new.disabled = true
-	} 
+	}
 
 }
 
-async function  frm_unlocked(self, evt) {
+async function frm_unlocked(self, evt) {
 	console.log('frm_unlocked')
 
 	if (frm.isNew()) {
@@ -410,11 +410,11 @@ async function  frm_unlocked(self, evt) {
 
 async function setPrimaryKeyState(self, opt) {
 	const obj_pk = frm.getPrimaryInput()
-	obj_pk.disabled = opt.disabled===true
-	if (opt.placeholder!==undefined) {
+	obj_pk.disabled = opt.disabled === true
+	if (opt.placeholder !== undefined) {
 		obj_pk.placeholder = opt.placeholder
 	}
-	if (opt.value!==undefined) {
+	if (opt.value !== undefined) {
 		obj_pk.value = opt.value
 	}
 }
@@ -439,11 +439,11 @@ async function btn_edit_click(self, evt) {
 
 async function btn_new_click(self, evt) {
 	console.log('new')
-	const sourceSection = evt.target.getAttribute('data-sectionsource') 
+	const sourceSection = evt.target.getAttribute('data-sectionsource')
 
 	const itemclassStructList = self.Modules.itemclassStructList
 	const listsecid = itemclassStructList.Section.Id
-	const fromListSection = sourceSection===listsecid
+	const fromListSection = sourceSection === listsecid
 
 	if (fromListSection) {
 		console.log('tambahkan row baru')
@@ -454,7 +454,7 @@ async function btn_new_click(self, evt) {
 		let cancel_new = false
 		if (frm.isChanged()) {
 			const ret = await $fgta5.MessageBox.confirm(Module.NEWDATA_CONFIRM)
-			if (ret=='cancel') {
+			if (ret == 'cancel') {
 				cancel_new = true
 			}
 		}
@@ -464,14 +464,14 @@ async function btn_new_click(self, evt) {
 	}
 
 	if (frm.AutoID) {
-		setPrimaryKeyState(self, {disabled:true, placeholder:'[AutoID]'})
+		setPrimaryKeyState(self, { disabled: true, placeholder: '[AutoID]' })
 	} else {
-		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
+		setPrimaryKeyState(self, { disabled: false, placeholder: 'ID' })
 	}
-	
-	
+
+
 	try {
-	
+
 		// ambil id header
 		const itemclassHeaderEdit = self.Modules.itemclassHeaderEdit
 		const frmHeader = itemclassHeaderEdit.getHeaderForm()
@@ -544,22 +544,22 @@ async function btn_save_click(self, evt) {
 			// skip save jika tidak ada perubahan data
 			console.log('tidak ada perubahan data, skip save')
 			return
-		} 
-		
+		}
+
 		// ambil hanya data yang berubah
 		dataToSave = frm.getDataChanged()
 
 	} else {
 
 		// untuk posisi data baru, ambil semua data
-		dataToSave = frm.getData()		
+		dataToSave = frm.getData()
 	}
 
-	
+
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
-	if (files!=null) {
+	if (files != null) {
 		formData = new FormData();
 		for (let name in files) {
 			const file = files[name]
@@ -591,7 +591,7 @@ async function btn_save_click(self, evt) {
 		if (isNewData) {
 			result = await createData(self, dataToSave, formData)
 		} else {
- 			result = await updateData(self, dataToSave, formData)
+			result = await updateData(self, dataToSave, formData)
 		}
 
 		console.log('result', result)
@@ -603,7 +603,7 @@ async function btn_save_click(self, evt) {
 		const data = await openData(self, idValue)
 		console.log('data', data)
 
-		
+
 
 		CurrentState.currentOpenedId = idValue
 
@@ -612,12 +612,12 @@ async function btn_save_click(self, evt) {
 			obj_pk.value = idValue
 		} else {
 			// jika bukan autoID, kunci field PK menjadi disabled
-			setPrimaryKeyState(self, {disabled:true})
+			setPrimaryKeyState(self, { disabled: true })
 
 		}
 
 		// update form
-		frm.setData(data)	
+		frm.setData(data)
 
 
 		// Extender Saving
@@ -672,7 +672,7 @@ async function btn_del_click(self, evt) {
 
 	// konfirmasi untuk delete data
 	const resp = await $fgta5.MessageBox.confirm(Module.DELETE_CONFIRM + `id: ${idValue}`)
-	if (resp!='ok') {
+	if (resp != 'ok') {
 		return
 	}
 
@@ -696,8 +696,8 @@ async function btn_del_click(self, evt) {
 		}
 
 		const result = await deleteData(self, idValue)
-		
-		
+
+
 
 		// Extender Delete
 		// export async function itemclassStructEdit_dataDeleted(self, data) {}
@@ -739,7 +739,7 @@ async function btn_reset_click(self, evt) {
 		if (frm.isChanged()) {
 			// ada perubahan data, tampilkan konfirmasi perubahan data
 			var resp = await $fgta5.MessageBox.confirm(Module.RESET_CONFIRM)
-			if (resp!='ok') {
+			if (resp != 'ok') {
 				// user klik tombil cancel
 				console.log('cancel reset')
 				return
@@ -771,14 +771,14 @@ async function btn_recordstatus_click(self, evt) {
 		Context,
 		sectionReturn: CurrentSection
 	}
-	
+
 	if (frm.isNew()) {
-		console.warn('tidak bisa buka rescord status jika data baru')	
+		console.warn('tidak bisa buka rescord status jika data baru')
 		$fgta5.MessageBox.warning('Record Status bisa dibuka setelah data disimpan')
 		return;
 	}
 
-	pageHelper.openSection(self, 'fRecord-section', params, async ()=>{
+	pageHelper.openSection(self, 'fRecord-section', params, async () => {
 
 		let mask = $fgta5.Modal.createMask()
 		try {
@@ -801,7 +801,7 @@ async function btn_recordstatus_click(self, evt) {
 			const fn_addrecordinfo_name = 'itemclassStructEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self,  data)
+				await fn_addrecordinfo(self, data)
 			}
 
 		} catch (err) {
@@ -822,12 +822,12 @@ async function btn_logs_click(self, evt) {
 	}
 
 	if (frm.isNew()) {
-		console.warn('tidak bisa buka logs jika data baru')	
+		console.warn('tidak bisa buka logs jika data baru')
 		$fgta5.MessageBox.warning('Logs bisa dibuka setelah data disimpan')
 		return;
 	}
 
-	pageHelper.openSection(self, 'fLogs-section', params, async ()=>{
+	pageHelper.openSection(self, 'fLogs-section', params, async () => {
 		// get log data
 		const pk = frm.getPrimaryInput()
 		const id = pk.value
@@ -845,9 +845,9 @@ async function btn_logs_click(self, evt) {
 				id: id
 			}
 
-			const result = await Module.apiCall(url, {  
+			const result = await Module.apiCall(url, {
 				criteria
-			}) 
+			})
 
 			const sc = document.getElementById('fLogs-section')
 			const tbody = sc.querySelector('tbody')
