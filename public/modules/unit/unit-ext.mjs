@@ -2,40 +2,20 @@ import Context from './unit-context.mjs'
 
 export const extenderHeader = null
 
+const VIEW_VARIANCE = 'view'
+
 
 export async function init(self, args) {
 	console.log('initializing unitExtender ...')
 
-	// tambahkan extender inisiasi module unit
+}
 
 
-	/* // contoh menambahkan content dari template extender
-	{
-		const target = secRec.querySelector('#fRecord-section div[name="column"][exteder]')
-		const tpl = document.getElementById('tpl-record-panel')
-		if (tpl!=null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			target.prepend(clone)
-		}
-	}
-	*/
+export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
+	const onView = Context.variance == VIEW_VARIANCE
 
-
-
-	/* // contoh menambahkan custom validator
-	// pada html, tambahkan validator="cobaFunction:paramValue"
-	const frm = self.Modules.coaHeaderEdit.getHeaderForm()
-	const obj_coa_normal = frm.Inputs['coaHeaderEdit-obj_coa_normal']
-	$validators.addCustomValidator('cobaFunction', (v, param)=>{
-		  console.log(v)
-		  setTimeout(()=>{
-				obj_coa_normal.setError('ini error')
-		  }, 500)
-	})	
-
-
-	*/
-
+	CurrentState.Actions.newdata.suspend(onView)
+	CurrentState.Actions.edit.suspend(onView)
 
 }
 

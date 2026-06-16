@@ -3,9 +3,22 @@ import Context from './struct-context.mjs'
 export const extenderHeader = null
 export const extenderMember = null
 
+const VIEW_VARIANCE = 'view'
+
+
 export async function init(self, args) {
 	console.log('initializing structExtender ...')
 }
+
+
+export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
+	const onView = Context.variance == VIEW_VARIANCE
+
+	CurrentState.Actions.newdata.suspend(onView)
+	CurrentState.Actions.edit.suspend(onView)
+
+}
+
 
 
 export function obj_struct_parent_selecting_criteria(self, obj_struct_parent, frm, criteria, sort, evt) {

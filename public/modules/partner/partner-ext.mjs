@@ -5,10 +5,21 @@ export const extenderHeader = null
 export const extenderBank = null
 export const extenderContact = null
 
+const VIEW_VARIANCE = 'view'
+
 
 export async function init(self, args) {
 	console.log('initializing partnerExtender ...')
 }
+
+export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
+	const onView = Context.variance == VIEW_VARIANCE
+
+	CurrentState.Actions.newdata.suspend(onView)
+	CurrentState.Actions.edit.suspend(onView)
+
+}
+
 
 export async function obj_partnertype_id_selected(self, obj_partnertype_id, frm, evt) {
 	if (!evt.detail.changed) {
