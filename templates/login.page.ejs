@@ -84,16 +84,16 @@
 </head>
 
 <body>
+	<!-- <%= moduleName %> -->
+	<main id="mainapp">
+		<%- include(loginPagePath) %>
+	</main>
+
 	<div id="loadingindicator">
 		<div style="font-family: system-ui, sans-serif">
 			loading module...
 		</div>
 	</div>
-
-	<!-- <%= moduleName %> -->
-	<main id="mainapp">
-		<%- include(loginPagePath) %>
-	</main>
 </body>
 
 <script type="module">

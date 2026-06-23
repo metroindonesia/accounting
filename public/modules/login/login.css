@@ -73,7 +73,7 @@ body {
 	cursor: pointer;
 	user-select: none;
 	font-size: 16px;
-	z-index: 10;
+	/* z-index: 10; */
 }
 
 
