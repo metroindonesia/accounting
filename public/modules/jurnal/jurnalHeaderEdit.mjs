@@ -111,6 +111,8 @@ export async function init(self, args) {
 	CurrentState.Actions = {
 		newdata: btn_new,
 		edit: btn_edit,
+		delete: btn_del,
+		save: btn_save,
 		commit: btn_actionCommit,
 		uncommit: btn_actionUncommit,
 		post: btn_actionPost,
@@ -142,6 +144,7 @@ export async function init(self, args) {
 		console.log('buat function di extender: export function setupActionButtonEvent(self, buttons)')
 	}
 
+	
 	
 	// Combobox: obj_jurnaltype_id
 	obj_jurnaltype_id.addEventListener('selected', (evt)=>{

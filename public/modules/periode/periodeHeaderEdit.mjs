@@ -86,6 +86,8 @@ export async function init(self, args) {
 	CurrentState.Actions = {
 		newdata: btn_new,
 		edit: btn_edit,
+		delete: btn_del,
+		save: btn_save,
 		close: btn_actionClose,
 		reopen: btn_actionReopen,	
 	}
@@ -111,6 +113,7 @@ export async function init(self, args) {
 		console.log('buat function di extender: export function setupActionButtonEvent(self, buttons)')
 	}
 
+	
 		
 	
 }

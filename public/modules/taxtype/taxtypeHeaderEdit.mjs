@@ -80,7 +80,9 @@ export async function init(self, args) {
 	// set actions
 	CurrentState.Actions = {
 		newdata: btn_new,
-		edit: btn_edit,	
+		edit: btn_edit,
+		delete: btn_del,
+		save: btn_save,	
 	}
 	
 	// export async function taxtypeHeaderEdit_init(self, CurrentState)
@@ -91,8 +93,18 @@ export async function init(self, args) {
 	}
 
 
-	
+	// buat di Extender: export function setupActionButtonEvent(self, frm, CurrentState, buttons) { }
+	const fn_setupactionbuttonevent_name = 'setupActionButtonEvent'
+	const fn_setupactionbuttonevent = Extender[fn_setupactionbuttonevent_name]
+	if (typeof fn_setupactionbuttonevent === 'function') {
+		fn_setupactionbuttonevent(self, frm, CurrentState, {
+		})
+	} else {
+		console.warn('Extender.setupActionButtonEvent is not implemented')
+		console.log('buat function di extender: export function setupActionButtonEvent(self, buttons)')
+	}
 
+	
 	
 	// Combobox: obj_bill_coa_id
 	obj_bill_coa_id.addEventListener('selecting', async (evt)=>{
