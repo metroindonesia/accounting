@@ -12,11 +12,11 @@ import context from '@agung_dhewe/webapps/src/context.js'
 import logger from '@agung_dhewe/webapps/src/logger.js'
 import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
 
-import * as Extender from './extenders/coagroup.apiext.js'
+import * as Extender from './extenders/brand.apiext.js'
 
-const moduleName = 'coagroup'
+const moduleName = 'brand'
 const headerSectionName = 'header'
-const headerTableName = 'public.coagroup' 	
+const headerTableName = 'public.brand' 	
 
 // api: account
 export default class extends Api {
@@ -29,23 +29,23 @@ export default class extends Api {
 	// dipanggil dengan model snake syntax
 	// contoh: header-list
 	//         header-open-data
-	async init(body) { return await coagroup_init(this, body) }
+	async init(body) { return await brand_init(this, body) }
 
 	// extender call
-	async execute(body) { return await coagroup_execute(this, body) }
+	async execute(body) { return await brand_execute(this, body) }
 
 	// header
-	async headerList(body) { return await coagroup_headerList(this, body) }
-	async headerOpen(body) { return await coagroup_headerOpen(this, body) }
-	async headerUpdate(body) { return await coagroup_headerUpdate(this, body)}
-	async headerCreate(body) { return await coagroup_headerCreate(this, body)}
-	async headerDelete(body) { return await coagroup_headerDelete(this, body) }
+	async headerList(body) { return await brand_headerList(this, body) }
+	async headerOpen(body) { return await brand_headerOpen(this, body) }
+	async headerUpdate(body) { return await brand_headerUpdate(this, body)}
+	async headerCreate(body) { return await brand_headerCreate(this, body)}
+	async headerDelete(body) { return await brand_headerDelete(this, body) }
 
 			
 }	
 
 // init module
-async function coagroup_init(self, body) {
+async function brand_init(self, body) {
 	const req = self.req
 
 	// set sid untuk session ini, diperlukan ini agar session aktif
@@ -75,9 +75,9 @@ async function coagroup_init(self, body) {
 			setting: {}
 		}
 		
-		if (typeof Extender.coagroup_init === 'function') {
-			// export async function coagroup_init(self, initialData) {}
-			await Extender.coagroup_init(self, initialData)
+		if (typeof Extender.brand_init === 'function') {
+			// export async function brand_init(self, initialData) {}
+			await Extender.brand_init(self, initialData)
 		}
 
 		return initialData
@@ -89,7 +89,7 @@ async function coagroup_init(self, body) {
 
 
 // execute extender function
-async function coagroup_execute(self, body) {
+async function brand_execute(self, body) {
 	const { fnName } = body
 
 	if (fnName==null || fnName=='') {
@@ -97,8 +97,8 @@ async function coagroup_execute(self, body) {
 	}
 
 	if (typeof Extender[fnName] === 'function') {
-		// export async function [fnName](self, db, body, coagroup_log) {}
-		return await Extender[fnName](self, db, body, coagroup_log)
+		// export async function [fnName](self, db, body, brand_log) {}
+		return await Extender[fnName](self, db, body, brand_log)
 	} else {
 		// api function extender tidak ditemukan
 		throw new Error(`${fnName} tidak ditmukan di extender`)
@@ -107,7 +107,7 @@ async function coagroup_execute(self, body) {
 
 
 // data logging
-async function coagroup_log(self, body, startTime, tablename, id, action, data={}, remark='') {
+async function brand_log(self, body, startTime, tablename, id, action, data={}, remark='') {
 	const { source } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -126,11 +126,11 @@ async function coagroup_log(self, body, startTime, tablename, id, action, data={
 
 
 
-async function coagroup_headerList(self, body) {
+async function brand_headerList(self, body) {
 	const tablename = headerTableName
 	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
 	const searchMap = {
-		searchtext: `coagroup_name ILIKE '%' || \${searchtext} || '%'`,
+		searchtext: `brand_name ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
@@ -177,15 +177,10 @@ async function coagroup_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coagroup.coarpt_id)
+			// lookup: unit_name dari field unit_name pada table public.unit dimana (public.unit.unit_id = public.brand.unit_id)
 			{
-				const { coarpt_name } = await sqlUtil.lookupdb(db, 'public.coarpt', 'coarpt_id', row.coarpt_id)
-				row.coarpt_name = coarpt_name
-			}
-			// lookup: coagroup_parent_name dari field coagroup_name pada table public.coagroup dimana (public.coagroup.coagroup_id = public.coagroup.coagroup_parent)
-			{
-				const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', row.coagroup_parent)
-				row.coagroup_parent_name = coagroup_name
+				const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', row.unit_id)
+				row.unit_name = unit_name
 			}
 			
 			// pasang extender di sini
@@ -214,13 +209,13 @@ async function coagroup_headerList(self, body) {
 	}
 }
 
-async function coagroup_headerOpen(self, body) {
+async function brand_headerOpen(self, body) {
 	const tablename = headerTableName
 
 	try {
 		const { id } = body 
-		const criteria = { coagroup_id: id }
-		const searchMap = { coagroup_id: `coagroup_id = \${coagroup_id}`}
+		const criteria = { brand_id: id }
+		const searchMap = { brand_id: `brand_id = \${brand_id}`}
 		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
 		const sql = sqlUtil.createSqlSelect({
 			tablename: tablename, 
@@ -236,15 +231,10 @@ async function coagroup_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
-		// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coagroup.coarpt_id)
+		// lookup: unit_name dari field unit_name pada table public.unit dimana (public.unit.unit_id = public.brand.unit_id)
 		{
-			const { coarpt_name } = await sqlUtil.lookupdb(db, 'public.coarpt', 'coarpt_id', data.coarpt_id)
-			data.coarpt_name = coarpt_name
-		}
-		// lookup: coagroup_parent_name dari field coagroup_name pada table public.coagroup dimana (public.coagroup.coagroup_id = public.coagroup.coagroup_parent)
-		{
-			const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', data.coagroup_parent)
-			data.coagroup_parent_name = coagroup_name
+			const { unit_name } = await sqlUtil.lookupdb(db, 'public.unit', 'unit_id', data.unit_id)
+			data.unit_name = unit_name
 		}
 		
 
@@ -274,8 +264,8 @@ async function coagroup_headerOpen(self, body) {
 }
 
 
-async function coagroup_headerCreate(self, body) {
-	const { source='coagroup', data={} } = body
+async function brand_headerCreate(self, body) {
+	const { source='brand', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -294,7 +284,7 @@ async function coagroup_headerCreate(self, body) {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', doc_id:'COGR' }
+			const args = { section: 'header', doc_id:'BRAN' }
 
 			
 			// buat short sequencer	
@@ -307,9 +297,9 @@ async function coagroup_headerCreate(self, body) {
 				await Extender.sequencerSetup(self, tx, sequencer, data, args)
 			}
 
-			// generate short id sesuai prefix (default: COGR) reset pertahun
+			// generate short id sesuai prefix (default: BRAN) reset pertahun
 			const seqdata = await sequencer.yearlyshort(args.doc_id)
-			data.coagroup_id = seqdata.id
+			data.brand_id = seqdata.id
 
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating
 			if (typeof Extender.headerCreating === 'function') {
@@ -332,7 +322,7 @@ async function coagroup_headerCreate(self, body) {
 			}
 
 			// record log
-			coagroup_log(self, body, startTime, tablename, ret.coagroup_id, 'CREATE', logMetadata)
+			brand_log(self, body, startTime, tablename, ret.brand_id, 'CREATE', logMetadata)
 
 			return ret
 		})
@@ -343,8 +333,8 @@ async function coagroup_headerCreate(self, body) {
 	}
 }
 
-async function coagroup_headerUpdate(self, body) {
-	const { source='coagroup', data={} } = body
+async function brand_headerUpdate(self, body) {
+	const { source='brand', data={} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -370,7 +360,7 @@ async function coagroup_headerUpdate(self, body) {
 			}
 
 			// eksekusi update
-			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['coagroup_id'])
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['brand_id'])
 			const ret = await cmd.execute(data)
 
 			
@@ -383,7 +373,7 @@ async function coagroup_headerUpdate(self, body) {
 			}			
 
 			// record log
-			coagroup_log(self, body, startTime, tablename, data.coagroup_id, 'UPDATE')
+			brand_log(self, body, startTime, tablename, data.brand_id, 'UPDATE')
 
 			return ret
 		})
@@ -396,7 +386,7 @@ async function coagroup_headerUpdate(self, body) {
 }
 
 
-async function coagroup_headerDelete(self, body) {
+async function brand_headerDelete(self, body) {
 	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
@@ -408,7 +398,7 @@ async function coagroup_headerDelete(self, body) {
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {coagroup_id: id}
+			const dataToRemove = {brand_id: id}
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender headerDeleting
 			if (typeof Extender.headerDeleting === 'function') {
@@ -419,7 +409,7 @@ async function coagroup_headerDelete(self, body) {
 			
 
 			// hapus data header
-			const cmd = sqlUtil.createDeleteCommand(tablename, ['coagroup_id'])
+			const cmd = sqlUtil.createDeleteCommand(tablename, ['brand_id'])
 			const deletedRow = await cmd.execute(dataToRemove)
 
 			const logMetadata = {}
@@ -431,7 +421,7 @@ async function coagroup_headerDelete(self, body) {
 			}
 
 			// record log
-			coagroup_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
+			brand_log(self, body, startTime, tablename, id, 'DELETE', logMetadata)
 
 			return deletedRow
 		})
