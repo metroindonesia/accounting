@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./src/index.js",
   "scripts": {
-    "server": "node .",
+    "server": "node --preserve-symlinks .",
     "debug": "nodemon .",
     "generate": "node ./generate.js",
     "x-generate": "node ./node_modules/@agung_dhewe/webapps/src/generator/trygenerate.js",
