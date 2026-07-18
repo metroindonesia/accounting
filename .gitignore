@@ -153,3 +153,5 @@ production.config.js
 run-prod.sh
 
 package-lock.json
+
+.DS_Store
