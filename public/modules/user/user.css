@@ -1,80 +1,10 @@
-/*
-.btn {
-	width: 100px;
-	height: 24px;
-
-	display: flex;
-	align-items: center;
-
-	border: none;
-	cursor: pointer;
-
-	color: white;
-	font-size: 10px;
-	letter-spacing: 2px;
-	font-weight: bold;
-
-	box-shadow:
-		0 1px 2px rgba(0, 0, 0, 0.15);
-
-	overflow: hidden;
-
-	transition:
-		transform .1s ease,
-		filter .15s ease;
-
-	padding-left: 0;
-
+.fgta5-gridview-row[data-isdisabled="true"] {
+	background-color: #ccc;
 }
 
-.btn:hover {
-	filter: brightness(1.5);
+.fgta5-gridview-row[data-isdisabled="true"] td {
+	color: #999;
 }
-
-.btn:active {
-	transform: translateY(1px);
-}
-
-.btn-icon {
-	width: 32px;
-	height: 100%;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	font-size: 12px;
-
-	background: rgba(0, 0, 0, 0.12);
-}
-
-.btn-text {
-	flex: 1;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-
-
-.btn-blue {
-	background: #245a99;
-}
-
-.btn-soft {
-	background: #bfd3ea;
-}
-
-.btn-orange {
-	background: #ffa31a;
-}
-
-.btn-yellow {
-	background: #f7c20f;
-}
-
-*/
 
 
 .btn-setpassword {

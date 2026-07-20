@@ -16,6 +16,7 @@ const __dirname = path.dirname(__filename);
 const webapp = createWebApplication()
 const appName = process.env.APPNAME
 const appTitle = process.env.APPTITLE
+const moduleWhiteList = ['profile']
 
 
 main()
@@ -96,6 +97,11 @@ async function main() {
 			new RegExp(`^http://localhost:${port}(:\\d+)?$`)
 		],
 		fnParseModuleRequest: async (req) => {
+			const moduleName = req.params.modulename
+			if (moduleWhiteList.includes(moduleName)) {
+				return true
+			}
+
 			await authorizeRequest(db, req)
 		}
 	})
