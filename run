@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# 1. Baca PORT dari .env
+PORT=""
+if [ -f .env ]; then
+    PORT=$(grep -E "^PORT=" .env | cut -d'=' -f2- | tr -d ' "\r')
+fi
+
+if [ -z "$PORT" ]; then
+    echo "Error: Port tidak didefinisikan di dalam file .env!"
+    exit 1
+fi
+
+# 2. Cek apakah port sedang digunakan, jika ya kill process-nya
+echo "Memeriksa port $PORT..."
+PID=$(lsof -t -i :"$PORT" -sTCP:LISTEN)
+if [ -n "$PID" ]; then
+    echo "Port $PORT terpakai oleh PID: $PID. Menghentikan proses..."
+    kill -9 $PID 2>/dev/null
+fi
+
+# 3. Jalankan server
+echo "Menjalankan server..."
+npm run server

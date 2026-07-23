@@ -288,7 +288,7 @@ async function unit_headerCreate(self, body) {
 			}
 
 			// generate short id sesuai prefix (default: UNIT) reset pertahun
-			const seqdata = await sequencer.yearlyshort(args.prefix)
+			const seqdata = await sequencer.yearlyshort(args.doc_id)
 			data.unit_id = seqdata.id
 
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

@@ -308,7 +308,7 @@ async function program_headerCreate(self, body) {
 			}
 
 			// generate short id sesuai prefix (default: PROG) reset pertahun
-			const seqdata = await sequencer.yearlyshort(args.prefix)
+			const seqdata = await sequencer.yearlyshort(args.doc_id)
 			data.program_id = seqdata.id
 
 			// apabila ada keperluan pengelohan data sebelum disimpan, lakukan di extender headerCreating

@@ -159,6 +159,21 @@ export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 
 }
 
+
+export function headerList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', (evt) => {
+		const tr = evt.detail.tr
+		const data = evt.detail.args.data
+		const { user_isdisabled } = data
+
+		if (user_isdisabled) {
+			tr.setAttribute('data-isdisabled', true)
+		} else {
+			tr.removeAttribute('data-isdisabled', true)
+		}
+	})
+}
+
 export function userHeaderEdit_formOpened(self, frm, CurrentState) {
 	const onDetilOnly = Context.variance == DETILONLY_VARIANCE
 	const obj = frm.Inputs[_user_name]
