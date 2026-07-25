@@ -12,7 +12,19 @@ export async function init(self, args) {
 }
 
 
+export function headerList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', (evt) => {
+		const tr = evt.detail.tr
+		const data = evt.detail.args.data
+		const { permission_isdisabled } = data
 
+		if (permission_isdisabled) {
+			tr.setAttribute('data-isdisabled', true)
+		} else {
+			tr.removeAttribute('data-isdisabled', true)
+		}
+	})
+}
 
 export function permissionHeaderEdit_formOpened(self, frm, CurrentState) {
 	const obj = frm.Inputs[_permission_name]

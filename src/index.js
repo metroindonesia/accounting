@@ -15,6 +15,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const webapp = createWebApplication()
 const appName = process.env.APPNAME
+const appTitle = process.env.APPTITLE
+const moduleWhiteList = ['profile']
 
 
 main()
@@ -56,6 +58,7 @@ async function main() {
 		...applicationSetting,
 		...{
 			appName,
+			appTitle,
 			fgta5jsDebugMode,
 			fgta5jsVersion,
 			appDebugMode,
@@ -90,11 +93,15 @@ async function main() {
 		appConfig,
 		router,
 		allowedOrigins: [
-			// /^https:\/\/[a-z0-9.-]+\.transfashion\.id(:\d+)?$/,
 			new RegExp(`^https?://[a-z0-9.-]*${escapedDomain}(:\\d+)?$`),
-			/^http:\/\/localhost:3003(:\d+)?$/
+			new RegExp(`^http://localhost:${port}(:\\d+)?$`)
 		],
 		fnParseModuleRequest: async (req) => {
+			const moduleName = req.params.modulename
+			if (moduleWhiteList.includes(moduleName)) {
+				return true
+			}
+
 			await authorizeRequest(db, req)
 		}
 	})

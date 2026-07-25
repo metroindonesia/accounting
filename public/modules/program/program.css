@@ -1,0 +1,7 @@
+.fgta5-gridview-row[data-isdisabled="true"] {
+	background-color: #ccc;
+}
+
+.fgta5-gridview-row[data-isdisabled="true"] td {
+	color: #999;
+}

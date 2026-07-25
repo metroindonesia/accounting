@@ -52,37 +52,6 @@ if (inputParam == 'all') {
 		});
 	}
 	console.log('Semua antrean selesai!');
-
-
-
-	/*
-	// query database
-	const sqlGen = "select generator_id from core.generator order by generator_id"
-	const rowsGen = await db.any(sqlGen)
-	for (let row of rowsGen) {
-		const generator_id = row.generator_id
-		args.push(generator_id)
-	}
-
-	for (const arg of args) {
-		console.log(`\n--- Generating program id: ${arg} ---`);
-
-		// Membungkus spawn agar bisa di-await
-		await new Promise((resolve) => {
-			const child = spawn('node', [scriptPath, arg], {
-				stdio: 'inherit',
-				shell: true
-			});
-
-			child.on('close', (code) => {
-				console.log(`--- Selesai dengan kode: ${code} ---\n`);
-				resolve(); // Lanjut ke iterasi loop berikutnya
-			});
-		});
-	}
-	console.log('Semua antrean selesai!');
-
-	*/
 	process.exit(0)
 
 } else {

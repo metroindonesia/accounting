@@ -37,7 +37,7 @@ async function container_init(self, body) {
 
 	try {
 		return {
-			title: 'Accounting & Finance',
+			title: req.app.locals.appConfig.appTitle,
 			userId: req.session.user.userId,
 			userName: req.session.user.userName,
 			userFullname: req.session.user.userFullname,
