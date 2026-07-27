@@ -102,6 +102,21 @@ comment on column public."struct".struct_istransaction is '';
 
 
 -- =============================================
+-- FIELD: struct_ishaspnl boolean
+-- =============================================
+-- ADD struct_ishaspnl
+alter table public."struct" add struct_ishaspnl boolean not null default false;
+comment on column public."struct".struct_ishaspnl is '';
+
+-- MODIFY struct_ishaspnl
+alter table public."struct"
+	alter column struct_ishaspnl type boolean,
+	ALTER COLUMN struct_ishaspnl SET DEFAULT false,
+	ALTER COLUMN struct_ishaspnl SET NOT NULL;
+comment on column public."struct".struct_ishaspnl is '';
+
+
+-- =============================================
 -- FIELD: structhrk_id smallint
 -- =============================================
 -- ADD structhrk_id

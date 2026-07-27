@@ -150,8 +150,8 @@ public/local
 
 production.config.js
 
-run-prod.sh
-start-prod.sh
+run-*.sh
+start-*.sh
 
 package-lock.json
 

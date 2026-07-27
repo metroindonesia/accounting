@@ -64,11 +64,74 @@ export default class extends Module {
 			})
 
 
+			const reporttype = document.getElementById('reporttype')
 
 			const unitselect = document.getElementById('unitselect')
+			const structselect = document.getElementById('structselect')
 			const siteselect = document.getElementById('siteselect')
+			const projectselect = document.getElementById('projectselect')
+
+			unitselect.hide = (hidden) => { hideSelector(unitselect, hidden) }
+			structselect.hide = (hidden) => { hideSelector(structselect, hidden) }
+			siteselect.hide = (hidden) => { hideSelector(siteselect, hidden) }
+			projectselect.hide = (hidden) => { hideSelector(projectselect, hidden) }
+
+
+			reporttype.addEventListener('change', (evt) => {
+				const param = reportPage.getParams()
+				if (param.scope == 'unitsite') {
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide(false)
+					projectselect.hide()
+
+				} else if (param.scope == 'unitstruct') {
+					unitselect.hide(false)
+					structselect.hide(false)
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'unitproject') {
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide(false)
+
+				} else if (param.scope == 'site') {
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide(false)
+					projectselect.hide()
+
+				} else if (param.scope == 'unit') {
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'struct') {
+					unitselect.hide()
+					structselect.hide(false)
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'project') {
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide(false)
+
+				} else {
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide()
+				}
+			})
+
 
 			populateUnit(unitselect)
+			populateUnit(structselect)
 			populateSite(siteselect)
 
 		} catch (err) {
@@ -78,9 +141,17 @@ export default class extends Module {
 	}
 
 
+}
 
 
-
+function hideSelector(selector, hidden = true) {
+	if (hidden) {
+		selector.setAttribute('disabled', '')
+		selector.classList.add('hidden')
+	} else {
+		selector.removeAttribute('disabled')
+		selector.classList.remove('hidden')
+	}
 }
 
 

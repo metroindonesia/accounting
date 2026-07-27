@@ -29,18 +29,34 @@ export async function init(self, args) {
 	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
+// export function getParams() {
+// 	const tgl = document.getElementById('rptLapkeu_tgl').value
+// 	const typelap = document.getElementById('typelap').value
+
+// 	return {
+// 		// date: '2024-01-31',  // TODO Ganti ini
+// 		date: tgl,
+// 		// isytd: false
+// 		// isytd: isytdval
+// 		typelap
+// 	}
+// }
+
+
 export function getParams() {
 	const tgl = document.getElementById('rptLapkeu_tgl').value
-	const typelap = document.getElementById('typelap').value
+	const reporttype = document.getElementById('reporttype').value
+
+	const [report, scope, range] = reporttype.split('|')
 
 	return {
-		// date: '2024-01-31',  // TODO Ganti ini
 		date: tgl,
-		// isytd: false
-		// isytd: isytdval
-		typelap
+		isytd: range == 'ytd' ? true : false,
+		scope: scope,
+		report: report
 	}
 }
+
 
 
 export function getReportObjects() {

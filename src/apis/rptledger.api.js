@@ -27,6 +27,7 @@ export default class extends Api {
 	async fetch(body) { return await reportviewer_fetch(this, body) }
 
 	async getUnitList(body) { return await reportviewer_getUnitList() }
+	async getStructList(body) { return await reportviewer_getStructList() }
 	async getSiteList(body) { return await reportviewer_getSiteList() }
 }
 
@@ -228,6 +229,15 @@ async function reportviewer_getUnitList() {
 	}
 }
 
+async function reportviewer_getStructList() {
+	try {
+		const sql = `select struct_id, struct_name from public.struct order by struct_name`
+		const rows = await db.any(sql)
+		return rows
+	} catch (err) {
+		throw err
+	}
+}
 
 async function reportviewer_getSiteList() {
 	try {

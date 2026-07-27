@@ -5,28 +5,47 @@
 		<div id="filter-container">
 
 			<select id="reporttype">
-				<option value="all|mtd">Buku besar MTD - all</option>
-				<option value="unit|mtd">Buku besar MTD - unit</option>
-				<option value="site|mtd">Buku besar MTD - site</option>
-				<option value="siteunit|mtd">Buku besar MTD - site unit</option>
-				<option value="all|ytd">Buku besar YTD - all</option>
-				<option value="unit|ytd">Buku besar YTD - unit</option>
-				<option value="site|ytd">Buku besar YTD - site</option>
-				<option value="siteunit|ytd">Buku besar YTD - site unit</option>
+				<optgroup label="Month to date">
+					<option value="all|mtd">Buku besar MTD - all</option>
+					<option value="unit|mtd">Buku besar MTD - unit</option>
+					<option value="struct|mtd">Buku besar MTD - struct</option>
+					<option value="site|mtd">Buku besar MTD - site</option>
+					<option value="project|mtd">Buku besar MTD - project</option>
+					<option value="unitstruct|mtd">Buku besar MTD - unit struct</option>
+					<option value="unitsite|mtd">Buku besar MTD - unit site</option>
+					<option value="unitproject|mtd">Buku besar MTD - unit project</option>
+				</optgroup>	
+
+				<optgroup label="Year to date">
+					<option value="all|ytd">Buku besar YTD - all</option>
+					<option value="unit|ytd">Buku besar YTD - unit</option>
+					<option value="struct|ytd">Buku besar YTD - unit</option>
+					<option value="site|ytd">Buku besar YTD - site</option>
+					<option value="project|ytd">Buku besar YTD - project</option>
+					<option value="unitstruct|ytd">Buku besar YTD - unit struct</option>
+					<option value="unitsite|ytd">Buku besar YTD - unit site</option>
+					<option value="unitproject|ytd">Buku besar YTD - unit project</option>
+				</optgroup>
+
 			</select>
 
-			<div>
-				<div>
-					<select id="unitselect" disabled class="hidden">
-						<option value="0">-- pilih unit --</option>
-					</select>
-				</div>
+			<div style="display: flex; flex-direction: column; row-gap: 5px;">
+				<select id="unitselect" disabled class="hidden">
+					<option value="0">-- pilih unit --</option>
+				</select>
 
-				<div style="margin-top: 5px">
-					<select id="siteselect" disabled class="hidden">
-						<option value="0">-- pilih site --</option>
-					</select>
-				</div>
+
+				<select id="structselect" disabled class="hidden">
+					<option value="0">-- pilih structure --</option>
+				</select>
+
+				<select id="siteselect" disabled class="hidden">
+					<option value="0">-- pilih site --</option>
+				</select>
+
+				<input id="projectselect" name="projectselect" disabled class="hidden" list="projectlist"  placeholder="search project...">
+				<input type="hidden" id="project_id" name="project_id">
+				<datalist id="projectlist"></datalist>
 
 			</div>
 

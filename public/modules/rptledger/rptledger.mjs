@@ -66,34 +66,74 @@ export default class extends Module {
 
 			// parameter event
 			const reporttype = document.getElementById('reporttype')
+
 			const unitselect = document.getElementById('unitselect')
+			const structselect = document.getElementById('structselect')
 			const siteselect = document.getElementById('siteselect')
+			const projectselect = document.getElementById('projectselect')
+
+
+			unitselect.hide = (hidden) => { hideSelector(unitselect, hidden) }
+			structselect.hide = (hidden) => { hideSelector(structselect, hidden) }
+			siteselect.hide = (hidden) => { hideSelector(siteselect, hidden) }
+			projectselect.hide = (hidden) => { hideSelector(projectselect, hidden) }
+
+
 			reporttype.addEventListener('change', (evt) => {
 				const param = reportPage.getParams()
-				if (param.scope == 'siteunit') {
-					unitselect.removeAttribute('disabled')
-					unitselect.classList.remove('hidden')
-					siteselect.removeAttribute('disabled')
-					siteselect.classList.remove('hidden')
+				if (param.scope == 'unitsite') {
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide(false)
+					projectselect.hide()
+
+				} else if (param.scope == 'unitstruct') {
+					unitselect.hide(false)
+					structselect.hide(false)
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'unitproject') {
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide(false)
+
+
 				} else if (param.scope == 'site') {
-					unitselect.setAttribute('disabled', '')
-					unitselect.classList.add('hidden')
-					siteselect.removeAttribute('disabled')
-					siteselect.classList.remove('hidden')
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide(false)
+					projectselect.hide()
+
 				} else if (param.scope == 'unit') {
-					unitselect.removeAttribute('disabled')
-					unitselect.classList.remove('hidden')
-					siteselect.setAttribute('disabled', '')
-					siteselect.classList.add('hidden')
+					unitselect.hide(false)
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'struct') {
+					unitselect.hide()
+					structselect.hide(false)
+					siteselect.hide()
+					projectselect.hide()
+
+				} else if (param.scope == 'project') {
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide(false)
+
 				} else {
-					unitselect.setAttribute('disabled', '')
-					unitselect.classList.add('hidden')
-					siteselect.setAttribute('disabled', '')
-					siteselect.classList.add('hidden')
+					unitselect.hide()
+					structselect.hide()
+					siteselect.hide()
+					projectselect.hide()
 				}
 			})
 
 			populateUnit(unitselect)
+			populateStruct(structselect)
 			populateSite(siteselect)
 
 
@@ -109,6 +149,17 @@ export default class extends Module {
 
 }
 
+
+
+function hideSelector(selector, hidden = true) {
+	if (hidden) {
+		selector.setAttribute('disabled', '')
+		selector.classList.add('hidden')
+	} else {
+		selector.removeAttribute('disabled')
+		selector.classList.remove('hidden')
+	}
+}
 
 async function render(self) {
 	try {
@@ -352,6 +403,20 @@ async function populateUnit(unitselect) {
 			option.value = item.unit_id;       // Nilai yang dikirim saat form di-submit
 			option.textContent = item.unit_name; // Teks yang muncul di layar
 			unitselect.appendChild(option);
+		});
+	} catch (err) {
+		console.error(err)
+	}
+}
+
+async function populateStruct(structselect) {
+	try {
+		const result = await Module.apiCall(`/${Context.moduleName}/get-struct-list`, {})
+		result.forEach(item => {
+			const option = document.createElement('option');
+			option.value = item.struct_id;       // Nilai yang dikirim saat form di-submit
+			option.textContent = item.struct_name; // Teks yang muncul di layar
+			structselect.appendChild(option);
 		});
 	} catch (err) {
 		console.error(err)
