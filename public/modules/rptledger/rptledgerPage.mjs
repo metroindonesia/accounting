@@ -1,4 +1,5 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
+import * as rptselector from '../../lib/rptselector.mjs'
 
 
 
@@ -26,17 +27,19 @@ export async function init(self, args) {
 	}
 }
 
-export function getParams() {
-	const tgl = document.getElementById('rptLedger_tgl').value
-	const reporttype = document.getElementById('reporttype').value
 
-	const [scope, range] = reporttype.split('|')
 
-	return {
-		date: tgl,
-		isytd: range == 'ytd' ? true : false,
-		scope: scope
-	}
+
+export function setTitle(text) {
+	document.getElementById('judul-laporan').innerHTML = text
+}
+
+export function setSubTitle(text) {
+	document.getElementById('subjudul-laporan').innerHTML = text
+}
+
+export function setReportDate(dt) {
+	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
 }
 
 

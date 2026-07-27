@@ -1,5 +1,7 @@
 import Context from './rptlapkeu-context.mjs'  // todo: sesuaikan
 import * as reportPage from './rptlapkeuPage.mjs'  // todo: sesuaikan
+import * as rptselector from '../../lib/rptselector.mjs'
+
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -65,74 +67,21 @@ export default class extends Module {
 
 
 			const reporttype = document.getElementById('reporttype')
-
 			const unitselect = document.getElementById('unitselect')
 			const structselect = document.getElementById('structselect')
 			const siteselect = document.getElementById('siteselect')
 			const projectselect = document.getElementById('projectselect')
-
-			unitselect.hide = (hidden) => { hideSelector(unitselect, hidden) }
-			structselect.hide = (hidden) => { hideSelector(structselect, hidden) }
-			siteselect.hide = (hidden) => { hideSelector(siteselect, hidden) }
-			projectselect.hide = (hidden) => { hideSelector(projectselect, hidden) }
+			const selectors = rptselector.setupSelectors({ unitselect, structselect, siteselect, projectselect })
 
 
 			reporttype.addEventListener('change', (evt) => {
 				const param = reportPage.getParams()
-				if (param.scope == 'unitsite') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide(false)
-					projectselect.hide()
-
-				} else if (param.scope == 'unitstruct') {
-					unitselect.hide(false)
-					structselect.hide(false)
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'unitproject') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide(false)
-
-				} else if (param.scope == 'site') {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide(false)
-					projectselect.hide()
-
-				} else if (param.scope == 'unit') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'struct') {
-					unitselect.hide()
-					structselect.hide(false)
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'project') {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide(false)
-
-				} else {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide()
-				}
+				rptselector.setSelectorByScope(param.scope, selectors)
 			})
 
-
-			populateUnit(unitselect)
-			populateUnit(structselect)
-			populateSite(siteselect)
+			rptselector.populateUnit(unitselect, `/${Context.moduleName}/get-unit-list`, {})
+			rptselector.populateStruct(structselect, `/${Context.moduleName}/get-struct-list`, {})
+			rptselector.populateSite(siteselect, `/${Context.moduleName}/get-site-list`, {})
 
 		} catch (err) {
 			throw err
@@ -409,32 +358,3 @@ async function loadReport(self, cache, mask) {
 }
 
 
-
-async function populateUnit(unitselect) {
-	try {
-		const result = await Module.apiCall(`/${Context.moduleName}/get-unit-list`, {})
-		result.forEach(item => {
-			const option = document.createElement('option');
-			option.value = item.unit_id;       // Nilai yang dikirim saat form di-submit
-			option.textContent = item.unit_name; // Teks yang muncul di layar
-			unitselect.appendChild(option);
-		});
-	} catch (err) {
-		console.error(err)
-	}
-}
-
-
-async function populateSite(siteselect) {
-	try {
-		const result = await Module.apiCall(`/${Context.moduleName}/get-site-list`, {})
-		result.forEach(item => {
-			const option = document.createElement('option');
-			option.value = item.site_id;       // Nilai yang dikirim saat form di-submit
-			option.textContent = item.site_name; // Teks yang muncul di layar
-			siteselect.appendChild(option);
-		});
-	} catch (err) {
-		console.error(err)
-	}
-}

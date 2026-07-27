@@ -1,5 +1,7 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
 import * as reportPage from './rptledgerPage.mjs'  // todo: sesuaikan
+import * as rptselector from '../../lib/rptselector.mjs'
+
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -65,77 +67,25 @@ export default class extends Module {
 
 
 			// parameter event
-			const reporttype = document.getElementById('reporttype')
-
+			const reporttypeselected = document.getElementById('reporttype')
 			const unitselect = document.getElementById('unitselect')
 			const structselect = document.getElementById('structselect')
 			const siteselect = document.getElementById('siteselect')
 			const projectselect = document.getElementById('projectselect')
+			const projectlist = document.getElementById('projectlist')
+			const dateselected = document.getElementById('rptLedger_tgl')
+			const selectors = rptselector.setupSelectors({ reporttypeselected, unitselect, structselect, siteselect, projectselect, projectlist, dateselected })
 
 
-			unitselect.hide = (hidden) => { hideSelector(unitselect, hidden) }
-			structselect.hide = (hidden) => { hideSelector(structselect, hidden) }
-			siteselect.hide = (hidden) => { hideSelector(siteselect, hidden) }
-			projectselect.hide = (hidden) => { hideSelector(projectselect, hidden) }
-
-
-			reporttype.addEventListener('change', (evt) => {
-				const param = reportPage.getParams()
-				if (param.scope == 'unitsite') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide(false)
-					projectselect.hide()
-
-				} else if (param.scope == 'unitstruct') {
-					unitselect.hide(false)
-					structselect.hide(false)
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'unitproject') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide(false)
-
-
-				} else if (param.scope == 'site') {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide(false)
-					projectselect.hide()
-
-				} else if (param.scope == 'unit') {
-					unitselect.hide(false)
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'struct') {
-					unitselect.hide()
-					structselect.hide(false)
-					siteselect.hide()
-					projectselect.hide()
-
-				} else if (param.scope == 'project') {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide(false)
-
-				} else {
-					unitselect.hide()
-					structselect.hide()
-					siteselect.hide()
-					projectselect.hide()
-				}
+			reporttypeselected.addEventListener('change', (evt) => {
+				const param = getParams()
+				rptselector.setSelectorByScope(param.scope, selectors)
 			})
 
-			populateUnit(unitselect)
-			populateStruct(structselect)
-			populateSite(siteselect)
-
+			rptselector.setSearchProjectEndpoint(`/${Context.moduleName}/search-project`)
+			rptselector.populateUnit(unitselect, `/${Context.moduleName}/get-unit-list`, {})
+			rptselector.populateStruct(structselect, `/${Context.moduleName}/get-struct-list`, {})
+			rptselector.populateSite(siteselect, `/${Context.moduleName}/get-site-list`, {})
 
 		} catch (err) {
 			throw err
@@ -143,23 +93,32 @@ export default class extends Module {
 
 	}
 
-
-
-
-
 }
 
 
+function getParams() {
+	const selectors = rptselector.getSelectors()
+	const { reporttypeselected, unitselect, structselect, siteselect, projectselect, projectlist, dateselected } = selectors
+	const tgl = dateselected.value
+	const reporttype = reporttypeselected.value
+	const unit_id = unitselect.value
+	const struct_id = structselect.value
+	const site_id = siteselect.value
+	const project_id = rptselector.getProjectId(projectselect, projectlist)
 
-function hideSelector(selector, hidden = true) {
-	if (hidden) {
-		selector.setAttribute('disabled', '')
-		selector.classList.add('hidden')
-	} else {
-		selector.removeAttribute('disabled')
-		selector.classList.remove('hidden')
+	const [scope, range] = reporttype.split('|')
+
+	return {
+		date: tgl,
+		isytd: range == 'ytd' ? true : false,
+		scope: scope,
+		unit_id: unit_id,
+		struct_id: struct_id,
+		site_id: site_id,
+		project_id: project_id
 	}
 }
+
 
 async function render(self) {
 	try {
@@ -199,35 +158,29 @@ async function btnPrint_click(self) {
 
 async function btnLoad_click(self) {
 	let mask = $fgta5.Modal.createMask()
-	// let reporttype = document.getElementById('reporttype').value
-	// let tgl = document.getElementById('rptLedger_tgl').value
-	// const [scope, range] = reporttype.split('|')
 
 	try {
+		const param = getParams()
+		const subtitle = rptselector.getSubtitle(param)
+
 		btnLoad.disabled = true
 		btnPrint.disabled = true
 		btnDownload.disabled = true
 
 		mask.setText('Requesting report data')
-		const param = reportPage.getParams()
 		const res = await loadData(self, param)
-
 		const cache = {
 			id: res.info.cache_id,
 			rowCount: res.info.rowCount,
 		}
 
-
-		document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
-		document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + param.date + "</b>"
-
-
+		reportPage.setTitle("BUKU BESAR")
+		reportPage.setReportDate(param.date)
 		if (param.isytd) {
-			document.getElementById('subjudul-laporan').innerHTML = param.scope + ' - YTD'
+			reportPage.setSubTitle('YTD - ' + subtitle)
 		} else {
-			document.getElementById('subjudul-laporan').innerHTML = param.scope + ' - MTD'
+			reportPage.setSubTitle('MTD - ' + subtitle)
 		}
-
 
 		await loadReport(self, cache, mask)
 
@@ -259,7 +212,7 @@ async function btnDownload_click(self) {
 	}
 
 	TableToExcel.convert(table, {
-		name: 'namafile.xlsx',
+		name: 'bukubesar.xlsx',
 		sheet: {
 			name: 'Sheet1'
 		},
@@ -394,46 +347,3 @@ async function loadReport(self, cache, mask) {
 	}
 }
 
-
-async function populateUnit(unitselect) {
-	try {
-		const result = await Module.apiCall(`/${Context.moduleName}/get-unit-list`, {})
-		result.forEach(item => {
-			const option = document.createElement('option');
-			option.value = item.unit_id;       // Nilai yang dikirim saat form di-submit
-			option.textContent = item.unit_name; // Teks yang muncul di layar
-			unitselect.appendChild(option);
-		});
-	} catch (err) {
-		console.error(err)
-	}
-}
-
-async function populateStruct(structselect) {
-	try {
-		const result = await Module.apiCall(`/${Context.moduleName}/get-struct-list`, {})
-		result.forEach(item => {
-			const option = document.createElement('option');
-			option.value = item.struct_id;       // Nilai yang dikirim saat form di-submit
-			option.textContent = item.struct_name; // Teks yang muncul di layar
-			structselect.appendChild(option);
-		});
-	} catch (err) {
-		console.error(err)
-	}
-}
-
-
-async function populateSite(siteselect) {
-	try {
-		const result = await Module.apiCall(`/${Context.moduleName}/get-site-list`, {})
-		result.forEach(item => {
-			const option = document.createElement('option');
-			option.value = item.site_id;       // Nilai yang dikirim saat form di-submit
-			option.textContent = item.site_name; // Teks yang muncul di layar
-			siteselect.appendChild(option);
-		});
-	} catch (err) {
-		console.error(err)
-	}
-}

@@ -6,7 +6,7 @@
 
 			<select id="reporttype">
 				<optgroup label="Month to date">
-					<option value="all|mtd">Buku besar MTD - all</option>
+					<option value="consolidated|mtd">Buku besar MTD - consolidated</option>
 					<option value="unit|mtd">Buku besar MTD - unit</option>
 					<option value="struct|mtd">Buku besar MTD - struct</option>
 					<option value="site|mtd">Buku besar MTD - site</option>
@@ -17,7 +17,7 @@
 				</optgroup>	
 
 				<optgroup label="Year to date">
-					<option value="all|ytd">Buku besar YTD - all</option>
+					<option value="consolidated|ytd">Buku besar YTD - consolidated</option>
 					<option value="unit|ytd">Buku besar YTD - unit</option>
 					<option value="struct|ytd">Buku besar YTD - unit</option>
 					<option value="site|ytd">Buku besar YTD - site</option>
@@ -44,7 +44,6 @@
 				</select>
 
 				<input id="projectselect" name="projectselect" disabled class="hidden" list="projectlist"  placeholder="search project...">
-				<input type="hidden" id="project_id" name="project_id">
 				<datalist id="projectlist"></datalist>
 
 			</div>
