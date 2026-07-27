@@ -21,6 +21,20 @@ export function setupActionButtonEvent(self, frm, CurrentState, buttons) {
 
 }
 
+export function headerList_addTableEvents(self, tbl) {
+	tbl.addEventListener('rowrender', (evt) => {
+		const tr = evt.detail.tr
+		const data = evt.detail.args.data
+		const { site_isdisabled } = data
+
+		if (site_isdisabled) {
+			tr.setAttribute('data-isdisabled', true)
+		} else {
+			tr.removeAttribute('data-isdisabled', true)
+		}
+	})
+}
+
 export function siteHeaderEdit_formOpened(self, frm, CurrentState) {
 	const obj = frm.Inputs[_site_code]
 	obj.disabled = true

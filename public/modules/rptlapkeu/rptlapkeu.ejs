@@ -3,19 +3,54 @@
 	<div id="lapkeuHeader">
 		<!-- <div style="flex-grow: 1;"> -->
 		<div id="filter-container">Type :
+
 			<select id="typelap">
-				<option value="nr_mtd">Neraca MTD</option>
-				<option value="nr_ytd">Neraca YTD</option>
-				<option value="lr_mtd">Laba Rugi MTD</option>
-				<option value="lr_ytd">Laba Rugi YTD</option>
+				<optgroup label="--- NERACA Month to date ---"></optgroup>
+					<option value="nr_mtd">Neraca MTD - all</option>
+					<option value="nr_mtd">Neraca MTD - unit</option>
+					<option value="nr_mtd">Neraca MTD - site</option>
+					<option value="nr_mtd">Neraca MTD - site unit</option>
+				</optgroup>	
+				
+				<optgroup label="--- NERACA Year to date ---"></optgroup>
+					<option value="nr_ytd">Neraca YTD - all</option>
+					<option value="nr_ytd">Neraca YTD - unit</option>
+					<option value="nr_ytd">Neraca YTD - site</option>
+					<option value="nr_ytd">Neraca YTD - site unit</option>
+				</optgroup>	
+				
+				<optgroup label="--- LABA RUGI Month to date ---"></optgroup>
+					<option value="lr_mtd">Laba Rugi MTD - all</option>
+					<option value="lr_mtd">Laba Rugi MTD - unit</option>
+					<option value="lr_mtd">Laba Rugi MTD - site</option>
+					<option value="lr_mtd">Laba Rugi MTD - site unit</option>
+				</optgroup>	
+				
+				<optgroup label="--- LABA RUGI Year to date ---"></optgroup>
+					<option value="lr_ytd">Laba Rugi YTD - all</option>
+					<option value="lr_ytd">Laba Rugi YTD - unit</option>
+					<option value="lr_ytd">Laba Rugi YTD - site</option>
+					<option value="lr_ytd">Laba Rugi YTD - site unit</option>
+				</optgroup>	
+			
+			
 			</select>
 
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Dept</option>
-			</select>
+			<div>
+				<div>
+					<select id="unitselect">
+						<option value="0">-- pilih unit --</option>
+					</select>
+				</div>
+
+				<div style="margin-top: 5px">
+					<select id="siteselect">
+						<option value="0">-- pilih site --</option>
+					</select>
+				</div>
+
+			</div>
+
 
 			Per Tanggal : <input type="date" id="rptLapkeu_tgl">
 			<button id="btnLoad">Load</button>

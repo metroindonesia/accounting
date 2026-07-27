@@ -62,6 +62,41 @@ export default class extends Module {
 				btnDownload_click(self)
 			})
 
+
+
+			// parameter event
+			const reporttype = document.getElementById('reporttype')
+			const unitselect = document.getElementById('unitselect')
+			const siteselect = document.getElementById('siteselect')
+			reporttype.addEventListener('change', (evt) => {
+				const param = reportPage.getParams()
+				if (param.scope == 'siteunit') {
+					unitselect.removeAttribute('disabled')
+					unitselect.classList.remove('hidden')
+					siteselect.removeAttribute('disabled')
+					siteselect.classList.remove('hidden')
+				} else if (param.scope == 'site') {
+					unitselect.setAttribute('disabled', '')
+					unitselect.classList.add('hidden')
+					siteselect.removeAttribute('disabled')
+					siteselect.classList.remove('hidden')
+				} else if (param.scope == 'unit') {
+					unitselect.removeAttribute('disabled')
+					unitselect.classList.remove('hidden')
+					siteselect.setAttribute('disabled', '')
+					siteselect.classList.add('hidden')
+				} else {
+					unitselect.setAttribute('disabled', '')
+					unitselect.classList.add('hidden')
+					siteselect.setAttribute('disabled', '')
+					siteselect.classList.add('hidden')
+				}
+			})
+
+			populateUnit(unitselect)
+			populateSite(siteselect)
+
+
 		} catch (err) {
 			throw err
 		}
@@ -113,8 +148,10 @@ async function btnPrint_click(self) {
 
 async function btnLoad_click(self) {
 	let mask = $fgta5.Modal.createMask()
-	let isytd = document.getElementById('isytd').value
-	let tgl = document.getElementById('rptLedger_tgl').value
+	// let reporttype = document.getElementById('reporttype').value
+	// let tgl = document.getElementById('rptLedger_tgl').value
+	// const [scope, range] = reporttype.split('|')
+
 	try {
 		btnLoad.disabled = true
 		btnPrint.disabled = true
@@ -129,6 +166,18 @@ async function btnLoad_click(self) {
 			rowCount: res.info.rowCount,
 		}
 
+
+		document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
+		document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + param.date + "</b>"
+
+
+		if (param.isytd) {
+			document.getElementById('subjudul-laporan').innerHTML = param.scope + ' - YTD'
+		} else {
+			document.getElementById('subjudul-laporan').innerHTML = param.scope + ' - MTD'
+		}
+
+
 		await loadReport(self, cache, mask)
 
 	} catch (err) {
@@ -139,20 +188,8 @@ async function btnLoad_click(self) {
 		btnLoad.disabled = false
 		btnPrint.disabled = false
 		btnDownload.disabled = false
-
-		if (isytd == 'true') {
-			document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
-			document.getElementById('subjudul-laporan').innerHTML = "YTD"
-			document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + tgl + "</b>"
-		} else {
-			document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
-			document.getElementById('subjudul-laporan').innerHTML = "MTD"
-			document.getElementById('tgl_cetak').innerHTML = "Per tanggal : <b>" + tgl + "</b>"
-		}
-
 		mask.close()
 		mask = null
-		// console.log(isytd)
 	}
 }
 
@@ -303,5 +340,35 @@ async function loadReport(self, cache, mask) {
 			reportInfo.innerHTML = `${line} rows fetched from ${cache.id}`;
 			doFetch = false
 		}
+	}
+}
+
+
+async function populateUnit(unitselect) {
+	try {
+		const result = await Module.apiCall(`/${Context.moduleName}/get-unit-list`, {})
+		result.forEach(item => {
+			const option = document.createElement('option');
+			option.value = item.unit_id;       // Nilai yang dikirim saat form di-submit
+			option.textContent = item.unit_name; // Teks yang muncul di layar
+			unitselect.appendChild(option);
+		});
+	} catch (err) {
+		console.error(err)
+	}
+}
+
+
+async function populateSite(siteselect) {
+	try {
+		const result = await Module.apiCall(`/${Context.moduleName}/get-site-list`, {})
+		result.forEach(item => {
+			const option = document.createElement('option');
+			option.value = item.site_id;       // Nilai yang dikirim saat form di-submit
+			option.textContent = item.site_name; // Teks yang muncul di layar
+			siteselect.appendChild(option);
+		});
+	} catch (err) {
+		console.error(err)
 	}
 }

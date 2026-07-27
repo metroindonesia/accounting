@@ -28,12 +28,14 @@ export async function init(self, args) {
 
 export function getParams() {
 	const tgl = document.getElementById('rptLedger_tgl').value
-	const isytdval = document.getElementById('isytd').value
+	const reporttype = document.getElementById('reporttype').value
+
+	const [scope, range] = reporttype.split('|')
+
 	return {
-		// date: '2024-01-31',  // TODO Ganti ini
 		date: tgl,
-		//isytd: true
-		isytd: isytdval
+		isytd: range == 'ytd' ? true : false,
+		scope: scope
 	}
 }
 
