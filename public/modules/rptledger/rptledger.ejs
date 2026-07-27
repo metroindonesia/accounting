@@ -2,17 +2,34 @@
 
 	<div id="ledgerHeader">
 		<!-- <div style="flex-grow: 1;"> -->
-		<div id="filter-container">Type :
-			<select id="isytd">
-				<option value="true">Buku besar YTD - all</option>
-				<option value="false">Buku besar MTD - all</option>
+		<div id="filter-container">
+
+			<select id="reporttype">
+				<option value="all|mtd">Buku besar MTD - all</option>
+				<option value="unit|mtd">Buku besar MTD - unit</option>
+				<option value="site|mtd">Buku besar MTD - site</option>
+				<option value="siteunit|mtd">Buku besar MTD - site unit</option>
+				<option value="all|ytd">Buku besar YTD - all</option>
+				<option value="unit|ytd">Buku besar YTD - unit</option>
+				<option value="site|ytd">Buku besar YTD - site</option>
+				<option value="siteunit|ytd">Buku besar YTD - site unit</option>
 			</select>
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Dept</option>
-			</select>
+
+			<div>
+				<div>
+					<select id="unitselect" disabled class="hidden">
+						<option value="0">-- pilih unit --</option>
+					</select>
+				</div>
+
+				<div style="margin-top: 5px">
+					<select id="siteselect" disabled class="hidden">
+						<option value="0">-- pilih site --</option>
+					</select>
+				</div>
+
+			</div>
+
 
 			<input type="date" id="rptLedger_tgl">
 			<button id="btnLoad">Load</button>
@@ -20,7 +37,7 @@
 		<!-- </div> -->
 
 
-		<div id="btn">
+		<div id="btn-panel">
 			<button id="btnDownload">Download</button>
 			<button id="btnPrint">Cetak</button>
 		</div>

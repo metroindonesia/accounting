@@ -63,6 +63,14 @@ export default class extends Module {
 				btnDownload_click(self)
 			})
 
+
+
+			const unitselect = document.getElementById('unitselect')
+			const siteselect = document.getElementById('siteselect')
+
+			populateUnit(unitselect)
+			populateSite(siteselect)
+
 		} catch (err) {
 			throw err
 		}
@@ -326,5 +334,36 @@ async function loadReport(self, cache, mask) {
 			reportInfo.innerHTML = `${line} rows fetched from ${cache.id}`;
 			doFetch = false
 		}
+	}
+}
+
+
+
+async function populateUnit(unitselect) {
+	try {
+		const result = await Module.apiCall(`/${Context.moduleName}/get-unit-list`, {})
+		result.forEach(item => {
+			const option = document.createElement('option');
+			option.value = item.unit_id;       // Nilai yang dikirim saat form di-submit
+			option.textContent = item.unit_name; // Teks yang muncul di layar
+			unitselect.appendChild(option);
+		});
+	} catch (err) {
+		console.error(err)
+	}
+}
+
+
+async function populateSite(siteselect) {
+	try {
+		const result = await Module.apiCall(`/${Context.moduleName}/get-site-list`, {})
+		result.forEach(item => {
+			const option = document.createElement('option');
+			option.value = item.site_id;       // Nilai yang dikirim saat form di-submit
+			option.textContent = item.site_name; // Teks yang muncul di layar
+			siteselect.appendChild(option);
+		});
+	} catch (err) {
+		console.error(err)
 	}
 }
