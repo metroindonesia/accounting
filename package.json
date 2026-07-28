@@ -2,6 +2,16 @@
   "name": "@metroindonesia/accounting",
   "version": "0.1.0",
   "description": "accounting system for metroindonesia",
+  "homepage": "https://github.com/metroindonesia/accounting#readme",
+  "bugs": {
+    "url": "https://github.com/metroindonesia/accounting/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metroindonesia/accounting.git"
+  },
+  "license": "BSD-3-Clause",
+  "author": "Agung Nugroho",
   "type": "module",
   "main": "./src/index.js",
   "scripts": {
@@ -10,11 +20,6 @@
     "generate": "node ./generate.js",
     "x-generate": "node ./node_modules/@agung_dhewe/webapps/src/generator/trygenerate.js",
     "clean": "kill -9 $(lsof -t -i :3003)"
-  },
-  "author": "Agung Nugroho",
-  "license": "BSD-3-Clause",
-  "publishConfig": {
-    "access": "public"
   },
   "dependencies": {
     "@agung_dhewe/pgsqlc": "^1.1.8",
@@ -43,5 +48,8 @@
     "rollup": "^4.59.0",
     "rollup-plugin-delete": "^3.0.2",
     "rollup-plugin-postcss": "^4.0.2"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
