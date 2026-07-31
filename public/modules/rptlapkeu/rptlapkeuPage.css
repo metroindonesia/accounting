@@ -125,12 +125,6 @@
 	grid-column: 1 / span 8;
 }
 
-#btn {
-	grid-row: 1;
-	grid-column: 11 / span 2;
-	text-align: right;
-}
-
 
 
 .reportrow {

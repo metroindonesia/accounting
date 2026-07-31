@@ -42,6 +42,9 @@ export default class extends Module {
 				Context.sid = result.sid
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
+				Context.setting = result.setting
+
+
 			} catch (err) {
 				throw err
 			}
@@ -71,10 +74,16 @@ export default class extends Module {
 
 			const today = new Date().toISOString().split("T")[0];
 			obj_date.value = today
-			obj_unit.isVisible = (scope) => { return ['unit', 'unitstruct'].includes(scope) }
+			obj_unit.isVisible = (scope) => { return ['unit', 'unitstruct', 'unitsite', 'unitproject'].includes(scope) }
+			obj_unit.addEventListener('selecting', (evt) => obj_unit_selecting(evt))
 			obj_struct.isVisible = (scope) => { return ['struct', 'unitstruct'].includes(scope) }
+			obj_struct.addEventListener('selecting', (evt) => obj_struct_selecting(evt))
 			obj_site.isVisible = (scope) => { return ['site', 'unitsite'].includes(scope) }
-			obj_project.isVisible = (scope) => { return ['project', 'unitsite'].includes(scope) }
+			obj_site.addEventListener('selecting', (evt) => obj_site_selecting(evt))
+			obj_project.isVisible = (scope) => { return ['project', 'unitproject'].includes(scope) }
+			obj_project.addEventListener('selecting', (evt) => obj_project_selecting(evt))
+
+
 
 
 			obj_reporttype.addEventListener('selected', (evt) => {
@@ -194,6 +203,11 @@ async function btnLoad_click(self) {
 			rowCount: res.info.rowCount,
 		}
 
+
+
+
+		await loadReport(self, cache, mask)
+
 		reportPage.setTitle(reportPage.TITLE)
 		reportPage.setReportDate(param.date)
 		if (param.isytd) {
@@ -201,8 +215,6 @@ async function btnLoad_click(self) {
 		} else {
 			reportPage.setSubTitle('MTD - ' + subtitles.join(', '))
 		}
-
-		await loadReport(self, cache, mask)
 
 	} catch (err) {
 		console.error(err)
@@ -303,17 +315,17 @@ async function loadReport(self, cache, mask) {
 	const { reportBody, reportInfo } = reportPage.getReportObjects()
 
 
+	reportPage.setTitle(reportPage.TITLE)
+	reportPage.setSubTitle('downloading report ...')
+	reportPage.setReportDate('')
+
 	reportInfo.innerHTML = `downloading data ${cache.id} ...`;
 	mask.setText(reportInfo.innerHTML)
 
 
 
-
-	// table untuk menampilkan hasil report
-
 	// kosongkan table
 	reportBody.innerHTML = ''
-
 
 
 	// ambil total Rows
@@ -367,3 +379,111 @@ async function loadReport(self, cache, mask) {
 	}
 }
 
+
+async function obj_unit_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'unit/header-list'
+	const sort = { unit_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.unit_id, row.unit_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_struct_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'struct/header-list'
+	const sort = { struct_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.struct_id, row.struct_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_site_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'site/header-list'
+	const sort = { site_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.site_id, row.site_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_project_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'project/header-list'
+	const sort = { project_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.project_id, row.project_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}

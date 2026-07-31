@@ -15,9 +15,14 @@ export const TITLE = 'Buku Besar'
 export async function init(self, args) {
 	console.log('initializing report ...')
 	Context.setTitle(TITLE);  // set judul di browser
+
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
 	}
+
+	const docLogo = document.getElementById('report-logo')
+	const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
+	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
 

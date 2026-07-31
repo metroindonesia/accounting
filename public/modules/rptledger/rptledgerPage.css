@@ -30,10 +30,26 @@
 		display: none;
 	}
 
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 15mm;
+		width: 60mm;
+	}
+
 }
 
 
-@media screen {}
+@media screen {
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 32px;
+		width: 128px;
+	}
+}
 
 
 #judul-laporan {

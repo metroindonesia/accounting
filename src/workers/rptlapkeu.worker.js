@@ -14,58 +14,29 @@ async function main(param) {
 		const row = await db.one(sqlCache)
 		const cache_id = row.cache_id;
 
-		let procedureName
-		let isytd
-
-		// const sqlParam = {
-		// 	date: param.date,
-		// 	// typelap: param.typelap,
-		// 	// isytd: param.isytd,
-		// 	cache_id: cache_id
-		// }
-
-		switch (param.typelap) {
-			case 'nr_mtd':
-				procedureName = 'public.nr_idr';
-				isytd = false;
-				// console.log('Case nr_mtd → procedure:', procedureName, ', isytd:', isytd);
-				break;
-
-			case 'nr_ytd':
-				procedureName = 'public.nr_idr';
-				isytd = true;
-				// console.log('Case nr_ytd → procedure:', procedureName, ', isytd:', isytd);
-				break;
-
-			case 'lr_mtd':
-				procedureName = 'public.lr_idr';
-				isytd = false;
-				// console.log('Case lr_mtd → procedure:', procedureName, ', isytd:', isytd);
-				break;
-
-			case 'lr_ytd':
-				procedureName = 'public.lr_idr';
-				isytd = true;
-				// console.log('Case lr_ytd → procedure:', procedureName, ', isytd:', isytd);
-				break;
-
-			default:
-				procedureName = 'public.nr_idr';
-				isytd = false;
-			// console.log('Case default nr_idr → procedure:', procedureName, ', isytd:', isytd);
-		}
-
-		// panggil stored procedure dengan cache_id
+		// report parameter
+		const { isytd, report, scope, unit_id, struct_id, site_id, project_id, date } = param
 		const sqlParam = {
-			date: param.date,
-			// typelap: param.typelap,
+			date: date,
 			isytd: isytd,
+			datascope: scope,
+			unit_id: unit_id,
+			struct_id: struct_id,
+			site_id: site_id,
+			project_id: project_id,
 			cache_id: cache_id
 		}
 
 
-		const sqlDataRequest = `call ${procedureName} (${'${date}'},${'${isytd}'},${'${cache_id}::uuid'})`;
-		await db.none(sqlDataRequest, sqlParam)
+		if (report == 'nr') {
+			const sqlDataRequest = 'call public.nr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}, ${struct_id}, ${site_id}, ${project_id}, ${cache_id}::uuid)'
+			await db.none(sqlDataRequest, sqlParam)
+		} else if (report == 'lr') {
+			const sqlDataRequest = 'call public.lr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}, ${struct_id}, ${site_id}, ${project_id}, ${cache_id}::uuid)'
+			await db.none(sqlDataRequest, sqlParam)
+		} else {
+			throw new Error(`report '${report}' is not supported`)
+		}
 
 
 		// hitung jumlah baris
