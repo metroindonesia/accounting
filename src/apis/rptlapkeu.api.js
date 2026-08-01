@@ -64,6 +64,14 @@ async function reportviewer_init(self, body) {
 		initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
 
 
+		// ambil data maximal level
+		{
+			const sql = 'select max(coagroup_level)+1 as maxlevel from public.coagroup'
+			const result = await db.one(sql)
+			initialData.maxCoaLevel = result.maxlevel
+		}
+
+
 		return initialData
 	} catch (err) {
 		throw err
@@ -119,9 +127,9 @@ async function reportviewer_fetch(self, body) {
 		console.log(`query for ${cache_id} by offset ${rowOffset}`)
 		const rows = await db.any(sql, { cache_id, rowOffset, rowLimit })
 
-		for (var row of rows) {
-			row.coa_id = ''
-		}
+		// for (var row of rows) {
+		// 	row.coa_id = ''
+		// }
 
 		return rows;
 	} catch (err) {

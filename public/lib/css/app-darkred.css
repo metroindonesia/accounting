@@ -50,6 +50,9 @@ input::selection {
 
 .action-button {
 	background-color: rgb(83, 8, 8);
+	width: auto;
+	min-width: max-content;
+	overflow: visible;
 }
 
 
@@ -60,4 +63,9 @@ input::selection {
 .action-button.button-rowremove,
 .action-button.button-delete {
 	background-color: rgb(174, 63, 63);
+}
+
+
+.logtable th {
+	color: #2c435c;
 }

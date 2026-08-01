@@ -17,7 +17,7 @@ const obj_struct = new $fgta5.Combobox('obj_struct')
 const obj_site = new $fgta5.Combobox('obj_site')
 const obj_project = new $fgta5.Combobox('obj_project')
 
-
+let obj_coalevel
 
 export default class extends Module {
 	constructor() {
@@ -45,7 +45,21 @@ export default class extends Module {
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
 				Context.setting = result.setting
+				Context.maxCoaLevel = result.maxCoaLevel
 
+				console.log(Context)
+
+
+
+				const obj_coalevelData = document.getElementById('obj_coalevel-data')
+				for (let level = 0; level <= Context.maxCoaLevel; level++) {
+					const opt = document.createElement('option')
+					opt.innerHTML = level
+					opt.setAttribute('value', level)
+					obj_coalevelData.appendChild(opt)
+				}
+				obj_coalevel = new $fgta5.Combobox('obj_coalevel')
+				obj_coalevel.maxValue = Context.maxCoaLevel
 
 			} catch (err) {
 				throw err
@@ -114,6 +128,7 @@ function getParams() {
 		struct_id: obj_struct.value,
 		site_id: obj_site.value,
 		project_id: obj_project.value,
+		coalevel: obj_coalevel.value ?? obj_coalevel.maxValue,
 		date: obj_date.value
 	}
 }
@@ -173,6 +188,8 @@ async function btnLoad_click(self) {
 	try {
 		const param = getParams()
 		let subtitles = []
+
+		console.log(param)
 
 		// cek data
 		for (let selector of [obj_unit, obj_site, obj_struct, obj_project]) {

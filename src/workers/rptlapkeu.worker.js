@@ -15,7 +15,7 @@ async function main(param) {
 		const cache_id = row.cache_id;
 
 		// report parameter
-		const { isytd, report, scope, unit_id, struct_id, site_id, project_id, date } = param
+		const { isytd, report, scope, unit_id, struct_id, site_id, project_id, coalevel, date } = param
 		const sqlParam = {
 			date: date,
 			isytd: isytd,
@@ -24,15 +24,17 @@ async function main(param) {
 			struct_id: struct_id,
 			site_id: site_id,
 			project_id: project_id,
+			coalevel: coalevel,
 			cache_id: cache_id
 		}
 
+		console.log(sqlParam)
 
 		if (report == 'nr') {
-			const sqlDataRequest = 'call public.nr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}, ${struct_id}, ${site_id}, ${project_id}, ${cache_id}::uuid)'
+			const sqlDataRequest = 'call public.nr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}::int4, ${struct_id}::int4, ${site_id}::int4, ${project_id}::int8, ${coalevel}::int2, ${cache_id}::uuid)'
 			await db.none(sqlDataRequest, sqlParam)
 		} else if (report == 'lr') {
-			const sqlDataRequest = 'call public.lr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}, ${struct_id}, ${site_id}, ${project_id}, ${cache_id}::uuid)'
+			const sqlDataRequest = 'call public.lr_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}::int4, ${struct_id}::int4, ${site_id}::int4, ${project_id}::int8, ${coalevel}::int2, ${cache_id}::uuid)'
 			await db.none(sqlDataRequest, sqlParam)
 		} else {
 			throw new Error(`report '${report}' is not supported`)

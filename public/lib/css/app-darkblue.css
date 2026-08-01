@@ -57,6 +57,9 @@ input::selection {
 
 .action-button {
 	background-color: #2c435c;
+	width: auto;
+	min-width: max-content;
+	overflow: visible;
 }
 
 
