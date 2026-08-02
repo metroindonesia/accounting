@@ -47,8 +47,6 @@ export default class extends Module {
 				Context.setting = result.setting
 				Context.maxCoaLevel = result.maxCoaLevel
 
-				console.log(Context)
-
 
 
 				const obj_coalevelData = document.getElementById('obj_coalevel-data')
