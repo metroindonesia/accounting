@@ -73,7 +73,6 @@ export function renderRow(self, row) {
 	}
 
 
-	console.log(row)
 
 	const tempContainer = document.createElement('tbody');
 	tempContainer.innerHTML = renderedHtml;

@@ -189,7 +189,6 @@ async function btnLoad_click(self) {
 		const param = getParams()
 		let subtitles = []
 
-		console.log(param)
 
 		// cek data
 		for (let selector of [obj_unit, obj_site, obj_struct, obj_project]) {
@@ -260,7 +259,7 @@ async function btnDownload_click(self) {
 	}
 
 	TableToExcel.convert(table, {
-		name: 'namafile.xlsx',
+		name: 'lapkeu.xlsx',
 		sheet: {
 			name: 'Sheet1'
 		},
