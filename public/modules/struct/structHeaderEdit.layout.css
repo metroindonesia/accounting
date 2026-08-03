@@ -56,7 +56,13 @@
 	
 	#structHeaderEdit-obj_struct_istransaction-container {
 		grid-row: 2;
-		grid-column: 5 / span 2;
+		grid-column: 5 / span 1;
+		
+	}
+	
+	#structHeaderEdit-obj_struct_ishaspnl-container {
+		grid-row: 2;
+		grid-column: 6 / span 1;
 		
 	}
 	

@@ -73,6 +73,8 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 			delete criteria.user_id
 		}
 
+	} else {
+		sort[`${entityname}_path`] = 'asc'
 	}
 }
 

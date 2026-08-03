@@ -13,16 +13,22 @@ async function main(param) {
 		const sqlCache = 'select gen_random_uuid() as cache_id;'
 		const row = await db.one(sqlCache)
 		const cache_id = row.cache_id;
-
-
-		// panggil stored procedure dengan cache_id
-		const sqlDataRequest = 'call public.ledger_idr (${date}, ${isytd}, ${cache_id}::uuid)'
-		await db.none(sqlDataRequest, {
-			date: param.date,
-			isytd: param.isytd,
+		const { isytd, scope, unit_id, struct_id, site_id, project_id, date } = param
+		const sqlParam = {
+			date: date,
+			isytd: isytd,
+			datascope: scope,
+			unit_id: unit_id,
+			struct_id: struct_id,
+			site_id: site_id,
+			project_id: project_id,
 			cache_id: cache_id
-		})
+		}
 
+
+		// eksekusi procedure generate report
+		const sqlDataRequest = 'call public.ledger_idr_scope (${date}, ${isytd}, ${datascope}, ${unit_id}, ${struct_id}, ${site_id}, ${project_id}, ${cache_id}::uuid)'
+		await db.none(sqlDataRequest, sqlParam)
 
 		// hitung jumlah baris
 		const sqlCountRows = 'select count(rowid) as n from temp.ledger where cache_id=${cache_id}'

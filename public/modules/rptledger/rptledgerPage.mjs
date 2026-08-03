@@ -1,7 +1,6 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
 
 
-
 const app = Context.app
 
 const reportTable = document.getElementById('tbl-report')
@@ -10,31 +9,35 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+
+export const TITLE = 'Buku Besar'
+
 export async function init(self, args) {
 	console.log('initializing report ...')
-
-	const pageTitle = 'Buku Besar'  // judul halaman
-	Context.setTitle(pageTitle);  // set judul di browser
-
-	// set datebox tanggal otomatis jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptLedger_tgl").value = today;
-
+	Context.setTitle(TITLE);  // set judul di browser
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
 	}
+
+	const docLogo = document.getElementById('report-logo')
+	const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
+	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
-export function getParams() {
-	const tgl = document.getElementById('rptLedger_tgl').value
-	const isytdval = document.getElementById('isytd').value
-	return {
-		// date: '2024-01-31',  // TODO Ganti ini
-		date: tgl,
-		//isytd: true
-		isytd: isytdval
-	}
+
+
+
+export function setTitle(text) {
+	document.getElementById('judul-laporan').innerHTML = text
+}
+
+export function setSubTitle(text) {
+	document.getElementById('subjudul-laporan').innerHTML = text
+}
+
+export function setReportDate(dt) {
+	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
 }
 
 

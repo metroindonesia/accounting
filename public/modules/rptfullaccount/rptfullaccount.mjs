@@ -8,6 +8,9 @@ const btnLoad = document.getElementById('btnLoad')
 const btnPrint = document.getElementById('btnPrint')
 const btnDownload = document.getElementById('btnDownload')
 
+const obj_reporttype = new $fgta5.Combobox('obj_reporttype')
+const obj_date = new $fgta5.Datepicker('obj_date')
+
 
 export default class extends Module {
 	constructor() {
@@ -62,18 +65,25 @@ export default class extends Module {
 				btnDownload_click(self)
 			})
 
+			const today = new Date().toISOString().split("T")[0];
+			obj_date.value = today
+
 		} catch (err) {
 			throw err
 		}
 
 	}
-
-
-
-
-
 }
 
+
+function getParams() {
+	const reporttype = obj_reporttype.value
+
+	return {
+		typelap: reporttype,
+		date: obj_date.value
+	}
+}
 
 async function render(self) {
 	try {
@@ -113,24 +123,27 @@ async function btnPrint_click(self) {
 
 async function btnLoad_click(self) {
 	let mask = $fgta5.Modal.createMask()
-	let typelap = document.getElementById('typelap').value
-	// let text = typelap.options[typelap.selectedIndex].text;
-	let tgl = document.getElementById('rptfullaccount_enddate').value
+
 	try {
+		const param = getParams()
+
 		btnLoad.disabled = true
 		btnPrint.disabled = true
 		btnDownload.disabled = true
 
 		mask.setText('Requesting report data')
-		const param = reportPage.getParams()
 		const res = await loadData(self, param)
-
 		const cache = {
 			id: res.info.cache_id,
 			rowCount: res.info.rowCount,
 		}
 
 		await loadReport(self, cache, mask)
+
+		reportPage.setTitle(reportPage.TITLE)
+		reportPage.setSubTitle(param.typelap)
+		reportPage.setReportDate(param.date)
+
 
 	} catch (err) {
 		console.error(err)
@@ -140,20 +153,8 @@ async function btnLoad_click(self) {
 		btnLoad.disabled = false
 		btnPrint.disabled = false
 		btnDownload.disabled = false
-
-
-		if (typelap == 'fa_mtd') {
-			document.getElementById("judul-laporan").innerHTML = "FullAccount MTD"
-			document.getElementById("tgl_cetak").innerHTML = "End Date : <b>" + tgl + "</b>";
-			
-		}else{
-			document.getElementById("judul-laporan").innerHTML = "FullAccount YTD"
-			document.getElementById("tgl_cetak").innerHTML = "End Date : <b>" + tgl + "</b>";
-		}
-
 		mask.close()
 		mask = null
-		// console.log(typelap)
 	}
 }
 
@@ -172,7 +173,7 @@ async function btnDownload_click(self) {
 	}
 
 	TableToExcel.convert(table, {
-		name: 'namafile.xlsx',
+		name: 'fullaccount.xlsx',
 		sheet: {
 			name: 'Sheet1'
 		},

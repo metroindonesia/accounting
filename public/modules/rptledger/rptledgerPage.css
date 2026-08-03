@@ -30,10 +30,26 @@
 		display: none;
 	}
 
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 15mm;
+		width: 60mm;
+	}
+
 }
 
 
-@media screen {}
+@media screen {
+	#report-logo {
+		background-size: cover;
+		background-position: center;
+		background-repeat: no-repeat;
+		height: 32px;
+		width: 128px;
+	}
+}
 
 
 #judul-laporan {
@@ -105,15 +121,4 @@
 	width: 100%;
 	margin-bottom: 10px;
 
-}
-
-#filter-container {
-	grid-row: 1;
-	grid-column: 1 / span 8;
-}
-
-#btn {
-	grid-row: 1;
-	grid-column: 11 / span 2;
-	text-align: right;
 }

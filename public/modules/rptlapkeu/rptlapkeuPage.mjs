@@ -10,15 +10,12 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+
+export const TITLE = 'Laporan Keuangan'
+
 export async function init(self, args) {
 	console.log('initializing report ...')
-
-	const pageTitle = 'Laporan Keuangan'  // judul halaman
-	Context.setTitle(pageTitle);  // set judul di browser
-
-	// set tanggal(datebox) jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptLapkeu_tgl").value = today;
+	Context.setTitle(TITLE);  // set judul di browser
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
@@ -29,18 +26,20 @@ export async function init(self, args) {
 	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
-export function getParams() {
-	const tgl = document.getElementById('rptLapkeu_tgl').value
-	const typelap = document.getElementById('typelap').value
 
-	return {
-		// date: '2024-01-31',  // TODO Ganti ini
-		date: tgl,
-		// isytd: false
-		// isytd: isytdval
-		typelap
-	}
+export function setTitle(text) {
+	document.getElementById('judul-laporan').innerHTML = text
 }
+
+export function setSubTitle(text) {
+	document.getElementById('subjudul-laporan').innerHTML = text
+}
+
+export function setReportDate(dt) {
+	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
+}
+
+
 
 
 export function getReportObjects() {
@@ -74,7 +73,6 @@ export function renderRow(self, row) {
 	}
 
 
-	console.log(row)
 
 	const tempContainer = document.createElement('tbody');
 	tempContainer.innerHTML = renderedHtml;

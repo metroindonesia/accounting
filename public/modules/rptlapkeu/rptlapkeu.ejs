@@ -2,29 +2,125 @@
 
 	<div id="lapkeuHeader">
 		<!-- <div style="flex-grow: 1;"> -->
-		<div id="filter-container">Type :
-			<select id="typelap">
-				<option value="nr_mtd">Neraca MTD</option>
-				<option value="nr_ytd">Neraca YTD</option>
-				<option value="lr_mtd">Laba Rugi MTD</option>
-				<option value="lr_ytd">Laba Rugi YTD</option>
-			</select>
+		<div id="filter-container">
 
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Dept</option>
-			</select>
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_reporttype" fgta5-component="Combobox" placeholder="report type" autocomplete="off" spellcheck="false" 
+					required
+					binding="reporttype_id"
+					data-display="reporttype_name">
+				<datalist for="obj_reporttype">
 
-			Per Tanggal : <input type="date" id="rptLapkeu_tgl">
-			<button id="btnLoad">Load</button>
-			<!-- </div> -->
+					<option value="nr|all|mtd" default>Neraca MTD - all</option>
+					<option value="nr|unit|mtd">Neraca MTD - unit</option>
+					<option value="nr|struct|mtd">Neraca MTD - struct</option>
+					<option value="nr|site|mtd">Neraca MTD - site</option>
+					<option value="nr|project|mtd">Neraca MTD - project</option>
+					<option value="nr|unitsite|mtd">Neraca MTD - unit site</option>
+					<option value="nr|unitstruct|mtd">Neraca MTD - unit struct</option>
+					<option value="nr|unitproject|mtd">Neraca MTD - unit project</option>
+
+					<option value="nr|all|ytd">Neraca YTD - all</option>
+					<option value="nr|unit|ytd">Neraca YTD - unit</option>
+					<option value="nr|struct|ytd">Neraca YTD - struct</option>
+					<option value="nr|site|ytd">Neraca YTD - site</option>
+					<option value="nr|project|ytd">Neraca YTD - project</option>
+					<option value="nr|unitsite|ytd">Neraca YTD - unit site</option>
+					<option value="nr|unitstruct|ytd">Neraca YTD - unit struct</option>
+					<option value="nr|unitproject|ytd">Neraca YTD - unit project</option>
+
+					<option value="lr|all|mtd">Laba Rugi MTD - all</option>
+					<option value="lr|unit|mtd">Laba Rugi MTD - unit</option>
+					<option value="lr|struct|mtd">Laba Rugi MTD - struct</option>
+					<option value="lr|site|mtd">Laba Rugi MTD - site</option>
+					<option value="lr|project|mtd">Laba Rugi MTD - project</option>
+					<option value="lr|unitsite|mtd">Laba Rugi MTD - site unit</option>
+					<option value="lr|unitstruct|mtd">Laba Rugi MTD - site struct</option>
+					<option value="lr|unitproject|mtd">Laba Rugi MTD - site project</option>
+
+					<option value="lr|all|ytd">Laba Rugi YTD - all</option>
+					<option value="lr|unit|ytd">Laba Rugi YTD - unit</option>
+					<option value="lr|struct|ytd">Laba Rugi YTD - struct</option>
+					<option value="lr|site|ytd">Laba Rugi YTD - site</option>
+					<option value="lr|project|ytd">Laba Rugi YTD - project</option>
+					<option value="lr|unitsite|ytd">Laba Rugi YTD - site unit</option>
+					<option value="lr|unitstruct|ytd">Laba Rugi YTD - site struct</option>
+					<option value="lr|unitproject|ytd">Laba Rugi YTD - site project</option>
+				</datalist>
+			</div>
+
+
+			<div style="display: flex; flex-direction: column; row-gap: 5px;">
+
+				<input id="obj_unit" fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="unit_id"
+					data-display="unit_name"
+					data-unselected-error="Unit belum dipilih">
+
+				<input id="obj_struct" fgta5-component="Combobox" placeholder="structure" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="struct_id"
+					data-display="struct_name"
+					data-unselected-error="Structure belum dipilih">
+
+				<input id="obj_site" fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="site_id"
+					data-display="site_name"
+					data-unselected-error="Site belum dipilih">
+
+				<input id="obj_project" fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="project_id"
+					data-display="project_name"
+					data-unselected-error="Project belum dipilih">
+
+			</div>
+
+			<div id="obj_coalevel-container" style="width: 70px;">
+				<input id="obj_coalevel" fgta5-component="Combobox" placeholder="level" autocomplete="off" spellcheck="false" 
+					required
+					binding="coalevel"
+					data-display="coalevel">
+				<datalist for="obj_coalevel" id="obj_coalevel-data"></datalist>	
+			</div>
+
+
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
+
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
+
+
 		</div>
 
-		<div id="btn">
-			<button id="btnDownload">Download</button>
-			<button id="btnPrint">Cetak</button>
+		<div id="btn-panel">
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
+
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
+
 		</div>
 
 	</div>

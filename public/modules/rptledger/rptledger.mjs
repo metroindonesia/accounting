@@ -1,5 +1,7 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
 import * as reportPage from './rptledgerPage.mjs'  // todo: sesuaikan
+// import * as rptselector from '../../lib/rptselector.mjs'
+
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -7,6 +9,13 @@ const Crsl = Context.Crsl
 const btnLoad = document.getElementById('btnLoad')
 const btnPrint = document.getElementById('btnPrint')
 const btnDownload = document.getElementById('btnDownload')
+
+const obj_reporttype = new $fgta5.Combobox('obj_reporttype')
+const obj_date = new $fgta5.Datepicker('obj_date')
+const obj_unit = new $fgta5.Combobox('obj_unit')
+const obj_struct = new $fgta5.Combobox('obj_struct')
+const obj_site = new $fgta5.Combobox('obj_site')
+const obj_project = new $fgta5.Combobox('obj_project')
 
 
 export default class extends Module {
@@ -33,7 +42,7 @@ export default class extends Module {
 				Context.sid = result.sid
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
-
+				Context.setting = result.setting
 
 
 			} catch (err) {
@@ -62,16 +71,62 @@ export default class extends Module {
 				btnDownload_click(self)
 			})
 
+
+			const today = new Date().toISOString().split("T")[0];
+			obj_date.value = today
+			obj_unit.isVisible = (scope) => { return ['unit', 'unitstruct', 'unitsite', 'unitproject'].includes(scope) }
+			obj_unit.addEventListener('selecting', (evt) => obj_unit_selecting(evt))
+			obj_struct.isVisible = (scope) => { return ['struct', 'unitstruct'].includes(scope) }
+			obj_struct.addEventListener('selecting', (evt) => obj_struct_selecting(evt))
+			obj_site.isVisible = (scope) => { return ['site', 'unitsite'].includes(scope) }
+			obj_site.addEventListener('selecting', (evt) => obj_site_selecting(evt))
+			obj_project.isVisible = (scope) => { return ['project', 'unitproject'].includes(scope) }
+			obj_project.addEventListener('selecting', (evt) => obj_project_selecting(evt))
+
+
+
+
+			obj_reporttype.addEventListener('selected', (evt) => {
+				const param = getParams()
+				setVisibility(param.scope, [obj_unit, obj_struct, obj_site, obj_project])
+			})
+
+
 		} catch (err) {
 			throw err
 		}
 
 	}
 
+}
 
 
 
 
+function getParams() {
+	const reporttype = obj_reporttype.value
+	const [scope, range] = reporttype.split('|')
+
+	return {
+		isytd: range == 'ytd' ? true : false,
+		scope: scope,
+		unit_id: obj_unit.value,
+		struct_id: obj_struct.value,
+		site_id: obj_site.value,
+		project_id: obj_project.value,
+		date: obj_date.value
+	}
+}
+
+function setVisibility(scope, selectors) {
+	for (let selector of selectors) {
+		const container = selector.Element.closest('.fgta5-entry-container');
+		if (selector.isVisible(scope)) {
+			container.classList.remove('hidden')
+		} else {
+			container.classList.add('hidden')
+		}
+	}
 }
 
 
@@ -113,23 +168,53 @@ async function btnPrint_click(self) {
 
 async function btnLoad_click(self) {
 	let mask = $fgta5.Modal.createMask()
-	let isytd = document.getElementById('isytd').value
-	let tgl = document.getElementById('rptLedger_tgl').value
+
 	try {
+		const param = getParams()
+		let subtitles = []
+
+
+		// cek data
+		for (let selector of [obj_unit, obj_site, obj_struct, obj_project]) {
+			const el = selector.Element
+			const binding = el.getAttribute('binding')
+			const errormessage = el.getAttribute('data-unselected-error')
+			if (selector.isVisible(param.scope)) {
+				subtitles.push(selector.text)
+				if (param[binding] == null) {
+					throw new Error(errormessage)
+				}
+			}
+		}
+
+
+		if (subtitles.length == 0) {
+			subtitles.push('Consolidated')
+		}
+
 		btnLoad.disabled = true
 		btnPrint.disabled = true
 		btnDownload.disabled = true
 
 		mask.setText('Requesting report data')
-		const param = reportPage.getParams()
 		const res = await loadData(self, param)
-
 		const cache = {
 			id: res.info.cache_id,
 			rowCount: res.info.rowCount,
 		}
 
+
+
+
 		await loadReport(self, cache, mask)
+
+		reportPage.setTitle(reportPage.TITLE)
+		reportPage.setReportDate(param.date)
+		if (param.isytd) {
+			reportPage.setSubTitle('YTD - ' + subtitles.join(', '))
+		} else {
+			reportPage.setSubTitle('MTD - ' + subtitles.join(', '))
+		}
 
 	} catch (err) {
 		console.error(err)
@@ -139,20 +224,8 @@ async function btnLoad_click(self) {
 		btnLoad.disabled = false
 		btnPrint.disabled = false
 		btnDownload.disabled = false
-
-		if (isytd == 'true') {
-			document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
-			document.getElementById('subjudul-laporan').innerHTML = "YTD"
-			document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + tgl + "</b>"
-		} else {
-			document.getElementById('judul-laporan').innerHTML = "BUKU BESAR"
-			document.getElementById('subjudul-laporan').innerHTML = "MTD"
-			document.getElementById('tgl_cetak').innerHTML = "Per tanggal : <b>" + tgl + "</b>"
-		}
-
 		mask.close()
 		mask = null
-		// console.log(isytd)
 	}
 }
 
@@ -171,7 +244,7 @@ async function btnDownload_click(self) {
 	}
 
 	TableToExcel.convert(table, {
-		name: 'namafile.xlsx',
+		name: 'bukubesar.xlsx',
 		sheet: {
 			name: 'Sheet1'
 		},
@@ -242,17 +315,17 @@ async function loadReport(self, cache, mask) {
 	const { reportBody, reportInfo } = reportPage.getReportObjects()
 
 
+	reportPage.setTitle(reportPage.TITLE)
+	reportPage.setSubTitle('downloading report ...')
+	reportPage.setReportDate('')
+
 	reportInfo.innerHTML = `downloading data ${cache.id} ...`;
 	mask.setText(reportInfo.innerHTML)
 
 
 
-
-	// table untuk menampilkan hasil report
-
 	// kosongkan table
 	reportBody.innerHTML = ''
-
 
 
 	// ambil total Rows
@@ -303,5 +376,114 @@ async function loadReport(self, cache, mask) {
 			reportInfo.innerHTML = `${line} rows fetched from ${cache.id}`;
 			doFetch = false
 		}
+	}
+}
+
+
+async function obj_unit_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'unit/header-list'
+	const sort = { unit_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.unit_id, row.unit_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_struct_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'struct/header-list'
+	const sort = { struct_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.struct_id, row.struct_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_site_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'site/header-list'
+	const sort = { site_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.site_id, row.site_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_project_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'project/header-list'
+	const sort = { project_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.project_id, row.project_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
 	}
 }
