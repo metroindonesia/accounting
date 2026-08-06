@@ -32,6 +32,7 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 export async function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
 	searchMap.struct_isdisabled = 'struct_isdisabled=${struct_isdisabled}'
 	searchMap.struct_isparent = 'struct_isparent=${struct_isparent}'
+	searchMap.struct_istransaction = 'struct_istransaction=${struct_istransaction}'
 	searchMap.exclude_self = 'struct_id<>${exclude_self}'
 
 

@@ -162,7 +162,9 @@ export async function headerDeleting(self, tx, dataToRemove) {
 	// apakah user boleh menghapus jurnal
 	const allowed = await getUserPermission(tx, user_id, PERMISSION.DELETE)
 	if (!allowed) {
-		throw new Error('tidak ada permission untuk menghapus jurnal')
+		const err = new Error('tidak ada permission untuk menghapus jurnal')
+		err.status = 403
+		throw err
 	}
 
 

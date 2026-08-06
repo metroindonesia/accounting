@@ -76,6 +76,10 @@ export function renderRow(self, row) {
 
 	const trElement = tempContainer.firstChild;
 
+
+	const colCoaId = trElement.querySelector("[data-colname=\"coa_id\"]");
+	colCoaId.classList.add('number')
+
 	// set padding dari coa_name
 	const colCoaName = trElement.querySelector("[data-colname=\"coa_name\"]");
 	colCoaName.style.paddingLeft = `${15 * row.coa_level}px`
@@ -83,6 +87,8 @@ export function renderRow(self, row) {
 	// format angka decimal
 	const colsDecimals = trElement.querySelectorAll("td[format=\"decimal\"]")
 	for (let col of colsDecimals) {
+		col.classList.add('number')
+
 		const text = col.innerHTML
 		const value = Number(text)
 

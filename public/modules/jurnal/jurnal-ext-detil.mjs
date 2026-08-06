@@ -369,6 +369,9 @@ export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, cri
 export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
 	criteria.struct_isdisabled = false
 	criteria.struct_isparent = false
+	criteria.struct_istransaction = true
+
+	sort.struct_name = 'asc'
 }
 
 export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {
