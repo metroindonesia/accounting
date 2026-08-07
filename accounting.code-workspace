@@ -28,6 +28,17 @@
 		"files.watcherExclude": {
 			"**/node_modules": true
 		},
+		"remote.autoForwardPortsSource": "output",
+		"remote.restoreForwardedPorts": false,
+		"remote.portsAttributes": {
+			"3003": {
+				"label": "Accounting Server",
+				"onAutoForward": "openBrowser"
+			},
+			"other": {
+				"onAutoForward": "ignore"
+			}
+		}
 	},
 	"launch": {
 		"version": "0.2.0",
