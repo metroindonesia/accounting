@@ -19,6 +19,7 @@ const _paymreq_version = 'paymreqHeaderEdit-obj_paymreq_version'
 const _paymreq_doc = 'paymreqHeaderEdit-obj_paymreq_doc'
 const _paymreq_descr = 'paymreqHeaderEdit-obj_paymreq_descr'
 const _paymreq_date = 'paymreqHeaderEdit-obj_paymreq_date'
+const _paymreq_datedue = 'paymreqHeaderEdit-obj_paymreq_datedue'
 const _iscommit = 'paymreqHeaderEdit-obj_iscommit'
 const _isapproved = 'paymreqHeaderEdit-obj_isapproved'
 const _paymreqtype_id = 'paymreqHeaderEdit-obj_paymreqtype_id'
@@ -327,6 +328,18 @@ export async function paymreqHeaderEdit_newData(self, datainit, frm) {
 
 	// console.log(Context.setting)
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
+}
+
+
+export async function paymreqHeaderEdit_dataSaving(self, dataToSave, frm, args) {
+	// cek tanggal paymreq_date & paymreq_datedue
+	const dt_paymreq_date = frm.Inputs[_paymreq_date].value ? frm.Inputs[_paymreq_date].value.split('T')[0] : ''
+	const dt_paymreq_datedue = frm.Inputs[_paymreq_datedue].value ? frm.Inputs[_paymreq_datedue].value.split('T')[0] : ''
+
+	if (dt_paymreq_datedue && dt_paymreq_date && dt_paymreq_datedue < dt_paymreq_date) {
+		$fgta5.MessageBox.warning('Tanggal Jatuh Tempo (Due Date) tidak boleh lebih kecil dari Tanggal Request (Date)')
+		args.cancelSave = true
+	}
 }
 
 export async function paymreqHeaderEdit_dataSaved(self, data, frm) {

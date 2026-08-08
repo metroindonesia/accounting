@@ -61,6 +61,27 @@ export function obj_itemclass_id_selecting_criteria(self, obj_itemclass_id, frm,
 	criteria.visible_by_struct_id = struct_id
 }
 
+export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
+	sort.struct_name = 'asc'
+	criteria.struct_isdisabled = false
+	criteria.struct_isparent = false
+	criteria.struct_istransaction = true
+}
+
+export function obj_project_id_selecting_criteria(self, obj_project_id, frm, criteria, sort, evt) {
+	sort.project_name = 'asc'
+	criteria.project_isdisabled = false
+}
+
+export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {
+	sort.site_name = 'asc'
+	criteria.site_isdisabled = false
+}
+
+export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {
+	sort.unit_name = 'asc'
+	criteria.unit_isdisabled = false
+}
 
 async function updateHeaderValues(self, paymreq_id) {
 	try {
