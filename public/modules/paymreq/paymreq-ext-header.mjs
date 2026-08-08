@@ -18,6 +18,7 @@ const _paymreq_id = 'paymreqHeaderEdit-obj_paymreq_id'
 const _paymreq_version = 'paymreqHeaderEdit-obj_paymreq_version'
 const _paymreq_doc = 'paymreqHeaderEdit-obj_paymreq_doc'
 const _paymreq_descr = 'paymreqHeaderEdit-obj_paymreq_descr'
+const _paymreq_date = 'paymreqHeaderEdit-obj_paymreq_date'
 const _iscommit = 'paymreqHeaderEdit-obj_iscommit'
 const _isapproved = 'paymreqHeaderEdit-obj_isapproved'
 const _paymreqtype_id = 'paymreqHeaderEdit-obj_paymreqtype_id'
@@ -564,6 +565,8 @@ async function btn_actionPrint_click(self, frm, CurrentState, evt) {
 }
 
 function paymreqtype_changed(paymreqtype, frm) {
+	console.log(paymreqtype)
+
 	pageHelper.setVisibility(`${_paymreq_invoice}-container`, paymreqtype.hasinvoice)
 	pageHelper.setVisibility(`${_ffl_id}-container`, paymreqtype.hasffl)
 	pageHelper.setVisibility(`${_po_id}-container`, paymreqtype.haspo)
@@ -575,6 +578,7 @@ function paymreqtype_changed(paymreqtype, frm) {
 	pageHelper.setVisibility(`${_paymreq_pph}-container`, paymreqtype.haspph)
 
 
+	frm.Inputs[_paymreq_date].disabled = !paymreqtype.canchangedate
 
 	frm.Inputs[_paymreq_invoice].markAsRequired(paymreqtype.hasinvoice)
 	frm.Inputs[_ffl_id].markAsRequired(paymreqtype.fflismandatory)

@@ -87,6 +87,21 @@ comment on column public."paymreqtype".paymreqtype_prog is '';
 
 
 -- =============================================
+-- FIELD: canchangedate boolean
+-- =============================================
+-- ADD canchangedate
+alter table public."paymreqtype" add canchangedate boolean not null default false;
+comment on column public."paymreqtype".canchangedate is '';
+
+-- MODIFY canchangedate
+alter table public."paymreqtype"
+	alter column canchangedate type boolean,
+	ALTER COLUMN canchangedate SET DEFAULT false,
+	ALTER COLUMN canchangedate SET NOT NULL;
+comment on column public."paymreqtype".canchangedate is '';
+
+
+-- =============================================
 -- FIELD: hasinvoice boolean
 -- =============================================
 -- ADD hasinvoice

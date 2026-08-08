@@ -42,6 +42,7 @@ const obj_paymreqtype_name = frm.Inputs['paymreqtypeHeaderEdit-obj_paymreqtype_n
 const obj_agingtype_id = frm.Inputs['paymreqtypeHeaderEdit-obj_agingtype_id']
 const obj_paymreqtype_title = frm.Inputs['paymreqtypeHeaderEdit-obj_paymreqtype_title']
 const obj_paymreqtype_prog = frm.Inputs['paymreqtypeHeaderEdit-obj_paymreqtype_prog']
+const obj_canchangedate = frm.Inputs['paymreqtypeHeaderEdit-obj_canchangedate']
 const obj_hasinvoice = frm.Inputs['paymreqtypeHeaderEdit-obj_hasinvoice']
 const obj_haspo = frm.Inputs['paymreqtypeHeaderEdit-obj_haspo']
 const obj_poismandatory = frm.Inputs['paymreqtypeHeaderEdit-obj_poismandatory']
