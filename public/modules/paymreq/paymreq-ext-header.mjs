@@ -272,13 +272,17 @@ export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {
 export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
 	const obj_struct_id = frm.Inputs[_struct_id]
+	const obj_paymreq_date = frm.Inputs[_paymreq_date]
 	obj_paymreqtype_id.disabled = true
 	obj_struct_id.disabled = true
 
-	const { paymtype, paymreqtype } = frm.getOriginalData()
+	const { paymtype, paymreqtype, paymreq_date } = frm.getOriginalData()
 	paymreqtype_changed(paymreqtype, frm)
 	paymtype_changed(paymtype, frm)
 
+	// dikarenakan mungkin ada perubahan obj_paymreq_date saat paymreqtype_change
+	// disini dikembalikan lagi
+	obj_paymreq_date.value = paymreq_date
 
 
 
@@ -585,7 +589,6 @@ async function btn_actionPrint_click(self, frm, CurrentState, evt) {
 }
 
 function paymreqtype_changed(paymreqtype, frm) {
-	console.log(paymreqtype)
 
 	pageHelper.setVisibility(`${_paymreq_invoice}-container`, paymreqtype.hasinvoice)
 	pageHelper.setVisibility(`${_ffl_id}-container`, paymreqtype.hasffl)
@@ -604,6 +607,12 @@ function paymreqtype_changed(paymreqtype, frm) {
 	frm.Inputs[_ffl_id].markAsRequired(paymreqtype.fflismandatory)
 	frm.Inputs[_po_id].markAsRequired(paymreqtype.poismandatory)
 	frm.Inputs[_bc_id].markAsRequired(paymreqtype.bcismandatory)
+
+
+	if (!paymreqtype.canchangedate) {
+		// karena tanggal tidak bisa diubah, set tanggal menjadi tanggal sekarang
+		frm.Inputs[_paymreq_date].value = new Date()
+	}
 }
 
 function paymtype_changed(paymtype, frm) {
