@@ -180,10 +180,30 @@ export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) 
 	paymtype_changed(paymtype, frm)
 }
 
+
+export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
+	sort.struct_name = 'asc'
+	criteria.struct_isparent = false
+	criteria.struct_isdisabled = false
+	criteria.struct_istransaction = true
+	criteria.user_id = Context.userId
+	criteria.check_permission = permission.LIST_ALLSTRUCT
+}
+
+export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {
+	sort.site_name = 'asc'
+	criteria.site_isdisabled = false
+}
+
 export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {
+	sort.partner_name = 'asc'
 	criteria.partner_isdisabled = false
 }
 
+export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {
+	sort.unit_name = 'asc'
+	criteria.unit_isdisabled = false
+}
 
 export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 	if (!obj_partner_id.isSelectedChanged()) {
