@@ -7,7 +7,6 @@ import { processApPayment } from './jurnal.apiext.ap-payment.js'
 import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
 import { processDirectPayment } from './jurnal.apiext.direct-payment.js'
 import { reopen } from './periode.apiext.js'
-import { GEO_REPLY_WITH } from 'redis'
 import * as PERMISSION from '../../../public/modules/jurnal/jurnal.permission.mjs'
 
 

@@ -1,5 +1,6 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import db from '@agung_dhewe/webapps/src/db.js'
+import { isCurrentAuthenticator } from '../../helpers/auth.inc.js'
 
 
 const TABLE = {
@@ -374,6 +375,7 @@ export async function approve(self, db, body, paymreq_log) {
 		const rowCurrent = await db.one(sqlCurent, { paymreq_id: paymreq_id })
 		const iscommit = rowCurrent.iscommit
 		const isapproved = rowCurrent.isapproved
+		const struct_id = rowCurrent.struct_id
 
 
 		if (isapproved) {
@@ -386,6 +388,12 @@ export async function approve(self, db, body, paymreq_log) {
 		if (!iscommit) {
 			// tidak bisa approve data yang belum di commit
 			throw new Error('tidak bisa approve dokumen yang belum dicommit')
+		}
+
+
+		// cek apakah user yang login saat ini adalah authenticator untuk structure ini
+		if (!isCurrentAuthenticator(struct_id, user_id)) {
+			throw new Error('tidak ada hak akses sebagai authenticator structure')
 		}
 
 
