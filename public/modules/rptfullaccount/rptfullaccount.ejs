@@ -1,31 +1,50 @@
 <section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
 
 	<div id="agingHeader">
-		<!-- <div style="flex-grow: 1;"> -->
-		<div id="filter-container">Type:
-			<select id="typelap">
-				<option value="fa_mtd">FullAccount MTD</option>
-				<option value="fa_ytd">FullAccount YTD</option>
-			</select>
+		<div id="filter-container">
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_reporttype" fgta5-component="Combobox" placeholder="report type" autocomplete="off" spellcheck="false" 
+					required
+					binding="reporttype_id"
+					data-display="reporttype_name">
+				<datalist for="obj_reporttype">
+					<option value="fa_mtd" default>FullAccount MTD</option>
+					<option value="fa_ytd">FullAccount YTD</option>
+				</datalist>
+			</div>
 
-			<!-- Filter -->
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Unit</option>
-			</select>
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
 
-			End Date: <input type="date" id="rptfullaccount_enddate">
-			<button id="btnLoad">Load</button>
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
+
 		</div>
 
 		<!-- </div> -->
 
 
-		<div id="btn">
-			<button id="btnDownload">Download</button>
-			<button id="btnPrint">Cetak</button>
+		<div id="btn-panel">
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
+
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
+
 		</div>
 
 	</div>

@@ -31,3 +31,14 @@
 		top: 0;
 	}
 }
+
+
+
+#btn-panel {
+	grid-row: 1;
+	grid-column: 11 / span 2;
+	text-align: right;
+	display: flex;
+	column-gap: 5px;
+	justify-content: end;
+}

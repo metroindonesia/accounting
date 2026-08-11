@@ -1,35 +1,52 @@
 <section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
 
 	<div id="agingHeader">
-		<!-- <div style="flex-grow: 1;"> -->
-		<div id="filter-container">Type:
-			<select id="typelap">
-				<option value="ar_part">Receivable by Partner</option>
-				<option value="ar_partcoa">Receivable by PartnerCOA</option>
-				<option value="ar_detil">Receivable Detil</option>
-				<option value="ap_part">Payable by Partner</option>
-				<option value="ap_partcoa">Payable by PartnerCOA</option>
-				<option value="ap_detil">Payable Detil</option>
-			</select>
+		<div id="filter-container">
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_reporttype" fgta5-component="Combobox" placeholder="report type" autocomplete="off" spellcheck="false" 
+					required
+					binding="reporttype_id"
+					data-display="reporttype_name">
+				<datalist for="obj_reporttype">
+					<option value="ar_part" default>Receivable by Partner</option>
+					<option value="ar_partcoa">Receivable by PartnerCOA</option>
+					<option value="ar_detil">Receivable Detil</option>
+					<option value="ap_part">Payable by Partner</option>
+					<option value="ap_partcoa">Payable by PartnerCOA</option>
+					<option value="ap_detil">Payable Detil</option>
+				</datalist>
+			</div>
 
-			<!-- Filter -->
-			Filter :
-			<select id="filter" disabled style="width: 200px;">
-				<option value="">Filter by</option>
-				<option value="">Site</option>
-				<option value="">Dept</option>
-			</select>
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
+			
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
 
-			Per Tanggal: <input type="date" id="rptaging_tgl">
-			<button id="btnLoad">Load</button>
+
 		</div>
 
-		<!-- </div> -->
+		<div id="btn-panel">
 
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
 
-		<div id="btn">
-			<button id="btnDownload">Download</button>
-			<button id="btnPrint">Cetak</button>
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
 		</div>
 
 	</div>

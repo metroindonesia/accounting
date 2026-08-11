@@ -25,12 +25,6 @@ export default class extends Api {
 	async init(body) { return await reportviewer_init(this, body) }
 	async generate(body) { return await reportviewer_generate(this, body) }
 	async fetch(body) { return await reportviewer_fetch(this, body) }
-
-	async getUnitList(body) { return await reportviewer_getUnitList(this, body) }
-	async getStructList(body) { return await reportviewer_getStructList(this, body) }
-	async getSiteList(body) { return await reportviewer_getSiteList(this, body) }
-	async searchProject(body) { return await reportviewer_searchProject(this, body) }
-
 }
 
 
@@ -218,56 +212,4 @@ export const runDetachedWorker = (notifierServer, clientId, options) => {
 	});
 
 
-}
-
-
-async function reportviewer_getUnitList() {
-	try {
-		const sql = `select unit_id, unit_name from public.unit order by unit_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
-
-async function reportviewer_getStructList() {
-	try {
-		const sql = `select struct_id, struct_name from public.struct order by struct_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
-
-async function reportviewer_getSiteList() {
-	try {
-		const sql = `select site_id, site_name from public.site order by site_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
-
-
-async function reportviewer_searchProject(self, body) {
-	const req = self.req;
-	const { searchText } = body
-
-	try {
-		const sql = `
-			SELECT project_id, project_name 
-			FROM public.project 
-			WHERE project_name ILIKE \${searchPattern} 
-			ORDER BY project_name 
-			LIMIT 20
-		`;
-
-		const rows = await db.any(sql, { searchPattern: `${searchText}%` })
-		return rows
-	} catch (err) {
-		throw err
-	}
 }

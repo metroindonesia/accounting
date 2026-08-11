@@ -10,15 +10,12 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+export const TITLE = 'Laporan FullAccount'
+
+
 export async function init(self, args) {
 	console.log('initializing report ...')
-
-	const pageTitle = 'Laporan FullAccount'  // judul halaman
-	Context.setTitle(pageTitle);  // set judul di browser
-
-	// set datebox tanggal otomatis jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptfullaccount_enddate").value = today;
+	Context.setTitle(TITLE);  // set judul di browser
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
@@ -29,17 +26,17 @@ export async function init(self, args) {
 	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
-export function getParams() {
-	const tgl = document.getElementById('rptfullaccount_enddate').value
-	const typelap = document.getElementById('typelap').value
 
-	return {
-		// date: '2023-10-31',  // TODO Ganti ini
-		date: tgl,
-		// typelap: 'ar_sum'
-		typelap
+export function setTitle(text) {
+	document.getElementById('judul-laporan').innerHTML = text
+}
 
-	}
+export function setSubTitle(text) {
+	document.getElementById('subjudul-laporan').innerHTML = text
+}
+
+export function setReportDate(dt) {
+	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
 }
 
 

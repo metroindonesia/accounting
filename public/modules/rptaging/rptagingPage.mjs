@@ -10,15 +10,15 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+
+let reportType
+
+export const TITLE = 'Laporan Aging AR/AP'
+
+
 export async function init(self, args) {
 	console.log('initializing report ...')
-
-	const pageTitle = 'Laporan Aging AR/AP'  // judul halaman
-	Context.setTitle(pageTitle);  // set judul di browser
-
-	// set datebox tanggal otomatis jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptaging_tgl").value = today;
+	Context.setTitle(TITLE);  // set judul di browser
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
@@ -29,17 +29,21 @@ export async function init(self, args) {
 	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
-export function getParams() {
-	const tgl = document.getElementById('rptaging_tgl').value
-	const typelap = document.getElementById('typelap').value
 
-	return {
-		// date: '2023-10-31',  // TODO Ganti ini
-		date: tgl,
-		// typelap: 'ar_sum'
-		typelap
+export function setTitle(text) {
+	document.getElementById('judul-laporan').innerHTML = text
+}
 
-	}
+export function setSubTitle(text) {
+	document.getElementById('subjudul-laporan').innerHTML = text
+}
+
+export function setReportDate(dt) {
+	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
+}
+
+export function setReportType(type) {
+	reportType = type
 }
 
 
@@ -80,57 +84,54 @@ export function renderRow(self, row) {
 	const trElement = tempContainer.firstChild;
 	console.log(row)
 
-	// data-a-indent="{{indent}}"
 
-	// atur tampilan berdasarkan typelap
-	const typelap = document.getElementById("typelap").value;
 	const table = document.getElementById("tbl-report");
 
-	if (typelap === 'ap_detil' || typelap === 'ar_detil') {
+	if (reportType === 'ap_detil' || reportType === 'ar_detil') {
 		table.classList.remove('mode-summary');
 	} else {
 		table.classList.add('mode-summary');
 	}
-	
+
 	// isi descr
 	const tdDescr = trElement.querySelector('td[data-colname="descr"]')
 	const tdJurnalDoc = trElement.querySelector('td[data-colname="jurnal_doc"]')
 	const tdJurnalDate = trElement.querySelector('td[data-colname="jurnal_date"]')
 	const tdJurnalDue = trElement.querySelector('td[data-colname="jurnal_datedue"]')
-		if (row.block == 0) {
-			tdDescr.innerHTML = row.partner_name
+	if (row.block == 0) {
+		tdDescr.innerHTML = row.partner_name
+		// set isi agar kosong tidak muncul "null" di cell
+		tdJurnalDoc.innerHTML = ''
+		tdJurnalDate.innerHTML = ''
+		tdJurnalDue.innerHTML = ''
+	} else {
+
+		if (row.jurnaldetil_descr != null) {
+			tdDescr.innerHTML = row.jurnaldetil_descr
+			tdDescr.setAttribute('data-a-indent', 3)
+
+		} else {
+			tdDescr.innerHTML = row.coa_name
 			// set isi agar kosong tidak muncul "null" di cell
 			tdJurnalDoc.innerHTML = ''
 			tdJurnalDate.innerHTML = ''
 			tdJurnalDue.innerHTML = ''
-		} else {
-
-			if (row.jurnaldetil_descr != null) {
-				tdDescr.innerHTML = row.jurnaldetil_descr
-				tdDescr.setAttribute('data-a-indent', 3)
-
-			} else {
-				tdDescr.innerHTML = row.coa_name
-				// set isi agar kosong tidak muncul "null" di cell
-				tdJurnalDoc.innerHTML = ''
-				tdJurnalDate.innerHTML = ''
-				tdJurnalDue.innerHTML = ''
-				tdDescr.setAttribute('data-a-indent', 2)
-			}
+			tdDescr.setAttribute('data-a-indent', 2)
 		}
-		
-		//Atur tampilan berdasarkan flag istotal, issubtotal, isrow
-		// reset class dulu biar tidak numpuk
-		trElement.classList.remove('row-normal', 'row-subtotal', 'row-total')
+	}
 
-		// kondisi styling berdasarkan flag database
-		if (row.istotal == 1) {
-			trElement.classList.add('row-total')
-		} else if (row.issubtotal == 1) {
-			trElement.classList.add('row-subtotal')
-		} else if (row.isrow == 1) {
-			trElement.classList.add('row-normal')
-		}
+	//Atur tampilan berdasarkan flag istotal, issubtotal, isrow
+	// reset class dulu biar tidak numpuk
+	trElement.classList.remove('row-normal', 'row-subtotal', 'row-total')
+
+	// kondisi styling berdasarkan flag database
+	if (row.istotal == 1) {
+		trElement.classList.add('row-total')
+	} else if (row.issubtotal == 1) {
+		trElement.classList.add('row-subtotal')
+	} else if (row.isrow == 1) {
+		trElement.classList.add('row-normal')
+	}
 
 	// format descimal
 	const colsDecimals = trElement.querySelectorAll("td[data-format=\"decimal\"]")

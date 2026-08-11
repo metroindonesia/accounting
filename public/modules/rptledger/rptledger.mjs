@@ -1,6 +1,6 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
 import * as reportPage from './rptledgerPage.mjs'  // todo: sesuaikan
-import * as rptselector from '../../lib/rptselector.mjs'
+// import * as rptselector from '../../lib/rptselector.mjs'
 
 
 const app = Context.app
@@ -9,6 +9,13 @@ const Crsl = Context.Crsl
 const btnLoad = document.getElementById('btnLoad')
 const btnPrint = document.getElementById('btnPrint')
 const btnDownload = document.getElementById('btnDownload')
+
+const obj_reporttype = new $fgta5.Combobox('obj_reporttype')
+const obj_date = new $fgta5.Datepicker('obj_date')
+const obj_unit = new $fgta5.Combobox('obj_unit')
+const obj_struct = new $fgta5.Combobox('obj_struct')
+const obj_site = new $fgta5.Combobox('obj_site')
+const obj_project = new $fgta5.Combobox('obj_project')
 
 
 export default class extends Module {
@@ -35,7 +42,7 @@ export default class extends Module {
 				Context.sid = result.sid
 				Context.targetDirectory = result.targetDirectory
 				Context.appsUrls = result.appsUrls
-
+				Context.setting = result.setting
 
 
 			} catch (err) {
@@ -65,27 +72,25 @@ export default class extends Module {
 			})
 
 
+			const today = new Date().toISOString().split("T")[0];
+			obj_date.value = today
+			obj_unit.isVisible = (scope) => { return ['unit', 'unitstruct', 'unitsite', 'unitproject'].includes(scope) }
+			obj_unit.addEventListener('selecting', (evt) => obj_unit_selecting(evt))
+			obj_struct.isVisible = (scope) => { return ['struct', 'unitstruct'].includes(scope) }
+			obj_struct.addEventListener('selecting', (evt) => obj_struct_selecting(evt))
+			obj_site.isVisible = (scope) => { return ['site', 'unitsite'].includes(scope) }
+			obj_site.addEventListener('selecting', (evt) => obj_site_selecting(evt))
+			obj_project.isVisible = (scope) => { return ['project', 'unitproject'].includes(scope) }
+			obj_project.addEventListener('selecting', (evt) => obj_project_selecting(evt))
 
-			// parameter event
-			const reporttypeselected = document.getElementById('reporttype')
-			const unitselect = document.getElementById('unitselect')
-			const structselect = document.getElementById('structselect')
-			const siteselect = document.getElementById('siteselect')
-			const projectselect = document.getElementById('projectselect')
-			const projectlist = document.getElementById('projectlist')
-			const dateselected = document.getElementById('rptLedger_tgl')
-			const selectors = rptselector.setupSelectors({ reporttypeselected, unitselect, structselect, siteselect, projectselect, projectlist, dateselected })
 
 
-			reporttypeselected.addEventListener('change', (evt) => {
+
+			obj_reporttype.addEventListener('selected', (evt) => {
 				const param = getParams()
-				rptselector.setSelectorByScope(param.scope, selectors)
+				setVisibility(param.scope, [obj_unit, obj_struct, obj_site, obj_project])
 			})
 
-			rptselector.setSearchProjectEndpoint(`/${Context.moduleName}/search-project`)
-			rptselector.populateUnit(unitselect, `/${Context.moduleName}/get-unit-list`, {})
-			rptselector.populateStruct(structselect, `/${Context.moduleName}/get-struct-list`, {})
-			rptselector.populateSite(siteselect, `/${Context.moduleName}/get-site-list`, {})
 
 		} catch (err) {
 			throw err
@@ -96,26 +101,31 @@ export default class extends Module {
 }
 
 
-function getParams() {
-	const selectors = rptselector.getSelectors()
-	const { reporttypeselected, unitselect, structselect, siteselect, projectselect, projectlist, dateselected } = selectors
-	const tgl = dateselected.value
-	const reporttype = reporttypeselected.value
-	const unit_id = unitselect.value
-	const struct_id = structselect.value
-	const site_id = siteselect.value
-	const project_id = rptselector.getProjectId(projectselect, projectlist)
 
+
+function getParams() {
+	const reporttype = obj_reporttype.value
 	const [scope, range] = reporttype.split('|')
 
 	return {
-		date: tgl,
 		isytd: range == 'ytd' ? true : false,
 		scope: scope,
-		unit_id: unit_id,
-		struct_id: struct_id,
-		site_id: site_id,
-		project_id: project_id
+		unit_id: obj_unit.value,
+		struct_id: obj_struct.value,
+		site_id: obj_site.value,
+		project_id: obj_project.value,
+		date: obj_date.value
+	}
+}
+
+function setVisibility(scope, selectors) {
+	for (let selector of selectors) {
+		const container = selector.Element.closest('.fgta5-entry-container');
+		if (selector.isVisible(scope)) {
+			container.classList.remove('hidden')
+		} else {
+			container.classList.add('hidden')
+		}
 	}
 }
 
@@ -161,7 +171,26 @@ async function btnLoad_click(self) {
 
 	try {
 		const param = getParams()
-		const subtitle = rptselector.getSubtitle(param)
+		let subtitles = []
+
+
+		// cek data
+		for (let selector of [obj_unit, obj_site, obj_struct, obj_project]) {
+			const el = selector.Element
+			const binding = el.getAttribute('binding')
+			const errormessage = el.getAttribute('data-unselected-error')
+			if (selector.isVisible(param.scope)) {
+				subtitles.push(selector.text)
+				if (param[binding] == null) {
+					throw new Error(errormessage)
+				}
+			}
+		}
+
+
+		if (subtitles.length == 0) {
+			subtitles.push('Consolidated')
+		}
 
 		btnLoad.disabled = true
 		btnPrint.disabled = true
@@ -174,15 +203,18 @@ async function btnLoad_click(self) {
 			rowCount: res.info.rowCount,
 		}
 
-		reportPage.setTitle("BUKU BESAR")
-		reportPage.setReportDate(param.date)
-		if (param.isytd) {
-			reportPage.setSubTitle('YTD - ' + subtitle)
-		} else {
-			reportPage.setSubTitle('MTD - ' + subtitle)
-		}
+
+
 
 		await loadReport(self, cache, mask)
+
+		reportPage.setTitle(reportPage.TITLE)
+		reportPage.setReportDate(param.date)
+		if (param.isytd) {
+			reportPage.setSubTitle('YTD - ' + subtitles.join(', '))
+		} else {
+			reportPage.setSubTitle('MTD - ' + subtitles.join(', '))
+		}
 
 	} catch (err) {
 		console.error(err)
@@ -283,17 +315,17 @@ async function loadReport(self, cache, mask) {
 	const { reportBody, reportInfo } = reportPage.getReportObjects()
 
 
+	reportPage.setTitle(reportPage.TITLE)
+	reportPage.setSubTitle('downloading report ...')
+	reportPage.setReportDate('')
+
 	reportInfo.innerHTML = `downloading data ${cache.id} ...`;
 	mask.setText(reportInfo.innerHTML)
 
 
 
-
-	// table untuk menampilkan hasil report
-
 	// kosongkan table
 	reportBody.innerHTML = ''
-
 
 
 	// ambil total Rows
@@ -347,3 +379,111 @@ async function loadReport(self, cache, mask) {
 	}
 }
 
+
+async function obj_unit_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'unit/header-list'
+	const sort = { unit_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.unit_id, row.unit_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_struct_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'struct/header-list'
+	const sort = { struct_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.struct_id, row.struct_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_site_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'site/header-list'
+	const sort = { site_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.site_id, row.site_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}
+
+async function obj_project_selecting(evt) {
+	const cbo = evt.detail.sender
+	const dialog = evt.detail.dialog
+	const url = 'project/header-list'
+	const sort = { project_name: 'asc' }
+	const criteria = {}
+	cbo.wait()
+	try {
+		const result = await Module.apiCall(url, {
+			sort,
+			criteria,
+			offset: evt.detail.offset,
+			limit: evt.detail.limit,
+		})
+
+		for (var row of result.data) {
+			evt.detail.addRow(row.project_id, row.project_name, row)
+		}
+
+		dialog.setNext(result.nextoffset, result.limit)
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		cbo.wait(false)
+	}
+}

@@ -4,9 +4,15 @@
 		<!-- <div style="flex-grow: 1;"> -->
 		<div id="filter-container">
 
-			<select id="reporttype">
-				<optgroup label="Month to date">
-					<option value="consolidated|mtd">Buku besar MTD - consolidated</option>
+
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_reporttype" fgta5-component="Combobox" placeholder="report type" autocomplete="off" spellcheck="false" 
+					required
+					binding="reporttype_id"
+					data-display="reporttype_name">
+				<datalist for="obj_reporttype">
+
+					<option value="consolidated|mtd" default>Buku besar MTD - consolidated</option>
 					<option value="unit|mtd">Buku besar MTD - unit</option>
 					<option value="struct|mtd">Buku besar MTD - struct</option>
 					<option value="site|mtd">Buku besar MTD - site</option>
@@ -14,9 +20,7 @@
 					<option value="unitstruct|mtd">Buku besar MTD - unit struct</option>
 					<option value="unitsite|mtd">Buku besar MTD - unit site</option>
 					<option value="unitproject|mtd">Buku besar MTD - unit project</option>
-				</optgroup>	
 
-				<optgroup label="Year to date">
 					<option value="consolidated|ytd">Buku besar YTD - consolidated</option>
 					<option value="unit|ytd">Buku besar YTD - unit</option>
 					<option value="struct|ytd">Buku besar YTD - unit</option>
@@ -25,39 +29,73 @@
 					<option value="unitstruct|ytd">Buku besar YTD - unit struct</option>
 					<option value="unitsite|ytd">Buku besar YTD - unit site</option>
 					<option value="unitproject|ytd">Buku besar YTD - unit project</option>
-				</optgroup>
 
-			</select>
-
-			<div style="display: flex; flex-direction: column; row-gap: 5px;">
-				<select id="unitselect" disabled class="hidden">
-					<option value="0">-- pilih unit --</option>
-				</select>
-
-
-				<select id="structselect" disabled class="hidden">
-					<option value="0">-- pilih structure --</option>
-				</select>
-
-				<select id="siteselect" disabled class="hidden">
-					<option value="0">-- pilih site --</option>
-				</select>
-
-				<input id="projectselect" name="projectselect" disabled class="hidden" list="projectlist"  placeholder="search project...">
-				<datalist id="projectlist"></datalist>
-
+				</datalist>
 			</div>
 
 
-			<input type="date" id="rptLedger_tgl">
-			<button id="btnLoad">Load</button>
+			<div style="display: flex; flex-direction: column; row-gap: 5px;">
+				<input id="obj_unit" fgta5-component="Combobox" placeholder="unit" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="unit_id"
+					data-display="unit_name"
+					data-unselected-error="Unit belum dipilih">
+
+				<input id="obj_struct" fgta5-component="Combobox" placeholder="structure" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="struct_id"
+					data-display="struct_name"
+					data-unselected-error="Structure belum dipilih">
+
+				<input id="obj_site" fgta5-component="Combobox" placeholder="site" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="site_id"
+					data-display="site_name"
+					data-unselected-error="Site belum dipilih">
+
+				<input id="obj_project" fgta5-component="Combobox" placeholder="project" autocomplete="off" spellcheck="false" 
+					required
+					class="hidden"
+					binding="project_id"
+					data-display="project_name"
+					data-unselected-error="Project belum dipilih">
+
+			</div>
+
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
+
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
+
 		</div>
 		<!-- </div> -->
 
 
 		<div id="btn-panel">
-			<button id="btnDownload">Download</button>
-			<button id="btnPrint">Cetak</button>
+
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
+
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
 		</div>
 
 	</div>

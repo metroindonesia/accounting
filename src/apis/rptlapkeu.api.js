@@ -26,9 +26,6 @@ export default class extends Api {
 	async generate(body) { return await reportviewer_generate(this, body) }
 	async fetch(body) { return await reportviewer_fetch(this, body) }
 
-	async getUnitList(body) { return await reportviewer_getUnitList() }
-	async getStructList(body) { return await reportviewer_getStructList() }
-	async getSiteList(body) { return await reportviewer_getSiteList() }
 
 }
 
@@ -65,6 +62,14 @@ async function reportviewer_init(self, body) {
 
 		// set data setting	
 		initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
+
+
+		// ambil data maximal level
+		{
+			const sql = 'select max(coagroup_level)+1 as maxlevel from public.coagroup'
+			const result = await db.one(sql)
+			initialData.maxCoaLevel = result.maxlevel
+		}
 
 
 		return initialData
@@ -122,9 +127,9 @@ async function reportviewer_fetch(self, body) {
 		console.log(`query for ${cache_id} by offset ${rowOffset}`)
 		const rows = await db.any(sql, { cache_id, rowOffset, rowLimit })
 
-		for (var row of rows) {
-			row.coa_id = ''
-		}
+		// for (var row of rows) {
+		// 	row.coa_id = ''
+		// }
 
 		return rows;
 	} catch (err) {
@@ -218,37 +223,5 @@ export const runDetachedWorker = (notifierServer, clientId, options) => {
 
 }
 
-
-
-async function reportviewer_getUnitList() {
-	try {
-		const sql = `select unit_id, unit_name from public.unit order by unit_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
-
-
-async function reportviewer_getStructList() {
-	try {
-		const sql = `select struct_id, struct_name from public.struct order by struct_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
-
-async function reportviewer_getSiteList() {
-	try {
-		const sql = `select site_id, site_name from public.site order by site_name`
-		const rows = await db.any(sql)
-		return rows
-	} catch (err) {
-		throw err
-	}
-}
 
 

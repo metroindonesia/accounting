@@ -1,6 +1,4 @@
 import Context from './rptledger-context.mjs'  // todo: sesuaikan
-import * as rptselector from '../../lib/rptselector.mjs'
-
 
 
 const app = Context.app
@@ -11,20 +9,20 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+
+export const TITLE = 'Buku Besar'
+
 export async function init(self, args) {
 	console.log('initializing report ...')
-
-	const pageTitle = 'Buku Besar'  // judul halaman
-	Context.setTitle(pageTitle);  // set judul di browser
-
-	// set datebox tanggal otomatis jadi today
-	let today = new Date().toISOString().split("T")[0];
-	document.getElementById("rptLedger_tgl").value = today;
-
+	Context.setTitle(TITLE);  // set judul di browser
 
 	if (rowTemplate == null) {
 		throw new Error('template report tidak ditemukan');
 	}
+
+	const docLogo = document.getElementById('report-logo')
+	const logoUrl = new URL(Context.setting.COMPANY_PRINTLOGO, origin).href;
+	docLogo.style.backgroundImage = `url(${logoUrl})`
 }
 
 
