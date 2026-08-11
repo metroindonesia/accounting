@@ -1,6 +1,8 @@
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import db from '@agung_dhewe/webapps/src/db.js'
 import { isCurrentAuthenticator } from '../../helpers/auth.inc.js'
+import { getUserPermission } from '@agung_dhewe/webapps/src/permission.js'
+import * as permission from '../../../public/modules/paymreq/paymreq.permission.mjs'
 
 
 const TABLE = {
@@ -30,6 +32,9 @@ const reqBillProcess = ['ap-payment']
 
 export async function paymreq_init(self, initialData) {
 	const req = self.req
+	const user_id = req.session.user.userId
+
+	initialData.setting.allow_all_structure = await getUserPermission(db, user_id, permission.LIST_ALLSTRUCT)
 	initialData.setting.defaultCurr = req.app.locals.appConfig.defaultCurr
 	initialData.setting.COMPANY_PRINTLOGO = req.app.locals.appConfig.COMPANY_PRINTLOGO
 
@@ -51,37 +56,11 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 
 
 	// ambil data criteria
-	const check_permission = criteria.check_permission;
+	const allow_all_structure = criteria.allow_all_structure;
 
 
 	// hapus parameter di criteria, karena tidak diapakai di query
-	delete criteria.check_permission
-
-
-
-	// cek apakah user diperbolehkan melihat seluruh dept
-	let limit_struct_form_member = true
-	permissionBlock: {
-		if (check_permission != null) {
-
-			// cek permission
-			const sqlCekPermission = 'select * from core.get_user_permission(${user_id}, ${permission})'
-			const rows = await db.any(sqlCekPermission, {
-				user_id: user_id,
-				permission: check_permission
-			});
-
-
-			if (rows.length == 0) {
-				break permissionBlock
-			}
-
-			const permission_value = `${rows[0].permission_value}`
-			if (permission_value.toLowerCase() == 'true') {
-				limit_struct_form_member = false
-			}
-		}
-	}
+	delete criteria.allow_all_structure
 
 
 	searchMap.iscommit = 'iscommit = ${iscommit}'
@@ -89,7 +68,9 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	searchMap.struct_id = 'struct_id = ${struct_id}'
 
 
-	if (limit_struct_form_member) {
+	if (!allow_all_structure) {
+		// tidak diperbolehkan query semua structure
+		// batasi structure berdasarkan user_id
 		searchMap.user_id = 'struct_id IN (select struct_id from public.structmember where user_id=${user_id})'
 	} else {
 		// user_id tidak digunakan di query, hapus dari criteria

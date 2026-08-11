@@ -15,9 +15,13 @@ export default {
 	Sections: { 
 		itemclassHeaderList: 'itemclassHeaderList-section', 
 		itemclassHeaderEdit: 'itemclassHeaderEdit-section', 
+		itemclassStructList: 'itemclassStructList-section', 
+		itemclassStructEdit: 'itemclassStructEdit-section', 
 	},
 	SectionMap: { 
 		'itemclassHeaderList-section' : 'itemclassHeaderList', 
 		'itemclassHeaderEdit-section' : 'itemclassHeaderEdit', 
+		'itemclassStructList-section' : 'itemclassStructList', 
+		'itemclassStructEdit-section' : 'itemclassStructEdit', 
 	}
 }

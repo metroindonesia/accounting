@@ -3,44 +3,45 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-import Context from './itemclass-context.mjs'
-import * as Ext from './itemclass-ext.mjs'
+import Context from './item-context.mjs'
+import * as Ext from './item-ext.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.itemclassHeaderEdit
+const CurrentSectionId = Context.Sections.itemHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New Item Classification'
-const TitleWhenView = 'View Item Classification'
-const TitleWhenEdit = 'Edit Item Classification'
+const TitleWhenNew = 'New Item'
+const TitleWhenView = 'View Item'
+const TitleWhenEdit = 'Edit Item'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('itemclassHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('itemclassHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('itemclassHeaderEdit-btn_new', 'itemclassHeader-new')
-const btn_del = new $fgta5.ActionButton('itemclassHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('itemclassHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('itemclassHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('itemclassHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('itemHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('itemHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('itemHeaderEdit-btn_new', 'itemHeader-new')
+const btn_del = new $fgta5.ActionButton('itemHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('itemHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('itemHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('itemHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('itemclassHeader-btn_recordstatus')
-const btn_logs = document.getElementById('itemclassHeader-btn_logs')
-const btn_about = document.getElementById('itemclassHeader-btn_about')
+const btn_recordstatus = document.getElementById('itemHeader-btn_recordstatus')
+const btn_logs = document.getElementById('itemHeader-btn_logs')
+const btn_about = document.getElementById('itemHeader-btn_about')
 
-const frm = new $fgta5.Form('itemclassHeaderEdit-frm');
-const obj_itemclass_id = frm.Inputs['itemclassHeaderEdit-obj_itemclass_id']
-const obj_itemclass_isdisabled = frm.Inputs['itemclassHeaderEdit-obj_itemclass_isdisabled']
-const obj_itemclass_name = frm.Inputs['itemclassHeaderEdit-obj_itemclass_name']
-const obj_itemclass_descr = frm.Inputs['itemclassHeaderEdit-obj_itemclass_descr']
-const obj_owner_struct_id = frm.Inputs['itemclassHeaderEdit-obj_owner_struct_id']	
+const frm = new $fgta5.Form('itemHeaderEdit-frm');
+const obj_item_id = frm.Inputs['itemHeaderEdit-obj_item_id']
+const obj_item_isdisabled = frm.Inputs['itemHeaderEdit-obj_item_isdisabled']
+const obj_item_name = frm.Inputs['itemHeaderEdit-obj_item_name']
+const obj_item_descr = frm.Inputs['itemHeaderEdit-obj_item_descr']
+const obj_struct_id = frm.Inputs['itemHeaderEdit-obj_struct_id']
+const obj_itemclass_id = frm.Inputs['itemHeaderEdit-obj_itemclass_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -52,7 +53,7 @@ export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing itemclassHeaderEdit ...')
+	console.log('initializing itemHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -84,8 +85,8 @@ export async function init(self, args) {
 		save: btn_save,	
 	}
 	
-	// export async function itemclassHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'itemclassHeaderEdit_init'
+	// export async function itemHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'itemHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -105,17 +106,32 @@ export async function init(self, args) {
 
 	
 	
-	// Combobox: obj_owner_struct_id
-	obj_owner_struct_id.addEventListener('selecting', async (evt)=>{
+	// Combobox: obj_struct_id
+	obj_struct_id.addEventListener('selected', (evt)=>{
 		
 		evt.detail.CurrentState = CurrentState
 		
-		const fn_selecting_name = 'obj_owner_struct_id_selecting'
+		const fn_selected_name = 'obj_struct_id_selected'
+		const fn_selected = Extender[fn_selected_name]
+		if (typeof fn_selected === 'function') {
+			// create function di Extender:
+			// export async function obj_struct_id_selected(self, obj_struct_id, frm, evt) {}
+			fn_selected(self, obj_struct_id, frm, evt)
+		} else {	
+			console.warn('Extender.obj_struct_id_selected is not implemented')
+		}		
+	})
+	
+	obj_struct_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_struct_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_owner_struct_id_selecting(self, obj_owner_struct_id, frm, evt) {}
-			fn_selecting(self, obj_owner_struct_id, frm, evt)
+			// export async function obj_struct_id_selecting(self, obj_struct_id, frm, evt) {}
+			fn_selecting(self, obj_struct_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
@@ -130,11 +146,11 @@ export async function init(self, args) {
 			evt.detail.url = url 
 			
 			// buat function di extender:
-			// export function obj_owner_struct_id_selecting_criteria(self, obj_owner_struct_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_owner_struct_id_selecting_criteria'
+			// export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_struct_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_owner_struct_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -161,6 +177,63 @@ export async function init(self, args) {
 		}		
 	})
 	
+	
+	// Combobox: obj_itemclass_id
+	obj_itemclass_id.addEventListener('selecting', async (evt)=>{
+		
+		evt.detail.CurrentState = CurrentState
+		
+		const fn_selecting_name = 'obj_itemclass_id_selecting'
+		const fn_selecting = Extender[fn_selecting_name]
+		if (typeof fn_selecting === 'function') {
+			// create function di Extender (jika perlu):
+			// export async function obj_itemclass_id_selecting(self, obj_itemclass_id, frm, evt) {}
+			fn_selecting(self, obj_itemclass_id, frm, evt)
+		} else {
+			// default selecting
+			const cbo = evt.detail.sender
+			const dialog = evt.detail.dialog
+			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
+			const url = 'itemclass/header-list'
+			const sort = {}
+			const criteria = {
+				searchtext: searchtext,
+			}
+
+			evt.detail.url = url 
+			
+			// buat function di extender:
+			// export function obj_itemclass_id_selecting_criteria(self, obj_itemclass_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_itemclass_id_selecting_criteria'
+			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
+			if (typeof fn_selecting_criteria === 'function') {
+				fn_selecting_criteria(self, obj_itemclass_id, frm, criteria, sort, evt)
+			}
+
+			cbo.wait()
+			try {
+				const result = await Module.apiCall(evt.detail.url, {
+					sort,
+					criteria,
+					offset: evt.detail.offset,
+					limit: evt.detail.limit,
+				}) 
+
+				for (var row of result.data) {
+					evt.detail.addRow(row.itemclass_id, row.itemclass_name, row)
+				}
+
+				dialog.setNext(result.nextoffset, result.limit)
+			} catch (err) {
+				$fgta5.MessageBox.error(err.message)
+			} finally {
+				cbo.wait(false)
+			}
+
+			
+		}		
+	})
+	
 		
 	
 }
@@ -170,7 +243,8 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_owner_struct_id.clear()
+		obj_struct_id.clear()
+		obj_itemclass_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -179,8 +253,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function itemclassHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'itemclassHeaderEdit_isEditDisabled'
+		// export async function itemHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'itemHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -194,8 +268,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function itemclassHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'itemclassHeaderEdit_formOpened'
+		// export async function itemHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'itemHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -336,7 +410,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.itemclassHeaderList
+		const listId =  Context.Sections.itemHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -366,8 +440,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function itemclassHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'itemclassHeaderEdit_formLocked'
+	// export function itemHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'itemHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -378,10 +452,6 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
-	
-	// trigger lock event di struct
-	self.Modules.itemclassStructList.headerLocked(self)
-	self.Modules.itemclassStructEdit.headerLocked(self)
 		
 
 }
@@ -415,17 +485,13 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function itemclassHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'itemclassHeaderEdit_formUnlocked'
+	// export function itemHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'itemHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
 	}
 
-	
-	// trigger unlock event di struct
-	self.Modules.itemclassStructList.headerUnlocked(self)
-	self.Modules.itemclassStructEdit.headerUnlocked(self)	
 		
 }
 
@@ -461,8 +527,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.currentTarget.getAttribute('data-sectionsource') 
 
-	const itemclassHeaderList = self.Modules.itemclassHeaderList
-	const listsecid = itemclassHeaderList.Section.Id
+	const itemHeaderList = self.Modules.itemHeaderList
+	const listsecid = itemHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -497,10 +563,10 @@ async function btn_new_click(self, evt) {
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'itemclassHeaderEdit_newData'
+		const fn_newdata_name = 'itemHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function itemclassHeaderEdit_newData(self, datainit, frm) {}
+			// export async function itemHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -522,7 +588,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.itemclassHeaderList.Section.show()
+			self.Modules.itemHeaderList.Section.show()
 		}
 	}
 }
@@ -532,7 +598,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'itemclassHeaderEdit_autofill'
+	const fn_autofill_name = 'itemHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -583,9 +649,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function itemclassHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function itemHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'itemclassHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'itemHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -635,10 +701,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'itemclassHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'itemHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function itemclassHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function itemHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -654,10 +720,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.itemclassHeaderList.addNewRow(self, data)
+			self.Modules.itemHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.itemclassHeaderList.updateCurrentRow(self, data)
+			self.Modules.itemHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -696,10 +762,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.itemclassHeaderList.removeCurrentRow(self)
+		self.Modules.itemHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.itemclassHeaderList.Section.show()
+		self.Modules.itemHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -744,12 +810,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.itemclassHeaderList.selectPreviousRow(self)
+	self.Modules.itemHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.itemclassHeaderList.selectNextRow(self)
+	self.Modules.itemHeaderList.selectNextRow(self)
 }
 
 
@@ -783,7 +849,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby
 			rec_modifydate.innerHTML = data._modifydate
 
-			const fn_addrecordinfo_name = 'itemclassHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'itemHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -825,7 +891,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.itemclass',
+				table: 'public.item',
 				id: id
 			}
 
@@ -855,7 +921,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Item Classification'
+		AboutSection.Title = 'About Item'
 
 		const section = document.getElementById('fAbout-section')
 
@@ -863,7 +929,7 @@ async function btn_about_click(self, evt) {
 			const divDescr = document.createElement('div')
 			divDescr.setAttribute('id', 'fAbout-section-fdescr')
 			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
+			divDescr.innerHTML = 'program untuk input item'
 			const divTopbar = section.querySelector('div[data-topbar]')
 			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
 		}

@@ -3,12 +3,10 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-import Context from './itemclass-context.mjs'  
-import * as itemclassHeaderList from './itemclassHeaderList.mjs' 
-import * as itemclassHeaderEdit from './itemclassHeaderEdit.mjs' 
-import * as itemclassStructList from './itemclassStructList.mjs' 
-import * as itemclassStructEdit from './itemclassStructEdit.mjs' 
-import * as Extender from './itemclass-ext.mjs'
+import Context from './item-context.mjs'  
+import * as itemHeaderList from './itemHeaderList.mjs' 
+import * as itemHeaderEdit from './itemHeaderEdit.mjs' 
+import * as Extender from './item-ext.mjs'
 
 const app = Context.app
 const Crsl = Context.Crsl
@@ -22,7 +20,7 @@ export default class extends Module {
 	async main(args={}) {
 		
 		console.log('initializing module...')
-		app.setTitle('Item Classification')
+		app.setTitle('Item')
 		app.showFooter(true)
 		
 		args.autoLoadGridData = true
@@ -49,10 +47,8 @@ export default class extends Module {
 		// jangan import lagi module-module ini di dalam mjs tersebut
 		// karena akan terjadi cyclic redudancy pada saat di rollup
 		self.Modules = { 
-			itemclassHeaderList, 
-			itemclassHeaderEdit, 
-			itemclassStructList, 
-			itemclassStructEdit, 
+			itemHeaderList, 
+			itemHeaderEdit, 
 		}
 
 		try {
@@ -73,10 +69,8 @@ export default class extends Module {
 			} 
 
 			await Promise.all([ 
-				itemclassHeaderList.init(self, args), 
-				itemclassHeaderEdit.init(self, args), 
-				itemclassStructList.init(self, args), 
-				itemclassStructEdit.init(self, args), 
+				itemHeaderList.init(self, args), 
+				itemHeaderEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -88,7 +82,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['itemclassHeaderEdit', 'itemclassStructEdit']
+			const modNameList = ['itemHeaderEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false
@@ -119,7 +113,7 @@ async function render(self) {
 		Module.renderFooterButtons(footerButtonsContainer)
 	
 		// Setup Icon
-		Crsl.setIconUrl('public/modules/itemclass/itemclass.svg')
+		Crsl.setIconUrl('')
 
 
 		// Set listener untuk section carousel
@@ -188,7 +182,7 @@ async function render(self) {
 		});
 
 		
-		// itemclass-ext.mjs, export function extendPage(self) {} 
+		// item-ext.mjs, export function extendPage(self) {} 
 		const fn_name = 'extendPage'
 		const fn_extendPage = Extender[fn_name]
 		if (typeof fn_extendPage === 'function') {

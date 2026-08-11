@@ -1,6 +1,5 @@
 import Context from './paymreq-context.mjs'
 import { printDocument } from './paymreq-print.mjs'
-import * as permission from './paymreq.permission.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 
@@ -83,7 +82,7 @@ export function headerList_initSearchParams(self, SearchParams) {
 		if (onApproval || onEntry || onView) {
 			criteria.user_id = Context.userId
 			if (onView) {
-				criteria.check_permission = permission.LIST_ALLSTRUCT
+				criteria.allow_all_structure = Context.setting.allow_all_structure
 			}
 		}
 
@@ -134,7 +133,7 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 
 	} else if (Context.variance == VIEW_VARIANCE) {
 		criteria.user_id = Context.userId
-		criteria.check_permission = 'PAYMREQ_LIST_ALLSTRUCT'
+		criteria.allow_all_structure = Context.setting.allow_all_structure
 		sort.paymreq_date = 'DESC'
 
 	} else {

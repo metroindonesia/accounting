@@ -7,8 +7,8 @@ const TABLE = {
 }
 
 export async function headerListCriteria(self, db, searchMap, criteria, sort, columns, args) {
-	searchMap.struct_id = 'struct_id = ${struct_id}'
-	searchMap.visible_by_struct_id = `(owner_struct_id=\${visible_by_struct_id} or itemclass_id IN (select struct_id from ${TABLE.itemclassstruct} where struct_id=\${visible_by_struct_id}))`
+	searchMap.struct_id = 'owner_struct_id = ${struct_id}'
+	searchMap.visible_by_struct_id = `(owner_struct_id=\${visible_by_struct_id} or itemclass_id IN (select itemclass_id from ${TABLE.itemclassstruct} where struct_id=\${visible_by_struct_id}))`
 }
 
 export async function headerCreated(self, tx, ret, data, logMetadata, args) {

@@ -123,7 +123,6 @@ comment on column public."structmember"._modifydate is 'waktu terakhir record di
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$user_id;
-ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$struct_id;
 
 
 -- Add Foreign Key Constraint  
@@ -136,17 +135,6 @@ ALTER TABLE public."structmember"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$structmember$user_id;
 CREATE INDEX idx_fk$public$structmember$user_id ON public."structmember"(user_id);	
-
-
-ALTER TABLE public."structmember"
-	ADD CONSTRAINT fk$public$structmember$struct_id
-	FOREIGN KEY (struct_id)
-	REFERENCES public."struct"(struct_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$structmember$struct_id;
-CREATE INDEX idx_fk$public$structmember$struct_id ON public."structmember"(struct_id);	
 
 	
 

@@ -82,6 +82,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -148,6 +149,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -214,6 +216,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -280,6 +283,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -346,6 +350,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -412,6 +417,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -478,6 +484,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -544,6 +551,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -610,6 +618,7 @@
             "bindingValue": "structhrk_id",
             "bindingText": "structhrk_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "structhrk/header-list"
           },
@@ -676,6 +685,7 @@
             "bindingValue": "auth_id",
             "bindingText": "auth_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "auth/header-list"
           },
@@ -742,6 +752,7 @@
             "bindingValue": "struct_id",
             "bindingText": "struct_name",
             "bindingDisplay": "struct_parent_name",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "struct/header-list"
           },
@@ -808,6 +819,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -874,6 +886,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -940,6 +953,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1047,6 +1061,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1113,6 +1128,7 @@
             "bindingValue": "user_id",
             "bindingText": "user_fullname",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "user/header-list"
           },
@@ -1179,6 +1195,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1245,6 +1262,7 @@
             "bindingValue": "struct_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
