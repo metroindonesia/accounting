@@ -188,7 +188,7 @@ export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, crite
 	criteria.struct_isdisabled = false
 	criteria.struct_istransaction = true
 	criteria.user_id = Context.userId
-	criteria.check_permission = permission.LIST_ALLSTRUCT
+	criteria.allow_all_structure = Context.setting.allow_all_structure
 }
 
 export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {
