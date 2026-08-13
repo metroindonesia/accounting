@@ -58,6 +58,11 @@
 	margin-bottom: 5px;
 }
 
+
+#tbl-report * {
+	font-size: 0.7rem;
+}
+
 #tbl-report th {
 	background-color: #ccc;
 	border-bottom: 1px solid #999;
@@ -137,4 +142,12 @@
 	text-overflow: ellipsis;
 	/* Menambahkan simbol ... */
 	border-bottom: 1px #ccc dotted;
+}
+
+
+
+.number {
+	/* font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace; */
+	font-family: 'Source Code Pro', monospace;
+	font-size: 0.7rem;
 }

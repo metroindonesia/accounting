@@ -7,7 +7,6 @@ import { processApPayment } from './jurnal.apiext.ap-payment.js'
 import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
 import { processDirectPayment } from './jurnal.apiext.direct-payment.js'
 import { reopen } from './periode.apiext.js'
-import { GEO_REPLY_WITH } from 'redis'
 import * as PERMISSION from '../../../public/modules/jurnal/jurnal.permission.mjs'
 
 
@@ -162,7 +161,9 @@ export async function headerDeleting(self, tx, dataToRemove) {
 	// apakah user boleh menghapus jurnal
 	const allowed = await getUserPermission(tx, user_id, PERMISSION.DELETE)
 	if (!allowed) {
-		throw new Error('tidak ada permission untuk menghapus jurnal')
+		const err = new Error('tidak ada permission untuk menghapus jurnal')
+		err.status = 403
+		throw err
 	}
 
 

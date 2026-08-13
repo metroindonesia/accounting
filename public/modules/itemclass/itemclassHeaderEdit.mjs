@@ -378,6 +378,10 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
+	
+	// trigger lock event di struct
+	self.Modules.itemclassStructList.headerLocked(self)
+	self.Modules.itemclassStructEdit.headerLocked(self)
 		
 
 }
@@ -418,6 +422,10 @@ async function  frm_unlocked(self, evt) {
 		fn(self, frm, CurrentState)
 	}
 
+	
+	// trigger unlock event di struct
+	self.Modules.itemclassStructList.headerUnlocked(self)
+	self.Modules.itemclassStructEdit.headerUnlocked(self)	
 		
 }
 

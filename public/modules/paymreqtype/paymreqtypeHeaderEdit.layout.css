@@ -54,56 +54,62 @@
 		
 	}
 	
-	#paymreqtypeHeaderEdit-obj_hasinvoice-container {
+	#paymreqtypeHeaderEdit-obj_canchangedate-container {
 		grid-row: 4;
 		grid-column: 1 / span 4;
 		margin-left: 77px
 	}
 	
-	#paymreqtypeHeaderEdit-obj_haspo-container {
+	#paymreqtypeHeaderEdit-obj_hasinvoice-container {
 		grid-row: 5;
+		grid-column: 1 / span 4;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_haspo-container {
+		grid-row: 6;
 		grid-column: 1 / span 2;
 		margin-left: 77px
 	}
 	
 	#paymreqtypeHeaderEdit-obj_poismandatory-container {
-		grid-row: 5;
+		grid-row: 6;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#paymreqtypeHeaderEdit-obj_hasffl-container {
-		grid-row: 6;
+		grid-row: 7;
 		grid-column: 1 / span 2;
 		margin-left: 77px
 	}
 	
 	#paymreqtypeHeaderEdit-obj_fflismandatory-container {
-		grid-row: 6;
+		grid-row: 7;
 		grid-column: 3 / span 2;
 		
 	}
 	
 	#paymreqtypeHeaderEdit-obj_hasbc-container {
-		grid-row: 7;
-		grid-column: 1 / span 2;
-		margin-left: 77px
-	}
-	
-	#paymreqtypeHeaderEdit-obj_bcismandatory-container {
-		grid-row: 7;
-		grid-column: 3 / span 2;
-		
-	}
-	
-	#paymreqtypeHeaderEdit-obj_hasppn-container {
 		grid-row: 8;
 		grid-column: 1 / span 2;
 		margin-left: 77px
 	}
 	
-	#paymreqtypeHeaderEdit-obj_haspph-container {
+	#paymreqtypeHeaderEdit-obj_bcismandatory-container {
+		grid-row: 8;
+		grid-column: 3 / span 2;
+		
+	}
+	
+	#paymreqtypeHeaderEdit-obj_hasppn-container {
 		grid-row: 9;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
+	
+	#paymreqtypeHeaderEdit-obj_haspph-container {
+		grid-row: 10;
 		grid-column: 1 / span 2;
 		margin-left: 77px
 	}

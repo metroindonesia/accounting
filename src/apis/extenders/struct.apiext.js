@@ -1,6 +1,3 @@
-import { getUserPermission } from '@agung_dhewe/webapps/src/permission.js'
-
-
 const tablename = 'public.struct'
 const entityname = 'struct'
 const HIERARCHY_PARAM = {
@@ -32,6 +29,7 @@ export async function headerUpdated(self, tx, ret, data, logMetadata) {
 export async function headerListCriteria(self, db, searchMap, criteria, sort, columns) {
 	searchMap.struct_isdisabled = 'struct_isdisabled=${struct_isdisabled}'
 	searchMap.struct_isparent = 'struct_isparent=${struct_isparent}'
+	searchMap.struct_istransaction = 'struct_istransaction=${struct_istransaction}'
 	searchMap.exclude_self = 'struct_id<>${exclude_self}'
 
 
@@ -39,13 +37,14 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 	const itemclass_id = criteria.itemclass_id
 	const selectForItemclassMember = criteria.selectForItemclassMember
 	const user_id = criteria.user_id
-	const check_permission = criteria.check_permission;
+	const allow_all_structure = criteria.allow_all_structure;
+
 
 
 	// hapus parameter di criteria, karena tidak diapakai di query
 	delete criteria.itemclass_id
 	delete criteria.selectForItemclassMember
-	delete criteria.check_permission
+	delete criteria.allow_all_structure
 
 
 
@@ -61,7 +60,6 @@ export async function headerListCriteria(self, db, searchMap, criteria, sort, co
 		// kecuali jika ada permission yang membolehkan untuk mengambil semua
 
 		// apakah ada permission khusus
-		const allow_all_structure = await getUserPermission(db, user_id, check_permission)
 		if (!allow_all_structure) {
 			searchMap[`${entityname}_isparent`] = `${entityname}_isparent = \${${entityname}_isparent}`
 			searchMap.exclude_self = `${entityname}_id<>\${exclude_self}`

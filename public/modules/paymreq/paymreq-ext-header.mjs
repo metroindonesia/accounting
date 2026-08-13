@@ -1,6 +1,5 @@
 import Context from './paymreq-context.mjs'
 import { printDocument } from './paymreq-print.mjs'
-import * as permission from './paymreq.permission.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 
@@ -18,6 +17,8 @@ const _paymreq_id = 'paymreqHeaderEdit-obj_paymreq_id'
 const _paymreq_version = 'paymreqHeaderEdit-obj_paymreq_version'
 const _paymreq_doc = 'paymreqHeaderEdit-obj_paymreq_doc'
 const _paymreq_descr = 'paymreqHeaderEdit-obj_paymreq_descr'
+const _paymreq_date = 'paymreqHeaderEdit-obj_paymreq_date'
+const _paymreq_datedue = 'paymreqHeaderEdit-obj_paymreq_datedue'
 const _iscommit = 'paymreqHeaderEdit-obj_iscommit'
 const _isapproved = 'paymreqHeaderEdit-obj_isapproved'
 const _paymreqtype_id = 'paymreqHeaderEdit-obj_paymreqtype_id'
@@ -81,7 +82,7 @@ export function headerList_initSearchParams(self, SearchParams) {
 		if (onApproval || onEntry || onView) {
 			criteria.user_id = Context.userId
 			if (onView) {
-				criteria.check_permission = permission.LIST_ALLSTRUCT
+				criteria.allow_all_structure = Context.setting.allow_all_structure
 			}
 		}
 
@@ -132,7 +133,7 @@ export function headerList_dataLoad(self, criteria, sort, evt) {
 
 	} else if (Context.variance == VIEW_VARIANCE) {
 		criteria.user_id = Context.userId
-		criteria.check_permission = 'PAYMREQ_LIST_ALLSTRUCT'
+		criteria.allow_all_structure = Context.setting.allow_all_structure
 		sort.paymreq_date = 'DESC'
 
 	} else {
@@ -180,10 +181,30 @@ export async function obj_paymtype_id_selected(self, obj_paymtype_id, frm, evt) 
 	paymtype_changed(paymtype, frm)
 }
 
+
+export function obj_struct_id_selecting_criteria(self, obj_struct_id, frm, criteria, sort, evt) {
+	sort.struct_name = 'asc'
+	criteria.struct_isparent = false
+	criteria.struct_isdisabled = false
+	criteria.struct_istransaction = true
+	criteria.user_id = Context.userId
+	criteria.allow_all_structure = Context.setting.allow_all_structure
+}
+
+export function obj_site_id_selecting_criteria(self, obj_site_id, frm, criteria, sort, evt) {
+	sort.site_name = 'asc'
+	criteria.site_isdisabled = false
+}
+
 export function obj_partner_id_selecting_criteria(self, obj_partner_id, frm, criteria, sort, evt) {
+	sort.partner_name = 'asc'
 	criteria.partner_isdisabled = false
 }
 
+export function obj_unit_id_selecting_criteria(self, obj_unit_id, frm, criteria, sort, evt) {
+	sort.unit_name = 'asc'
+	criteria.unit_isdisabled = false
+}
 
 export async function obj_partner_id_selected(self, obj_partner_id, frm, evt) {
 	if (!obj_partner_id.isSelectedChanged()) {
@@ -251,13 +272,17 @@ export async function obj_pph_id_selected(self, obj_pph_id, frm, evt) {
 export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	const obj_paymreqtype_id = frm.Inputs[_paymreqtype_id]
 	const obj_struct_id = frm.Inputs[_struct_id]
+	const obj_paymreq_date = frm.Inputs[_paymreq_date]
 	obj_paymreqtype_id.disabled = true
 	obj_struct_id.disabled = true
 
-	const { paymtype, paymreqtype } = frm.getOriginalData()
+	const { paymtype, paymreqtype, paymreq_date } = frm.getOriginalData()
 	paymreqtype_changed(paymreqtype, frm)
 	paymtype_changed(paymtype, frm)
 
+	// dikarenakan mungkin ada perubahan obj_paymreq_date saat paymreqtype_change
+	// disini dikembalikan lagi
+	obj_paymreq_date.value = paymreq_date
 
 
 
@@ -302,6 +327,18 @@ export async function paymreqHeaderEdit_newData(self, datainit, frm) {
 
 	// console.log(Context.setting)
 	datainit.curr_id = { value: Context.setting.defaultCurr.id, text: Context.setting.defaultCurr.name }
+}
+
+
+export async function paymreqHeaderEdit_dataSaving(self, dataToSave, frm, args) {
+	// cek tanggal paymreq_date & paymreq_datedue
+	const dt_paymreq_date = frm.Inputs[_paymreq_date].value ? frm.Inputs[_paymreq_date].value.split('T')[0] : ''
+	const dt_paymreq_datedue = frm.Inputs[_paymreq_datedue].value ? frm.Inputs[_paymreq_datedue].value.split('T')[0] : ''
+
+	if (dt_paymreq_datedue && dt_paymreq_date && dt_paymreq_datedue < dt_paymreq_date) {
+		$fgta5.MessageBox.warning('Tanggal Jatuh Tempo (Due Date) tidak boleh lebih kecil dari Tanggal Request (Date)')
+		args.cancelSave = true
+	}
 }
 
 export async function paymreqHeaderEdit_dataSaved(self, data, frm) {
@@ -564,6 +601,7 @@ async function btn_actionPrint_click(self, frm, CurrentState, evt) {
 }
 
 function paymreqtype_changed(paymreqtype, frm) {
+
 	pageHelper.setVisibility(`${_paymreq_invoice}-container`, paymreqtype.hasinvoice)
 	pageHelper.setVisibility(`${_ffl_id}-container`, paymreqtype.hasffl)
 	pageHelper.setVisibility(`${_po_id}-container`, paymreqtype.haspo)
@@ -575,11 +613,18 @@ function paymreqtype_changed(paymreqtype, frm) {
 	pageHelper.setVisibility(`${_paymreq_pph}-container`, paymreqtype.haspph)
 
 
+	frm.Inputs[_paymreq_date].disabled = !paymreqtype.canchangedate
 
 	frm.Inputs[_paymreq_invoice].markAsRequired(paymreqtype.hasinvoice)
 	frm.Inputs[_ffl_id].markAsRequired(paymreqtype.fflismandatory)
 	frm.Inputs[_po_id].markAsRequired(paymreqtype.poismandatory)
 	frm.Inputs[_bc_id].markAsRequired(paymreqtype.bcismandatory)
+
+
+	if (!paymreqtype.canchangedate) {
+		// karena tanggal tidak bisa diubah, set tanggal menjadi tanggal sekarang
+		frm.Inputs[_paymreq_date].value = new Date()
+	}
 }
 
 function paymtype_changed(paymtype, frm) {

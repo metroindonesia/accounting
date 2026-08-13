@@ -122,3 +122,10 @@
 	margin-bottom: 10px;
 
 }
+
+
+.number {
+	/* font-family: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'Courier New', monospace; */
+	font-family: 'Source Code Pro', monospace;
+	font-size: 0.7rem;
+}

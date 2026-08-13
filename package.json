@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@agung_dhewe/pgsqlc": "^1.1.8",
-    "@agung_dhewe/webapps": "^1.2.12",
+    "@agung_dhewe/webapps": "^1.2.14",
     "bcrypt": "^6.0.0",
     "connect-redis": "^9.0.0",
     "cors": "^2.8.5",

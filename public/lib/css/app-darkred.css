@@ -41,6 +41,11 @@ input::selection {
 	color: #4a0e0e;
 }
 
+.fgta5-messagebox-button {
+	background-color: #4a0e0e;
+	color: #fff;
+}
+
 
 
 .panel-detil [panel-title] {
