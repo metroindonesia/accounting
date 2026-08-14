@@ -37,8 +37,8 @@ const btn_logs = document.getElementById('groupProgram-btn_logs')
 
 const frm = new $fgta5.Form('groupProgramEdit-frm');
 const obj_groupprogram_id = frm.Inputs['groupProgramEdit-obj_groupprogram_id']
-const obj_program_id = frm.Inputs['groupProgramEdit-obj_program_id']
 const obj_groupprogram_isdisabled = frm.Inputs['groupProgramEdit-obj_groupprogram_isdisabled']
+const obj_program_id = frm.Inputs['groupProgramEdit-obj_program_id']
 const obj_group_id = frm.Inputs['groupProgramEdit-obj_group_id']	
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -127,7 +127,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.program_id, row.program_name, row)
+					evt.detail.addRow(row.program_id, row.program_title, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)

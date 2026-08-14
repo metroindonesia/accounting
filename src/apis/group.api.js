@@ -519,10 +519,10 @@ async function group_programList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			// lookup: program_name dari field program_name pada table core.program dimana (core.program.program_id = core.group.program_id)
+			// lookup: program_title dari field program_title pada table core.program dimana (core.program.program_id = core.group.program_id)
 			{
-				const { program_name } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', row.program_id)
-				row.program_name = program_name
+				const { program_title } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', row.program_id)
+				row.program_title = program_title
 			}
 			
 
@@ -582,10 +582,10 @@ async function group_programOpen(self, body) {
 		}	
 
 
-		// lookup: program_name dari field program_name pada table core.program dimana (core.program.program_id = core.group.program_id)
+		// lookup: program_title dari field program_title pada table core.program dimana (core.program.program_id = core.group.program_id)
 		{
-			const { program_name } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', data.program_id)
-			data.program_name = program_name
+			const { program_title } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', data.program_id)
+			data.program_title = program_title
 		}
 		
 
