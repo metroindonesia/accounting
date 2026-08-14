@@ -12,21 +12,6 @@ comment on table core."groupprogram" is '';
 
 
 -- =============================================
--- FIELD: program_id int
--- =============================================
--- ADD program_id
-alter table core."groupprogram" add program_id int  ;
-comment on column core."groupprogram".program_id is '';
-
--- MODIFY program_id
-alter table core."groupprogram"
-	alter column program_id type int,
-	ALTER COLUMN program_id DROP DEFAULT,
-	ALTER COLUMN program_id DROP NOT NULL;
-comment on column core."groupprogram".program_id is '';
-
-
--- =============================================
 -- FIELD: groupprogram_isdisabled boolean
 -- =============================================
 -- ADD groupprogram_isdisabled
@@ -39,6 +24,21 @@ alter table core."groupprogram"
 	ALTER COLUMN groupprogram_isdisabled SET DEFAULT false,
 	ALTER COLUMN groupprogram_isdisabled SET NOT NULL;
 comment on column core."groupprogram".groupprogram_isdisabled is '';
+
+
+-- =============================================
+-- FIELD: program_id int
+-- =============================================
+-- ADD program_id
+alter table core."groupprogram" add program_id int  ;
+comment on column core."groupprogram".program_id is '';
+
+-- MODIFY program_id
+alter table core."groupprogram"
+	alter column program_id type int,
+	ALTER COLUMN program_id DROP DEFAULT,
+	ALTER COLUMN program_id DROP NOT NULL;
+comment on column core."groupprogram".program_id is '';
 
 
 -- =============================================
@@ -123,7 +123,6 @@ comment on column core."groupprogram"._modifydate is 'waktu terakhir record dimo
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."groupprogram" DROP CONSTRAINT fk$core$groupprogram$program_id;
-ALTER TABLE core."groupprogram" DROP CONSTRAINT fk$core$groupprogram$group_id;
 
 
 -- Add Foreign Key Constraint  
