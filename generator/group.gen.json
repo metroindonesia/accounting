@@ -82,6 +82,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -148,6 +149,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -214,6 +216,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -280,6 +283,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -353,7 +357,7 @@
           "input_inlinestyle": "",
           "input_charcase": "normal",
           "input_disabled": false,
-          "showInGrid": true,
+          "showInGrid": false,
           "showInForm": true,
           "input_dposrow": "auto",
           "input_dposrowspan": "",
@@ -383,6 +387,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -410,7 +415,7 @@
           "data_defaultvalue": "",
           "description": "",
           "input_name": "obj_program_id",
-          "input_index": "0",
+          "input_index": "1",
           "input_label": "Program",
           "input_placeholder": "program",
           "input_caption": "",
@@ -437,7 +442,7 @@
             "Minimum": null,
             "Maximum": null,
             "messageDefault": "",
-            "messageRequired": "",
+            "messageRequired": "program harus diisi",
             "messageMinimum": null,
             "messageMaximum": null,
             "hasCustomValidator": false,
@@ -447,8 +452,9 @@
             "table": "core.program",
             "pk": "program_id",
             "bindingValue": "program_id",
-            "bindingText": "program_name",
-            "bindingDisplay": "program_name",
+            "bindingText": "program_title",
+            "bindingDisplay": "program_title",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "program/header-list"
           },
@@ -476,7 +482,7 @@
           "data_defaultvalue": 0,
           "description": "",
           "input_name": "obj_groupprogram_isdisabled",
-          "input_index": "0",
+          "input_index": "2",
           "input_label": "Disabled",
           "input_placeholder": "",
           "input_caption": "",
@@ -515,6 +521,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -581,6 +588,7 @@
             "bindingValue": "group_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },

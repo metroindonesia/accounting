@@ -137,17 +137,6 @@ ALTER TABLE core."groupprogram"
 DROP INDEX IF EXISTS core.idx_fk$core$groupprogram$program_id;
 CREATE INDEX idx_fk$core$groupprogram$program_id ON core."groupprogram"(program_id);	
 
-
-ALTER TABLE core."groupprogram"
-	ADD CONSTRAINT fk$core$groupprogram$group_id
-	FOREIGN KEY (group_id)
-	REFERENCES core."group"(group_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS core.idx_fk$core$groupprogram$group_id;
-CREATE INDEX idx_fk$core$groupprogram$group_id ON core."groupprogram"(group_id);	
-
 	
 
 
