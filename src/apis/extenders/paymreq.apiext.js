@@ -161,6 +161,22 @@ export async function headerOpen(self, db, data) {
 	data.paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', data.paymtype_id)
 	data.paymreqtype = await sqlUtil.lookupdb(db, TABLE.paymreqtype, 'paymreqtype_id', data.paymreqtype_id)
 
+	// commit
+	{
+		const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._commitby)
+		data._commitby = user_fullname ?? '-'
+	}
+
+	// approve
+	{
+		const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._approveby)
+		data._approveby = user_fullname ?? '-'
+	}
+
+
+	// response document
+	await db.none('call public.paymreq_response(${paymreq_id})', { paymreq_id: data.paymreq_id })
+	data.response = await db.any('select * from TEMP_PAYMREQ_RESPONSE order by docdate')
 
 }
 
