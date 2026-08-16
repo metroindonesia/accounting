@@ -34,7 +34,7 @@
 
 
 	<div name="panel-record-basic" class="record-secion-panel">
-		<!-- LEFT: Standard Info -->
+		<!-- Standard Info -->
 		<div name="column">
 			<div name="row">
 				<span name="caption">Create By</span>
@@ -56,12 +56,18 @@
 		</div>
 
 
-		<!-- RIGHT: Extended Info -->
+		<!-- Extended Info -->
 		<div name="column" exteder>
 		<%- include(`${moduleDir}/paymreq-ext-record.html`) %>	
 		</div> 
 
-	</div>	
+		<!-- Extended Additional Info -->
+		<% if (fs.existsSync(`${moduleDir}/paymreq-ext-record-additional.html`)) { %>
+		<%- include(`${moduleDir}/paymreq-ext-record-additional.html`) %> 
+		<% } %> 
+
+	</div>
+
 </section>
 
 <section id="fLogs-section" class="fgta5-carousell" data-title="Logs">

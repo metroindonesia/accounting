@@ -594,14 +594,7 @@ ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$site_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$unit_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$project_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$curr_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaltype_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnaldetil_id_ref;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$agingtype_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreq_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$jurnal_id;
 
 
 -- Add Foreign Key Constraint  
@@ -683,72 +676,6 @@ CREATE INDEX idx_fk$public$jurnaldetil$curr_id ON public."jurnaldetil"(curr_id);
 
 
 ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$jurnaltype_id
-	FOREIGN KEY (jurnaltype_id)
-	REFERENCES public."jurnaltype"(jurnaltype_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$jurnaltype_id;
-CREATE INDEX idx_fk$public$jurnaldetil$jurnaltype_id ON public."jurnaldetil"(jurnaltype_id);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$jurnaldetil_id_ref
-	FOREIGN KEY (jurnaldetil_id_ref)
-	REFERENCES public."jurnaldetil"(jurnaldetil_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$jurnaldetil_id_ref;
-CREATE INDEX idx_fk$public$jurnaldetil$jurnaldetil_id_ref ON public."jurnaldetil"(jurnaldetil_id_ref);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$agingtype_id
-	FOREIGN KEY (agingtype_id)
-	REFERENCES public."agingtype"(agingtype_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$agingtype_id;
-CREATE INDEX idx_fk$public$jurnaldetil$agingtype_id ON public."jurnaldetil"(agingtype_id);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$paymreq_id
-	FOREIGN KEY (paymreq_id)
-	REFERENCES public."paymreq"(paymreq_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$paymreq_id;
-CREATE INDEX idx_fk$public$jurnaldetil$paymreq_id ON public."jurnaldetil"(paymreq_id);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$paymreqdetil_id
-	FOREIGN KEY (paymreqdetil_id)
-	REFERENCES public."paymreqdetil"(paymreqdetil_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$paymreqdetil_id;
-CREATE INDEX idx_fk$public$jurnaldetil$paymreqdetil_id ON public."jurnaldetil"(paymreqdetil_id);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$tag_paymreq_id
-	FOREIGN KEY (tag_paymreq_id)
-	REFERENCES public."paymreq"(paymreq_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$tag_paymreq_id;
-CREATE INDEX idx_fk$public$jurnaldetil$tag_paymreq_id ON public."jurnaldetil"(tag_paymreq_id);	
-
-
-ALTER TABLE public."jurnaldetil"
 	ADD CONSTRAINT fk$public$jurnaldetil$periode_id
 	FOREIGN KEY (periode_id)
 	REFERENCES public."periode"(periode_id);
@@ -757,17 +684,6 @@ ALTER TABLE public."jurnaldetil"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$periode_id;
 CREATE INDEX idx_fk$public$jurnaldetil$periode_id ON public."jurnaldetil"(periode_id);	
-
-
-ALTER TABLE public."jurnaldetil"
-	ADD CONSTRAINT fk$public$jurnaldetil$jurnal_id
-	FOREIGN KEY (jurnal_id)
-	REFERENCES public."jurnal"(jurnal_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnaldetil$jurnal_id;
-CREATE INDEX idx_fk$public$jurnaldetil$jurnal_id ON public."jurnaldetil"(jurnal_id);	
 
 	
 

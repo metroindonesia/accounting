@@ -276,7 +276,7 @@ export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	obj_paymreqtype_id.disabled = true
 	obj_struct_id.disabled = true
 
-	const { paymtype, paymreqtype, paymreq_date } = frm.getOriginalData()
+	const { paymtype, paymreqtype, paymreq_date, response, _commitby, _commitdate, _approveby, _approvedate } = frm.getOriginalData()
 	paymreqtype_changed(paymreqtype, frm)
 	paymtype_changed(paymtype, frm)
 
@@ -315,8 +315,46 @@ export async function paymreqHeaderEdit_formOpened(self, frm, CurrentState) {
 	CurrentState.Actions.uncommit.suspend(onView || onApproval || onRejection || !iscommit || isapproved)
 	CurrentState.Actions.print.suspend(!iscommit)
 
+	renderRecord(_commitby, _commitdate, _approveby, _approvedate)
+	renderResponse(response)
 }
 
+function formatNumber(num) {
+	return new Intl.NumberFormat("en-EN", {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0
+	}).format(num);
+}
+
+async function renderRecord(_commitby, _commitdate, _approveby, _approvedate) {
+	const commitby = document.getElementById('fRecord-section-commitby')
+	const commitdate = document.getElementById('fRecord-section-commitdate')
+	const approveby = document.getElementById('fRecord-section-approveby')
+	const approvedate = document.getElementById('fRecord-section-approvedate')
+
+	commitby.innerHTML = _commitby
+	commitdate.innerHTML = _commitdate
+	approveby.innerHTML = _approveby
+	approvedate.innerHTML = _approvedate
+}
+
+async function renderResponse(response) {
+	const tbl = document.getElementById('paymreq-response-table')
+	const tbody = tbl.querySelector('tbody')
+
+	tbody.innerHTML = ''
+	for (let row of response) {
+		const tr = document.createElement('tr')
+		tr.innerHTML = `
+			<td name="jurnal-doc">${row.doc}</td>
+			<td name="jurnal-date">${row.docdate}</td>
+			<td name="jurnal-descr">${row.descr}</td>
+			<td name="jurnal-value">${formatNumber(row.value)}</td>
+			<td name="jurnal-posted">${row.ispost}</td>
+		`
+		tbody.appendChild(tr)
+	}
+}
 
 
 export async function paymreqHeaderEdit_newData(self, datainit, frm) {

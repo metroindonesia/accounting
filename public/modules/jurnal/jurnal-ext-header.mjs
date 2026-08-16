@@ -195,10 +195,13 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 
 
 	const {
+		jurnal_doc, jurnal_descr,
 		jurnaltype, paymtype, periode, iscommit, ispost,
 		_commitby, _commitdate, _postby, _postdate,
 		isallowposting, isallowunposting,
-		balance_value, balance_idr
+		balance_value, balance_idr,
+		reference,
+		response
 	} = frm.getOriginalData()
 
 
@@ -221,7 +224,75 @@ export async function jurnalHeaderEdit_formOpened(self, frm, CurrentState) {
 
 	updateDetilInfo_balance(self, balance_value, balance_idr)
 
+
+	renderRecord(jurnal_doc, jurnal_descr, _commitby, _commitdate, _postby, _postdate)
+	renderReference(reference)
+	renderResponse(response)
 }
+
+function formatNumber(num) {
+	return new Intl.NumberFormat("en-EN", {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 0
+	}).format(num);
+}
+
+async function renderRecord(doc, descr, _commitby, _commitdate, _postby, _postdate) {
+
+	const jurnal_doc = document.getElementById('fRecord-jurnal-doc')
+	const jurnal_descr = document.getElementById('fRecord-jurnal-descr')
+
+	const commitby = document.getElementById('fRecord-section-commitby')
+	const commitdate = document.getElementById('fRecord-section-commitdate')
+	const postby = document.getElementById('fRecord-section-postby')
+	const postdate = document.getElementById('fRecord-section-postdate')
+
+	jurnal_doc.innerHTML = doc
+	jurnal_descr.innerHTML = descr
+
+	commitby.innerHTML = _commitby
+	commitdate.innerHTML = _commitdate
+	postby.innerHTML = _postby
+	postdate.innerHTML = _postdate
+}
+
+
+async function renderReference(reference) {
+	const tbl = document.getElementById('jurnal-reference-table')
+	const tbody = tbl.querySelector('tbody')
+
+	tbody.innerHTML = ''
+	for (let row of reference) {
+		const tr = document.createElement('tr')
+		tr.innerHTML = `
+			<td name="jurnal-doc">${row.doc}</td>
+			<td name="jurnal-date">${row.docdate}</td>
+			<td name="jurnal-descr">${row.descr}</td>
+			<td name="jurnal-value">${formatNumber(row.value)}</td>
+			<td name="jurnal-posted">${row.ispost}</td>
+		`
+		tbody.appendChild(tr)
+	}
+}
+
+async function renderResponse(response) {
+	const tbl = document.getElementById('jurnal-response-table')
+	const tbody = tbl.querySelector('tbody')
+
+	tbody.innerHTML = ''
+	for (let row of response) {
+		const tr = document.createElement('tr')
+		tr.innerHTML = `
+			<td name="jurnal-doc">${row.doc}</td>
+			<td name="jurnal-date">${row.docdate}</td>
+			<td name="jurnal-descr">${row.descr}</td>
+			<td name="jurnal-value">${formatNumber(row.value)}</td>
+			<td name="jurnal-posted">${row.ispost}</td>
+		`
+		tbody.appendChild(tr)
+	}
+}
+
 
 export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 	disableJurnaltype(frm, false)  // aktifkan kembali jurnaltype saat membuat data baru
