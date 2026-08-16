@@ -615,7 +615,6 @@ ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$site_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$unit_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$project_id;
 ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$curr_id;
-ALTER TABLE public."jurnal" DROP CONSTRAINT fk$public$jurnal$jurnaldetil_id_link;
 
 
 -- Add Foreign Key Constraint  
@@ -760,17 +759,6 @@ ALTER TABLE public."jurnal"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$jurnal$curr_id;
 CREATE INDEX idx_fk$public$jurnal$curr_id ON public."jurnal"(curr_id);	
-
-
-ALTER TABLE public."jurnal"
-	ADD CONSTRAINT fk$public$jurnal$jurnaldetil_id_link
-	FOREIGN KEY (jurnaldetil_id_link)
-	REFERENCES public."jurnaldetil"(jurnaldetil_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$jurnal$jurnaldetil_id_link;
-CREATE INDEX idx_fk$public$jurnal$jurnaldetil_id_link ON public."jurnal"(jurnaldetil_id_link);	
 
 	
 

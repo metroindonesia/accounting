@@ -157,22 +157,26 @@ export async function sequencerSetup(self, tx, sequencer, data, args) {
 export async function headerOpen(self, db, data) {
 	sqlUtil.connect(db)
 
-	// dapatkan info untuk paymtype dan paymreqtype
-	data.paymtype = await sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', data.paymtype_id)
-	data.paymreqtype = await sqlUtil.lookupdb(db, TABLE.paymreqtype, 'paymreqtype_id', data.paymreqtype_id)
 
-	// commit
-	{
-		const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._commitby)
-		data._commitby = user_fullname ?? '-'
-	}
+	const [
+		paymtype,
+		paymreqtype,
+		commitUser,
+		approvebyUser
+	] = await Promise.all([
+		sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', data.paymtype_id),
+		sqlUtil.lookupdb(db, TABLE.paymreqtype, 'paymreqtype_id', data.paymreqtype_id),
+		sqlUtil.lookupdb(db, 'core.user', 'user_id', data._commitby),
+		sqlUtil.lookupdb(db, 'core.user', 'user_id', data._approveby)
+	])
 
-	// approve
-	{
-		const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._approveby)
-		data._approveby = user_fullname ?? '-'
-	}
-
+	// Mapping hasil secara ringkas
+	Object.assign(data, {
+		paymtype,
+		paymreqtype,
+		_commitby: commitUser.user_fullname ?? '',
+		_approveby: approvebyUser.user_fullname ?? ''
+	})
 
 	// response document
 	await db.none('call public.paymreq_response(${paymreq_id})', { paymreq_id: data.paymreq_id })

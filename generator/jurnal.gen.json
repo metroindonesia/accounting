@@ -103,6 +103,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -169,6 +170,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -235,6 +237,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -301,6 +304,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -367,6 +371,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -433,6 +438,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -499,6 +505,7 @@
             "bindingValue": "jurnaltype_id",
             "bindingText": "jurnaltype_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "jurnaltype/header-list"
           },
@@ -565,6 +572,7 @@
             "bindingValue": "paymreq_id",
             "bindingText": "paymreq_descr",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "paymreq/header-list"
           },
@@ -631,6 +639,7 @@
             "bindingValue": "periode_id",
             "bindingText": "periode_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "periode/header-list"
           },
@@ -697,6 +706,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -763,6 +773,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -829,6 +840,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -895,6 +907,7 @@
             "bindingValue": "partner_id",
             "bindingText": "partner_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "partner/header-list"
           },
@@ -961,6 +974,7 @@
             "bindingValue": "paymtype_id",
             "bindingText": "paymtype_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "paymtype/header-list"
           },
@@ -1027,6 +1041,7 @@
             "bindingValue": "partnerbank_id",
             "bindingText": "partnerbank_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "partner/bank-list"
           },
@@ -1093,6 +1108,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1159,6 +1175,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1225,6 +1242,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1291,6 +1309,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1357,6 +1376,7 @@
             "bindingValue": "partnercontact_id",
             "bindingText": "partnercontact_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "partner/contact-list"
           },
@@ -1423,6 +1443,7 @@
             "bindingValue": "coa_id",
             "bindingText": "coa_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "coa/header-list"
           },
@@ -1489,6 +1510,7 @@
             "bindingValue": "struct_id",
             "bindingText": "struct_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "struct/header-list"
           },
@@ -1555,6 +1577,7 @@
             "bindingValue": "site_id",
             "bindingText": "site_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "site/header-list"
           },
@@ -1621,6 +1644,7 @@
             "bindingValue": "unit_id",
             "bindingText": "unit_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "unit/header-list"
           },
@@ -1687,6 +1711,7 @@
             "bindingValue": "project_id",
             "bindingText": "project_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "project/header-list"
           },
@@ -1753,6 +1778,7 @@
             "bindingValue": "curr_id",
             "bindingText": "curr_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "curr/header-list"
           },
@@ -1819,6 +1845,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1885,6 +1912,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1951,6 +1979,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2017,6 +2046,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2083,6 +2113,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2149,6 +2180,7 @@
             "bindingValue": "jurnaldetil_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2215,6 +2247,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2281,6 +2314,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2347,6 +2381,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2413,6 +2448,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2516,6 +2552,7 @@
             "bindingValue": "coa_id",
             "bindingText": "coa_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "coa/header-list"
           },
@@ -2582,6 +2619,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2648,6 +2686,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -2714,6 +2753,7 @@
             "bindingValue": "partner_id",
             "bindingText": "partner_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "partner/header-list"
           },
@@ -2780,6 +2820,7 @@
             "bindingValue": "struct_id",
             "bindingText": "struct_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "struct/header-list"
           },
@@ -2846,6 +2887,7 @@
             "bindingValue": "site_id",
             "bindingText": "site_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "site/header-list"
           },
@@ -2912,6 +2954,7 @@
             "bindingValue": "unit_id",
             "bindingText": "unit_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "unit/header-list"
           },
@@ -2978,6 +3021,7 @@
             "bindingValue": "project_id",
             "bindingText": "project_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "project/header-list"
           },
@@ -3044,6 +3088,7 @@
             "bindingValue": "curr_id",
             "bindingText": "curr_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "curr/header-list"
           },
@@ -3110,6 +3155,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3176,6 +3222,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3242,6 +3289,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3308,6 +3356,7 @@
             "bindingValue": "jurnaltype_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3374,6 +3423,7 @@
             "bindingValue": "jurnaldetil_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3440,6 +3490,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3506,6 +3557,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3572,6 +3624,7 @@
             "bindingValue": "agingtype_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3638,6 +3691,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3704,6 +3758,7 @@
             "bindingValue": "paymreq_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3770,6 +3825,7 @@
             "bindingValue": "paymreqdetil_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3836,6 +3892,7 @@
             "bindingValue": "paymreq_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3902,6 +3959,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -3968,6 +4026,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4034,6 +4093,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4100,6 +4160,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4166,6 +4227,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4232,6 +4294,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4298,6 +4361,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4364,6 +4428,7 @@
             "bindingValue": "periode_id",
             "bindingText": "periode_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "periode/header-list"
           },
@@ -4430,6 +4495,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4496,6 +4562,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4562,6 +4629,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4628,6 +4696,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4694,6 +4763,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -4760,6 +4830,7 @@
             "bindingValue": "jurnal_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },

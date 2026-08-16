@@ -1,6 +1,12 @@
 @import url('./paymreq-print.css');
 
 
+/* patch */
+#paymreqHeaderEdit-obj_paymreq_version-display,
+#paymreqHeaderEdit-obj_paymreq_version-container .fgta5-entry-input-wrapper {
+	width: stretch;
+}
+
 
 @media screen and (min-width: 501px) {
 	#paymreqHeaderEdit-obj_curr_id-container>label {
@@ -52,6 +58,7 @@
 	#paymreq-response-table td {
 		border-bottom: 1px dotted #999;
 		vertical-align: top;
+		user-select: text;
 	}
 
 	#paymreq-response-table [name="jurnal-doc"] {

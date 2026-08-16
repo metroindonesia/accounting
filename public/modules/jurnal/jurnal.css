@@ -4,6 +4,15 @@
 @import url('./jurnalDetilList.css');
 
 
+
+/* patch */
+#jurnalHeaderEdit-obj_jurnal_version-display,
+#jurnalHeaderEdit-obj_jurnal_version-container .fgta5-entry-input-wrapper {
+	width: stretch;
+}
+
+
+
 @media screen and (max-width: 500px) {
 	.detil-info {
 		display: none;
@@ -81,6 +90,65 @@
 }
 
 
+
+@media screen and (min-width: 501px) {
+
+	div[name="panel-record-basic"] {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 10px;
+	}
+
+	div[name="panel-record-basic"]>div:nth-child(3) {
+		grid-column: span 2;
+		margin: 20px 10px 0 10px;
+
+	}
+
+	#jurnal-doc-panel {
+		padding-left: 20px;
+	}
+
+	.jurnal-doc-table th {
+		border-bottom: 1px solid #666666;
+		background-color: #ddd;
+	}
+
+	.jurnal-doc-table td {
+		border-bottom: 1px dotted #999;
+		vertical-align: top;
+		user-select: text;
+	}
+
+	.jurnal-doc-table [name="jurnal-doc"] {
+		width: 150px;
+		white-space: nowrap;
+		text-align: left;
+	}
+
+	.jurnal-doc-table [name="jurnal-date"] {
+		width: 90px;
+		white-space: nowrap;
+		text-align: center;
+	}
+
+	.jurnal-doc-table [name="jurnal-descr"] {
+		text-align: left;
+	}
+
+
+	.jurnal-doc-table [name="jurnal-value"] {
+		width: 100px;
+		white-space: nowrap;
+		text-align: right;
+	}
+
+	.jurnal-doc-table [name="jurnal-posted"] {
+		width: 80px;
+		white-space: nowrap;
+		text-align: center;
+	}
+}
 
 
 

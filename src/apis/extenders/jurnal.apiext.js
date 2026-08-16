@@ -386,7 +386,9 @@ export async function headerOpen(self, db, data) {
 		postByUser,
 		commitByUser,
 		allowRow,
-		balance
+		balance,
+		reference,
+		response,
 	] = await Promise.all([
 		sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', jurnaltype_id),
 		sqlUtil.lookupdb(db, TABLE.paymtype, 'paymtype_id', paymtype_id),
@@ -394,7 +396,9 @@ export async function headerOpen(self, db, data) {
 		sqlUtil.lookupdb(db, TABLE.user, 'user_id', _postby),
 		sqlUtil.lookupdb(db, TABLE.user, 'user_id', _commitby),
 		db.oneOrNone(`SELECT isallowposting, isallowunposting FROM ${TABLE.jurnaltypeuser} WHERE jurnaltype_id=\${jurnaltype_id} AND user_id=\${user_id}`, { jurnaltype_id, user_id }),
-		db.oneOrNone(`SELECT SUM(jurnaldetil_value) as balance_value, SUM(jurnaldetil_idr) as balance_idr FROM ${TABLE.jurnaldetil} WHERE jurnal_id = \${jurnal_id}`, { jurnal_id })
+		db.oneOrNone(`SELECT SUM(jurnaldetil_value) as balance_value, SUM(jurnaldetil_idr) as balance_idr FROM ${TABLE.jurnaldetil} WHERE jurnal_id = \${jurnal_id}`, { jurnal_id }),
+		getReference(data.jurnal_id),
+		getResponse(data.jurnal_id)
 	]);
 
 
@@ -409,9 +413,27 @@ export async function headerOpen(self, db, data) {
 		isallowposting: allowRow?.isallowposting ?? false,
 		isallowunposting: allowRow?.isallowunposting ?? false,
 		balance_value: balance?.balance_value ?? 0,
-		balance_idr: balance?.balance_idr ?? 0
+		balance_idr: balance?.balance_idr ?? 0,
+		reference,
+		response
 	});
 }
+
+
+async function getReference(jurnal_id) {
+	await db.none('call public.jurnal_reference(${jurnal_id})', { jurnal_id })
+	const reference = await db.any('select * from TEMP_JURNAL_REFERENCE order by docorder, docdate')
+	return reference
+}
+
+
+async function getResponse(jurnal_id) {
+	await db.none('call public.jurnal_response(${jurnal_id})', { jurnal_id })
+	const response = await db.any('select * from TEMP_JURNAL_RESPONSE order by docdate')
+	return response
+}
+
+
 
 
 export async function detilOpen(self, db, data) {
