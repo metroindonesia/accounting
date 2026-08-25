@@ -95,8 +95,33 @@ export async function init_detil(self, args) {
 		}
 	}
 
-	// divBalance.id = 'balance-info-container'
-	// divBalance.
+	// panel  untuk upload data
+	{
+		const target = document.getElementById('jurnalDetilList-foot')
+		const tpl = document.getElementById('tpl-upload-panel')
+		if (tpl != null) {
+			const clone = tpl.content.cloneNode(true); // salin isi template
+			const divUpload = clone.querySelector('div')
+			divUpload.id = 'upload-panel'
+			divUpload.classList.add('hidden')
+			target.appendChild(divUpload)
+
+			const uploadButton = document.getElementById('upload-button')
+			const uploadDataFile = document.getElementById('upload-data-file')
+			uploadDataFile.addEventListener('change', (evt) => {
+				if (uploadDataFile.files && uploadDataFile.files.length > 0) {
+					uploadButton.classList.remove('hidden')
+				} else {
+					uploadButton.classList.add('hidden')
+				}
+			})
+
+			uploadButton.addEventListener('click', (evt) => {
+				console.log('upload click')
+			})
+		}
+
+	}
 }
 
 
@@ -296,6 +321,15 @@ export function jurnalDetilEdit_formLocked(self, frm, CurrentState) {
 	if (refButtons.receivable) {
 		refButtons.receivable.disabled = true;
 	}
+
+	// hide upload-panel
+	const uploadPanel = document.getElementById('upload-panel')
+	if (uploadPanel) {
+		uploadPanel.classList.add('hidden')
+	}
+
+
+
 }
 
 export function jurnalDetilEdit_formUnlocked(self, frm) {
@@ -305,6 +339,13 @@ export function jurnalDetilEdit_formUnlocked(self, frm) {
 	if (refButtons.receivable) {
 		refButtons.receivable.disabled = false;
 	}
+
+	// show upload-panel
+	const uploadPanel = document.getElementById('upload-panel')
+	if (uploadPanel) {
+		uploadPanel.classList.remove('hidden')
+	}
+
 }
 
 
