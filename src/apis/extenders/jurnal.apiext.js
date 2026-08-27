@@ -1089,3 +1089,23 @@ async function cekJurnalForModification(self, tx, jurnal_id) {
 	}
 
 }
+
+
+
+export async function uploadJurnalChunk(self, db, body, jurnal_log) {
+	const user_id = self.req.session.user.userId;
+	const { jurnal_id, chunk, meta } = body
+	const uploadId = meta.uploadId
+
+
+
+
+	console.log(jurnal_id)
+	console.log(chunk)
+}
+
+
+export async function verifyJurnalChunk(self, db, body, jurnal_log) {
+
+
+}

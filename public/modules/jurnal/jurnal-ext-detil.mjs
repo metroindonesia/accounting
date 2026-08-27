@@ -2,7 +2,7 @@ import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 import outstandingDialog from './jurnal-outstandingdialog.mjs'
-
+import uploadSpreadsheet from '../../lib/excelreaderwasm/uploadSpreadsheet.js';
 
 const _coa_id = 'jurnalDetilEdit-obj_coa_id'
 const _jurnaldetil_id = 'jurnalDetilEdit-obj_jurnaldetil_id'
@@ -117,12 +117,88 @@ export async function init_detil(self, args) {
 			})
 
 			uploadButton.addEventListener('click', (evt) => {
-				console.log('upload click')
+				uploadButton_click(uploadDataFile)
 			})
 		}
 
 	}
 }
+
+
+function generateUploadId() {
+	if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+		return crypto.randomUUID();
+	}
+	return 'up_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
+}
+
+async function uploadButton_click(uploadDataFile) {
+	const file = uploadDataFile.files[0];
+	if (!file) return;
+
+	console.log(file)
+
+	const rowChunk = 10
+	const validHeader = "jurnaldetil_descr | coa_id | partner_id | struct_id | site_id | unit_id | project_id | curr_id | jurnaldetil_value | curr_rate | jurnaldetil_idr"
+	const mappingHeader = {
+		coa_id: "coa_id",
+		partner_id: "partner_id"
+	}
+
+
+	// create upload id dulu
+	const uploadId = generateUploadId()
+	console.log(uploadId)
+
+
+	const result = await uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
+		onUploading: uploadDataFile_onUploading,
+		// verifyServer: uploadDataFile_verifyServer
+		meta: {
+			uploadId: uploadId,
+			jurnal_id: 'abcdefg'
+		}
+	})
+	console.log('✅ Upload & Verifikasi Sukses!', result);
+
+}
+
+async function uploadDataFile_onUploading(chunk, meta) {
+	console.log(meta)
+
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'uploadJurnalChunk',
+			meta: meta,
+			chunk: chunk
+		})
+
+		// console.log('uploading chunk', result)
+	} catch (err) {
+		throw err
+	}
+
+}
+
+
+async function uploadDataFile_verifyServer(manifest) {
+	console.log(manifest)
+
+	try {
+		const url = 'jurnal/execute'
+		const result = await Module.apiCall(url, {
+			fnName: 'verifyJurnalChunk',
+			jurnal_id: jurnal_id
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+
 
 
 export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {
