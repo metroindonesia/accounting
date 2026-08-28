@@ -37,11 +37,7 @@ export async function uploadData(uploadUi) {
 
 	// upload
 	uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
-		uploadId: uploadId,
-		meta: {
-			jurnal_id
-		},
-
+		uploadId: jurnal_id,
 
 		onInit: async (uploadId) => {
 			await uploadDataFile_onInit(uploadId)
