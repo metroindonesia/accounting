@@ -2,7 +2,8 @@ import Context from './jurnal-context.mjs'
 import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 import outstandingDialog from './jurnal-outstandingdialog.mjs'
-import uploadSpreadsheet from '../../lib/excelreaderwasm/uploadSpreadsheet.js';
+
+import { uploadData } from './jurnal-ext-detil-upload.mjs'
 
 const _coa_id = 'jurnalDetilEdit-obj_coa_id'
 const _jurnaldetil_id = 'jurnalDetilEdit-obj_jurnaldetil_id'
@@ -32,173 +33,133 @@ const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 
 const refButtons = {}
+const uploadUi = {}
+
 
 export async function init_detil(self, args) {
 	const formEl = document.getElementById('jurnalDetilEdit-frm')
 
-	// tambahkan box information
+	// tambahkan box information (tidak berpengaruh langsung ke program, hanya untuk mempercantik form detil)
 	const divInfo = document.createElement('div')
 	divInfo.classList.add('detil-info')
 	formEl.prepend(divInfo)
 
 
-
 	// tombol get outstanding pada form detil
-	{
-		const target = document.getElementById('jurnalDetilEdit-head')
-		const tpl = document.getElementById('tpl-get-outstd-buttons')
-		if (tpl != null) {
-
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divButton = clone.querySelector('div')
-			target.insertAdjacentElement('afterend', divButton);
-
-			const dlg = new outstandingDialog()
-			dlg.addEventListener('selected', async evt => {
-				await outstandingSelected(self, evt.detail.data, evt)
-				if (evt.detail.cancelSelect) {
-					return
-				}
-				dlg.close()
-			})
-
-			refButtons.payable = new $fgta5.ActionButton('btn_getPayable')
-			refButtons.receivable = new $fgta5.ActionButton('btn_getReceivable')
-
-			refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
-			refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
-		}
-	}
+	setup_getOutstandingButton()
 
 	// tambahkan total di list detil table
-	{
-		const tpl = document.getElementById('tpl-detil-tfoot')
-		const target = document.getElementById('jurnalDetilList-tbl')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const tfoot = clone.querySelector('tfoot')
-			target.appendChild(tfoot)
-		}
-	}
-
+	setup_totalDetilInfo()
 
 	// tambahkan current balance di form
-	{
-		const target = document.getElementById('jurnalDetilEdit-frm')
-		const tpl = document.getElementById('tpl-detil-balance')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divBalance = clone.querySelector('div')
-			const balInfo = clone.querySelector('.formdetil-current-balance');
-			balInfo.id = 'formdetil-current-balance' // beri nama container balance info
-			target.appendChild(divBalance)
-		}
-	}
+	setup_currentBalanceInfo()
 
 	// panel  untuk upload data
-	{
-		const target = document.getElementById('jurnalDetilList-foot')
-		const tpl = document.getElementById('tpl-upload-panel')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divUpload = clone.querySelector('div')
-			divUpload.id = 'upload-panel'
-			divUpload.classList.add('hidden')
-			target.appendChild(divUpload)
-
-			const uploadButton = document.getElementById('upload-button')
-			const uploadDataFile = document.getElementById('upload-data-file')
-			uploadDataFile.addEventListener('change', (evt) => {
-				if (uploadDataFile.files && uploadDataFile.files.length > 0) {
-					uploadButton.classList.remove('hidden')
-				} else {
-					uploadButton.classList.add('hidden')
-				}
-			})
-
-			uploadButton.addEventListener('click', (evt) => {
-				uploadButton_click(uploadDataFile)
-			})
-		}
-
-	}
-}
-
-
-function generateUploadId() {
-	if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-		return crypto.randomUUID();
-	}
-	return 'up_' + Date.now().toString(36) + '_' + Math.random().toString(36).substring(2, 9);
-}
-
-async function uploadButton_click(uploadDataFile) {
-	const file = uploadDataFile.files[0];
-	if (!file) return;
-
-	console.log(file)
-
-	const rowChunk = 10
-	const validHeader = "jurnaldetil_descr | coa_id | partner_id | struct_id | site_id | unit_id | project_id | curr_id | jurnaldetil_value | curr_rate | jurnaldetil_idr"
-	const mappingHeader = {
-		coa_id: "coa_id",
-		partner_id: "partner_id"
-	}
-
-
-	// create upload id dulu
-	const uploadId = generateUploadId()
-	console.log(uploadId)
-
-
-	const result = await uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
-		onUploading: uploadDataFile_onUploading,
-		// verifyServer: uploadDataFile_verifyServer
-		meta: {
-			uploadId: uploadId,
-			jurnal_id: 'abcdefg'
-		}
-	})
-	console.log('✅ Upload & Verifikasi Sukses!', result);
+	setup_uploadPanel()
 
 }
 
-async function uploadDataFile_onUploading(chunk, meta) {
-	console.log(meta)
 
-	try {
-		const url = 'jurnal/execute'
-		const result = await Module.apiCall(url, {
-			fnName: 'uploadJurnalChunk',
-			meta: meta,
-			chunk: chunk
+function setup_getOutstandingButton() {
+	const target = document.getElementById('jurnalDetilEdit-head')
+	const tpl = document.getElementById('tpl-get-outstd-buttons')
+	if (tpl != null) {
+
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divButton = clone.querySelector('div')
+		target.insertAdjacentElement('afterend', divButton);
+
+		const dlg = new outstandingDialog()
+		dlg.addEventListener('selected', async evt => {
+			await outstandingSelected(self, evt.detail.data, evt)
+			if (evt.detail.cancelSelect) {
+				return
+			}
+			dlg.close()
 		})
 
-		// console.log('uploading chunk', result)
-	} catch (err) {
-		throw err
-	}
+		refButtons.payable = new $fgta5.ActionButton('btn_getPayable')
+		refButtons.receivable = new $fgta5.ActionButton('btn_getReceivable')
 
+		refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
+		refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
+	}
 }
 
 
-async function uploadDataFile_verifyServer(manifest) {
-	console.log(manifest)
+function setup_totalDetilInfo() {
+	const tpl = document.getElementById('tpl-detil-tfoot')
+	const target = document.getElementById('jurnalDetilList-tbl')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const tfoot = clone.querySelector('tfoot')
+		target.appendChild(tfoot)
+	}
+}
 
-	try {
-		const url = 'jurnal/execute'
-		const result = await Module.apiCall(url, {
-			fnName: 'verifyJurnalChunk',
-			jurnal_id: jurnal_id
+function setup_currentBalanceInfo() {
+	const target = document.getElementById('jurnalDetilEdit-frm')
+	const tpl = document.getElementById('tpl-detil-balance')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divBalance = clone.querySelector('div')
+		const balInfo = clone.querySelector('.formdetil-current-balance');
+		balInfo.id = 'formdetil-current-balance' // beri nama container balance info
+		target.appendChild(divBalance)
+	}
+}
+
+
+function setup_uploadPanel() {
+	const target = document.getElementById('jurnalDetilList-foot')
+	const tpl = document.getElementById('tpl-upload-panel')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divUpload = clone.querySelector('div')
+		divUpload.id = 'upload-panel'
+		divUpload.classList.add('hidden')
+		target.appendChild(divUpload)
+
+
+		if (uploadUi.progress == null) {
+			uploadUi.progress = document.getElementById('upload-progress')
+			uploadUi.progress.min = 0
+			uploadUi.progress.max = 100
+			uploadUi.progress.value = 0
+			uploadUi.progress.classList.add('hidden')
+		}
+
+		if (uploadUi.button == null) {
+			uploadUi.button = document.getElementById('upload-button')
+		}
+
+		if (uploadUi.dataFile == null) {
+			uploadUi.dataFile = document.getElementById('upload-data-file')
+		}
+
+		uploadUi.dataFile.addEventListener('change', (evt) => {
+			uploadUi.progress.value = 0
+			if (uploadUi.dataFile.files && uploadUi.dataFile.files.length > 0) {
+				uploadUi.button.classList.remove('hidden')
+			} else {
+				uploadUi.button.classList.add('hidden')
+			}
 		})
 
-		return result
-	} catch (err) {
-		throw err
+		uploadUi.button.addEventListener('click', (evt) => {
+			uploadButton_click(self)
+		})
 	}
+
 }
 
 
+
+
+
+async function uploadButton_click(self) {
+	uploadData(uploadUi)
+}
 
 
 export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {

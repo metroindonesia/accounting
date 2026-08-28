@@ -1091,17 +1091,28 @@ async function cekJurnalForModification(self, tx, jurnal_id) {
 }
 
 
+export async function uploadJurnalInit(self, db, body, jurnal_log) {
+	const { uploadId } = body
+
+	if (uploadId == null) {
+		throw new Error('Upload id cannot be null')
+	}
+
+	self.req.session.uploadJurnal = {
+		id: uploadId,
+		totalRows: 0,
+	}
+}
+
 
 export async function uploadJurnalChunk(self, db, body, jurnal_log) {
 	const user_id = self.req.session.user.userId;
 	const { jurnal_id, chunk, meta } = body
 	const uploadId = meta.uploadId
 
-
-
-
-	console.log(jurnal_id)
 	console.log(chunk)
+	console.log(meta)
+
 }
 
 

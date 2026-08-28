@@ -7,7 +7,7 @@ let wasmInitPromise = null;
  * Generate unique session/upload ID
  * @returns {string}
  */
-function generateUploadId() {
+export function generateUploadId() {
 	if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
 		return crypto.randomUUID();
 	}
@@ -92,39 +92,6 @@ function normalizeMappingHeader(mappingHeader) {
 	return String(mappingHeader);
 }
 
-/**
- * Helper to verify upload completeness between client manifest and server status.
- * @param {ProcessSummary} manifest - Client-side upload summary/manifest
- * @param {object} serverStatus - Server response containing received stats
- * @returns {{ isComplete: boolean, missingChunks: number[], message: string }}
- */
-export function verifyUploadCompleteness(manifest, serverStatus) {
-	const expectedChunks = manifest.totalChunks;
-	const expectedRows = manifest.totalRows;
-
-	const serverChunks = serverStatus.receivedChunks || serverStatus.chunksCount || serverStatus.totalChunks || 0;
-	const serverRows = serverStatus.receivedRows || serverStatus.rowsCount || serverStatus.totalRows || 0;
-	const serverMissing = serverStatus.missingChunks || [];
-
-	const isComplete = (serverChunks === expectedChunks) && (serverRows === expectedRows) && (serverMissing.length === 0);
-
-	let message = '';
-	if (isComplete) {
-		message = `Verifikasi sukses: Seluruh ${expectedRows} baris (${expectedChunks} chunk) telah diterima lengkap di server.`;
-	} else {
-		message = `Verifikasi gagal! Server menerima ${serverRows}/${expectedRows} baris dan ${serverChunks}/${expectedChunks} chunk. Kolom chunk yang hilang: ${serverMissing.join(', ') || 'N/A'}`;
-	}
-
-	return {
-		isComplete,
-		missingChunks: serverMissing,
-		expectedRows,
-		serverRows,
-		expectedChunks,
-		serverChunks,
-		message
-	};
-}
 
 /**
  * Upload & parse spreadsheet with WebAssembly and complete verification support.
@@ -175,6 +142,7 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 	const vHeaderStr = normalizeValidHeader(vHeader);
 	const mHeaderStr = normalizeMappingHeader(mHeader);
 	const sheetIndex = typeof opts.sheetIndex === 'number' ? opts.sheetIndex : 0;
+	const onInit = opts.onInit || null;
 	const onUploading = opts.onUploading || (typeof opts.onChunk === 'function' ? opts.onChunk : null);
 	const onCompleted = opts.onCompleted || null;
 	const verifyServer = opts.verifyServer || null;
@@ -205,6 +173,12 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		summary.chunkManifest = summary.chunk_manifest;
 
 		const successfulChunks = [];
+
+
+		if (typeof onInit === 'function') {
+			await onInit(uploadId)
+		}
+
 
 		// If onUploading handler is provided, process chunks sequentially
 		if (typeof onUploading === 'function') {
@@ -239,7 +213,6 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		}
 
 		const finalSummary = {
-			success: true,
 			uploadId,
 			totalRows: summary.total_rows,
 			totalChunks: summary.total_chunks,
@@ -255,15 +228,16 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		// Check server verification if verifyServer is provided
 		if (typeof verifyServer === 'function') {
 			const serverResponse = await verifyServer(finalSummary);
-			const verification = verifyUploadCompleteness(finalSummary, serverResponse);
-			finalSummary.verification = {
-				...verification,
-				serverResponse
-			};
+			const verification = {
+				... {
+					isComplete: true,
+					message: ''
+				},
+				...serverResponse
+			}
 
 			if (!verification.isComplete) {
 				const err = new Error(verification.message);
-				err.verification = finalSummary.verification;
 				throw err;
 			}
 		}
