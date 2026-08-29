@@ -1,4 +1,4 @@
-import init, { ExcelReader, parseSpreadsheetDirect } from './pkg/excelreaderwasm.js';
+import init, { ExcelReader } from './pkg/excelreaderwasm.js';
 
 let wasmInitialized = false;
 let wasmInitPromise = null;
@@ -248,6 +248,11 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		}
 
 		return finalSummary;
+	} catch (err) {
+		if (err instanceof Error) {
+			throw err;
+		}
+		throw new Error(typeof err === 'object' && err !== null && err.message ? err.message : String(err));
 	} finally {
 		if (reader && typeof reader.free === 'function') {
 			reader.free();
@@ -255,64 +260,5 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 	}
 }
 
-/**
- * EventTarget-based Spreadsheet Uploader with verification events.
- */
-export class SpreadsheetUploader extends EventTarget {
-	constructor(options = {}) {
-		super();
-		this.options = options;
-	}
 
-	/**
-	 * Helper to register event listener
-	 * @param {string} eventName
-	 * @param {Function} listener
-	 */
-	on(eventName, listener) {
-		this.addEventListener(eventName, (e) => {
-			listener(e.detail?.data, e.detail?.meta || e.detail);
-		});
-		return this;
-	}
-
-	/**
-	 * Process and upload spreadsheet
-	 */
-	async process(file, validHeader, mappingHeader, rowChunk, options = {}) {
-		const mergedOpts = { ...this.options, ...options };
-		const uploadId = mergedOpts.uploadId || generateUploadId();
-
-		try {
-			this.dispatchEvent(new CustomEvent('start', { detail: { file, uploadId } }));
-
-			const result = await uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
-				...mergedOpts,
-				uploadId,
-				onUploading: async (chunk, meta) => {
-					this.dispatchEvent(new CustomEvent('uploading', {
-						detail: { data: chunk, meta }
-					}));
-					if (typeof mergedOpts.onUploading === 'function') {
-						await mergedOpts.onUploading(chunk, meta);
-					}
-				},
-				onProgress: (meta) => {
-					this.dispatchEvent(new CustomEvent('progress', { detail: meta }));
-					if (typeof mergedOpts.onProgress === 'function') {
-						mergedOpts.onProgress(meta);
-					}
-				}
-			});
-
-			this.dispatchEvent(new CustomEvent('complete', { detail: result }));
-			return result;
-		} catch (err) {
-			this.dispatchEvent(new CustomEvent('error', { detail: err }));
-			throw err;
-		}
-	}
-}
-
-export { ExcelReader, parseSpreadsheetDirect };
 export default uploadSpreadsheet;

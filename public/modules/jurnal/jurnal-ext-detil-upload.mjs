@@ -1,11 +1,12 @@
 import { generateUploadId, uploadSpreadsheet } from '../../lib/excelreaderwasm/uploadSpreadsheet.js';
 
 
-export async function uploadData(uploadUi) {
+export async function uploadData(jurnal_id, uploadUi) {
 	const { dataFile, progress, button } = uploadUi
 	const file = dataFile.files[0];
 	if (!file) return;
 
+	console.log('uploading ', jurnal_id)
 
 	const rowChunk = 10
 	const validHeader = "id | jurnaldetil_descr | coa_id | partner_id | struct_id | site_id | unit_id | project_id | curr_id | jurnaldetil_value | curr_rate | jurnaldetil_idr"
@@ -28,15 +29,8 @@ export async function uploadData(uploadUi) {
 	progress.classList.remove('hidden')
 
 
-	// create upload id dulu
-	const uploadId = generateUploadId()
-
-
-	// ambil data jurnal_id yang akan diupload datanya
-	const jurnal_id = 'xxxx'
-
 	// upload
-	uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
+	await uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
 		uploadId: jurnal_id,
 
 		onInit: async (uploadId) => {
@@ -58,12 +52,13 @@ export async function uploadData(uploadUi) {
 		},
 
 		onCompleted: (finalSummary) => {
-			$fgta5.MessageBox.info('Upload selesai.')
 			progress.classList.add('hidden')
 			button.classList.add('hidden')
 			dataFile.value = null
 		}
 	})
+
+
 
 }
 

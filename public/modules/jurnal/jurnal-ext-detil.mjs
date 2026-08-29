@@ -46,21 +46,21 @@ export async function init_detil(self, args) {
 
 
 	// tombol get outstanding pada form detil
-	setup_getOutstandingButton()
+	setup_getOutstandingButton(self)
 
 	// tambahkan total di list detil table
-	setup_totalDetilInfo()
+	setup_totalDetilInfo(self)
 
 	// tambahkan current balance di form
-	setup_currentBalanceInfo()
+	setup_currentBalanceInfo(self)
 
 	// panel  untuk upload data
-	setup_uploadPanel()
+	setup_uploadPanel(self)
 
 }
 
 
-function setup_getOutstandingButton() {
+function setup_getOutstandingButton(self) {
 	const target = document.getElementById('jurnalDetilEdit-head')
 	const tpl = document.getElementById('tpl-get-outstd-buttons')
 	if (tpl != null) {
@@ -87,7 +87,7 @@ function setup_getOutstandingButton() {
 }
 
 
-function setup_totalDetilInfo() {
+function setup_totalDetilInfo(self) {
 	const tpl = document.getElementById('tpl-detil-tfoot')
 	const target = document.getElementById('jurnalDetilList-tbl')
 	if (tpl != null) {
@@ -97,7 +97,7 @@ function setup_totalDetilInfo() {
 	}
 }
 
-function setup_currentBalanceInfo() {
+function setup_currentBalanceInfo(self) {
 	const target = document.getElementById('jurnalDetilEdit-frm')
 	const tpl = document.getElementById('tpl-detil-balance')
 	if (tpl != null) {
@@ -110,7 +110,7 @@ function setup_currentBalanceInfo() {
 }
 
 
-function setup_uploadPanel() {
+function setup_uploadPanel(self) {
 	const target = document.getElementById('jurnalDetilList-foot')
 	const tpl = document.getElementById('tpl-upload-panel')
 	if (tpl != null) {
@@ -154,11 +154,16 @@ function setup_uploadPanel() {
 }
 
 
-
-
-
 async function uploadButton_click(self) {
-	uploadData(uploadUi)
+	try {
+		const frm = self.Modules.jurnalHeaderEdit.getForm(self)
+		const obj_jurnal_id = frm.Inputs['jurnalHeaderEdit-obj_jurnal_id']
+		const jurnal_id = obj_jurnal_id.value
+		await uploadData(jurnal_id, uploadUi)
+		$fgta5.MessageBox.info('Upload selesai.')
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+	}
 }
 
 
