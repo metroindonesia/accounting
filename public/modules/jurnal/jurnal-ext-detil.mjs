@@ -137,7 +137,14 @@ function setup_uploadPanel(self) {
 			uploadUi.dataFile = document.getElementById('upload-data-file')
 		}
 
+		if (uploadUi.errorMessage == null) {
+			uploadUi.errorMessage = document.getElementById('upload-error-message')
+			uploadUi.errorMessage.classList.add('hidden')
+		}
+
 		uploadUi.dataFile.addEventListener('change', (evt) => {
+			uploadUi.errorMessage.classList.add('hidden')
+			uploadUi.errorMessage.innerHTML = ''
 			uploadUi.progress.value = 0
 			if (uploadUi.dataFile.files && uploadUi.dataFile.files.length > 0) {
 				uploadUi.button.classList.remove('hidden')
@@ -156,13 +163,39 @@ function setup_uploadPanel(self) {
 
 async function uploadButton_click(self) {
 	try {
+		uploadUi.errorMessage.classList.add('hidden')
+		uploadUi.errorMessage.innerHTML = ''
+
 		const frm = self.Modules.jurnalHeaderEdit.getForm(self)
 		const obj_jurnal_id = frm.Inputs['jurnalHeaderEdit-obj_jurnal_id']
 		const jurnal_id = obj_jurnal_id.value
-		await uploadData(jurnal_id, uploadUi)
+		await uploadData(self, jurnal_id, uploadUi)
+
+		uploadUi.button.classList.add('hidden')
+		uploadUi.dataFile.value = null
+
+		// refresh grid detil
+		const detilListModule = self.Modules.jurnalDetilList
+		await detilListModule.openList(self, {
+			moduleHeaderEdit: self.Modules.jurnalHeaderEdit
+		})
+
+
 		$fgta5.MessageBox.info('Upload selesai.')
+
 	} catch (err) {
 		$fgta5.MessageBox.error(err.message)
+		uploadUi.errorMessage.classList.remove('hidden')
+		uploadUi.errorMessage.innerHTML = `
+			<div><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 4px;">
+			<circle cx="12" cy="12" r="10"></circle>
+			<line x1="12" y1="8" x2="12" y2="12"></line>
+			<line x1="12" y1="16" x2="12.01" y2="16"></line>
+			</svg></div>
+			<div>${err.message}</div>`
+	} finally {
+		uploadUi.progress.classList.add('hidden')
+		uploadUi.progress.value = 0
 	}
 }
 

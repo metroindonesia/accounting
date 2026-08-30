@@ -47,10 +47,19 @@
 
 
 <template id="tpl-upload-panel">
-	<div>
-		UPLOAD
-		<input type="file" id="upload-data-file" accept=".xlsx, .xls, .ods, .csv">
-		<button id="upload-button" class="hidden">Upload</button>
-		<meter id="upload-progress"></meter>
+	<div class="upload-panel">
+		<div style="display: flex; align-items: center; column-gap: 5px;">
+			Upload data jurnal
+			<input type="file" id="upload-data-file" accept=".xlsx, .xls, .ods, .csv">
+			<button id="upload-button" class="action-button hidden ">
+				<span class="action-button-icon">
+					<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 8px; vertical-align: middle;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+				</span>	
+				<span class="action-button-text">Upload</span>
+			</button>
+			<meter id="upload-progress"></meter>
+		</div>
+		<div id="upload-error-message" class="hidden fgta5-entry-error" style="margin-top: 20px;">
+		</div>
 	</div>
 </template>

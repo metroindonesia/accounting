@@ -8,7 +8,10 @@ import { processAdvancePayment } from './jurnal.apiext.adv-payment.js'
 import { processDirectPayment } from './jurnal.apiext.direct-payment.js'
 import { reopen } from './periode.apiext.js'
 import * as PERMISSION from '../../../public/modules/jurnal/jurnal.permission.mjs'
-
+import { Worker } from 'worker_threads';
+import * as path from 'path'
+import * as fs from 'fs'
+import context from '@agung_dhewe/webapps/src/context.js'
 
 const TABLE = {
 	jurnal: 'public.jurnal',
@@ -1098,25 +1101,263 @@ export async function uploadJurnalInit(self, db, body, jurnal_log) {
 		throw new Error('Upload id cannot be null')
 	}
 
-	self.req.session.uploadJurnal = {
-		id: uploadId,
-		totalRows: 0,
-	}
+	// hapus dulu data di temp.jurnalupload
+	const jurnal_id = uploadId
+	const sql = 'delete from temp.jurnalupload where jurnal_id=${jurnal_id}'
+	await db.none(sql, { jurnal_id })
+
+	return true
+	/*
+	CREATE UNLOGGED TABLE "temp".jurnalupload (
+		jurnal_id int8, 
+		row_index int4,
+		jurnaldetil_descr text,
+		coa_id int4,
+		partner_id int4,
+		struct_id int4,
+		site_id int4,
+		unit_id int4,
+		project_id int4,
+		curr_id int2,
+		jurnaldetil_value numeric(18,2),
+		curr_rate numeric(5),
+		jurnaldetil_idr numeric(18,2),
+		CONSTRAINT pk_jurnalupload PRIMARY KEY (jurnal_id, row_index)
+	);
+	*/
 }
 
 
 export async function uploadJurnalChunk(self, db, body, jurnal_log) {
 	const user_id = self.req.session.user.userId;
-	const { jurnal_id, chunk, meta } = body
-	const uploadId = meta.uploadId
+	const { chunk, meta } = body
+	const { uploadId, startRow } = meta
 
-	console.log(chunk)
-	console.log(meta)
+	const jurnal_id = uploadId
+
+	let row_index = startRow
+	for (let row of chunk) {
+
+
+		row.jurnal_id = jurnal_id
+		row.row_index = row_index
+		const sqlInsert = `
+			insert into temp.jurnalupload
+			(
+				jurnal_id,
+				row_index,
+				jurnaldetil_descr, 
+				coa_id,
+				partner_id,
+				struct_id,
+				site_id,
+				unit_id,
+				project_id,
+				curr_id,
+				jurnaldetil_value,
+				curr_rate,
+				jurnaldetil_idr
+			)
+			values
+			(
+				\${jurnal_id},
+				\${row_index},
+				\${jurnaldetil_descr}, 
+				\${coa_id},
+				\${partner_id},
+				\${struct_id},
+				\${site_id},
+				\${unit_id},
+				\${project_id},
+				\${curr_id},
+				\${jurnaldetil_value},
+				\${curr_rate},
+				\${jurnaldetil_idr}
+			)
+		`
+
+		await db.none(sqlInsert, row)
+		row_index++
+	}
 
 }
 
 
 export async function verifyJurnalChunk(self, db, body, jurnal_log) {
+	const { jurnal_id, totalRows } = body
+
+	try {
+
+		{
+			const sql = 'select count(jurnal_id) as rowcount from temp.jurnalupload where jurnal_id=${jurnal_id}'
+			const res = await db.one(sql, { jurnal_id })
+			const { rowcount } = res
+			if (rowcount != totalRows) {
+				throw new Error(`jumlah baris terupload (${rowcount}) tidak sama dengan data asli (${totalRows}). kemungkinan ada corrupt data. proses dibatalkan`)
+			}
+		}
+
+
+		// cek account AR dan AP
+		// AR tidak boleh minus
+		// AP tidak boleh plus
+		{
+			const sqlCekAging = `
+				select 
+				count(*) as rowcount
+				from temp.jurnalupload A inner join public.coa B on B.coa_id=A.coa_id
+				where
+				A.jurnal_id = \${jurnal_id}
+				and B.agingtype_id is not null
+				and (
+					(B.agingtype_id=1 and (A.jurnaldetil_value<0 or A.jurnaldetil_idr<0))
+					or
+					(B.agingtype_id=2 and (A.jurnaldetil_value>0 or A.jurnaldetil_idr>0))
+				)`
+
+			/*	
+			const res = await db.one(sqlCekAging, { jurnal_id })
+			const { rowcount } = res
+			if (rowcount > 0) {
+				throw new Error(`ada ${rowcount} data dengan account AR/AP yang salah. AR tidak boleh minus, dan AP tidak boleh plus`)
+			}
+			*/
+
+		}
+
+
+		// cek currency
+		{
+			const sqlCekCurr = `
+				select 
+				count(*) as rowcount
+				from temp.jurnalupload A inner join public.coa B on B.coa_id=A.coa_id
+				where 
+				A.jurnal_id = \${jurnal_id}
+				and A.jurnaldetil_value*A.curr_rate<>A.jurnaldetil_idr 
+				and B.iscurradj=false`
+
+			const res = await db.one(sqlCekCurr, { jurnal_id })
+			const { rowcount } = res
+			if (rowcount > 0) {
+				throw new Error(`ada ${rowcount} data dengan perhitungan value/rate yang salah`)
+			}
+		}
+
+	} catch (err) {
+		throw err
+	}
+
+}
+
+
+export async function finalizeJurnalUpload(self, db, body, jurnal_log) {
+	const req = self.req;
+	const { jurnal_id, clientId } = body
+	const user_id = req.session.user.userId
+	const user_name = req.session.user.userFullname
+	const ipaddress = req.ip
+
+	// jalankan background worker untuk copy data dari temp jurnalupload ke jurnaldetil
+	try {
+		const notifierServer = req.app.locals.appConfig.notifierServer
+		runDetachedWorker(notifierServer, clientId, {
+			user_id: user_id,
+			user_name: user_name,
+			ipaddress: ipaddress,
+			jurnal_id: jurnal_id
+		})
+
+	} catch (err) {
+		throw err
+	}
+}
+
+async function notifyClient(notifierServer, clientId, status, info) {
+	try {
+
+		const data = { clientId, status, info }
+		const url = `${notifierServer}/notify`
+		const response = await fetch(url, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(data)
+		});
+
+		if (!response.ok) {
+			const httpErrorStatus = response.status
+			const httpErrorStatustext = response.statusText
+			const err = new Error(`${httpErrorStatus} ${httpErrorStatustext}: ${options.method} ${url}`)
+			err.code = httpErrorStatus
+			throw err
+		}
+
+		return response
+	} catch (err) {
+		throw err
+	}
+
+}
+
+export const runDetachedWorker = (notifierServer, clientId, options) => {
+	const timeout = 2 * 60 * 1000  // timeout setelah n detik ekskusi
+
+	// cek dulu apakah valid
+	try {
+		if (clientId == null || notifierServer == null) {
+			throw new Error('clientId / notifierServer belum didefinisikan di parameter runDetachedWorker')
+		}
+	} catch (err) {
+		throw err
+	}
+
+	// siapkan worker untuk memproses report
+	const workerPath = path.join(context.getRootDirectory(), 'src', 'workers', 'jurnalUpload.worker.js')
+	if (!fs.existsSync(workerPath)) {
+		throw new Error(`Worker file tidak ditemukan: ${workerPath}`)
+	}
+
+	const worker = new Worker(workerPath, {
+		workerData: options
+	});
+
+
+	// handle timeout, sesuai dengan waktu yang di set
+	const timeoutId = setTimeout(() => {
+		console.warn('Worker timeout, terminating...');
+		notifyClient(notifierServer, clientId, 'timeout')     // nofify ke clent, kalau timeout
+		worker.terminate();
+	}, timeout);
+
+
+
+	worker.on('message', (info) => {
+		clearTimeout(timeoutId);
+		console.log('Worker message:', 'message', info);
+		if (info.done === true) {
+			notifyClient(notifierServer, clientId, 'done', info)     // nofify message ke clent
+		} else {
+			notifyClient(notifierServer, clientId, 'message', info)     // nofify message ke clent
+		}
+	});
+
+
+	// handle error yang terjadi di worker
+	worker.on('error', (err) => {
+		clearTimeout(timeoutId);
+		console.error('Worker error:', err);
+		notifyClient(notifierServer, clientId, 'error', { message: err.message })     // nofify error ke clent
+		worker.terminate();
+	});
+
+	// worker selesi	
+	worker.on('exit', (code) => {
+		clearTimeout(timeoutId);
+		notifyClient(notifierServer, clientId, 'done', {})
+		console.log(`Worker exited with code ${code}`);
+	});
 
 
 }

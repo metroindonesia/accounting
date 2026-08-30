@@ -1,17 +1,17 @@
-import { generateUploadId, uploadSpreadsheet } from '../../lib/excelreaderwasm/uploadSpreadsheet.js';
+import Context from './jurnal-context.mjs'
+import { uploadSpreadsheet } from '../../lib/excelreaderwasm/uploadSpreadsheet.js';
 
 
-export async function uploadData(jurnal_id, uploadUi) {
-	const { dataFile, progress, button } = uploadUi
+export async function uploadData(self, jurnal_id, uploadUi) {
+	const { dataFile, progress, button, errorMessage } = uploadUi
 	const file = dataFile.files[0];
 	if (!file) return;
 
 	console.log('uploading ', jurnal_id)
 
 	const rowChunk = 10
-	const validHeader = "id | jurnaldetil_descr | coa_id | partner_id | struct_id | site_id | unit_id | project_id | curr_id | jurnaldetil_value | curr_rate | jurnaldetil_idr"
+	const validHeader = "jurnaldetil_descr | coa_id | partner_id | struct_id | site_id | unit_id | project_id | curr_id | jurnaldetil_value | curr_rate | jurnaldetil_idr"
 	const mappingHeader = {
-		id: "id",
 		jurnaldetil_descr: "jurnaldetil_descr",
 		coa_id: "coa_id",
 		partner_id: "partner_id",
@@ -28,88 +28,95 @@ export async function uploadData(jurnal_id, uploadUi) {
 	// tampilkan progress bar
 	progress.classList.remove('hidden')
 
-
-	// upload
-	await uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
-		uploadId: jurnal_id,
-
-		onInit: async (uploadId) => {
-			await uploadDataFile_onInit(uploadId)
-		},
-
-		onUploading: async (chunk, meta) => {
-			await uploadDataFile_onUploading(chunk, meta)
-		},
-
-		verifyServer: async (finalSummary) => {
-			await uploadDataFile_verifyServer(finalSummary)
-		},
+	const jobId = Date.now()
+	const clientId = `${Context.notifierId}-${jobId}`
+	const notifierSocket = Context.notifierSocket
+	const ws = new WebSocket(`${notifierSocket}/?clientId=${clientId}`);
 
 
-		onProgress: (meta) => {
-			const { progressPercent } = meta
-			progress.value = progressPercent
-		},
+	return new Promise((resolve, reject) => {
+		ws.onmessage = (event) => {
+			const data = JSON.parse(event.data);
+			if (data.status === 'done') {
+				console.log('DONE.')
+				ws.close();
+				resolve()
+			} else if (data.status == 'error') {
+				ws.close();
+				reject(event.data.info.message)
+			} else if (data.status === 'timeout') {
+				ws.close();
+				reject('Worker timeout')
 
-		onCompleted: (finalSummary) => {
-			progress.classList.add('hidden')
-			button.classList.add('hidden')
-			dataFile.value = null
-		}
+			}
+		};
+
+		// ada error di server
+		ws.onerror = (err) => {
+			ws.close();
+			reject(err.message)
+		};
+
+
+		// upload
+		uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
+			uploadId: jurnal_id,
+
+			onInit: async (uploadId) => {
+				const url = 'jurnal/execute'
+				await Module.apiCall(url, {
+					fnName: 'uploadJurnalInit',
+					uploadId: uploadId
+				})
+			},
+
+			onUploading: async (chunk, meta) => {
+				const url = 'jurnal/execute'
+				await Module.apiCall(url, {
+					fnName: 'uploadJurnalChunk',
+					meta: meta,
+					chunk: chunk
+				})
+			},
+
+			verifyServer: async (finalSummary) => {
+				const url = 'jurnal/execute'
+				await Module.apiCall(url, {
+					fnName: 'verifyJurnalChunk',
+					jurnal_id: finalSummary.uploadId,
+					totalRows: finalSummary.totalRows,
+				})
+				return {
+					isComplete: true,
+					message: ''
+				}
+			},
+
+
+			onProgress: (meta) => {
+				const { progressPercent } = meta
+				progress.value = progressPercent
+			},
+
+			onCompleted: async (finalSummary) => {
+				const url = 'jurnal/execute'
+				await Module.apiCall(url, {
+					fnName: 'finalizeJurnalUpload',
+					jurnal_id: finalSummary.uploadId,
+					clientId: clientId
+				})
+			}
+
+
+		})
+
 	})
 
 
 
-}
-
-
-async function uploadDataFile_onInit(uploadId) {
-	try {
-		const url = 'jurnal/execute'
-		const result = await Module.apiCall(url, {
-			fnName: 'uploadJurnalInit',
-			uploadId: uploadId
-		})
-	} catch (err) {
-		throw err
-	}
-}
-
-
-
-
-async function uploadDataFile_onUploading(chunk, meta) {
-	try {
-		const url = 'jurnal/execute'
-		const result = await Module.apiCall(url, {
-			fnName: 'uploadJurnalChunk',
-			meta: meta,
-			chunk: chunk
-		})
-	} catch (err) {
-		throw err
-	}
 
 }
 
 
-
-async function uploadDataFile_verifyServer(finalSummary) {
-	try {
-		const url = 'jurnal/execute'
-		const result = await Module.apiCall(url, {
-			fnName: 'verifyJurnalChunk',
-			uploadId: finalSummary.uploadId,
-			totalRows: finalSummary.totalRows,
-		})
-
-		return {
-			isComplete: true,
-			message: ''
-		}
-	} catch (err) {
-		throw err
-	}
-}
 
 
