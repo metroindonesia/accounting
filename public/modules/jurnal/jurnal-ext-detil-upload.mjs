@@ -43,10 +43,24 @@ export async function uploadData(self, jurnal_id, uploadUi) {
 				resolve()
 			} else if (data.status == 'error') {
 				ws.close();
-				reject(event.data.info.message)
+				console.error(event.data)
+
+				try {
+					if (typeof event.data === 'string') {
+						const data = JSON.parse(event.data)
+						reject(new Error(data.info.message))
+					} else {
+						reject(new Error('Worker error'))
+					}
+				} catch (err) {
+					console.error(err)
+					reject(new Error('Worker error'))
+				}
+
+
 			} else if (data.status === 'timeout') {
 				ws.close();
-				reject('Worker timeout')
+				reject(new Error('Worker timeout'))
 
 			}
 		};
@@ -54,7 +68,7 @@ export async function uploadData(self, jurnal_id, uploadUi) {
 		// ada error di server
 		ws.onerror = (err) => {
 			ws.close();
-			reject(err.message)
+			reject(err)
 		};
 
 
