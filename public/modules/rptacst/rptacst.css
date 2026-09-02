@@ -1,0 +1,52 @@
+@import url('./rptacstPage.css');
+
+/* todo: sesuaikan */
+
+@media screen {
+	#print-media {
+		border: 1px solid #ccc;
+		background-color: #fff;
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		padding: 20px;
+	}
+}
+
+
+@media print {
+	body * {
+		visibility: hidden;
+	}
+
+	/* 2. Tampilkan kembali (visibility: visible) hanya div yang ingin dicetak */
+	#print-media,
+	#print-media * {
+		visibility: visible;
+	}
+
+	/* 3. Posisikan div cetak agar menempati seluruh halaman cetak */
+	#print-media {
+		border: 0px;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+}
+
+
+
+#filter-container {
+	grid-row: 1;
+	grid-column: 1 / span 8;
+	display: flex;
+	align-items: flex-start;
+	column-gap: 5px;
+}
+
+#btn-panel {
+	grid-row: 1;
+	grid-column: 11 / span 2;
+	text-align: right;
+	display: flex;
+	column-gap: 5px;
+	justify-content: end;
+}

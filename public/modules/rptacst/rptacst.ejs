@@ -1,0 +1,53 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="acstHeader">
+		<div id="filter-container">
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_partner" fgta5-component="Combobox" placeholder="Pilih Partner" autocomplete="off" spellcheck="false" 
+					required
+					binding="partner_id"
+					data-display="partner_name"
+					data-unselected-error="Partner belum dipilih">
+			</div>
+
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
+			
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
+
+
+		</div>
+
+		<div id="btn-panel">
+
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
+
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptacstPage.html`) %>
+	</div>
+</section>
