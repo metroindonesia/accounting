@@ -75,6 +75,7 @@ export async function uploadData(self, jurnal_id, uploadUi) {
 		// upload
 		uploadSpreadsheet(file, validHeader, mappingHeader, rowChunk, {
 			uploadId: jurnal_id,
+			headerRownum: 9,
 
 			onInit: async (uploadId) => {
 				const url = 'jurnal/execute'
@@ -119,9 +120,12 @@ export async function uploadData(self, jurnal_id, uploadUi) {
 					jurnal_id: finalSummary.uploadId,
 					clientId: clientId
 				})
+			},
+
+			onError: (err) => {
+				console.error(err)
+				$fgta5.MessageBox.error(err.message)
 			}
-
-
 		})
 
 	})

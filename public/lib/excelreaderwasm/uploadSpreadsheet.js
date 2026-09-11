@@ -149,6 +149,7 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 	const onCompleted = opts.onCompleted || null;
 	const verifyServer = opts.verifyServer || null;
 	const onProgress = opts.onProgress || null;
+	const onError = typeof opts.onError === 'function' ? opts.onError : (err) => { console.error(err); throw err };
 	const uploadId = opts.uploadId || generateUploadId();
 
 	// Initialize WASM
@@ -254,9 +255,10 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		return finalSummary;
 	} catch (err) {
 		if (err instanceof Error) {
+			onError(err)
 			throw err;
 		}
-		throw new Error(typeof err === 'object' && err !== null && err.message ? err.message : String(err));
+		onError(new Error(typeof err === 'object' && err !== null && err.message ? err.message : String(err)))
 	} finally {
 		if (reader && typeof reader.free === 'function') {
 			reader.free();
