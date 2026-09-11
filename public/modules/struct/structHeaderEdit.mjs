@@ -50,6 +50,7 @@ const obj_struct_parent = frm.Inputs['structHeaderEdit-obj_struct_parent']
 const obj_struct_level = frm.Inputs['structHeaderEdit-obj_struct_level']
 const obj_struct_pathid = frm.Inputs['structHeaderEdit-obj_struct_pathid']
 const obj_struct_path = frm.Inputs['structHeaderEdit-obj_struct_path']	
+const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -904,6 +905,7 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
+			rec_timestamp.innerHTML = data._timestamp
 			rec_createby.innerHTML = data._createby
 			rec_createdate.innerHTML = data._createdate
 			rec_modifyby.innerHTML = data._modifyby

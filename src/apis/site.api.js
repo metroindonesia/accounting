@@ -16,7 +16,8 @@ import * as Extender from './extenders/site.apiext.js'
 
 const moduleName = 'site'
 const headerSectionName = 'header'
-const headerTableName = 'public.site' 	
+const headerTableName = 'public.site' 
+const headerPrimaryKey = 'site_id' 	
 
 // api: account
 export default class extends Api {
@@ -269,6 +270,7 @@ async function site_headerCreate(self, body) {
 
 		data._createby = user_id
 		data._createdate = (new Date()).toISOString()
+		data._timestamp = (new Date()).toISOString()
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -338,6 +340,8 @@ async function site_headerUpdate(self, body) {
 
 		data._modifyby = user_id
 		data._modifydate = (new Date()).toISOString()
+		data._timestamp = (new Date()).toISOString()
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)

@@ -17,6 +17,7 @@ import * as Extender from './extenders/struct.apiext.js'
 const moduleName = 'struct'
 const headerSectionName = 'header'
 const headerTableName = 'public.struct' 
+const headerPrimaryKey = 'struct_id' 
 const memberTableName = 'public.structmember'  	
 
 // api: account
@@ -308,6 +309,7 @@ async function struct_headerCreate(self, body) {
 
 		data._createby = user_id
 		data._createdate = (new Date()).toISOString()
+		data._timestamp = (new Date()).toISOString()
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -377,6 +379,8 @@ async function struct_headerUpdate(self, body) {
 
 		data._modifyby = user_id
 		data._modifydate = (new Date()).toISOString()
+		data._timestamp = (new Date()).toISOString()
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -693,6 +697,14 @@ async function struct_memberCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: (new Date()).toISOString(),
+				pk: data.struct_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -732,6 +744,10 @@ async function struct_memberUpdate(self, body) {
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
+			const dataToUpdate = {structmember_id: data.structmember_id}
+			const sql = `select * from ${memberTableName} where structmember_id=\${structmember_id}`
+			const rowmember = await tx.oneOrNone(sql, dataToUpdate)
+
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
 			if (typeof Extender.memberUpdating === 'function') {
@@ -742,6 +758,13 @@ async function struct_memberUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['structmember_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: (new Date()).toISOString(),
+				pk: rowmember.struct_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -789,6 +812,13 @@ async function struct_memberDelete(self, body) {
 			const param = {structmember_id: rowmember.structmember_id}
 			const cmd = sqlUtil.createDeleteCommand(memberTableName, ['structmember_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: (new Date()).toISOString(),
+				pk: rowmember.struct_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.memberDeleted === 'function') {
@@ -842,6 +872,12 @@ async function struct_memberDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(memberTableName, ['structmember_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: (new Date()).toISOString(),
+					pk: rowmember.struct_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.memberDeleted === 'function') {
 					// export async function memberDeleted(self, tx, deletedRow, logMetadata) {}
