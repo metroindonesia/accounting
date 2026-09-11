@@ -101,27 +101,23 @@ alter table core."userlogin"
 comment on column core."userlogin"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
-
-
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- FIELD: _timestamp timestamp with time zone
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE core."userlogin" DROP CONSTRAINT fk$core$userlogin$user_id;
+-- ADD _timestamp
+alter table core."userlogin" add _timestamp timestamp with time zone not null default now();
+comment on column core."userlogin"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table core."userlogin"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column core."userlogin"._timestamp is 'data timestamp';
 
 
--- Add Foreign Key Constraint  
-ALTER TABLE core."userlogin"
-	ADD CONSTRAINT fk$core$userlogin$user_id
-	FOREIGN KEY (user_id)
-	REFERENCES core."user"(user_id);
 
 
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS core.idx_fk$core$userlogin$user_id;
-CREATE INDEX idx_fk$core$userlogin$user_id ON core."userlogin"(user_id);	
-
-	
 
 
 -- =============================================

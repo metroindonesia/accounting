@@ -101,6 +101,21 @@ alter table core."userrole"
 comment on column core."userrole"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table core."userrole" add _timestamp timestamp with time zone not null default now();
+comment on column core."userrole"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table core."userrole"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column core."userrole"._timestamp is 'data timestamp';
+
+
 
 
 -- =============================================
@@ -121,17 +136,6 @@ ALTER TABLE core."userrole"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS core.idx_fk$core$userrole$role_id;
 CREATE INDEX idx_fk$core$userrole$role_id ON core."userrole"(role_id);	
-
-
-ALTER TABLE core."userrole"
-	ADD CONSTRAINT fk$core$userrole$user_id
-	FOREIGN KEY (user_id)
-	REFERENCES core."user"(user_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS core.idx_fk$core$userrole$user_id;
-CREATE INDEX idx_fk$core$userrole$user_id ON core."userrole"(user_id);	
 
 	
 
