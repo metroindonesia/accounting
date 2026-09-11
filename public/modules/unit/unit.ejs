@@ -22,11 +22,16 @@
 			<span name="caption">Id</span>
 			<span name="value" id="fRecord-section-id">-</span>
 		</div>
+
+		<div name="row">
+			<span name="caption">Timestamp</span>
+			<span name="value" id="fRecord-section-timestamp">-</span>
+		</div>
 	</div>	
 
 
 	<div name="panel-record-basic" class="record-secion-panel">
-		<!-- LEFT: Standard Info -->
+		<!-- Standard Info -->
 		<div name="column">
 			<div name="row">
 				<span name="caption">Create By</span>
@@ -48,12 +53,18 @@
 		</div>
 
 
-		<!-- RIGHT: Extended Info -->
+		<!-- Extended Info -->
 		<div name="column" exteder>
 		<%- include(`${moduleDir}/unit-ext-record.html`) %>	
 		</div> 
 
-	</div>	
+		<!-- Extended Additional Info -->
+		<% if (fs.existsSync(`${moduleDir}/unit-ext-record-additional.html`)) { %>
+		<%- include(`${moduleDir}/unit-ext-record-additional.html`) %> 
+		<% } %> 
+
+	</div>
+
 </section>
 
 <section id="fLogs-section" class="fgta5-carousell" data-title="Logs">

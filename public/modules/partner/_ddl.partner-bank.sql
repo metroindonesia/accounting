@@ -161,27 +161,23 @@ alter table public."partnerbank"
 comment on column public."partnerbank"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
-
-
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- FIELD: _timestamp timestamp with time zone
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."partnerbank" DROP CONSTRAINT fk$public$partnerbank$partner_id;
+-- ADD _timestamp
+alter table public."partnerbank" add _timestamp timestamp with time zone not null default now();
+comment on column public."partnerbank"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."partnerbank"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."partnerbank"._timestamp is 'data timestamp';
 
 
--- Add Foreign Key Constraint  
-ALTER TABLE public."partnerbank"
-	ADD CONSTRAINT fk$public$partnerbank$partner_id
-	FOREIGN KEY (partner_id)
-	REFERENCES public."partner"(partner_id);
 
 
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$partnerbank$partner_id;
-CREATE INDEX idx_fk$public$partnerbank$partner_id ON public."partnerbank"(partner_id);	
-
-	
 
 
 -- =============================================

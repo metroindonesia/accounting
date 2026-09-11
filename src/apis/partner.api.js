@@ -17,6 +17,7 @@ import * as Extender from './extenders/partner.apiext.js'
 const moduleName = 'partner'
 const headerSectionName = 'header'
 const headerTableName = 'public.partner' 
+const headerPrimaryKey = 'partner_id' 
 const bankTableName = 'public.partnerbank'  
 const contactTableName = 'public.partnercontact'  	
 
@@ -294,9 +295,11 @@ async function partner_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -363,9 +366,12 @@ async function partner_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -667,9 +673,11 @@ async function partner_bankCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -703,6 +711,14 @@ async function partner_bankCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.partner_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -735,12 +751,18 @@ async function partner_bankUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {partnerbank_id: data.partnerbank_id}
+			const sql = `select * from ${bankTableName} where partnerbank_id=\${partnerbank_id}`
+			const rowbank = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -752,6 +774,13 @@ async function partner_bankUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['partnerbank_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowbank.partner_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -781,6 +810,8 @@ async function partner_bankDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -799,6 +830,13 @@ async function partner_bankDelete(self, body) {
 			const param = {partnerbank_id: rowbank.partnerbank_id}
 			const cmd = sqlUtil.createDeleteCommand(bankTableName, ['partnerbank_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowbank.partner_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.bankDeleted === 'function') {
@@ -829,6 +867,9 @@ async function partner_bankDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let partner_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -852,6 +893,12 @@ async function partner_bankDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(bankTableName, ['partnerbank_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowbank.partner_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.bankDeleted === 'function') {
 					// export async function bankDeleted(self, tx, deletedRow, logMetadata) {}
@@ -1035,9 +1082,11 @@ async function partner_contactCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1071,6 +1120,14 @@ async function partner_contactCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.partner_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1103,12 +1160,18 @@ async function partner_contactUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {partnercontact_id: data.partnercontact_id}
+			const sql = `select * from ${contactTableName} where partnercontact_id=\${partnercontact_id}`
+			const rowcontact = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -1120,6 +1183,13 @@ async function partner_contactUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['partnercontact_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowcontact.partner_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1149,6 +1219,8 @@ async function partner_contactDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1167,6 +1239,13 @@ async function partner_contactDelete(self, body) {
 			const param = {partnercontact_id: rowcontact.partnercontact_id}
 			const cmd = sqlUtil.createDeleteCommand(contactTableName, ['partnercontact_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowcontact.partner_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.contactDeleted === 'function') {
@@ -1197,6 +1276,9 @@ async function partner_contactDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let partner_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1220,6 +1302,12 @@ async function partner_contactDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(contactTableName, ['partnercontact_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowcontact.partner_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.contactDeleted === 'function') {
 					// export async function contactDeleted(self, tx, deletedRow, logMetadata) {}

@@ -82,6 +82,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -148,6 +149,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -214,6 +216,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -280,6 +283,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -346,6 +350,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -412,6 +417,7 @@
             "bindingValue": "partnertype_id",
             "bindingText": "partnertype_name",
             "bindingDisplay": "",
+            "bindingConstraint": true,
             "loaderApiModule": "/",
             "loaderApiPath": "partnertype/header-list"
           },
@@ -478,6 +484,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -544,6 +551,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -610,6 +618,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -676,6 +685,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -742,6 +752,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -808,6 +819,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -911,6 +923,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -977,6 +990,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1043,6 +1057,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1109,6 +1124,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1175,6 +1191,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1241,6 +1258,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1307,6 +1325,7 @@
             "bindingValue": "partner_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1399,6 +1418,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1465,6 +1485,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1531,6 +1552,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1597,6 +1619,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1663,6 +1686,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1729,6 +1753,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -1795,6 +1820,7 @@
             "bindingValue": "partner_id",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },

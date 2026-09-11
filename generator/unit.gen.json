@@ -17,7 +17,7 @@
       "table": "public.unit",
       "pk": "unit_id",
       "descr": "",
-      "skipRegenerateTable": true,
+      "skipRegenerateTable": false,
       "formGridLayout": true,
       "allowFormNew": true,
       "allowFormEdit": true,
@@ -82,6 +82,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -148,6 +149,7 @@
             "bindingValue": null,
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -214,6 +216,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
@@ -280,6 +283,7 @@
             "bindingValue": "",
             "bindingText": null,
             "bindingDisplay": null,
+            "bindingConstraint": false,
             "loaderApiModule": null,
             "loaderApiPath": null
           },
