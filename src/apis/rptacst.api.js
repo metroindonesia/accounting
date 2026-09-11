@@ -97,6 +97,7 @@ async function reportviewer_fetch(self, body) {
 	try {
 		const sql = `
 			select
+			seq,
 			block,
 			rowid,
 			coa_id,
@@ -109,6 +110,7 @@ async function reportviewer_fetch(self, body) {
 			jurnaldetil_descr,
 			jurnal_date,
 			jurnal_datedue,
+			jurnal_due,
 			istotal,
 			issubtotal,
 			isrow,

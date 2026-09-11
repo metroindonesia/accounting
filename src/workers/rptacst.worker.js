@@ -14,25 +14,21 @@ async function main(param) {
 		const row = await db.one(sqlCache)
 		const cache_id = row.cache_id;
 
-		let procedureName
-
 
 
 		// panggil stored procedure dengan cache_id
 		const sqlParam = {
 			date: param.date,
-			agingtype_id: param.partner_id,
+			partner_id: param.partner_id,
 			cache_id: cache_id
 		}
 
-		// const sqlDataRequest = 'call act.nr_idr (${date}, ${isytd}, ${cache_id}::uuid)'
-		// const sqlDataRequest = `call ${procedureName} (${date}, ${isytd}, ${cache_id}::uuid)`
-		// const sqlDataRequest = `call ${procedureName} (${'${date}'},${'${agingtype_id}::int2'},${'${cache_id}::uuid'})`;
-		// await db.none(sqlDataRequest, sqlParam)
+		const procedureName = 'call public.acst_idr ($[date], $[partner_id], $[cache_id]::uuid)'
+		await db.none(procedureName, sqlParam)
 
 
 		// hitung jumlah baris
-		const sqlCountRows = 'select count(rowid) as n from temp.aging where cache_id=${cache_id}'
+		const sqlCountRows = 'select count(rowid) as n from temp.aging where cache_id=$[cache_id]'
 		const rowInfo = await db.one(sqlCountRows, { cache_id })
 		const rowCount = rowInfo.n
 

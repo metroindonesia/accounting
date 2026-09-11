@@ -10,8 +10,14 @@ const reportInfo = document.getElementById('tbl-infoloader');
 const rowTemplate = document.querySelector('template[name="template-report-row"]')
 const rowTemplateString = rowTemplate.innerHTML.trim()
 
+const rowTemplateSum = document.querySelector('template[name="template-report-sum"]')
+const rowTemplateSumString = rowTemplateSum.innerHTML.trim()
 
-let reportType
+const rowTemplateSection = document.querySelector('template[name="template-report-section"]')
+const rowTemplateSectionString = rowTemplateSection.innerHTML.trim()
+
+
+
 
 export const TITLE = 'Account Statement'
 
@@ -42,9 +48,6 @@ export function setReportDate(dt) {
 	document.getElementById('tgl_cetak').innerHTML = "Per tanggal: <b>" + dt + "</b>"
 }
 
-export function setReportType(type) {
-	reportType = type
-}
 
 
 export function getReportObjects() {
@@ -66,13 +69,28 @@ function formatNumber(num) {
 
 
 export function renderRow(self, row) {
-	let renderedHtml = rowTemplateString
+	let renderedHtml
 
+	const isSectionTitle = !row.isrow && !row.issubtotal && !row.istotal
+	const isSummary = !row.isrow && (row.issubtotal || row.istotal)
+	const isRow = row.isrow
 
+	if (isSectionTitle) {
+		renderedHtml = rowTemplateSectionString
+	} else if (isSummary) {
+		renderedHtml = rowTemplateSumString
+	} else {
+		renderedHtml = rowTemplateString
+	}
 
+	if (row.jurnaldetil_descr == 'CONSOLIDATED') {
+		row.jurnaldetil_descr = 'CONSOLIDATED AR(AP)'
+		row.addclass = 'report-row-consolidated'
+	}
+
+	console.log(row)
 	for (const key in row) {
 		if (row.hasOwnProperty(key)) {
-
 			const placeholder = new RegExp(`{{\\s*${key}\\s*}}`, 'g');  // Buat placeholder yang dicari: {{key}}
 			let value = row[key]
 			renderedHtml = renderedHtml.replace(placeholder, value);  // Ganti placeholder dengan nilai data
@@ -81,60 +99,14 @@ export function renderRow(self, row) {
 
 	const tempContainer = document.createElement('tbody');
 	tempContainer.innerHTML = renderedHtml;
-	const trElement = tempContainer.firstChild;
-	console.log(row)
 
+	const rowsElement = tempContainer.rows;
+	return rowsElement
+}
 
-	const table = document.getElementById("tbl-report");
-
-	if (reportType === 'ap_detil' || reportType === 'ar_detil') {
-		table.classList.remove('mode-summary');
-	} else {
-		table.classList.add('mode-summary');
-	}
-
-	// isi descr
-	const tdDescr = trElement.querySelector('td[data-colname="descr"]')
-	const tdJurnalDoc = trElement.querySelector('td[data-colname="jurnal_doc"]')
-	const tdJurnalDate = trElement.querySelector('td[data-colname="jurnal_date"]')
-	const tdJurnalDue = trElement.querySelector('td[data-colname="jurnal_datedue"]')
-	if (row.block == 0) {
-		tdDescr.innerHTML = row.partner_name
-		// set isi agar kosong tidak muncul "null" di cell
-		tdJurnalDoc.innerHTML = ''
-		tdJurnalDate.innerHTML = ''
-		tdJurnalDue.innerHTML = ''
-	} else {
-
-		if (row.jurnaldetil_descr != null) {
-			tdDescr.innerHTML = row.jurnaldetil_descr
-			tdDescr.setAttribute('data-a-indent', 3)
-
-		} else {
-			tdDescr.innerHTML = row.coa_name
-			// set isi agar kosong tidak muncul "null" di cell
-			tdJurnalDoc.innerHTML = ''
-			tdJurnalDate.innerHTML = ''
-			tdJurnalDue.innerHTML = ''
-			tdDescr.setAttribute('data-a-indent', 2)
-		}
-	}
-
-	//Atur tampilan berdasarkan flag istotal, issubtotal, isrow
-	// reset class dulu biar tidak numpuk
-	trElement.classList.remove('row-normal', 'row-subtotal', 'row-total')
-
-	// kondisi styling berdasarkan flag database
-	if (row.istotal == 1) {
-		trElement.classList.add('row-total')
-	} else if (row.issubtotal == 1) {
-		trElement.classList.add('row-subtotal')
-	} else if (row.isrow == 1) {
-		trElement.classList.add('row-normal')
-	}
-
-	// format descimal
-	const colsDecimals = trElement.querySelectorAll("td[data-format=\"decimal\"]")
+export function formatRowFields(tr) {
+	// format decimal
+	const colsDecimals = tr.querySelectorAll("td[data-format=\"decimal\"]")
 	for (let col of colsDecimals) {
 		const text = col.innerHTML
 		const value = Number(text)
@@ -143,8 +115,4 @@ export function renderRow(self, row) {
 			col.innerHTML = formatNumber(value)
 		}
 	}
-
-
-	return trElement
 }
-

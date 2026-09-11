@@ -82,10 +82,12 @@ export default class extends Module {
 function getParams() {
 	const reporttype = 'acst'
 	const partner_id = obj_partner.value
+	const partner_name = obj_partner.text
 
 	return {
 		typelap: reporttype,
 		partner_id: partner_id,
+		partner_name: partner_name,
 		date: obj_date.value
 	}
 }
@@ -152,9 +154,8 @@ async function btnLoad_click(self) {
 		await loadReport(self, cache, mask)
 
 		reportPage.setTitle(reportPage.TITLE)
-		reportPage.setSubTitle(param.typelap)
+		reportPage.setSubTitle(param.partner_name)
 		reportPage.setReportDate(param.date)
-		reportPage.setReportType(param.typelap)
 
 	} catch (err) {
 		console.error(err)
@@ -301,8 +302,11 @@ async function loadReport(self, cache, mask) {
 			for (let row of rows) {
 				line++;
 				rowOffset++
-				const tr = reportPage.renderRow(self, row)
-				fragment.appendChild(tr);
+				const rowsElement = reportPage.renderRow(self, row)
+				Array.from(rowsElement).forEach((tr) => {
+					fragment.appendChild(tr)
+					reportPage.formatRowFields(tr)
+				})
 			}
 			reportBody.appendChild(fragment)
 		} catch (err) {
@@ -327,7 +331,12 @@ async function obj_partner_selecting(evt) {
 	const url = 'partner/header-list'
 	const columns = ['partner_id', 'partner_name']
 	const sort = { partner_name: 'asc' }
-	const criteria = {}
+	const criteria = {
+		searchtext: evt.detail.searchtext
+	}
+
+	// console.log(evt.detail)
+
 	cbo.wait()
 	try {
 		const result = await Module.apiCall(url, {
