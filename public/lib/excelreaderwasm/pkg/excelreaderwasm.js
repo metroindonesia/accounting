@@ -12,12 +12,13 @@ export class ExcelReader {
         wasm.__wbg_excelreader_free(ptr, 0);
     }
     /**
-     * Retrieve headers for a given sheet index
+     * Retrieve headers for a given sheet index and header row number (1-based, default 1)
      * @param {number | null} [sheet_index]
+     * @param {number | null} [header_rownum]
      * @returns {any}
      */
-    getHeaders(sheet_index) {
-        const ret = wasm.excelreader_getHeaders(this.__wbg_ptr, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0);
+    getHeaders(sheet_index, header_rownum) {
+        const ret = wasm.excelreader_getHeaders(this.__wbg_ptr, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(header_rownum) ? Number.MAX_SAFE_INTEGER : (header_rownum) >>> 0);
         if (ret[2]) {
             throw takeFromExternrefTable0(ret[1]);
         }
@@ -53,15 +54,16 @@ export class ExcelReader {
      * @param {string} mapping_header
      * @param {number} row_chunk
      * @param {number | null} [sheet_index]
+     * @param {number | null} [header_rownum]
      * @param {Function | null} [callback]
      * @returns {any}
      */
-    parseSpreadsheet(valid_header, mapping_header, row_chunk, sheet_index, callback) {
+    parseSpreadsheet(valid_header, mapping_header, row_chunk, sheet_index, header_rownum, callback) {
         const ptr0 = passStringToWasm0(valid_header, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
         const ptr1 = passStringToWasm0(mapping_header, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len1 = WASM_VECTOR_LEN;
-        const ret = wasm.excelreader_parseSpreadsheet(this.__wbg_ptr, ptr0, len0, ptr1, len1, row_chunk, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(callback) ? 0 : addToExternrefTable0(callback));
+        const ret = wasm.excelreader_parseSpreadsheet(this.__wbg_ptr, ptr0, len0, ptr1, len1, row_chunk, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(header_rownum) ? Number.MAX_SAFE_INTEGER : (header_rownum) >>> 0, isLikeNone(callback) ? 0 : addToExternrefTable0(callback));
         if (ret[2]) {
             throw takeFromExternrefTable0(ret[1]);
         }
@@ -71,12 +73,13 @@ export class ExcelReader {
      * Validates the sheet header against valid_header specification
      * @param {string} valid_header
      * @param {number | null} [sheet_index]
+     * @param {number | null} [header_rownum]
      * @returns {any}
      */
-    validateHeaders(valid_header, sheet_index) {
+    validateHeaders(valid_header, sheet_index, header_rownum) {
         const ptr0 = passStringToWasm0(valid_header, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
         const len0 = WASM_VECTOR_LEN;
-        const ret = wasm.excelreader_validateHeaders(this.__wbg_ptr, ptr0, len0, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0);
+        const ret = wasm.excelreader_validateHeaders(this.__wbg_ptr, ptr0, len0, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(header_rownum) ? Number.MAX_SAFE_INTEGER : (header_rownum) >>> 0);
         if (ret[2]) {
             throw takeFromExternrefTable0(ret[1]);
         }
@@ -92,17 +95,18 @@ if (Symbol.dispose) ExcelReader.prototype[Symbol.dispose] = ExcelReader.prototyp
  * @param {string} mapping_header
  * @param {number} row_chunk
  * @param {number | null} [sheet_index]
+ * @param {number | null} [header_rownum]
  * @param {Function | null} [callback]
  * @returns {any}
  */
-export function parseSpreadsheetDirect(bytes, valid_header, mapping_header, row_chunk, sheet_index, callback) {
+export function parseSpreadsheetDirect(bytes, valid_header, mapping_header, row_chunk, sheet_index, header_rownum, callback) {
     const ptr0 = passArray8ToWasm0(bytes, wasm.__wbindgen_malloc);
     const len0 = WASM_VECTOR_LEN;
     const ptr1 = passStringToWasm0(valid_header, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len1 = WASM_VECTOR_LEN;
     const ptr2 = passStringToWasm0(mapping_header, wasm.__wbindgen_malloc, wasm.__wbindgen_realloc);
     const len2 = WASM_VECTOR_LEN;
-    const ret = wasm.parseSpreadsheetDirect(ptr0, len0, ptr1, len1, ptr2, len2, row_chunk, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(callback) ? 0 : addToExternrefTable0(callback));
+    const ret = wasm.parseSpreadsheetDirect(ptr0, len0, ptr1, len1, ptr2, len2, row_chunk, isLikeNone(sheet_index) ? Number.MAX_SAFE_INTEGER : (sheet_index) >>> 0, isLikeNone(header_rownum) ? Number.MAX_SAFE_INTEGER : (header_rownum) >>> 0, isLikeNone(callback) ? 0 : addToExternrefTable0(callback));
     if (ret[2]) {
         throw takeFromExternrefTable0(ret[1]);
     }
