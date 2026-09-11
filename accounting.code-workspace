@@ -44,6 +44,12 @@
 		"version": "0.2.0",
 		"configurations": [
 			{
+				"type": "bun",
+				"request": "launch",
+				"name": "Backend Accounting Debug (bun)",
+				"program": "${workspaceFolder}/src/index.js",
+			},
+			{
 				"name": "Chrome",
 				"request": "launch",
 				"type": "chrome",

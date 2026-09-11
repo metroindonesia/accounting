@@ -381,3 +381,30 @@
 	-webkit-mask-size: contain;
 	mask-size: contain;
 }
+
+
+
+
+
+.upload-panel {
+	padding: 16px;
+	background-color: rgb(249, 250, 251);
+	border: 1px solid rgb(229, 231, 235);
+	border-radius: 8px;
+	margin: 10px 0px;
+	font-family: Karla, sans-serif;
+}
+
+.upload-panel input[type="file"] {
+	padding: 6px 10px;
+	border: 1px solid rgb(209, 213, 219);
+	border-radius: 6px;
+	background-color: rgb(255, 255, 255);
+	font-size: 13px;
+	color: rgb(55, 65, 81);
+}
+
+.upload-panel .fgta5-entry-error {
+	margin-top: 4px;
+	padding: 10px 12px;
+}

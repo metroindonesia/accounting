@@ -1,0 +1,17 @@
+{
+  "name": "excelreaderwasm",
+  "type": "module",
+  "description": "High-performance Excel spreadsheet reader and chunk parser using WebAssembly",
+  "version": "0.1.0",
+  "license": "MIT",
+  "files": [
+    "excelreaderwasm_bg.wasm",
+    "excelreaderwasm.js",
+    "excelreaderwasm.d.ts"
+  ],
+  "main": "excelreaderwasm.js",
+  "types": "excelreaderwasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
