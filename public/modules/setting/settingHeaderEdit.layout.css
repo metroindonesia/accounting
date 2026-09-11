@@ -35,6 +35,12 @@
 		grid-column: 1 / span 6;
 		
 	}
+	
+	#settingHeaderEdit-obj_isdisabled-container {
+		grid-row: auto;
+		grid-column: 1 / span 2;
+		margin-left: 77px
+	}
 		
 
 

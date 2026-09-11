@@ -35,7 +35,13 @@ async function main(self, args) {
 
 		// ambil menuIcon
 		const preloadIcon = document.getElementById('main-menu-icon');
-		const iconMenuHref = preloadIcon.getAttribute('href')
+		if (preloadIcon) {
+			const iconMenuHref = preloadIcon.getAttribute('href')
+			// set menu icon
+			if (iconMenuHref != null && iconMenuHref != '') {
+				appmgr.setMenuIcon(iconMenuHref)
+			}
+		}
 
 
 		// setup Application Manager
@@ -44,10 +50,6 @@ async function main(self, args) {
 		appmgr.setMenu(Context.programs)
 		appmgr.setFavourite(Context.favourites)
 
-		// set menu icon
-		if (iconMenuHref != null && iconMenuHref != '') {
-			appmgr.setMenuIcon(iconMenuHref)
-		}
 
 		appmgr.addEventListener('logout', (evt) => {
 			appmgr_logout(self, evt)

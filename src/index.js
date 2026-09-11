@@ -43,7 +43,6 @@ async function main() {
 	const fgta5jsVersion = process.env.FGTA5JS_VERSION || ''
 	const appDebugMode = process.env.DEBUG_MODE_APP === 'true'
 
-	const iconMenuUrl = process.env.ICON_MENU_URL || ''
 
 
 	const router = createRouter()
@@ -51,6 +50,9 @@ async function main() {
 	// ambil setting system
 	const applicationSetting = await getApplicationSetting(db, 'core."setting"')
 	await settingInit(db, applicationSetting)
+
+	const iconMenuUrl = applicationSetting.ICON_MENU_URL
+
 
 	// variabel local konfigurasi yang bisa diakses dari api/router
 	const appConfig = {
