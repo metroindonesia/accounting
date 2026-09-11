@@ -905,11 +905,11 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
-			rec_timestamp.innerHTML = data._timestamp
+			rec_timestamp.innerHTML = pageHelper.formatLocalDateTime(data._timestamp)
 			rec_createby.innerHTML = data._createby
-			rec_createdate.innerHTML = data._createdate
-			rec_modifyby.innerHTML = data._modifyby
-			rec_modifydate.innerHTML = data._modifydate
+			rec_createdate.innerHTML = pageHelper.formatLocalDateTime(data._createdate)
+			rec_modifyby.innerHTML = data._modifyby || '-'
+			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
 			const fn_addrecordinfo_name = 'structHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]

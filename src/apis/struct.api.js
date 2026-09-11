@@ -306,10 +306,11 @@ async function struct_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
-		data._timestamp = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -376,10 +377,11 @@ async function struct_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
-		data._timestamp = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 
 		const result = await db.tx(async tx=>{
@@ -661,9 +663,11 @@ async function struct_memberCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -700,7 +704,7 @@ async function struct_memberCreate(self, body) {
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
-				_timestamp: (new Date()).toISOString(),
+				_timestamp: data_timestamp,
 				pk: data.struct_id
 			})
 
@@ -737,9 +741,11 @@ async function struct_memberUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -761,7 +767,7 @@ async function struct_memberUpdate(self, body) {
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
-				_timestamp: (new Date()).toISOString(),
+				_timestamp: data_timestamp,
 				pk: rowmember.struct_id
 			})
 
@@ -794,6 +800,8 @@ async function struct_memberDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -816,7 +824,7 @@ async function struct_memberDelete(self, body) {
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
-				_timestamp: (new Date()).toISOString(),
+				_timestamp: data_timestamp,
 				pk: rowmember.struct_id
 			})
 
@@ -849,6 +857,9 @@ async function struct_memberDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let struct_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -874,7 +885,7 @@ async function struct_memberDeleteRows(self, body) {
 
 				// update timestamp pada header
 				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
-					_timestamp: (new Date()).toISOString(),
+					_timestamp: data_timestamp,
 					pk: rowmember.struct_id
 				})
 				
