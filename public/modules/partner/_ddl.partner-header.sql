@@ -251,6 +251,11 @@ alter table public."partner"
 comment on column public."partner"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$partner$_timestamp;
+CREATE INDEX idx$public$partner$_timestamp ON public.partner (_timestamp);
 
 
 -- =============================================

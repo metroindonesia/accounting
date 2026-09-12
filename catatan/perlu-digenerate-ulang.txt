@@ -17,32 +17,90 @@ Yang perlu digenerate ulang, dan di sync:
 alter table core."user" add _timestamp timestamp with time zone not null default now();
 comment on column core."user"._timestamp is 'data timestamp';
 
+alter table core."userlogin" add _timestamp timestamp with time zone not null default now();
+comment on column core."userlogin"._timestamp is 'data timestamp';
+
 alter table core."auth" add _timestamp timestamp with time zone not null default now();
 comment on column core."auth"._timestamp is 'data timestamp';
 
-alter table core."partner" add _timestamp timestamp with time zone not null default now();
-comment on column core."partner"._timestamp is 'data timestamp';
+alter table public."partner" add _timestamp timestamp with time zone not null default now();
+comment on column public."partner"._timestamp is 'data timestamp';
 
-alter table core."partnertype" add _timestamp timestamp with time zone not null default now();
-comment on column core."partnertype"._timestamp is 'data timestamp';
+alter table public."partnertype" add _timestamp timestamp with time zone not null default now();
+comment on column public."partnertype"._timestamp is 'data timestamp';
 
-alter table core."site" add _timestamp timestamp with time zone not null default now();
-comment on column core."site"._timestamp is 'data timestamp';
+alter table public."site" add _timestamp timestamp with time zone not null default now();
+comment on column public."site"._timestamp is 'data timestamp';
 
-alter table core."struct" add _timestamp timestamp with time zone not null default now();
-comment on column core."struct"._timestamp is 'data timestamp';
+alter table public."struct" add _timestamp timestamp with time zone not null default now();
+comment on column public."struct"._timestamp is 'data timestamp';
 
-alter table core."structhrk" add _timestamp timestamp with time zone not null default now();
-comment on column core."structhrk"._timestamp is 'data timestamp';
+alter table public."structmember" add _timestamp timestamp with time zone not null default now();
+comment on column public."structmember"._timestamp is 'data timestamp';
 
-alter table core."unit" add _timestamp timestamp with time zone not null default now();
-comment on column core."unit"._timestamp is 'data timestamp';
+alter table public."structhrk" add _timestamp timestamp with time zone not null default now();
+comment on column public."structhrk"._timestamp is 'data timestamp';
 
-alter table core."curr" add _timestamp timestamp with time zone not null default now();
-comment on column core."curr"._timestamp is 'data timestamp';
+alter table public."unit" add _timestamp timestamp with time zone not null default now();
+comment on column public."unit"._timestamp is 'data timestamp';
 
-alter table core."itemclass" add _timestamp timestamp with time zone not null default now();
-comment on column core."itemclass"._timestamp is 'data timestamp';
+alter table public."curr" add _timestamp timestamp with time zone not null default now();
+comment on column public."curr"._timestamp is 'data timestamp';
+
+alter table public."currrate" add _timestamp timestamp with time zone not null default now();
+comment on column public."currrate"._timestamp is 'data timestamp';
+
+
+alter table public."itemclass" add _timestamp timestamp with time zone not null default now();
+comment on column public."itemclass"._timestamp is 'data timestamp';
+
+alter table public."itemclassstruct" add _timestamp timestamp with time zone not null default now();
+comment on column public."itemclassstruct"._timestamp is 'data timestamp';
 
 
 
+
+
+
+DROP INDEX IF EXISTS core.idx$core$user$_timestamp;
+CREATE INDEX idx$core$user$_timestamp ON core.user (_timestamp);
+
+DROP INDEX IF EXISTS core.idx$core$userlogin$_timestamp;
+CREATE INDEX idx$core$userlogin$_timestamp ON core.userlogin (_timestamp);
+
+DROP INDEX IF EXISTS core.idx$core$auth$_timestamp;
+CREATE INDEX idx$core$auth$_timestamp ON core.auth (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$partner$_timestamp;
+CREATE INDEX idx$public$partner$_timestamp ON public.partner (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$partnertype$_timestamp;
+CREATE INDEX idx$public$partnertype$_timestamp ON public.partnertype (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$site$_timestamp;
+CREATE INDEX idx$public$site$_timestamp ON public.site (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$struct$_timestamp;
+CREATE INDEX idx$public$struct$_timestamp ON public.struct (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$structmember$_timestamp;
+CREATE INDEX idx$public$structmember$_timestamp ON public.structmember (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$structhrk$_timestamp;
+CREATE INDEX idx$public$structhrk$_timestamp ON public.structhrk (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$unit$_timestamp;
+CREATE INDEX idx$public$unit$_timestamp ON public.unit (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$curr$_timestamp;
+CREATE INDEX idx$public$curr$_timestamp ON public.curr (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$currrate$_timestamp;
+CREATE INDEX idx$public$currrate$_timestamp ON public.currrate (_timestamp);
+
+DROP INDEX IF EXISTS public.idx$public$itemclass$_timestamp;
+CREATE INDEX idx$public$itemclass$_timestamp ON public.itemclass (_timestamp);
+
+
+DROP INDEX IF EXISTS public.idx$public$itemclassstruct$_timestamp;
+CREATE INDEX idx$public$itemclassstruct$_timestamp ON public.itemclassstruct (_timestamp);
