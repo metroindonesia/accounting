@@ -1,0 +1,48 @@
+Yang perlu digenerate ulang, dan di sync:
+
+
+- user
+- auth
+- partner
+- partnertype
+- site
+- struct
+- structhrk
+- unit 
+- curr
+- itemclass
+
+
+
+alter table core."user" add _timestamp timestamp with time zone not null default now();
+comment on column core."user"._timestamp is 'data timestamp';
+
+alter table core."auth" add _timestamp timestamp with time zone not null default now();
+comment on column core."auth"._timestamp is 'data timestamp';
+
+alter table core."partner" add _timestamp timestamp with time zone not null default now();
+comment on column core."partner"._timestamp is 'data timestamp';
+
+alter table core."partnertype" add _timestamp timestamp with time zone not null default now();
+comment on column core."partnertype"._timestamp is 'data timestamp';
+
+alter table core."site" add _timestamp timestamp with time zone not null default now();
+comment on column core."site"._timestamp is 'data timestamp';
+
+alter table core."struct" add _timestamp timestamp with time zone not null default now();
+comment on column core."struct"._timestamp is 'data timestamp';
+
+alter table core."structhrk" add _timestamp timestamp with time zone not null default now();
+comment on column core."structhrk"._timestamp is 'data timestamp';
+
+alter table core."unit" add _timestamp timestamp with time zone not null default now();
+comment on column core."unit"._timestamp is 'data timestamp';
+
+alter table core."curr" add _timestamp timestamp with time zone not null default now();
+comment on column core."curr"._timestamp is 'data timestamp';
+
+alter table core."itemclass" add _timestamp timestamp with time zone not null default now();
+comment on column core."itemclass"._timestamp is 'data timestamp';
+
+
+
