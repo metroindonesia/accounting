@@ -101,12 +101,23 @@ alter table public."partnertype"
 comment on column public."partnertype"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."partnertype" add _timestamp timestamp with time zone not null default now();
+comment on column public."partnertype"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."partnertype"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."partnertype"._timestamp is 'data timestamp';
 
 
--- =============================================
--- FOREIGN KEY CONSTRAINT
--- =============================================
--- Add Foreign Key Constraint  	
+
+
 
 
 -- =============================================

@@ -116,15 +116,26 @@ alter table public."itemclassstruct"
 comment on column public."itemclassstruct"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."itemclassstruct" add _timestamp timestamp with time zone not null default now();
+comment on column public."itemclassstruct"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."itemclassstruct"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."itemclassstruct"._timestamp is 'data timestamp';
+
+
 
 
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."itemclassstruct" DROP CONSTRAINT fk$public$itemclassstruct$struct_id;
-
-
 -- Add Foreign Key Constraint  
 ALTER TABLE public."itemclassstruct"
 	ADD CONSTRAINT fk$public$itemclassstruct$struct_id
