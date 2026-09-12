@@ -191,7 +191,11 @@ alter table core."auth"
 comment on column core."auth"._timestamp is 'data timestamp';
 
 
-
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$auth$_timestamp;
+CREATE INDEX idx$core$auth$_timestamp ON core.auth (_timestamp);
 
 
 -- =============================================

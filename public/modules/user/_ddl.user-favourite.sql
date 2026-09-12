@@ -116,6 +116,11 @@ alter table core."userfavouriteprogram"
 comment on column core."userfavouriteprogram"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$userfavouriteprogram$_timestamp;
+CREATE INDEX idx$core$userfavouriteprogram$_timestamp ON core.userfavouriteprogram (_timestamp);
 
 
 -- =============================================
@@ -123,7 +128,6 @@ comment on column core."userfavouriteprogram"._timestamp is 'data timestamp';
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$program_id;
-ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$user_id;
 
 
 -- Add Foreign Key Constraint  

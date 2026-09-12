@@ -176,6 +176,11 @@ alter table public."site"
 comment on column public."site"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$site$_timestamp;
+CREATE INDEX idx$public$site$_timestamp ON public.site (_timestamp);
 
 
 

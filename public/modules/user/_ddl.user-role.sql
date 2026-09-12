@@ -116,6 +116,11 @@ alter table core."userrole"
 comment on column core."userrole"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$userrole$_timestamp;
+CREATE INDEX idx$core$userrole$_timestamp ON core.userrole (_timestamp);
 
 
 -- =============================================
@@ -123,7 +128,6 @@ comment on column core."userrole"._timestamp is 'data timestamp';
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$role_id;
-ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$user_id;
 
 
 -- Add Foreign Key Constraint  

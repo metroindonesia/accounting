@@ -116,6 +116,11 @@ alter table public."structhrk"
 comment on column public."structhrk"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$structhrk$_timestamp;
+CREATE INDEX idx$public$structhrk$_timestamp ON public.structhrk (_timestamp);
 
 
 

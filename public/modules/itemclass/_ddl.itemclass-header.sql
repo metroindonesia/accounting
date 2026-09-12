@@ -146,6 +146,11 @@ alter table public."itemclass"
 comment on column public."itemclass"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$itemclass$_timestamp;
+CREATE INDEX idx$public$itemclass$_timestamp ON public.itemclass (_timestamp);
 
 
 -- =============================================

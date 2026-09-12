@@ -131,6 +131,11 @@ alter table core."userprop"
 comment on column core."userprop"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$userprop$_timestamp;
+CREATE INDEX idx$core$userprop$_timestamp ON core.userprop (_timestamp);
 
 
 

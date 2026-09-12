@@ -131,6 +131,11 @@ alter table public."structmember"
 comment on column public."structmember"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$structmember$_timestamp;
+CREATE INDEX idx$public$structmember$_timestamp ON public.structmember (_timestamp);
 
 
 -- =============================================
@@ -138,6 +143,7 @@ comment on column public."structmember"._timestamp is 'data timestamp';
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$user_id;
+ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$struct_id;
 
 
 -- Add Foreign Key Constraint  

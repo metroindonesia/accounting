@@ -131,6 +131,11 @@ alter table core."usergroup"
 comment on column core."usergroup"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$usergroup$_timestamp;
+CREATE INDEX idx$core$usergroup$_timestamp ON core.usergroup (_timestamp);
 
 
 -- =============================================
@@ -138,7 +143,6 @@ comment on column core."usergroup"._timestamp is 'data timestamp';
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."usergroup" DROP CONSTRAINT fk$core$usergroup$group_id;
-ALTER TABLE core."usergroup" DROP CONSTRAINT fk$core$usergroup$user_id;
 
 
 -- Add Foreign Key Constraint  

@@ -131,6 +131,11 @@ alter table public."unit"
 comment on column public."unit"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$unit$_timestamp;
+CREATE INDEX idx$public$unit$_timestamp ON public.unit (_timestamp);
 
 
 

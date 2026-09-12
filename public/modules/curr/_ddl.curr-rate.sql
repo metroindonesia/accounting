@@ -131,6 +131,11 @@ alter table public."currrate"
 comment on column public."currrate"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$currrate$_timestamp;
+CREATE INDEX idx$public$currrate$_timestamp ON public.currrate (_timestamp);
 
 
 

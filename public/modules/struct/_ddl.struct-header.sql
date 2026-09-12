@@ -281,6 +281,11 @@ alter table public."struct"
 comment on column public."struct"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$struct$_timestamp;
+CREATE INDEX idx$public$struct$_timestamp ON public.struct (_timestamp);
 
 
 -- =============================================

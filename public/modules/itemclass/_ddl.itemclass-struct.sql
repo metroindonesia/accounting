@@ -131,11 +131,20 @@ alter table public."itemclassstruct"
 comment on column public."itemclassstruct"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$itemclassstruct$_timestamp;
+CREATE INDEX idx$public$itemclassstruct$_timestamp ON public.itemclassstruct (_timestamp);
 
 
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
+-- Drop Existing Foreign Key Constraint 
+ALTER TABLE public."itemclassstruct" DROP CONSTRAINT fk$public$itemclassstruct$struct_id;
+
+
 -- Add Foreign Key Constraint  
 ALTER TABLE public."itemclassstruct"
 	ADD CONSTRAINT fk$public$itemclassstruct$struct_id

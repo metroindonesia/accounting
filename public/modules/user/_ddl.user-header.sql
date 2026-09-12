@@ -206,6 +206,11 @@ alter table core."user"
 comment on column core."user"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$user$_timestamp;
+CREATE INDEX idx$core$user$_timestamp ON core.user (_timestamp);
 
 
 
