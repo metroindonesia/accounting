@@ -143,7 +143,6 @@ CREATE INDEX idx$public$structmember$_timestamp ON public.structmember (_timesta
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$user_id;
-ALTER TABLE public."structmember" DROP CONSTRAINT fk$public$structmember$struct_id;
 
 
 -- Add Foreign Key Constraint  

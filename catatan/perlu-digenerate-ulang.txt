@@ -283,3 +283,14 @@ create table log.deleteditemclass (
 	_timestamp timestamptz default now() not null,
 	constraint deleteditemclass_pk primary key (itemclass_id)
 );
+
+
+
+
+=== SET TIMESTAMP
+
+UPDATE public.partner
+set _timestamp = coalesce(_modifydate , _createdate );
+
+select * from public.partner
+
