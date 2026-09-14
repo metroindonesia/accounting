@@ -5,37 +5,37 @@ export class ExcelReader {
     free(): void;
     [Symbol.dispose](): void;
     /**
-     * Retrieve headers for a given sheet index
+     * Retrieve headers for a given sheet index and header row number (1-based, default 1)
      */
-    getHeaders(sheet_index?: number | null): any;
+    getHeaders(sheet_index?: number | null, header_rownum?: number | null): any;
     getSheetNames(): any;
     constructor(bytes: Uint8Array);
     /**
      * Process spreadsheet in chunks and either trigger callback or return all chunks.
      */
-    parseSpreadsheet(valid_header: string, mapping_header: string, row_chunk: number, sheet_index?: number | null, callback?: Function | null): any;
+    parseSpreadsheet(valid_header: string, mapping_header: string, row_chunk: number, sheet_index?: number | null, header_rownum?: number | null, callback?: Function | null): any;
     /**
      * Validates the sheet header against valid_header specification
      */
-    validateHeaders(valid_header: string, sheet_index?: number | null): any;
+    validateHeaders(valid_header: string, sheet_index?: number | null, header_rownum?: number | null): any;
 }
 
 /**
  * Standalone helper to parse spreadsheet directly from bytes
  */
-export function parseSpreadsheetDirect(bytes: Uint8Array, valid_header: string, mapping_header: string, row_chunk: number, sheet_index?: number | null, callback?: Function | null): any;
+export function parseSpreadsheetDirect(bytes: Uint8Array, valid_header: string, mapping_header: string, row_chunk: number, sheet_index?: number | null, header_rownum?: number | null, callback?: Function | null): any;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
     readonly memory: WebAssembly.Memory;
     readonly __wbg_excelreader_free: (a: number, b: number) => void;
-    readonly excelreader_getHeaders: (a: number, b: number) => [number, number, number];
+    readonly excelreader_getHeaders: (a: number, b: number, c: number) => [number, number, number];
     readonly excelreader_getSheetNames: (a: number) => [number, number, number];
     readonly excelreader_new: (a: number, b: number) => [number, number, number];
-    readonly excelreader_parseSpreadsheet: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number) => [number, number, number];
-    readonly excelreader_validateHeaders: (a: number, b: number, c: number, d: number) => [number, number, number];
-    readonly parseSpreadsheetDirect: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number, number];
+    readonly excelreader_parseSpreadsheet: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number) => [number, number, number];
+    readonly excelreader_validateHeaders: (a: number, b: number, c: number, d: number, e: number) => [number, number, number];
+    readonly parseSpreadsheetDirect: (a: number, b: number, c: number, d: number, e: number, f: number, g: number, h: number, i: number, j: number) => [number, number, number];
     readonly __wbindgen_exn_store: (a: number) => void;
     readonly __externref_table_alloc: () => number;
     readonly __wbindgen_externrefs: WebAssembly.Table;

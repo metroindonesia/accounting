@@ -107,6 +107,7 @@ function normalizeMappingHeader(mappingHeader) {
  * @param {(meta: ChunkMeta) => void} [options.onProgress] - Callback called per progress update
  * @param {string} [options.uploadId] - Custom upload/session ID
  * @param {number} [options.sheetIndex=0] - Worksheet index (0-based)
+ * @param {number} [options.headerRownum=1] - Header row number (1-based, default 1)
  * @param {string | URL} [options.wasmUrl] - Custom WebAssembly module path
  * @returns {Promise<UploadResult>}
  */
@@ -142,11 +143,13 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 	const vHeaderStr = normalizeValidHeader(vHeader);
 	const mHeaderStr = normalizeMappingHeader(mHeader);
 	const sheetIndex = typeof opts.sheetIndex === 'number' ? opts.sheetIndex : 0;
+	const headerRownum = typeof opts.headerRownum === 'number' ? opts.headerRownum : (typeof opts.header_rownum === 'number' ? opts.header_rownum : 1);
 	const onInit = opts.onInit || null;
 	const onUploading = opts.onUploading || (typeof opts.onChunk === 'function' ? opts.onChunk : null);
 	const onCompleted = opts.onCompleted || null;
 	const verifyServer = opts.verifyServer || null;
 	const onProgress = opts.onProgress || null;
+	const onError = typeof opts.onError === 'function' ? opts.onError : (err) => { console.error(err); throw err };
 	const uploadId = opts.uploadId || generateUploadId();
 
 	// Initialize WASM
@@ -159,7 +162,9 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 	const reader = new ExcelReader(bytes);
 
 	try {
-		const result = reader.parseSpreadsheet(vHeaderStr, mHeaderStr, chunkNum, sheetIndex, null);
+
+		const result = reader.parseSpreadsheet(vHeaderStr, mHeaderStr, chunkNum, sheetIndex, headerRownum, null);
+
 		const chunks = result.chunks || [];
 		const summary = result.summary;
 
@@ -250,9 +255,10 @@ export async function uploadSpreadsheet(fileOrOptions, validHeader, mappingHeade
 		return finalSummary;
 	} catch (err) {
 		if (err instanceof Error) {
+			onError(err)
 			throw err;
 		}
-		throw new Error(typeof err === 'object' && err !== null && err.message ? err.message : String(err));
+		onError(new Error(typeof err === 'object' && err !== null && err.message ? err.message : String(err)))
 	} finally {
 		if (reader && typeof reader.free === 'function') {
 			reader.free();
