@@ -180,11 +180,11 @@ Yang perlu digenerate ulang, dan di sync:
 
 --CREATE UNLOGGED TABLE "temp".syncuser (
 --	batch_id varchar(13) NOT NULL,
---	auth_id int4 NOT NULL,
+--	user_id int4 NOT NULL,
 --	_timestamp timestamptz,
 --	_expired timestamp,
 --	_isdelete bool not null default false,
---	CONSTRAINT syncuser_pk PRIMARY KEY (batch_id, auth_id)
+--	CONSTRAINT syncuser_pk PRIMARY KEY (batch_id, user_id)
 --);
 
 
