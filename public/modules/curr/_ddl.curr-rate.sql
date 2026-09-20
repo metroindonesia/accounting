@@ -116,27 +116,28 @@ alter table public."currrate"
 comment on column public."currrate"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."currrate" add _timestamp timestamp with time zone not null default now();
+comment on column public."currrate"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."currrate"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."currrate"._timestamp is 'data timestamp';
 
 
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- INDEX
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."currrate" DROP CONSTRAINT fk$public$currrate$curr_id;
+DROP INDEX IF EXISTS public.idx$public$currrate$_timestamp;
+CREATE INDEX idx$public$currrate$_timestamp ON public.currrate (_timestamp);
 
 
--- Add Foreign Key Constraint  
-ALTER TABLE public."currrate"
-	ADD CONSTRAINT fk$public$currrate$curr_id
-	FOREIGN KEY (curr_id)
-	REFERENCES public."curr"(curr_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS public.idx_fk$public$currrate$curr_id;
-CREATE INDEX idx_fk$public$currrate$curr_id ON public."currrate"(curr_id);	
-
-	
 
 
 -- =============================================

@@ -42,6 +42,21 @@ comment on column core."setting".setting_descr is '';
 
 
 -- =============================================
+-- FIELD: isdisabled boolean
+-- =============================================
+-- ADD isdisabled
+alter table core."setting" add isdisabled boolean not null default false;
+comment on column core."setting".isdisabled is '';
+
+-- MODIFY isdisabled
+alter table core."setting"
+	alter column isdisabled type boolean,
+	ALTER COLUMN isdisabled SET DEFAULT false,
+	ALTER COLUMN isdisabled SET NOT NULL;
+comment on column core."setting".isdisabled is '';
+
+
+-- =============================================
 -- FIELD: _createby integer
 -- =============================================
 -- ADD _createby
@@ -101,12 +116,23 @@ alter table core."setting"
 comment on column core."setting"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table core."setting" add _timestamp timestamp with time zone not null default now();
+comment on column core."setting"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table core."setting"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column core."setting"._timestamp is 'data timestamp';
 
 
--- =============================================
--- FOREIGN KEY CONSTRAINT
--- =============================================
--- Add Foreign Key Constraint  	
+
+
 
 
 -- =============================================

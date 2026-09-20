@@ -40,6 +40,7 @@ const obj_itemclassstruct_id = frm.Inputs['itemclassStructEdit-obj_itemclassstru
 const obj_struct_id = frm.Inputs['itemclassStructEdit-obj_struct_id']
 const obj_itemclassstruct_isdisabled = frm.Inputs['itemclassStructEdit-obj_itemclassstruct_isdisabled']
 const obj_itemclass_id = frm.Inputs['itemclassStructEdit-obj_itemclass_id']	
+const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -812,10 +813,11 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
+			rec_timestamp.innerHTML = pageHelper.formatLocalDateTime(data._timestamp)
 			rec_createby.innerHTML = data._createby
-			rec_createdate.innerHTML = data._createdate
-			rec_modifyby.innerHTML = data._modifyby
-			rec_modifydate.innerHTML = data._modifydate
+			rec_createdate.innerHTML = pageHelper.formatLocalDateTime(data._createdate)
+			rec_modifyby.innerHTML = data._modifyby || '-'
+			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
 
 			// jika mau menambah beberapa informasi mengenai record,

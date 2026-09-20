@@ -44,11 +44,24 @@ async function profile_changePassword(self, body) {
 	const saltRounds = 10;
 	const hash = await bcrypt.hash(newPassword, saltRounds);
 
+	const data_timestamp = (new Date()).toISOString()
+
 	// ganti password di db
-	const sql = 'update core."user" set user_password=${newPassword} where user_id=${user_id}'
+	const sql = `
+		update core."user" 
+		set 
+		user_password=$[newPassword] 
+		_timestamp=$[_timestamp]
+		where 
+		user_id=$[user_id]
+		
+	`
+
+
 	await db.none(sql, {
 		newPassword: hash,
-		user_id: user_id
+		user_id: user_id,
+		_timestamp: data_timestamp
 	})
 
 	return true

@@ -3,6 +3,7 @@ import * as jurnalHelper from './jurnal-helper.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 import outstandingDialog from './jurnal-outstandingdialog.mjs'
 
+import { uploadData } from './jurnal-ext-detil-upload.mjs'
 
 const _coa_id = 'jurnalDetilEdit-obj_coa_id'
 const _jurnaldetil_id = 'jurnalDetilEdit-obj_jurnaldetil_id'
@@ -32,95 +33,169 @@ const _jurnal_id = 'jurnalDetilEdit-obj_jurnal_id'
 
 
 const refButtons = {}
+const uploadUi = {}
+
 
 export async function init_detil(self, args) {
 	const formEl = document.getElementById('jurnalDetilEdit-frm')
 
-	// tambahkan box information
+	// tambahkan box information (tidak berpengaruh langsung ke program, hanya untuk mempercantik form detil)
 	const divInfo = document.createElement('div')
 	divInfo.classList.add('detil-info')
 	formEl.prepend(divInfo)
 
 
-
 	// tombol get outstanding pada form detil
-	{
-		const target = document.getElementById('jurnalDetilEdit-head')
-		const tpl = document.getElementById('tpl-get-outstd-buttons')
-		if (tpl != null) {
-
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divButton = clone.querySelector('div')
-			target.insertAdjacentElement('afterend', divButton);
-
-			const dlg = new outstandingDialog()
-			dlg.addEventListener('selected', async evt => {
-				await outstandingSelected(self, evt.detail.data, evt)
-				if (evt.detail.cancelSelect) {
-					return
-				}
-				dlg.close()
-			})
-
-			refButtons.payable = new $fgta5.ActionButton('btn_getPayable')
-			refButtons.receivable = new $fgta5.ActionButton('btn_getReceivable')
-
-			refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
-			refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
-		}
-	}
+	setup_getOutstandingButton(self)
 
 	// tambahkan total di list detil table
-	{
-		const tpl = document.getElementById('tpl-detil-tfoot')
-		const target = document.getElementById('jurnalDetilList-tbl')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const tfoot = clone.querySelector('tfoot')
-			target.appendChild(tfoot)
-		}
-	}
-
+	setup_totalDetilInfo(self)
 
 	// tambahkan current balance di form
-	{
-		const target = document.getElementById('jurnalDetilEdit-frm')
-		const tpl = document.getElementById('tpl-detil-balance')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divBalance = clone.querySelector('div')
-			const balInfo = clone.querySelector('.formdetil-current-balance');
-			balInfo.id = 'formdetil-current-balance' // beri nama container balance info
-			target.appendChild(divBalance)
-		}
-	}
+	setup_currentBalanceInfo(self)
 
 	// panel  untuk upload data
-	{
-		const target = document.getElementById('jurnalDetilList-foot')
-		const tpl = document.getElementById('tpl-upload-panel')
-		if (tpl != null) {
-			const clone = tpl.content.cloneNode(true); // salin isi template
-			const divUpload = clone.querySelector('div')
-			divUpload.id = 'upload-panel'
-			divUpload.classList.add('hidden')
-			target.appendChild(divUpload)
+	setup_uploadPanel(self)
 
-			const uploadButton = document.getElementById('upload-button')
-			const uploadDataFile = document.getElementById('upload-data-file')
-			uploadDataFile.addEventListener('change', (evt) => {
-				if (uploadDataFile.files && uploadDataFile.files.length > 0) {
-					uploadButton.classList.remove('hidden')
-				} else {
-					uploadButton.classList.add('hidden')
-				}
-			})
+}
 
-			uploadButton.addEventListener('click', (evt) => {
-				console.log('upload click')
-			})
+
+function setup_getOutstandingButton(self) {
+	const target = document.getElementById('jurnalDetilEdit-head')
+	const tpl = document.getElementById('tpl-get-outstd-buttons')
+	if (tpl != null) {
+
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divButton = clone.querySelector('div')
+		target.insertAdjacentElement('afterend', divButton);
+
+		const dlg = new outstandingDialog()
+		dlg.addEventListener('selected', async evt => {
+			await outstandingSelected(self, evt.detail.data, evt)
+			if (evt.detail.cancelSelect) {
+				return
+			}
+			dlg.close()
+		})
+
+		refButtons.payable = new $fgta5.ActionButton('btn_getPayable')
+		refButtons.receivable = new $fgta5.ActionButton('btn_getReceivable')
+
+		refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
+		refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
+	}
+}
+
+
+function setup_totalDetilInfo(self) {
+	const tpl = document.getElementById('tpl-detil-tfoot')
+	const target = document.getElementById('jurnalDetilList-tbl')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const tfoot = clone.querySelector('tfoot')
+		target.appendChild(tfoot)
+	}
+}
+
+function setup_currentBalanceInfo(self) {
+	const target = document.getElementById('jurnalDetilEdit-frm')
+	const tpl = document.getElementById('tpl-detil-balance')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divBalance = clone.querySelector('div')
+		const balInfo = clone.querySelector('.formdetil-current-balance');
+		balInfo.id = 'formdetil-current-balance' // beri nama container balance info
+		target.appendChild(divBalance)
+	}
+}
+
+
+function setup_uploadPanel(self) {
+	const target = document.getElementById('jurnalDetilList-foot')
+	const tpl = document.getElementById('tpl-upload-panel')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divUpload = clone.querySelector('div')
+		divUpload.id = 'upload-panel'
+		divUpload.classList.add('hidden')
+		target.appendChild(divUpload)
+
+
+		if (uploadUi.progress == null) {
+			uploadUi.progress = document.getElementById('upload-progress')
+			uploadUi.progress.min = 0
+			uploadUi.progress.max = 100
+			uploadUi.progress.value = 0
+			uploadUi.progress.classList.add('hidden')
 		}
 
+		if (uploadUi.button == null) {
+			uploadUi.button = document.getElementById('upload-button')
+		}
+
+		if (uploadUi.dataFile == null) {
+			uploadUi.dataFile = document.getElementById('upload-data-file')
+		}
+
+		if (uploadUi.errorMessage == null) {
+			uploadUi.errorMessage = document.getElementById('upload-error-message')
+			uploadUi.errorMessage.classList.add('hidden')
+		}
+
+		uploadUi.dataFile.addEventListener('change', (evt) => {
+			uploadUi.errorMessage.classList.add('hidden')
+			uploadUi.errorMessage.innerHTML = ''
+			uploadUi.progress.value = 0
+			if (uploadUi.dataFile.files && uploadUi.dataFile.files.length > 0) {
+				uploadUi.button.classList.remove('hidden')
+			} else {
+				uploadUi.button.classList.add('hidden')
+			}
+		})
+
+		uploadUi.button.addEventListener('click', (evt) => {
+			uploadButton_click(self)
+		})
+	}
+
+}
+
+
+async function uploadButton_click(self) {
+	try {
+		uploadUi.errorMessage.classList.add('hidden')
+		uploadUi.errorMessage.innerHTML = ''
+
+		const frm = self.Modules.jurnalHeaderEdit.getForm(self)
+		const obj_jurnal_id = frm.Inputs['jurnalHeaderEdit-obj_jurnal_id']
+		const jurnal_id = obj_jurnal_id.value
+		await uploadData(self, jurnal_id, uploadUi)
+
+		uploadUi.button.classList.add('hidden')
+		uploadUi.dataFile.value = null
+
+		// refresh grid detil
+		const detilListModule = self.Modules.jurnalDetilList
+		await detilListModule.openList(self, {
+			moduleHeaderEdit: self.Modules.jurnalHeaderEdit
+		})
+
+
+		$fgta5.MessageBox.info('Upload selesai.')
+
+	} catch (err) {
+		$fgta5.MessageBox.error(err.message)
+		uploadUi.errorMessage.classList.remove('hidden')
+		uploadUi.errorMessage.innerHTML = `
+			<div><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-right: 4px;">
+			<circle cx="12" cy="12" r="10"></circle>
+			<line x1="12" y1="8" x2="12" y2="12"></line>
+			<line x1="12" y1="16" x2="12.01" y2="16"></line>
+			</svg></div>
+			<div>${err.message}</div>`
+	} finally {
+		uploadUi.progress.classList.add('hidden')
+		uploadUi.progress.value = 0
 	}
 }
 

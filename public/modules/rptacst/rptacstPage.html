@@ -1,0 +1,79 @@
+<!-- 
+manual format excel:
+https://github.com/linways/table-to-excel 
+-->
+
+<div id="print-area">
+
+	<div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+		<div>
+			<div id="judul-laporan">Account Statement</div>
+			<div id="subjudul-laporan" style="font-weight: bold; font-size: 1rem;"></div>
+			<div id="tgl_cetak" style="margin-bottom:15px;"></div>
+		</div>
+		<div id="report-logo"></div>
+	</div>
+
+	<table id="tbl-report" width="100%" data-cols-width="5,20,8,8,8,8,8,8,8,8,8,8">
+		<!-- <thead>
+			<tr>
+				<th data-colname="no">No</th>
+				<th data-colname="jurnal_doc">Jurnal Doc</th>
+				<th data-colname="jurnal_date">Jurnal Bookdate</th>
+				<th data-colname="jurnal_datedue">Jurnal Duedate</th>
+				<th data-colname="due">Due</th>
+				<th>&nbsp;</th>
+				<th data-colname="outstanding">Outstanding</th>
+			</tr>
+		</thead> -->
+
+		<tbody>
+		</tbody>
+
+		<tfoot>
+			<tr>
+				<td>
+					<div id="tbl-infoloader" style="position: absolute;"><!-- Report Loader Info --></div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+
+
+	<template name="template-report-section">
+		<tr data-rowblock="{{block}}" class="report-row-section">
+			<!-- <td data-colname="rowid">{{rowid}}</td> -->
+			<td colspan="6" data-colname="jurnal_descr">{{jurnaldetil_descr}}</td>
+		</tr>
+	</template>	
+
+	<template name="template-report-sum">
+		<tr data-rowblock="{{block}}" class="report-row-sum {{addclass}}">
+			<!-- <td data-colname="rowid">{{rowid}}</td> -->
+			<td colspan="5" data-colname="jurnal_descr">{{jurnaldetil_descr}}</td>
+			<td data-colname="outstanding" data-format="decimal" data-t="n" data-a-h="right"
+				data-num-fmt="#,##0;#,##0;#,##0;@">{{outstanding_idr}}</td>
+		</tr>
+		<tr>
+			<td colspan="3">&nbsp;</td>
+		</tr>
+	</template>
+
+	<template name="template-report-row">
+		<tr data-rowblock="{{block}}" class="report-row">
+			<!-- <td data-colname="rowid" rowspan="2">{{rowid}}</td> -->
+			<td data-colname="no" style="padding-right: 15px; text-align: right;">{{seq}}.</td>
+			<td data-colname="jurnal_doc">{{jurnal_doc}}</td>
+			<td data-colname="jurnal_datedue">{{jurnal_datedue}}</td>
+			<td data-colname="due">{{jurnal_due}}</td>
+			<td data-colname="coa_name">{{coa_name}}</td>
+			<td data-colname="outstanding" rowspan="2" data-format="decimal" data-t="n" data-a-h="right"
+				data-num-fmt="#,##0;#,##0;#,##0;@">{{outstanding_idr}}</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td colspan="4" data-colname="jurnal_descr" style="padding-left: 50px; padding-bottom: 5px; font-style: italic;">{{jurnaldetil_descr}}</td>
+		</tr>
+	</template>
+
+</div>

@@ -101,6 +101,26 @@ alter table core."userfavouriteprogram"
 comment on column core."userfavouriteprogram"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table core."userfavouriteprogram" add _timestamp timestamp with time zone not null default now();
+comment on column core."userfavouriteprogram"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table core."userfavouriteprogram"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column core."userfavouriteprogram"._timestamp is 'data timestamp';
+
+
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$userfavouriteprogram$_timestamp;
+CREATE INDEX idx$core$userfavouriteprogram$_timestamp ON core.userfavouriteprogram (_timestamp);
 
 
 -- =============================================
@@ -108,7 +128,6 @@ comment on column core."userfavouriteprogram"._modifydate is 'waktu terakhir rec
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$program_id;
-ALTER TABLE core."userfavouriteprogram" DROP CONSTRAINT fk$core$userfavouriteprogram$user_id;
 
 
 -- Add Foreign Key Constraint  
@@ -121,17 +140,6 @@ ALTER TABLE core."userfavouriteprogram"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS core.idx_fk$core$userfavouriteprogram$program_id;
 CREATE INDEX idx_fk$core$userfavouriteprogram$program_id ON core."userfavouriteprogram"(program_id);	
-
-
-ALTER TABLE core."userfavouriteprogram"
-	ADD CONSTRAINT fk$core$userfavouriteprogram$user_id
-	FOREIGN KEY (user_id)
-	REFERENCES core."user"(user_id);
-
-
--- Add As Index, drop dulu jika sudah ada
-DROP INDEX IF EXISTS core.idx_fk$core$userfavouriteprogram$user_id;
-CREATE INDEX idx_fk$core$userfavouriteprogram$user_id ON core."userfavouriteprogram"(user_id);	
 
 	
 

@@ -38,7 +38,9 @@ const btn_about = document.getElementById('settingHeader-btn_about')
 const frm = new $fgta5.Form('settingHeaderEdit-frm');
 const obj_setting_id = frm.Inputs['settingHeaderEdit-obj_setting_id']
 const obj_setting_value = frm.Inputs['settingHeaderEdit-obj_setting_value']
-const obj_setting_descr = frm.Inputs['settingHeaderEdit-obj_setting_descr']	
+const obj_setting_descr = frm.Inputs['settingHeaderEdit-obj_setting_descr']
+const obj_isdisabled = frm.Inputs['settingHeaderEdit-obj_isdisabled']	
+const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -710,10 +712,11 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
+			rec_timestamp.innerHTML = pageHelper.formatLocalDateTime(data._timestamp)
 			rec_createby.innerHTML = data._createby
-			rec_createdate.innerHTML = data._createdate
-			rec_modifyby.innerHTML = data._modifyby
-			rec_modifydate.innerHTML = data._modifydate
+			rec_createdate.innerHTML = pageHelper.formatLocalDateTime(data._createdate)
+			rec_modifyby.innerHTML = data._modifyby || '-'
+			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
 			const fn_addrecordinfo_name = 'settingHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]

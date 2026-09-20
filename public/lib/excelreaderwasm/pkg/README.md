@@ -1,10 +1,8 @@
 # Excel Reader Wasm ⚡
 
-High-performance Excel spreadsheet reader and chunk uploader powered by **Rust** and **WebAssembly (WASM)**.
+High-performance Excel spreadsheet reader and chunk uploader powered by **Rust** and **WebAssembly (WASM)** with **Completeness & Integrity Verification**.
 
-📦 **Repository:** [https://github.com/agungdhewe/excelreaderwasm](https://github.com/agungdhewe/excelreaderwasm)
-
-Membaca dan memproses spreadsheet Excel (.xlsx, .xls, .ods, .csv) dengan jutaan baris langsung di browser / client secara super cepat dan efisien tanpa membebani server backend, serta mendukung streaming chunk upload dengan event `onUploading`.
+Membaca dan memproses spreadsheet Excel (.xlsx, .xls, .ods, .csv) dengan jutaan baris langsung di browser / client secara super cepat dan efisien tanpa membebani server backend, serta mendukung streaming chunk upload dengan event `onUploading` dan verifikasi kelengkapan data di server.
 
 ---
 
@@ -12,140 +10,239 @@ Membaca dan memproses spreadsheet Excel (.xlsx, .xls, .ods, .csv) dengan jutaan 
 
 - **Blazing Fast**: Ditenagai oleh engine Rust ([calamine](https://crates.io/crates/calamine)) yang dikompilasi ke WebAssembly.
 - **Header Validation (`validHeader`)**: Memvalidasi baris pertama spreadsheet dengan format string pipa (`"No|Nama|Alamat|Kota"`), koma, atau array JSON.
-- **Field Mapping (`mappingHeader`)**: Mapping kolom spesifik ke field JSON (misal `{"no": "No", "alamat": "Alamat"}`). Hanya kolom yang dipetakan yang akan diekstrak.
+- **Field Mapping (`mappingHeader`)**: Mapping kolom spesifik ke field JSON (misal `{"no": "No", "alamat": "Alamat"}`). Hanya kolom yang dipetakan yang diekstrak.
 - **Row Chunking (`rowChunk`)**: Memecah baris data menjadi batch/chunk berukuran tetap (misal per 10 baris). Jika ada 105 baris, proses looping sebanyak 11 kali.
-- **Streaming & Callback (`onUploading`)**: Mendukung callback async `onUploading(chunk, meta)` dan event emitter `SpreadsheetUploader` untuk mengupload chunk per chunk secara langsung ke API backend.
+- **Data Integrity & CRC32 Checksum**: Setiap chunk dan keseluruhan file dihitung nilai checksum CRC32-nya secara native di Rust untuk validasi integritas data.
+- **Server Completeness Verification (`verifyServer` / `onCompleted`)**: Mekanisme verifikasi untuk memastikan seluruh chunk dan total baris telah diterima sempurna oleh server sebelum proses dianggap selesai.
 - **Type Safe**: Dilengkapi dengan TypeScript definitions (`index.d.ts`).
 
 ---
 
+## 📦 Instalasi & Build
 
-## 🛠️ Penggunaan & Contoh Kode
+```bash
+# Build WASM package ke folder pkg/
+npm run build
 
-### 1. Basic Usage (Sesuai Spesifikasi)
+# Jalankan Interactive Web Demo
+npm run dev
+```
+
+---
+
+## 🛠️ Cara Kerja Verifikasi Kelengkapan Data
+
+Saat mengupload file besar dalam potongan chunk, terdapat kemungkinan salah satu chunk gagal di tengah jalan akibat gangguan jaringan. Sistem ini menerapkan arsitektur **Session Manifest & Reconciliation**:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as Browser (WASM)
+    participant Server as Backend Server / API
+    participant DB as Database / Redis
+
+    Note over Client: 1. Parse Excel & Buat Manifest (uploadId, totalRows, totalChunks, CRC32)
+    loop Setiap Chunk (1 s/d N)
+        Client->>Server: POST /api/upload-chunk (uploadId, chunkIndex, CRC32, rows)
+        Server->>DB: Simpan chunk ke staging / buffer
+        Server-->>Client: 200 OK (ACK)
+    end
+    Note over Client: 2. Semua chunk lokal terkirim
+    Client->>Server: POST /api/verify-upload (uploadId, totalRows, totalChunks, totalChecksum, chunkManifest)
+    Server->>DB: Cocokkan jumlah chunk & total baris yang tersimpan
+    alt Semua chunk lengkap & baris cocok
+        Server->>DB: COMMIT / Simpan ke tabel utama
+        Server-->>Client: { verified: true, receivedRows: 105, status: 'COMMITTED' }
+    else Ada chunk hilang / mismatch
+        Server-->>Client: { verified: false, missingChunks: [4], receivedRows: 95 }
+        Note over Client: Error / Re-upload chunk yang hilang
+    end
+```
+
+---
+
+## 💻 Contoh Penggunaan Frontend
+
+### 1. Upload dengan Verifikasi Server (`verifyServer`)
 
 ```javascript
 import { uploadSpreadsheet } from 'excelreaderwasm';
 
-// 1. Ambil file dari input HTML (<input type="file" id="fileInput" />)
 const file = document.getElementById('fileInput').files[0];
 
-// 2. Jalankan uploadSpreadsheet
 const result = await uploadSpreadsheet(
   file,
-  'No|Nama|Alamat|Kota',               // validHeader
-  { no: 'No', alamat: 'Alamat' },       // mappingHeader
-  10,                                  // rowChunk (10 baris per chunk)
+  'No|Nama|Alamat|Kota',                // validHeader
+  { no: 'No', alamat: 'Alamat' },        // mappingHeader
+  10,                                   // rowChunk (10 baris per iterasi)
   {
+    // 1. Upload setiap chunk ke backend
     onUploading: async (chunk, meta) => {
-      console.log(`Mengupload chunk ${meta.chunkIndex}/${meta.totalChunks}`);
-      console.log(`Baris ${meta.startRow} - ${meta.endRow} (Total: ${meta.totalRows} baris)`);
-      console.log(`Progres: ${meta.progressPercent}%`);
-      console.log('Data Chunk:', chunk);
-
-      // Contoh: Kirim chunk ke endpoint backend Anda
-      await fetch('/api/v1/import-excel-chunk', {
+      console.log(`Mengupload chunk ${meta.chunkIndex}/${meta.totalChunks} (CRC32: ${meta.checksum})`);
+      
+      const response = await fetch('/api/v1/import/chunk', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          batchIndex: meta.chunkIndex,
-          isLast: meta.isLastChunk,
-          rows: chunk
+          uploadId: meta.uploadId,
+          chunkIndex: meta.chunkIndex,
+          chunkSize: meta.chunkSize,
+          startRow: meta.startRow,
+          endRow: meta.endRow,
+          checksum: meta.checksum,
+          data: chunk
         })
       });
+
+      if (!response.ok) {
+        throw new Error(`Gagal mengupload chunk ${meta.chunkIndex}`);
+      }
+    },
+
+    // 2. Metode verifikasi otomatis setelah semua chunk selesai
+    verifyServer: async (manifest) => {
+      console.log('Semua chunk terkirim. Memvalidasi kelengkapan data di server...');
+
+      const response = await fetch('/api/v1/import/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          uploadId: manifest.uploadId,
+          totalRows: manifest.totalRows,
+          totalChunks: manifest.totalChunks,
+          totalChecksum: manifest.totalChecksum,
+          chunkManifest: manifest.chunkManifest
+        })
+      });
+
+      return await response.json(); 
+      // Server harus mengembalikan: { verified: true, receivedChunks: 11, receivedRows: 105 }
     }
   }
 );
 
-console.log('Selesai!', result);
+console.log('✅ Upload & Verifikasi Sukses!', result);
 ```
 
 ---
 
-### 2. Format Parameter
+## 🖥️ Contoh Implementasi Endpoint Backend (Node.js / Express)
 
-#### `file`
-Menerima tipe data:
-- `File` (dari input form / drag & drop)
-- `Blob`
-- `ArrayBuffer`
-- `Uint8Array`
+Berikut adalah contoh endpoint backend untuk menerima chunk dan memverifikasi kelengkapan:
 
-#### `validHeader`
-Validasi kolom wajib pada baris pertama spreadsheet. Mendukung format:
-- String pipa: `"No|Nama|Alamat|Kota"`
-- String koma: `"No, Nama, Alamat, Kota"`
-- Array: `["No", "Nama", "Alamat", "Kota"]`
+```javascript
+import express from 'express';
 
-Jika kolom pada file Excel tidak cocok / ada kolom wajib yang hilang, sistem akan melempar Error deskriptif:
-```text
-Validasi header gagal!
-Header yang diharapkan: No | Nama | Alamat | Kota
-Header yang ditemukan: No | Nama | Gaji | Kota
-Kolom yang hilang: Alamat
+const app = express();
+app.use(express.json());
+
+// Tempat penyimpanan session upload sementara (bisa diganti Redis / DB staging)
+const uploadSessions = new Map();
+
+// 1. Endpoint Terima Chunk
+app.post('/api/v1/import/chunk', (req, res) => {
+  const { uploadId, chunkIndex, checksum, data } = req.body;
+
+  if (!uploadSessions.has(uploadId)) {
+    uploadSessions.set(uploadId, {
+      chunks: new Map(),
+      rowsCount: 0
+    });
+  }
+
+  const session = uploadSessions.get(uploadId);
+  session.chunks.set(chunkIndex, { checksum, rowCount: data.length, rows: data });
+  session.rowsCount += data.length;
+
+  res.json({ status: 'CHUNK_RECEIVED', chunkIndex });
+});
+
+// 2. Endpoint Verifikasi Kelengkapan (Finalize)
+app.post('/api/v1/import/verify', async (req, res) => {
+  const { uploadId, totalRows, totalChunks, totalChecksum, chunkManifest } = req.body;
+
+  const session = uploadSessions.get(uploadId);
+  if (!session) {
+    return res.status(404).json({ verified: false, message: 'Upload session tidak ditemukan' });
+  }
+
+  // Cek apakah ada chunk yang bolong
+  const missingChunks = [];
+  for (let i = 1; i <= totalChunks; i++) {
+    if (!session.chunks.has(i)) {
+      missingChunks.push(i);
+    }
+  }
+
+  const isComplete = missingChunks.length === 0 && session.rowsCount === totalRows;
+
+  if (isComplete) {
+    // SEMPURNA: Simpan seluruh data ke database utama di sini (Bulk Insert / Transaction)
+    // await db.bulkInsert(...);
+    
+    // Hapus session staging
+    uploadSessions.delete(uploadId);
+
+    return res.json({
+      verified: true,
+      receivedChunks: session.chunks.size,
+      receivedRows: session.rowsCount,
+      missingChunks: [],
+      status: 'COMMITTED'
+    });
+  } else {
+    return res.status(400).json({
+      verified: false,
+      receivedChunks: session.chunks.size,
+      receivedRows: session.rowsCount,
+      missingChunks,
+      status: 'INCOMPLETE'
+    });
+  }
+});
 ```
-
-#### `mappingHeader`
-Menentukan field JSON output dan mencocokkannya ke kolom Excel:
-- Object: `{ no: "No", alamat: "Alamat" }`
-- JSON String: `'{"no":"No", "alamat":"Alamat"}'`
-
-Output JSON per baris hanya akan memuat key yang dimapping:
-```json
-[
-  { "no": 1, "alamat": "Jl. Sudirman No. 1" },
-  { "no": 2, "alamat": "Jl. Thamrin No. 2" }
-]
-```
-
-#### `rowChunk`
-Jumlah baris per chunk (misal `10`).
-- Total baris = **105** & `rowChunk = 10` ➔ **11 Chunk** (Chunk 1-10 berisi 10 baris, Chunk 11 berisi 5 baris).
 
 ---
 
-### 3. Struktur `meta` pada `onUploading`
+## 📊 Struktur Objek `meta` & `manifest`
 
+### `meta` pada `onUploading(chunk, meta)`
 ```typescript
-interface ChunkMeta {
-  chunkIndex: number;       // Indeks chunk saat ini (1, 2, ..., 11)
-  totalChunks: number;      // Total jumlah chunk (11)
-  chunkSize: number;        // Jumlah baris dalam chunk ini (misal: 10 atau 5)
-  startRow: number;         // Nomor baris awal (1-indexed)
-  endRow: number;           // Nomor baris akhir (1-indexed)
-  totalRows: number;        // Total seluruh baris data (105)
-  isLastChunk: boolean;     // True jika ini chunk terakhir
-  progressPercent: number;  // Progres dalam persen (misal: 9.52, 100.0)
+{
+  uploadId: "fefc58ec-4a6d-420a-9bb8-0f0c38b4fbf5",
+  chunkIndex: 1,         // Chunk 1, 2, ..., 11
+  totalChunks: 11,       // Total chunk
+  chunkSize: 10,         // Jumlah baris dalam chunk ini
+  startRow: 1,           // Baris awal data
+  endRow: 10,            // Baris akhir data
+  totalRows: 105,        // Total baris di Excel
+  isLastChunk: false,    // True jika chunk terakhir
+  progressPercent: 9.52, // Progres persen
+  checksum: "d1a091b5"   // CRC32 checksum chunk
+}
+```
+
+### `manifest` pada `verifyServer(manifest)` / `onCompleted(summary)`
+```typescript
+{
+  uploadId: "fefc58ec-4a6d-420a-9bb8-0f0c38b4fbf5",
+  totalRows: 105,
+  totalChunks: 11,
+  chunkSize: 10,
+  totalChecksum: "ecc37022",
+  chunkManifest: [
+    { chunk_index: 1, chunk_size: 10, start_row: 1, end_row: 10, checksum: "d1a091b5" },
+    // ...
+    { chunk_index: 11, chunk_size: 5, start_row: 101, end_row: 105, checksum: "7f992990" }
+  ]
 }
 ```
 
 ---
 
-### 4. Menggunakan Event Emitter (`SpreadsheetUploader`)
+## 🧪 Testing & Verifikasi
 
-Jika Anda lebih menyukai arsitektur berbasis Event:
-
-```javascript
-import { SpreadsheetUploader } from 'excelreaderwasm';
-
-const uploader = new SpreadsheetUploader();
-
-uploader
-  .on('uploading', async (chunk, meta) => {
-    console.log(`[Event uploading] Chunk ${meta.chunkIndex}/${meta.totalChunks}`);
-    await sendToBackend(chunk);
-  })
-  .on('progress', (meta) => {
-    updateProgressBar(meta.progressPercent);
-  })
-  .on('complete', (summary) => {
-    console.log('Semua chunk berhasil diupload:', summary);
-  })
-  .on('error', (err) => {
-    console.error('Terjadi kesalahan:', err);
-  });
-
-await uploader.process(file, 'No|Nama|Alamat|Kota', { no: 'No', alamat: 'Alamat' }, 10);
+```bash
+# Jalankan unit test & verifikasi integritas
+node test/test_upload.js
 ```
-
-

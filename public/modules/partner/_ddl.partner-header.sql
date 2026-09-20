@@ -236,6 +236,26 @@ alter table public."partner"
 comment on column public."partner"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."partner" add _timestamp timestamp with time zone not null default now();
+comment on column public."partner"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."partner"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."partner"._timestamp is 'data timestamp';
+
+
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$partner$_timestamp;
+CREATE INDEX idx$public$partner$_timestamp ON public.partner (_timestamp);
 
 
 -- =============================================

@@ -1,0 +1,389 @@
+Yang perlu digenerate ulang, dan di sync:
+
+
+- user
+- auth
+
+- partner
+- partnertype
+- site
+- struct
+- structhrk
+- unit 
+- curr
+- itemclass
+
+
+--alter table core."user" add _timestamp timestamp with time zone not null default now();
+--comment on column core."user"._timestamp is 'data timestamp';
+
+
+--alter table core."userlogin" add _timestamp timestamp with time zone not null default now();
+--comment on column core."userlogin"._timestamp is 'data timestamp';
+
+
+--alter table core."auth" add _timestamp timestamp with time zone not null default now();
+--comment on column core."auth"._timestamp is 'data timestamp';
+
+
+--alter table public."partner" add _timestamp timestamp with time zone not null default now();
+--comment on column public."partner"._timestamp is 'data timestamp';
+
+
+--alter table public."partnertype" add _timestamp timestamp with time zone not null default now();
+--comment on column public."partnertype"._timestamp is 'data timestamp';
+
+
+--alter table public."site" add _timestamp timestamp with time zone not null default now();
+--comment on column public."site"._timestamp is 'data timestamp';
+
+
+--alter table public."struct" add _timestamp timestamp with time zone not null default now();
+--comment on column public."struct"._timestamp is 'data timestamp';
+
+
+--alter table public."structmember" add _timestamp timestamp with time zone not null default now();
+--comment on column public."structmember"._timestamp is 'data timestamp';
+
+
+--alter table public."structhrk" add _timestamp timestamp with time zone not null default now();
+--comment on column public."structhrk"._timestamp is 'data timestamp';
+
+
+--alter table public."unit" add _timestamp timestamp with time zone not null default now();
+--comment on column public."unit"._timestamp is 'data timestamp';
+
+
+--alter table public."curr" add _timestamp timestamp with time zone not null default now();
+--comment on column public."curr"._timestamp is 'data timestamp';
+
+
+--alter table public."currrate" add _timestamp timestamp with time zone not null default now();
+--comment on column public."currrate"._timestamp is 'data timestamp';
+
+
+--alter table public."itemclass" add _timestamp timestamp with time zone not null default now();
+--comment on column public."itemclass"._timestamp is 'data timestamp';
+
+
+--alter table public."itemclassstruct" add _timestamp timestamp with time zone not null default now();
+--comment on column public."itemclassstruct"._timestamp is 'data timestamp';
+
+
+
+***** tambahan
+--alter table core."userprop" add _timestamp timestamp with time zone not null default now();
+--comment on column core."userprop"._timestamp is 'data timestamp';
+
+--alter table core."usergroup" add _timestamp timestamp with time zone not null default now();
+--comment on column core."usergroup"._timestamp is 'data timestamp';
+
+--alter table core."userfavouriteprogram" add _timestamp timestamp with time zone not null default now();
+--comment on column core."userfavouriteprogram"._timestamp is 'data timestamp';
+
+--alter table core."userrole" add _timestamp timestamp with time zone not null default now();
+--comment on column core."userrole"._timestamp is 'data timestamp';
+
+--alter table public."partnerbank" add _timestamp timestamp with time zone not null default now();
+--comment on column public."partnerbank"._timestamp is 'data timestamp';
+
+--alter table public."partnercontact" add _timestamp timestamp with time zone not null default now();
+--comment on column public."partnercontact"._timestamp is 'data timestamp';
+
+
+
+
+
+--CREATE INDEX idx$core$userprop$_timestamp ON core.userlogin (_timestamp);
+--CREATE INDEX idx$core$usergroup$_timestamp ON core.userlogin (_timestamp);
+--CREATE INDEX idx$core$userfavouriteprogram$_timestamp ON core.userlogin (_timestamp);
+--CREATE INDEX idx$core$userrole$_timestamp ON core.userlogin (_timestamp);
+--CREATE INDEX idx$public$partnerbank$_timestamp ON public.partner (_timestamp);
+--CREATE INDEX idx$public$partnercontact$_timestamp ON public.partner (_timestamp);
+
+
+
+
+--DROP INDEX IF EXISTS core.idx$core$user$_timestamp;
+--CREATE INDEX idx$core$user$_timestamp ON core.user (_timestamp);
+
+
+--DROP INDEX IF EXISTS core.idx$core$userlogin$_timestamp;
+--CREATE INDEX idx$core$userlogin$_timestamp ON core.userlogin (_timestamp);
+
+
+--DROP INDEX IF EXISTS core.idx$core$auth$_timestamp;
+--CREATE INDEX idx$core$auth$_timestamp ON core.auth (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$partner$_timestamp;
+--CREATE INDEX idx$public$partner$_timestamp ON public.partner (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$partnertype$_timestamp;
+--CREATE INDEX idx$public$partnertype$_timestamp ON public.partnertype (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$site$_timestamp;
+--CREATE INDEX idx$public$site$_timestamp ON public.site (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$struct$_timestamp;
+--CREATE INDEX idx$public$struct$_timestamp ON public.struct (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$structmember$_timestamp;
+--CREATE INDEX idx$public$structmember$_timestamp ON public.structmember (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$structhrk$_timestamp;
+--CREATE INDEX idx$public$structhrk$_timestamp ON public.structhrk (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$unit$_timestamp;
+--CREATE INDEX idx$public$unit$_timestamp ON public.unit (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$curr$_timestamp;
+--CREATE INDEX idx$public$curr$_timestamp ON public.curr (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$currrate$_timestamp;
+--CREATE INDEX idx$public$currrate$_timestamp ON public.currrate (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$itemclass$_timestamp;
+--CREATE INDEX idx$public$itemclass$_timestamp ON public.itemclass (_timestamp);
+
+
+--DROP INDEX IF EXISTS public.idx$public$itemclassstruct$_timestamp;
+--CREATE INDEX idx$public$itemclassstruct$_timestamp ON public.itemclassstruct (_timestamp);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+== TABLE SYNC
+
+
+--CREATE UNLOGGED TABLE "temp".syncuser (
+--	batch_id varchar(13) NOT NULL,
+--	auth_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncuser_pk PRIMARY KEY (batch_id, auth_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncauth (
+--	batch_id varchar(13) NOT NULL,
+--	auth_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncauth_pk PRIMARY KEY (batch_id, auth_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncpartner (
+--	batch_id varchar(13) NOT NULL,
+--	partner_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncpartner_pk PRIMARY KEY (batch_id, partner_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncpartnertype (
+--	batch_id varchar(13) NOT NULL,
+--	partnertype_id int2 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncpartnertype_pk PRIMARY KEY (batch_id, partnertype_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncsite (
+--	batch_id varchar(13) NOT NULL,
+--	site_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncsite_pk PRIMARY KEY (batch_id, site_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncstruct (
+--	batch_id varchar(13) NOT NULL,
+--	struct_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncstruct_pk PRIMARY KEY (batch_id, struct_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncstructhrk (
+--	batch_id varchar(13) NOT NULL,
+--	structhrk_id int2 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncstructhrk_pk PRIMARY KEY (batch_id, structhrk_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncunit (
+--	batch_id varchar(13) NOT NULL,
+--	unit_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncunit_pk PRIMARY KEY (batch_id, unit_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".synccurr (
+--	batch_id varchar(13) NOT NULL,
+--	curr_id int2 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT synccurr_pk PRIMARY KEY (batch_id, curr_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".synccurrrate (
+--	batch_id varchar(13) NOT NULL,
+--	currrate_id int8 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT synccurrrate_pk PRIMARY KEY (batch_id, currrate_id)
+--);
+
+
+--CREATE UNLOGGED TABLE "temp".syncitemclass (
+--	batch_id varchar(13) NOT NULL,
+--	itemclass_id int4 NOT NULL,
+--	_timestamp timestamptz,
+--	_expired timestamp,
+--	_isdelete bool not null default false,
+--	CONSTRAINT syncitemclass_pk PRIMARY KEY (batch_id, itemclass_id)
+--);
+
+
+
+
+
+
+== TABLE LOG ==
+
+--create table log.deleteduser (
+--	user_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deleteduser_pk primary key (user_id)
+--);
+
+
+--create table log.deletedauth (
+--	auth_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedauth_pk primary key (auth_id)
+--);
+
+
+--create table log.deletedpartner (
+--	partner_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedpartner_pk primary key (partner_id)
+--);
+
+
+--create table log.deletedpartnertype (
+--	partnertype_id int2 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedpartnertype_pk primary key (partnertype_id)
+--);
+
+
+--create table log.deletedsite (
+--	site_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedsite_pk primary key (site_id)
+--);
+
+
+--create table log.deletedstruct (
+--	struct_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedstruct_pk primary key (struct_id)
+--);
+
+
+--create table log.deletedstructhrk (
+--	structhrk_id int2 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedstructhrk_pk primary key (structhrk_id)
+--);
+
+
+--create table log.deletedunit (
+--	unit_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedunit_pk primary key (unit_id)
+--);
+
+
+
+--create table log.deletedcurr (
+--	curr_id int2 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedcurr_pk primary key (curr_id)
+--);
+
+
+
+--create table log.deletedcurrrate (
+--	currrate_id int8 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deletedcurrrate_pk primary key (currrate_id)
+--);
+
+
+--create table log.deleteditemclass (
+--	itemclass_id int4 not null,
+--	_timestamp timestamptz default now() not null,
+--	constraint deleteditemclass_pk primary key (itemclass_id)
+--);
+
+
+
+
+
+
+
+
+
+=== SET TIMESTAMP
+
+UPDATE public.partner
+set _timestamp = coalesce(_modifydate , _createdate );
+
+select * from public.partner
+
