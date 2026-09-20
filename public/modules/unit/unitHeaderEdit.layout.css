@@ -41,6 +41,12 @@
 		grid-column: 1 / span 6;
 		
 	}
+	
+	#unitHeaderEdit-obj_struct_id-container {
+		grid-row: 4;
+		grid-column: 1 / span 2;
+		
+	}
 		
 
 
