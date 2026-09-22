@@ -146,6 +146,26 @@ alter table public."item"
 comment on column public."item"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."item" add _timestamp timestamp with time zone not null default now();
+comment on column public."item"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."item"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."item"._timestamp is 'data timestamp';
+
+
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$item$_timestamp;
+CREATE INDEX idx$public$item$_timestamp ON public.item (_timestamp);
 
 
 -- =============================================

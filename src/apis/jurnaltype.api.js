@@ -17,6 +17,7 @@ import * as Extender from './extenders/jurnaltype.apiext.js'
 const moduleName = 'jurnaltype'
 const headerSectionName = 'header'
 const headerTableName = 'public.jurnaltype' 
+const headerPrimaryKey = 'jurnaltype_id' 
 const coaTableName = 'public.jurnaltypecoa'  
 const userTableName = 'public.jurnaltypeuser'  
 const paymreqtypeTableName = 'public.jurnaltypepaymreqtype'  	
@@ -313,9 +314,11 @@ async function jurnaltype_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -366,9 +369,12 @@ async function jurnaltype_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -711,9 +717,11 @@ async function jurnaltype_coaCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -747,6 +755,14 @@ async function jurnaltype_coaCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.jurnaltype_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -779,12 +795,18 @@ async function jurnaltype_coaUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {jurnaltypecoa_id: data.jurnaltypecoa_id}
+			const sql = `select * from ${coaTableName} where jurnaltypecoa_id=\${jurnaltypecoa_id}`
+			const rowcoa = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -796,6 +818,13 @@ async function jurnaltype_coaUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['jurnaltypecoa_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowcoa.jurnaltype_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -825,6 +854,8 @@ async function jurnaltype_coaDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -843,6 +874,13 @@ async function jurnaltype_coaDelete(self, body) {
 			const param = {jurnaltypecoa_id: rowcoa.jurnaltypecoa_id}
 			const cmd = sqlUtil.createDeleteCommand(coaTableName, ['jurnaltypecoa_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowcoa.jurnaltype_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.coaDeleted === 'function') {
@@ -873,6 +911,9 @@ async function jurnaltype_coaDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let jurnaltype_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -896,6 +937,12 @@ async function jurnaltype_coaDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(coaTableName, ['jurnaltypecoa_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowcoa.jurnaltype_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.coaDeleted === 'function') {
 					// export async function coaDeleted(self, tx, deletedRow, logMetadata) {}
@@ -1089,9 +1136,11 @@ async function jurnaltype_userCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1125,6 +1174,14 @@ async function jurnaltype_userCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.jurnaltype_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1157,12 +1214,18 @@ async function jurnaltype_userUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {jurnaltypeuser_id: data.jurnaltypeuser_id}
+			const sql = `select * from ${userTableName} where jurnaltypeuser_id=\${jurnaltypeuser_id}`
+			const rowuser = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -1174,6 +1237,13 @@ async function jurnaltype_userUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['jurnaltypeuser_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowuser.jurnaltype_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1203,6 +1273,8 @@ async function jurnaltype_userDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1221,6 +1293,13 @@ async function jurnaltype_userDelete(self, body) {
 			const param = {jurnaltypeuser_id: rowuser.jurnaltypeuser_id}
 			const cmd = sqlUtil.createDeleteCommand(userTableName, ['jurnaltypeuser_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowuser.jurnaltype_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.userDeleted === 'function') {
@@ -1251,6 +1330,9 @@ async function jurnaltype_userDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let jurnaltype_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1274,6 +1356,12 @@ async function jurnaltype_userDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(userTableName, ['jurnaltypeuser_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowuser.jurnaltype_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.userDeleted === 'function') {
 					// export async function userDeleted(self, tx, deletedRow, logMetadata) {}
@@ -1467,9 +1555,11 @@ async function jurnaltype_paymreqtypeCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1503,6 +1593,14 @@ async function jurnaltype_paymreqtypeCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.jurnaltype_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1535,12 +1633,18 @@ async function jurnaltype_paymreqtypeUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {jurnaltypepaymreqtype_id: data.jurnaltypepaymreqtype_id}
+			const sql = `select * from ${paymreqtypeTableName} where jurnaltypepaymreqtype_id=\${jurnaltypepaymreqtype_id}`
+			const rowpaymreqtype = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -1552,6 +1656,13 @@ async function jurnaltype_paymreqtypeUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['jurnaltypepaymreqtype_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowpaymreqtype.jurnaltype_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -1581,6 +1692,8 @@ async function jurnaltype_paymreqtypeDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -1599,6 +1712,13 @@ async function jurnaltype_paymreqtypeDelete(self, body) {
 			const param = {jurnaltypepaymreqtype_id: rowpaymreqtype.jurnaltypepaymreqtype_id}
 			const cmd = sqlUtil.createDeleteCommand(paymreqtypeTableName, ['jurnaltypepaymreqtype_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowpaymreqtype.jurnaltype_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.paymreqtypeDeleted === 'function') {
@@ -1629,6 +1749,9 @@ async function jurnaltype_paymreqtypeDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let jurnaltype_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1652,6 +1775,12 @@ async function jurnaltype_paymreqtypeDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(paymreqtypeTableName, ['jurnaltypepaymreqtype_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowpaymreqtype.jurnaltype_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.paymreqtypeDeleted === 'function') {
 					// export async function paymreqtypeDeleted(self, tx, deletedRow, logMetadata) {}

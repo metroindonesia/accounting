@@ -101,6 +101,26 @@ alter table public."ffldetil"
 comment on column public."ffldetil"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."ffldetil" add _timestamp timestamp with time zone not null default now();
+comment on column public."ffldetil"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."ffldetil"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."ffldetil"._timestamp is 'data timestamp';
+
+
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS public.idx$public$ffldetil$_timestamp;
+CREATE INDEX idx$public$ffldetil$_timestamp ON public.ffldetil (_timestamp);
 
 
 -- =============================================

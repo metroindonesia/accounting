@@ -2,6 +2,7 @@
 // generator_id : untuk generate 1 program
 // all: generate semua program
 
+import dotenv from 'dotenv';
 import { spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import * as path from 'node:path';
@@ -9,12 +10,18 @@ import { readdir, access, readFile, writeFile, mkdir } from 'fs/promises';
 
 // import db from '@agung_dhewe/webapps/src/db.js'
 
+
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 
 // 1. Validasi Input dari CLI
 const scriptPath = './node_modules/@agung_dhewe/webapps/src/generator/trygenerate.js';
 const inputParam = process.argv[2];
+const appName = process.env.APPNAME
+
 
 
 if (!inputParam) {
@@ -28,6 +35,8 @@ if (!inputParam) {
 console.log(`🚀 Menjalankan generator dengan input: ${inputParam}\n`);
 
 
+const projectDir = __dirname
+
 if (inputParam == 'all') {
 	const args = []
 
@@ -40,7 +49,7 @@ if (inputParam == 'all') {
 
 		console.log(`\n--- Generating program: ${file} ---`);
 		await new Promise((resolve) => {
-			const child = spawn('node', [scriptPath, inputParam, genFile], {
+			const child = spawn('node', [scriptPath, inputParam, genFile, projectDir, appName], {
 				stdio: 'inherit',
 				shell: true
 			});
@@ -58,7 +67,7 @@ if (inputParam == 'all') {
 	const modulename = inputParam
 	const genFile = path.join(__dirname, 'generator', `${modulename}.gen.json`)
 
-	const child = spawn('node', [scriptPath, inputParam, genFile], {
+	const child = spawn('node', [scriptPath, inputParam, genFile, projectDir, appName], {
 		stdio: 'inherit',
 		shell: true // Gunakan shell: true jika Anda berjalan di Windows agar lebih stabil
 	});

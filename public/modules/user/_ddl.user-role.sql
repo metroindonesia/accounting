@@ -128,6 +128,7 @@ CREATE INDEX idx$core$userrole$_timestamp ON core.userrole (_timestamp);
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
 ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$role_id;
+ALTER TABLE core."userrole" DROP CONSTRAINT fk$core$userrole$user_id;
 
 
 -- Add Foreign Key Constraint  

@@ -101,12 +101,28 @@ alter table public."bc"
 comment on column public."bc"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."bc" add _timestamp timestamp with time zone not null default now();
+comment on column public."bc"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."bc"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."bc"._timestamp is 'data timestamp';
 
 
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- INDEX
 -- =============================================
--- Add Foreign Key Constraint  	
+DROP INDEX IF EXISTS public.idx$public$bc$_timestamp;
+CREATE INDEX idx$public$bc$_timestamp ON public.bc (_timestamp);
+
+
 
 
 -- =============================================

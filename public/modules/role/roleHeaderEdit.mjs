@@ -41,6 +41,7 @@ const obj_role_name = frm.Inputs['roleHeaderEdit-obj_role_name']
 const obj_role_isdisabled = frm.Inputs['roleHeaderEdit-obj_role_isdisabled']
 const obj_role_descr = frm.Inputs['roleHeaderEdit-obj_role_descr']
 const obj_role_priority = frm.Inputs['roleHeaderEdit-obj_role_priority']	
+const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -721,10 +722,11 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
+			rec_timestamp.innerHTML = pageHelper.formatLocalDateTime(data._timestamp)
 			rec_createby.innerHTML = data._createby
-			rec_createdate.innerHTML = data._createdate
-			rec_modifyby.innerHTML = data._modifyby
-			rec_modifydate.innerHTML = data._modifydate
+			rec_createdate.innerHTML = pageHelper.formatLocalDateTime(data._createdate)
+			rec_modifyby.innerHTML = data._modifyby || '-'
+			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
 			const fn_addrecordinfo_name = 'roleHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]

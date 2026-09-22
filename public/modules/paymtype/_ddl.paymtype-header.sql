@@ -176,12 +176,28 @@ alter table public."paymtype"
 comment on column public."paymtype"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."paymtype" add _timestamp timestamp with time zone not null default now();
+comment on column public."paymtype"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."paymtype"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."paymtype"._timestamp is 'data timestamp';
 
 
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- INDEX
 -- =============================================
--- Add Foreign Key Constraint  	
+DROP INDEX IF EXISTS public.idx$public$paymtype$_timestamp;
+CREATE INDEX idx$public$paymtype$_timestamp ON public.paymtype (_timestamp);
+
+
 
 
 -- =============================================

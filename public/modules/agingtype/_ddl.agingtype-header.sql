@@ -86,12 +86,28 @@ alter table public."agingtype"
 comment on column public."agingtype"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."agingtype" add _timestamp timestamp with time zone not null default now();
+comment on column public."agingtype"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."agingtype"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."agingtype"._timestamp is 'data timestamp';
 
 
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- INDEX
 -- =============================================
--- Add Foreign Key Constraint  	
+DROP INDEX IF EXISTS public.idx$public$agingtype$_timestamp;
+CREATE INDEX idx$public$agingtype$_timestamp ON public.agingtype (_timestamp);
+
+
 
 
 -- =============================================

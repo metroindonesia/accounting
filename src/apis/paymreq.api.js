@@ -18,6 +18,7 @@ import * as Extender from './extenders/paymreq.apiext.js'
 const moduleName = 'paymreq'
 const headerSectionName = 'header'
 const headerTableName = 'public.paymreq' 
+const headerPrimaryKey = 'paymreq_id' 
 const detilTableName = 'public.paymreqdetil'  	
 
 // api: account
@@ -426,9 +427,11 @@ async function paymreq_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -498,9 +501,12 @@ async function paymreq_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -831,9 +837,11 @@ async function paymreq_detilCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -867,6 +875,14 @@ async function paymreq_detilCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.paymreq_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -899,12 +915,18 @@ async function paymreq_detilUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {paymreqdetil_id: data.paymreqdetil_id}
+			const sql = `select * from ${detilTableName} where paymreqdetil_id=\${paymreqdetil_id}`
+			const rowdetil = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -916,6 +938,13 @@ async function paymreq_detilUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['paymreqdetil_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowdetil.paymreq_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -945,6 +974,8 @@ async function paymreq_detilDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -963,6 +994,13 @@ async function paymreq_detilDelete(self, body) {
 			const param = {paymreqdetil_id: rowdetil.paymreqdetil_id}
 			const cmd = sqlUtil.createDeleteCommand(detilTableName, ['paymreqdetil_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowdetil.paymreq_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.detilDeleted === 'function') {
@@ -993,6 +1031,9 @@ async function paymreq_detilDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let paymreq_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -1016,6 +1057,12 @@ async function paymreq_detilDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(detilTableName, ['paymreqdetil_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowdetil.paymreq_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.detilDeleted === 'function') {
 					// export async function detilDeleted(self, tx, deletedRow, logMetadata) {}
