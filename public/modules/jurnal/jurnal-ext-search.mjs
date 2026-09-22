@@ -40,7 +40,7 @@ export function setupSearchJurnaltype(self, obj_search_jurnaltype) {
 		const url = 'jurnaltype-filtered/list-by-user'
 		const sort = { jurnaltype_name: 'asc' }
 		const criteria = {
-			jurnaltype_isallowselect: true
+			// jurnaltype_isallowselect: true
 		}
 		cbo.wait()
 		try {

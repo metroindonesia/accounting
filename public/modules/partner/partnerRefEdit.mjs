@@ -7,47 +7,42 @@ import Context from './partner-context.mjs'
 import * as Ext from './partner-ext.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
-const Extender = Ext.extenderHeader ?? Ext
+const Extender = Ext.extenderRef ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.partnerHeaderEdit
+const CurrentSectionId = Context.Sections.partnerRefEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New Partner'
-const TitleWhenView = 'View Partner'
-const TitleWhenEdit = 'Edit Partner'
+const TitleWhenNew = 'New Reference'
+const TitleWhenView = 'View Reference'
+const TitleWhenEdit = 'Edit Reference'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('partnerHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('partnerHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('partnerHeaderEdit-btn_new', 'partnerHeader-new')
-const btn_del = new $fgta5.ActionButton('partnerHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('partnerHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('partnerHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('partnerHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('partnerHeader-btn_recordstatus')
-const btn_logs = document.getElementById('partnerHeader-btn_logs')
-const btn_about = document.getElementById('partnerHeader-btn_about')
+const btn_edit = new $fgta5.ActionButton('partnerRefEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('partnerRefEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('partnerRefEdit-btn_new', 'partnerRef-addrow')
+const btn_del = new $fgta5.ActionButton('partnerRefEdit-btn_delete', 'partnerRef-delrow')
+const btn_reset = new $fgta5.ActionButton('partnerRefEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('partnerRefEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('partnerRefEdit-btn_next')
 
-const frm = new $fgta5.Form('partnerHeaderEdit-frm');
-const obj_partner_id = frm.Inputs['partnerHeaderEdit-obj_partner_id']
-const obj_partner_isdisabled = frm.Inputs['partnerHeaderEdit-obj_partner_isdisabled']
-const obj_partner_isemployee = frm.Inputs['partnerHeaderEdit-obj_partner_isemployee']
-const obj_partner_name = frm.Inputs['partnerHeaderEdit-obj_partner_name']
-const obj_partner_legaltitle = frm.Inputs['partnerHeaderEdit-obj_partner_legaltitle']
-const obj_partnertype_id = frm.Inputs['partnerHeaderEdit-obj_partnertype_id']
-const obj_employee_nip = frm.Inputs['partnerHeaderEdit-obj_employee_nip']
-const obj_partner_address = frm.Inputs['partnerHeaderEdit-obj_partner_address']
-const obj_partner_city = frm.Inputs['partnerHeaderEdit-obj_partner_city']
-const obj_partner_email = frm.Inputs['partnerHeaderEdit-obj_partner_email']
-const obj_partner_npwp = frm.Inputs['partnerHeaderEdit-obj_partner_npwp']
-const obj_partner_isnonpkp = frm.Inputs['partnerHeaderEdit-obj_partner_isnonpkp']	
+const btn_recordstatus = document.getElementById('partnerRef-btn_recordstatus')
+const btn_logs = document.getElementById('partnerRef-btn_logs')
+
+const frm = new $fgta5.Form('partnerRefEdit-frm');
+const obj_partnerref_id = frm.Inputs['partnerRefEdit-obj_partnerref_id']
+const obj_interface_id = frm.Inputs['partnerRefEdit-obj_interface_id']
+const Name = frm.Inputs['partnerRefEdit-Name']
+const obj_partnerref_value = frm.Inputs['partnerRefEdit-obj_partnerref_value']
+const obj_partnerref_descr = frm.Inputs['partnerRefEdit-obj_partnerref_descr']
+const obj_partnerref_data = frm.Inputs['partnerRefEdit-obj_partnerref_data']
+const obj_partner_id = frm.Inputs['partnerRefEdit-obj_partner_id']	
 const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -55,13 +50,10 @@ const rec_modifyby = document.getElementById('fRecord-section-modifyby')
 const rec_modifydate = document.getElementById('fRecord-section-modifydate')
 const rec_id = document.getElementById('fRecord-section-id')
 
-
 export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing partnerHeaderEdit ...')
-	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
 		backToList(self, evt)
@@ -73,91 +65,60 @@ export async function init(self, args) {
 
 	btn_edit.addEventListener('click', (evt)=>{ btn_edit_click(self, evt) })
 	btn_save.addEventListener('click', (evt)=>{ btn_save_click(self, evt)  })
-	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt)})
-	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt)})
+	btn_new.addEventListener('click', (evt)=>{ btn_new_click(self, evt) })
+	btn_del.addEventListener('click', (evt)=>{ btn_del_click(self, evt) })
 	btn_reset.addEventListener('click', (evt)=>{ btn_reset_click(self, evt)})
 	btn_prev.addEventListener('click', (evt)=>{ btn_prev_click(self, evt)})
 	btn_next.addEventListener('click', (evt)=>{ btn_next_click(self, evt)})
-
+	
 
 	btn_recordstatus.addEventListener('click', evt=>{ btn_recordstatus_click(self, evt) })	
 	btn_logs.addEventListener('click', evt=>{ btn_logs_click(self, evt) })	
-	btn_about.addEventListener('click', evt=>{ btn_about_click(self, evt) })
 
-	// set actions
+	CurrentState.headerFormLocked = true 
+	CurrentState.editDisabled = false
+
 	CurrentState.Actions = {
 		newdata: btn_new,
 		edit: btn_edit,
-		delete: btn_del,
-		save: btn_save,	
 	}
-	
-	// export async function partnerHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'partnerHeaderEdit_init'
-	const fn_init = Extender[fn_init_name]
-	if (typeof fn_init === 'function') {
-		await fn_init(self, CurrentState)
+
+	CurrentState.getHeaderForm = () => {
+		const partnerHeaderEdit = self.Modules.partnerHeaderEdit
+		const frmHeader = partnerHeaderEdit.getHeaderForm()
+		return frmHeader
 	}
 
 
-	// buat di Extender: export function setupActionButtonEvent(self, frm, CurrentState, buttons) { }
-	const fn_setupactionbuttonevent_name = 'setupActionButtonEvent'
-	const fn_setupactionbuttonevent = Extender[fn_setupactionbuttonevent_name]
-	if (typeof fn_setupactionbuttonevent === 'function') {
-		fn_setupactionbuttonevent(self, frm, CurrentState, {
-		})
-	} else {
-		console.warn('Extender.setupActionButtonEvent is not implemented')
-		console.log('buat function di extender: export function setupActionButtonEvent(self, buttons)')
-	}
-
 	
-	
-	// Combobox: obj_partnertype_id
-	obj_partnertype_id.addEventListener('selected', (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selected_name = 'obj_partnertype_id_selected'
-		const fn_selected = Extender[fn_selected_name]
-		if (typeof fn_selected === 'function') {
-			// create function di Extender:
-			// export async function obj_partnertype_id_selected(self, obj_partnertype_id, frm, evt) {}
-			fn_selected(self, obj_partnertype_id, frm, evt)
-		} else {	
-			console.warn('Extender.obj_partnertype_id_selected is not implemented')
-		}		
-	})
-	
-	obj_partnertype_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_partnertype_id_selecting'
+	// Combobox: obj_interface_id
+	obj_interface_id.addEventListener('selecting', async (evt)=>{
+		const fn_selecting_name = 'obj_interface_id_selecting'
 		const fn_selecting = Extender[fn_selecting_name]
 		if (typeof fn_selecting === 'function') {
 			// create function di Extender (jika perlu):
-			// export async function obj_partnertype_id_selecting(self, obj_partnertype_id, frm, evt) {}
-			fn_selecting(self, obj_partnertype_id, frm, evt)
+			// export async function obj_interface_id_selecting(self, obj_interface_id, frm, evt) {}
+			fn_selecting(self, obj_interface_id, frm, evt)
 		} else {
 			// default selecting
 			const cbo = evt.detail.sender
 			const dialog = evt.detail.dialog
 			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'partnertype/header-list'
+			const url = 'interface/header-list'
 			const sort = {}
 			const criteria = {
 				searchtext: searchtext,
 			}
 
 			evt.detail.url = url 
+			evt.detail.CurrentState = CurrentState
 			
 			// buat function di extender:
-			// export function obj_partnertype_id_selecting_criteria(self, obj_partnertype_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_partnertype_id_selecting_criteria'
+			// export function obj_interface_id_selecting_criteria(self, obj_interface_id, frm, criteria, sort, evt) {}
+			const fn_selecting_criteria_name = 'obj_interface_id_selecting_criteria'
 			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
 			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_partnertype_id, frm, criteria, sort, evt)
+				fn_selecting_criteria(self, obj_interface_id, frm, criteria, sort, evt)
 			}
 
 			cbo.wait()
@@ -170,7 +131,7 @@ export async function init(self, args) {
 				}) 
 
 				for (var row of result.data) {
-					evt.detail.addRow(row.partnertype_id, row.partnertype_name, row)
+					evt.detail.addRow(row.interface_id, row.interface_name, row)
 				}
 
 				dialog.setNext(result.nextoffset, result.limit)
@@ -183,48 +144,35 @@ export async function init(self, args) {
 			
 		}		
 	})
-	
-	
-	// Checkbox: obj_partner_isnonpkp
-	obj_partner_isnonpkp.addEventListener('changed', (evt)=>{
 		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_changed_name = 'obj_partner_isnonpkp_changed'
-		const fn_changed = Extender[fn_changed_name]
-		if (typeof fn_changed === 'function') {
-			// create function di Extender:
-			// export async function obj_partner_isnonpkp_changed(self, obj_partner_isnonpkp, frm, evt) {}
-			fn_changed(self, obj_partner_isnonpkp, frm, evt)
-		} else {	
-			console.warn('Extender.obj_partner_isnonpkp_changed is not implemented')
-		}		
-	})
-	
-		
-	
 }
+
 
 export async function openSelectedData(self, params) {
 	console.log('openSelectedData')
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_partnertype_id.clear()
-					
+		obj_interface_id.clear()
+		
 		const id = params.keyvalue
 		const data = await openData(self, id)
 
 		
 
-		CurrentState.currentOpenedId = id
+		const suspended = self.Modules.partnerHeaderEdit.getCurrentState().Actions.edit.isSuspended()
 
-		// export async function partnerHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'partnerHeaderEdit_isEditDisabled'
-		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
-		if (typeof fn_iseditdisabled === 'function') {
-			const editDisabled = fn_iseditdisabled(self, data)
-			CurrentState.editDisabled = editDisabled
+		CurrentState.editDisabled = suspended
+		CurrentState.currentOpenedId = id
+		
+		// jika posisi header dalam keadaan unlock (bisa edit, perlu cek kondisi data, untuk menentukan bisa diedit atau tidak)
+		if (!CurrentState.headerFormLocked) {
+			const fn_iseditdisabled_name = 'partnerRefEdit_isEditDisabled'
+			const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
+			if (typeof fn_iseditdisabled === 'function') {
+				const editDisabled = fn_iseditdisabled(self, data)
+				CurrentState.editDisabled = editDisabled
+			}
 		}
 
 		// disable primary key
@@ -232,14 +180,15 @@ export async function openSelectedData(self, params) {
 
 		// isi form dengan data
 		frm.setData(data)
-
+	
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function partnerHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'partnerHeaderEdit_formOpened'
+		// export function partnerRefEdit_formOpened(self, frm, CurrentState) {}
+		const fn_formopened_name = 'partnerRefEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
-			await fn_formopened(self, frm, CurrentState)
+			fn_formopened(self, frm, CurrentState)
 		}
+
 
 		// finally, accept changes dan lock form
 		frm.acceptChanges()
@@ -254,22 +203,44 @@ export async function openSelectedData(self, params) {
 	}
 }
 
-
-
-export function getHeaderForm(self) {
-	return frm
+export function getCurrentState(self) {
+	return CurrentState
 }
 
 export function getForm(self) {
 	return frm
 }
 
-export function getCurrentState(self) {
-	return CurrentState
-}
-
 export function clearForm(self, text) {
 	frm.clear(text)
+}
+
+export function headerLocked(self) {
+	CurrentState.headerFormLocked = true
+	CurrentState.editDisabled = true
+	btn_new.disabled = true
+
+	// Extender untuk event Locked
+	// export function partnerRefEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'partnerRefEdit_formLocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
+}
+
+export function headerUnlocked(self) {
+	CurrentState.headerFormLocked = false
+	CurrentState.editDisabled = false
+	btn_new.disabled = false
+
+	// Extender untuk event Unlocked
+	// export function partnerRefEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'partnerRefEdit_formUnlocked'
+	const fn = Extender[fn_name]
+	if (typeof fn === 'function') {
+		fn(self, frm, CurrentState)
+	}	
 }
 
 export function disableNextButton(self, disabled=true) {
@@ -315,8 +286,9 @@ async function newData(self, datainit) {
 	}
 }
 
+
 async function openData(self, id) {
-	const url = `/${Context.moduleName}/header-open`
+	const url = `/${Context.moduleName}/ref-open`
 	try {
 		const result = await Module.apiCall(url, { id }) 
 		return result 
@@ -326,7 +298,7 @@ async function openData(self, id) {
 }
 
 async function createData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-create`
+	const url = `/${Context.moduleName}/ref-create`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -335,9 +307,8 @@ async function createData(self, data, formData) {
 	} 	
 }
 
-
 async function updateData(self, data, formData) {
-	const url = `/${Context.moduleName}/header-update`
+	const url = `/${Context.moduleName}/ref-update`
 	try {
 		const result = await Module.apiCall(url, { data, source: Source }, formData) 
 		return result 
@@ -346,9 +317,8 @@ async function updateData(self, data, formData) {
 	} 
 }
 
-
 async function deleteData(self, id) {
-	const url = `/${Context.moduleName}/header-delete`
+	const url = `/${Context.moduleName}/ref-delete`
 	try {
 		const result = await Module.apiCall(url, { id, source: Source }) 
 		return result 
@@ -376,14 +346,18 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.partnerHeaderList
+		const listId =  Context.Sections.partnerRefList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
 }
 
+
 async function  frm_locked(self, evt) {
+	console.log('frm_locked')
+
 	CurrentSection.Title = TitleWhenView
+
 
 	const content = `
 		<span class="action-button-icon">
@@ -392,8 +366,11 @@ async function  frm_locked(self, evt) {
 		<span class="action-button-text">${EditModeText}</span>	
 	`
 
+
 	btn_edit.setText(content)
 	btn_edit.setAttribute('data-state', 'unlocked')
+
+	//  todo: cek dulu apakah boleh add/remove rows 
 
 	btn_edit.disabled = false
 	btn_save.disabled = true
@@ -403,40 +380,30 @@ async function  frm_locked(self, evt) {
 	btn_prev.disabled = false
 	btn_next.disabled = false
 
-	
-	
+
 	// Extender untuk event locked
-	// export function partnerHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'partnerHeaderEdit_formLocked'
+	// export function partnerRefEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'partnerRefEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
-	}
+	}	
 
+	// jika heder form dalam kondisi lock,
+	// tetap tidak bisa hapus
 	if (CurrentState.editDisabled) {
-		// jika karena suatu kondisi data mengharuskan data tidak boleh diedit
 		btn_edit.disabled = true
-	}
-
-	
-	// trigger lock event di bank
-	self.Modules.partnerBankList.headerLocked(self)
-	self.Modules.partnerBankEdit.headerLocked(self)
-	
-	// trigger lock event di contact
-	self.Modules.partnerContactList.headerLocked(self)
-	self.Modules.partnerContactEdit.headerLocked(self)
-	
-	// trigger lock event di ref
-	self.Modules.partnerRefList.headerLocked(self)
-	self.Modules.partnerRefEdit.headerLocked(self)
-		
+		btn_new.disabled = true
+	} 
 
 }
 
 async function  frm_unlocked(self, evt) {
+	console.log('frm_unlocked')
+
 	if (frm.isNew()) {
 		CurrentSection.Title = TitleWhenNew
+
 	} else {
 		CurrentSection.Title = TitleWhenEdit
 	}
@@ -450,7 +417,7 @@ async function  frm_unlocked(self, evt) {
 
 	btn_edit.setText(content)
 	btn_edit.setAttribute('data-state', 'locked')
-
+	
 
 	btn_edit.disabled = false
 	btn_save.disabled = false
@@ -460,29 +427,13 @@ async function  frm_unlocked(self, evt) {
 	btn_prev.disabled = true
 	btn_next.disabled = true
 
-	
-
 	// Extender untuk event Unlocked
-	// export function partnerHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'partnerHeaderEdit_formUnlocked'
+	// export function partnerRefEdit_formUnlocked(self, frm) {}
+	const fn_name = 'partnerRefEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
-		fn(self, frm, CurrentState)
+		fn(self, frm)
 	}
-
-	
-	// trigger unlock event di bank
-	self.Modules.partnerBankList.headerUnlocked(self)
-	self.Modules.partnerBankEdit.headerUnlocked(self)	
-	
-	// trigger unlock event di contact
-	self.Modules.partnerContactList.headerUnlocked(self)
-	self.Modules.partnerContactEdit.headerUnlocked(self)	
-	
-	// trigger unlock event di ref
-	self.Modules.partnerRefList.headerUnlocked(self)
-	self.Modules.partnerRefEdit.headerUnlocked(self)	
-		
 }
 
 async function setPrimaryKeyState(self, opt) {
@@ -513,16 +464,18 @@ async function btn_edit_click(self, evt) {
 	}
 }
 
+
 async function btn_new_click(self, evt) {
-	console.log('btn_new_click')
+	console.log('new')
 	const sourceSection = evt.currentTarget.getAttribute('data-sectionsource') 
 
-	const partnerHeaderList = self.Modules.partnerHeaderList
-	const listsecid = partnerHeaderList.Section.Id
+	const partnerRefList = self.Modules.partnerRefList
+	const listsecid = partnerRefList.Section.Id
 	const fromListSection = sourceSection===listsecid
+
 	if (fromListSection) {
-		// klik new dari list (tidak perlu cek ada perubahan data)
-		// tampilkan dulu form
+		console.log('tambahkan row baru')
+		CurrentSection.setSectionReturn(partnerRefList.Section)
 		await CurrentSection.show()
 	} else {
 		// klik new dari form
@@ -543,21 +496,31 @@ async function btn_new_click(self, evt) {
 	} else {
 		setPrimaryKeyState(self, {disabled:false, placeholder:'ID'})
 	}
-
+	
+	
 	try {
+	
+		// ambil id header
+		const partnerHeaderEdit = self.Modules.partnerHeaderEdit
+		const frmHeader = partnerHeaderEdit.getHeaderForm()
+		const header_pk = frmHeader.getPrimaryInput()
+		const partner_id = header_pk.value
 
 		// inisiasi data baru
 		const datainit = {
+			partner_id,
+			partnerref_data: '{}',
 		}
 
 
 		// jika perlu modifikasi data initial,
-		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'partnerHeaderEdit_newData'
+		// atau dialog untuk opsi data baru, 
+		// dapat dibuat di Extender.newData
+		// export async function partnerRefEdit_newData(self, datainit, frm, CurrentState) {}
+		const fn_newdata_name = 'partnerRefEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function partnerHeaderEdit_newData(self, datainit, frm) {}
-			await fn_newdata(self, datainit, frm)
+			await fn_newdata(self, datainit, frm, CurrentState)
 		}
 
 		// buat data baru
@@ -565,10 +528,6 @@ async function btn_new_click(self, evt) {
 
 		// buka lock, agar user bisa edit
 		frm.lock(false)
-
-		// jika edit di suspend, enable dulu
-		btn_edit.suspend(false)
-
 
 		// matikan tombol edit dan del saat kondisi form adalah data baru 
 		btn_edit.disabled = true
@@ -578,17 +537,18 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.partnerHeaderList.Section.show()
+			self.Modules.partnerRefList.Section.show()
 		}
 	}
 }
 
+
 async function btn_save_click(self, evt) {
 	console.log('btn_save_click')
 
-
 	// Extender Autofill
-	const fn_autofill_name = 'partnerHeaderEdit_autofill'
+	// export async function partnerRefEdit_autofill(self, frm) {}
+	const fn_autofill_name = 'partnerRefEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -624,8 +584,7 @@ async function btn_save_click(self, evt) {
 		dataToSave = frm.getData()		
 	}
 
-
-
+	
 	// bila ada file, upload filenya
 	let formData = null
 	const files = frm.getFiles()
@@ -639,9 +598,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function partnerHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function partnerRefEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'partnerHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'partnerRefEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -652,7 +611,7 @@ async function btn_save_click(self, evt) {
 		console.log('save is canceled')
 		return
 	}
-	
+
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -691,10 +650,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'partnerHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'partnerRefEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function partnerHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function partnerRefEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -710,10 +669,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.partnerHeaderList.addNewRow(self, data)
+			self.Modules.partnerRefList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.partnerHeaderList.updateCurrentRow(self, data)
+			self.Modules.partnerRefList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -749,13 +708,40 @@ async function btn_del_click(self, evt) {
 	console.log('delete data')
 	let mask = $fgta5.Modal.createMask()
 	try {
+
+		// Extender Deleting
+		// export async function partnerRefEdit_dataDeleting(self, id, args) {}
+		const args = { cancelDelete: false }
+		const fn_datadeleting_name = 'partnerRefEdit_dataDeleting'
+		const fn_datadeleting = Extender[fn_datadeleting_name]
+		if (typeof fn_datadeleting === 'function') {
+			await fn_datadeleting(self, idValue, args)
+		}
+
+		// batalkan save, jika ada request cancel
+		if (args.cancelDelete) {
+			console.log('delete is canceled')
+			return
+		}
+
 		const result = await deleteData(self, idValue)
 		
-		// hapus current row yang dipilih di list
-		self.Modules.partnerHeaderList.removeCurrentRow(self)
 		
+
+		// Extender Delete
+		// export async function partnerRefEdit_dataDeleted(self, data) {}
+		const fn_datadeleted_name = 'partnerRefEdit_dataDeleted'
+		const fn_datadeleted = Extender[fn_datadeleted_name]
+		if (typeof fn_datadeleted === 'function') {
+			await fn_datadeleted(self, result)
+		}
+
+
+		// hapus current row yang dipilih di list
+		self.Modules.partnerRefList.removeCurrentRow(self)
+
 		// kembali ke list
-		self.Modules.partnerHeaderList.Section.show()
+		self.Modules.partnerRefList.Section.show()
 
 
 		// lock kembali form
@@ -768,9 +754,7 @@ async function btn_del_click(self, evt) {
 		mask.close()
 		mask = null
 	}
-
 }
-
 
 async function btn_reset_click(self, evt) {
 	console.log('btn_reset_click')
@@ -795,19 +779,18 @@ async function btn_reset_click(self, evt) {
 			console.log('tidak ada perubahan data, reset data tidak dieksekusi')
 		}
 	}
-
 }
+
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.partnerHeaderList.selectPreviousRow(self)
+	self.Modules.partnerRefList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.partnerHeaderList.selectNextRow(self)
+	self.Modules.partnerRefList.selectNextRow(self)
 }
-
 
 
 
@@ -840,10 +823,15 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby || '-'
 			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
-			const fn_addrecordinfo_name = 'partnerHeaderEdit_addRecordInfo'
+
+			// jika mau menambah beberapa informasi mengenai record,
+			// misalnya commit by, postby, dll
+			// melalui extender partnerRefEdit_addRecordInfo
+			// export async function partnerRefEdit_addRecordInfo(self,  data) {}
+			const fn_addrecordinfo_name = 'partnerRefEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
-				await fn_addrecordinfo(self, data)
+				await fn_addrecordinfo(self,  data)
 			}
 
 		} catch (err) {
@@ -878,11 +866,12 @@ async function btn_logs_click(self, evt) {
 		let mask = $fgta5.Modal.createMask()
 		try {
 
+
 			const logApp = Context.appsUrls.core ?? Context.appsUrls[Context.appName]
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.partner',
+				table: 'public.partnerref',
 				id: id
 			}
 
@@ -901,37 +890,5 @@ async function btn_logs_click(self, evt) {
 			mask = null
 		}
 
-	})
-}
-
-async function btn_about_click(self, evt) {
-	const params = {
-		Context,
-		sectionReturn: CurrentSection
-	}
-	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
-		
-		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Partner'
-
-		const section = document.getElementById('fAbout-section')
-
-		if ( document.getElementById('fAbout-section-fdescr') == null) {
-			const divDescr = document.createElement('div')
-			divDescr.setAttribute('id', 'fAbout-section-fdescr')
-			divDescr.setAttribute('style', 'padding: 0 0 10px 0')
-			divDescr.innerHTML = ''
-			const divTopbar = section.querySelector('div[data-topbar]')
-			divTopbar.parentNode.insertBefore(divDescr, divTopbar.nextSibling);
-		}
-
-		if ( document.getElementById('fAbout-section-footer') == null) {
-			const divFooter = document.createElement('div')
-			divFooter.setAttribute('id', 'fAbout-section-footer')
-			divFooter.setAttribute('style', 'border-top: 1px solid #ccc; padding: 5px 0 0 0; margin-top: 50px')
-			divFooter.innerHTML = 'This module is generated by fgta5 generator.'
-			section.appendChild(divFooter)
-		}
-		
 	})
 }

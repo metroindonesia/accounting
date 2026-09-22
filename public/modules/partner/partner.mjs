@@ -10,6 +10,8 @@ import * as partnerBankList from './partnerBankList.mjs'
 import * as partnerBankEdit from './partnerBankEdit.mjs' 
 import * as partnerContactList from './partnerContactList.mjs' 
 import * as partnerContactEdit from './partnerContactEdit.mjs' 
+import * as partnerRefList from './partnerRefList.mjs' 
+import * as partnerRefEdit from './partnerRefEdit.mjs' 
 import * as Extender from './partner-ext.mjs'
 
 const app = Context.app
@@ -57,6 +59,8 @@ export default class extends Module {
 			partnerBankEdit, 
 			partnerContactList, 
 			partnerContactEdit, 
+			partnerRefList, 
+			partnerRefEdit, 
 		}
 
 		try {
@@ -83,6 +87,8 @@ export default class extends Module {
 				partnerBankEdit.init(self, args), 
 				partnerContactList.init(self, args), 
 				partnerContactEdit.init(self, args), 
+				partnerRefList.init(self, args), 
+				partnerRefEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -94,7 +100,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['partnerHeaderEdit', 'partnerBankEdit', 'partnerContactEdit']
+			const modNameList = ['partnerHeaderEdit', 'partnerBankEdit', 'partnerContactEdit', 'partnerRefEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

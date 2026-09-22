@@ -19,6 +19,8 @@ export default {
 		partnerBankEdit: 'partnerBankEdit-section', 
 		partnerContactList: 'partnerContactList-section', 
 		partnerContactEdit: 'partnerContactEdit-section', 
+		partnerRefList: 'partnerRefList-section', 
+		partnerRefEdit: 'partnerRefEdit-section', 
 	},
 	SectionMap: { 
 		'partnerHeaderList-section' : 'partnerHeaderList', 
@@ -27,5 +29,7 @@ export default {
 		'partnerBankEdit-section' : 'partnerBankEdit', 
 		'partnerContactList-section' : 'partnerContactList', 
 		'partnerContactEdit-section' : 'partnerContactEdit', 
+		'partnerRefList-section' : 'partnerRefList', 
+		'partnerRefEdit-section' : 'partnerRefEdit', 
 	}
 }
