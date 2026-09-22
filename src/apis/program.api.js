@@ -16,7 +16,8 @@ import * as Extender from './extenders/program.apiext.js'
 
 const moduleName = 'program'
 const headerSectionName = 'header'
-const headerTableName = 'core.program' 	
+const headerTableName = 'core.program' 
+const headerPrimaryKey = 'program_id' 	
 
 // api: account
 export default class extends Api {
@@ -286,9 +287,11 @@ async function program_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -355,9 +358,12 @@ async function program_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)

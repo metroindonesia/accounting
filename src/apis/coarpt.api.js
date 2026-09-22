@@ -15,7 +15,8 @@ import * as Extender from './extenders/coarpt.apiext.js'
 
 const moduleName = 'coarpt'
 const headerSectionName = 'header'
-const headerTableName = 'public.coarpt' 	
+const headerTableName = 'public.coarpt' 
+const headerPrimaryKey = 'coarpt_id' 	
 
 // api: account
 export default class extends Api {
@@ -265,9 +266,11 @@ async function coarpt_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -318,9 +321,12 @@ async function coarpt_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)

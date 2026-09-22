@@ -17,6 +17,7 @@ import * as Extender from './extenders/group.apiext.js'
 const moduleName = 'group'
 const headerSectionName = 'header'
 const headerTableName = 'core.group' 
+const headerPrimaryKey = 'group_id' 
 const programTableName = 'core.groupprogram'  	
 
 // api: account
@@ -275,9 +276,11 @@ async function group_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -344,9 +347,12 @@ async function group_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -627,9 +633,11 @@ async function group_programCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -663,6 +671,14 @@ async function group_programCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.group_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -695,12 +711,18 @@ async function group_programUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {groupprogram_id: data.groupprogram_id}
+			const sql = `select * from ${programTableName} where groupprogram_id=\${groupprogram_id}`
+			const rowprogram = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -712,6 +734,13 @@ async function group_programUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['groupprogram_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowprogram.group_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -741,6 +770,8 @@ async function group_programDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -759,6 +790,13 @@ async function group_programDelete(self, body) {
 			const param = {groupprogram_id: rowprogram.groupprogram_id}
 			const cmd = sqlUtil.createDeleteCommand(programTableName, ['groupprogram_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowprogram.group_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.programDeleted === 'function') {
@@ -789,6 +827,9 @@ async function group_programDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let group_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -812,6 +853,12 @@ async function group_programDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(programTableName, ['groupprogram_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowprogram.group_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.programDeleted === 'function') {
 					// export async function programDeleted(self, tx, deletedRow, logMetadata) {}

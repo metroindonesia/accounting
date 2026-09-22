@@ -178,6 +178,11 @@ async function unit_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
+			// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.unit.struct_id)
+			{
+				const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', row.struct_id)
+				row.struct_name = struct_name
+			}
 			
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
@@ -227,6 +232,11 @@ async function unit_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
+		// lookup: struct_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.unit.struct_id)
+		{
+			const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', data.struct_id)
+			data.struct_name = struct_name
+		}
 		
 
 		// lookup data createby

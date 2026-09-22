@@ -131,6 +131,11 @@ alter table core."setting"
 comment on column core."setting"._timestamp is 'data timestamp';
 
 
+-- =============================================
+-- INDEX
+-- =============================================
+DROP INDEX IF EXISTS core.idx$core$setting$_timestamp;
+CREATE INDEX idx$core$setting$_timestamp ON core.setting (_timestamp);
 
 
 

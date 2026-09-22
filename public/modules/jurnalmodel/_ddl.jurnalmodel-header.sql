@@ -146,12 +146,28 @@ alter table public."jurnalmodel"
 comment on column public."jurnalmodel"._modifydate is 'waktu terakhir record dimodifikasi';
 
 
+-- =============================================
+-- FIELD: _timestamp timestamp with time zone
+-- =============================================
+-- ADD _timestamp
+alter table public."jurnalmodel" add _timestamp timestamp with time zone not null default now();
+comment on column public."jurnalmodel"._timestamp is 'data timestamp';
+
+-- MODIFY _timestamp
+alter table public."jurnalmodel"
+	alter column _timestamp type timestamp with time zone,
+	ALTER COLUMN _timestamp SET DEFAULT now(),
+	ALTER COLUMN _timestamp SET NOT NULL;
+comment on column public."jurnalmodel"._timestamp is 'data timestamp';
 
 
 -- =============================================
--- FOREIGN KEY CONSTRAINT
+-- INDEX
 -- =============================================
--- Add Foreign Key Constraint  	
+DROP INDEX IF EXISTS public.idx$public$jurnalmodel$_timestamp;
+CREATE INDEX idx$public$jurnalmodel$_timestamp ON public.jurnalmodel (_timestamp);
+
+
 
 
 -- =============================================

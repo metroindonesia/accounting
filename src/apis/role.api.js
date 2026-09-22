@@ -17,6 +17,7 @@ import * as Extender from './extenders/role.apiext.js'
 const moduleName = 'role'
 const headerSectionName = 'header'
 const headerTableName = 'core.role' 
+const headerPrimaryKey = 'role_id' 
 const permissionTableName = 'core.rolepermission'  	
 
 // api: account
@@ -275,9 +276,11 @@ async function role_headerCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -328,9 +331,12 @@ async function role_headerUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -611,9 +617,11 @@ async function role_permissionCreate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._createby = user_id
-		data._createdate = (new Date()).toISOString()
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -647,6 +655,14 @@ async function role_permissionCreate(self, body) {
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.role_id
+			})
+
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -679,12 +695,18 @@ async function role_permissionUpdate(self, body) {
 		// parse uploaded data
 		const files = Api.parseUploadData(data, req.files)
 
+		const data_timestamp = (new Date()).toISOString()
 
 		data._modifyby = user_id
-		data._modifydate = (new Date()).toISOString()
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
 
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
+
+			const dataToUpdate = {rolepermission_id: data.rolepermission_id}
+			const sql = `select * from ${permissionTableName} where rolepermission_id=\${rolepermission_id}`
+			const rowpermission = await tx.oneOrNone(sql, dataToUpdate)
 
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -696,6 +718,13 @@ async function role_permissionUpdate(self, body) {
 			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['rolepermission_id'])
 			const ret = await cmd.execute(data)
 			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowpermission.role_id
+			})
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -725,6 +754,8 @@ async function role_permissionDelete(self, body) {
 
 	try {
 
+		const data_timestamp = (new Date()).toISOString()
+
 		const deletedRow = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
 
@@ -743,6 +774,13 @@ async function role_permissionDelete(self, body) {
 			const param = {rolepermission_id: rowpermission.rolepermission_id}
 			const cmd = sqlUtil.createDeleteCommand(permissionTableName, ['rolepermission_id'])
 			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowpermission.role_id
+			})
 
 			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 			if (typeof Extender.permissionDeleted === 'function') {
@@ -773,6 +811,9 @@ async function role_permissionDeleteRows(self, body) {
 
 	try {
 
+
+		const data_timestamp = (new Date()).toISOString()
+
 		let role_id
 		const result = await db.tx(async tx=>{
 			sqlUtil.connect(tx)
@@ -796,6 +837,12 @@ async function role_permissionDeleteRows(self, body) {
 				const cmd = sqlUtil.createDeleteCommand(permissionTableName, ['rolepermission_id'])
 				const deletedRow = await cmd.execute(param)
 
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowpermission.role_id
+				})
+				
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.permissionDeleted === 'function') {
 					// export async function permissionDeleted(self, tx, deletedRow, logMetadata) {}

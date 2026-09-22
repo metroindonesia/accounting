@@ -42,6 +42,7 @@ const obj_doc_name = frm.Inputs['docHeaderEdit-obj_doc_name']
 const obj_doc_descr = frm.Inputs['docHeaderEdit-obj_doc_descr']
 const obj_doc_seqclust = frm.Inputs['docHeaderEdit-obj_doc_seqclust']
 const obj_doc_seqnum = frm.Inputs['docHeaderEdit-obj_doc_seqnum']	
+const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
 const rec_modifyby = document.getElementById('fRecord-section-modifyby')
@@ -715,10 +716,11 @@ async function btn_recordstatus_click(self, evt) {
 			const data = await openData(self, id)
 
 			rec_id.innerHTML = id
+			rec_timestamp.innerHTML = pageHelper.formatLocalDateTime(data._timestamp)
 			rec_createby.innerHTML = data._createby
-			rec_createdate.innerHTML = data._createdate
-			rec_modifyby.innerHTML = data._modifyby
-			rec_modifydate.innerHTML = data._modifydate
+			rec_createdate.innerHTML = pageHelper.formatLocalDateTime(data._createdate)
+			rec_modifyby.innerHTML = data._modifyby || '-'
+			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
 			const fn_addrecordinfo_name = 'docHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
