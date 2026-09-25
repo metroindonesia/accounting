@@ -52,6 +52,7 @@ async function main() {
 	await settingInit(db, applicationSetting)
 
 	const iconMenuUrl = applicationSetting.ICON_MENU_URL
+	const themeCssUrl = applicationSetting.THEME_CSS_URL
 
 
 	// variabel local konfigurasi yang bisa diakses dari api/router
@@ -77,6 +78,7 @@ async function main() {
 			sessionHttpOnly: sessionHttpOnly.toLowerCase() === 'false' ? false : true,
 
 			iconMenuUrl,
+			themeCssUrl,
 
 			defaultCurr: { id: 1, name: 'IDR' },
 			localCurr: { id: 1, name: 'IDR' }

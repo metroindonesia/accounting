@@ -4,6 +4,7 @@ import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 export const extenderHeader = null
 export const extenderBank = null
 export const extenderContact = null
+export const extenderRef = null
 
 const VIEW_VARIANCE = 'view'
 
