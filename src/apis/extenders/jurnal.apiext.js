@@ -1042,26 +1042,36 @@ async function updateHeaderValue(self, db, ret, jurnal_id) {
 	sqlUtil.connect(db)
 
 	try {
-		const sql = `select jurnaldetil_id_link from ${TABLE.jurnal} where jurnal_id=\${jurnal_id}`
+		const sql = `select jurnaldetil_id_link, curr_id from ${TABLE.jurnal} where jurnal_id=\${jurnal_id}`
 		const row = await db.one(sql, { jurnal_id })
 
 
+		const curr_id = row.curr_id
 		// hanya update jurnal_value, dan jurnal_idr jika tidak link ke detil (jurnaldetil_id_link == null)
 		if (row.jurnaldetil_id_link == null) {
 			// jurnal header value tidak terkait dengan detil
-			// update value berdasarkan value debet (+)
+			// untuk value, ambil yang currencynya sama dengan header
 			const sqlDebet = `
 				select 
-				sum(jurnaldetil_value) as total_value, sum(jurnaldetil_idr) as total_idr
-				from ${TABLE.jurnaldetil} where jurnal_id=\${jurnal_id} and jurnaldetil_idr > 0`
+					sum(case when jurnaldetil_idr>=0 and curr_id=${curr_id} then jurnaldetil_value else 0 end) as total_value_debet, 
+					abs(sum(case when jurnaldetil_idr<0 and curr_id=${curr_id} then jurnaldetil_value else 0 end)) as total_value_kredit, 
+					sum(case when jurnaldetil_idr>=0 then jurnaldetil_idr else 0 end) as total_idr_debet,
+					abs(sum(case when jurnaldetil_idr<0 then jurnaldetil_idr else 0 end)) as total_idr_kredit
+				from ${TABLE.jurnaldetil} where jurnal_id=$[jurnal_id]`
 			const rowSum = await db.one(sqlDebet, { jurnal_id })
-			const total_idr = Number(rowSum.total_idr)
-			const total_value = Number(rowSum.total_value)
+
+			const total_idr_debet = Number(rowSum.total_idr_debet)
+			const total_value_debet = Number(rowSum.total_value_kredit)
+			const total_idr_kredit = Number(rowSum.total_idr_kredit)
+			const total_value_kredit = Number(rowSum.total_value_kredit)
+			const total_idr = Math.max(total_idr_debet, total_idr_kredit)
+			const total_value = Math.max(total_value_debet, total_value_kredit)
 
 			// update header
 			const data = {
 				jurnal_id,
-				jurnal_idr: total_idr
+				jurnal_idr: total_idr,
+				jurnal_value: total_value
 			}
 			const cmd = sqlUtil.createUpdateCommand(TABLE.jurnal, data, ['jurnal_id'])
 			await cmd.execute(data)

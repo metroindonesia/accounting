@@ -10,16 +10,18 @@
 	/* flex-direction: column; */
 
 	/* Hilangkan background blokir bawaan browser */
-	background: white; /* atau transparan */
+	background: white;
+	/* atau transparan */
 }
 
 
 #dialog-outstanding::backdrop {
-	background: rgba(0,0,0,0.4); /* opsional */
+	background: rgba(0, 0, 0, 0.4);
+	/* opsional */
 }
 
 
-#dialog-outstanding > div {
+#dialog-outstanding>div {
 	display: flex;
 	flex-direction: column;
 }
@@ -39,12 +41,14 @@
 }
 
 
-#dialog-outstanding-filter {
+#dialog-outstanding-header {
 	margin-top: 15px;
 	margin-bottom: 25px;
+	display: flex;
+	column-gap: 20px;
 }
 
-#dialog-outstanding-filter > div {
+#dialog-outstanding-filter>div {
 	display: flex;
 	column-gap: 5px;
 	max-width: 800px;
@@ -52,6 +56,31 @@
 	margin-bottom: 10px;
 }
 
+#dialog-outstanding-summary {
+	display: grid;
+
+	/* agar mepet ke kanan */
+	margin-left: auto;
+
+
+	/* Kolom 1 (label): 100px, Kolom 2 (isi/nilai): auto atau max-content */
+	grid-template-columns: max-content 120px;
+
+	/* Mendorong seluruh grid mepet ke kanan */
+	justify-content: end;
+
+	/* Opsional: memberi jarak antar kolom & baris */
+	row-gap: 8px;
+	align-items: start;
+
+	/* Mengatur tinggi setiap baris menjadi 20px */
+	grid-auto-rows: 20px;
+	line-height: 20px;
+}
+
+#dialog-outstanding-summary>div {
+	text-align: right;
+}
 
 
 #dialog-outstanding-table {
@@ -72,10 +101,39 @@
 	background-color: darkkhaki;
 }
 
+
+#dialog-outstanding-table tr[checked="true"] {
+	background-color: rgb(106, 104, 77);
+}
+
+#dialog-outstanding-table tr[checked="true"]:hover {
+	filter: brightness(140%)
+}
+
+
+
 #dialog-outstanding-table tr td {
 	cursor: pointer;
 	vertical-align: top;
 	padding-bottom: 2px;
 	padding-top: 3px;
 	border-bottom: 1px dotted #ccc;
+}
+
+
+#dialog-outstanding-table tr [rowselector] {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+
+
+.dosum-label {
+	display: inline-block;
+	font-weight: bold;
+	border-bottom: 1px solid #ccc;
+}
+
+.dosum-value {
+	border-bottom: 1px solid #ccc;
 }

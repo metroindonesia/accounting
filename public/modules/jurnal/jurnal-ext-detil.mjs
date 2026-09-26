@@ -47,6 +47,7 @@ export async function init_detil(self, args) {
 
 	// tombol get outstanding pada form detil
 	setup_getOutstandingButton(self)
+	setup_getOutstandingButtonMulti(self)
 
 	// tambahkan total di list detil table
 	setup_totalDetilInfo(self)
@@ -83,6 +84,32 @@ function setup_getOutstandingButton(self) {
 
 		refButtons.payable.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
 		refButtons.receivable.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
+	}
+}
+
+function setup_getOutstandingButtonMulti(self) {
+	const target = document.getElementById('jurnalDetilList-head')
+	const tpl = document.getElementById('tpl-get-outstd-buttons-multi')
+	if (tpl != null) {
+		const clone = tpl.content.cloneNode(true); // salin isi template
+		const divButton = clone.querySelector('div')
+		target.insertAdjacentElement('afterend', divButton);
+
+
+		const dlg = new outstandingDialog({ multiselect: true })
+		dlg.addEventListener('selected', async evt => {
+			await outstandingSelected(self, evt.detail.data, evt)
+			if (evt.detail.cancelSelect) {
+				return
+			}
+			dlg.close()
+		})
+
+		refButtons.payableMulti = new $fgta5.ActionButton('btn_getPayableMulti')
+		refButtons.receivableMulti = new $fgta5.ActionButton('btn_getReceivableMulti')
+
+		refButtons.payableMulti.addEventListener('click', (evt) => { btn_getPayable_click(self, dlg, evt) })
+		refButtons.receivableMulti.addEventListener('click', (evt) => { btn_getReceivable_click(self, dlg, evt) })
 	}
 }
 
@@ -744,7 +771,8 @@ function updateBalance(self, balance_value, balance_idr) {
 }
 
 function updateTotal(self, total_idr, total_value) {
-	self.Modules.jurnalHeaderList.updateCurrentRow(self, { jurnal_idr: total_idr })
+	self.Modules.jurnalHeaderList.updateCurrentRow(self, { jurnal_idr: total_idr, jurnal_value: total_value })
+	self.Modules.extenderHeader.updateTotal(self, total_idr, total_value)
 }
 
 function iscurradj_changed(self, iscurradj, frm) {

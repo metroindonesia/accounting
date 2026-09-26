@@ -24,6 +24,9 @@ export function createRouter() {
 
 async function containerPage(req, res) {
 	try {
+		const rootPath = context.getRootDirectory()
+		const cssApplicationPath = path.join(rootPath, 'public', 'local', 'application.css');
+		const cssApplicationExists = await helper.isFileExists(cssApplicationPath);
 
 		// cek login terlebih dahulu
 		try {
@@ -40,13 +43,13 @@ async function containerPage(req, res) {
 
 		const iconMenuUrl = req.app.locals.appConfig.iconMenuUrl
 		const themeCssUrl = req.app.locals.appConfig.themeCssUrl
-		const rootPath = context.getRootDirectory()
 		const variables = {
 			...helper.createDefaultEjsVariable(req),
 			...{
 				rootPath,
 				iconMenuUrl,
-				themeCssUrl
+				themeCssUrl,
+				cssApplicationExists,
 			}
 		}
 

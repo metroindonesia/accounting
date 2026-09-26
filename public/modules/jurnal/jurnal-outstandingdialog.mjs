@@ -15,6 +15,7 @@ export default class {
 	#outstandingType
 	#agingtypeId
 	#rowTemplate
+	#isMultiselect
 
 	get title() { return this.#title }
 	get dialog() { return this.#dlg }
@@ -25,6 +26,7 @@ export default class {
 	get txtSearch() { return this.#txtSearch }
 	get tableBody() { return this.#tbody }
 	get rowTemplate() { return this.#rowTemplate }
+	get multiselect() { return this.#isMultiselect }
 
 
 	get outstandingType() { return this.#outstandingType }
@@ -36,11 +38,13 @@ export default class {
 	// set cboCoa(v) { this.#cboCoa = v}
 
 
-	constructor() {
+	constructor(options) {
 		const self = this
 
-		this.#dlg = dialog_create(self)
+		this.#isMultiselect = options?.multiselect ?? false
 
+
+		this.#dlg = dialog_create(self)
 		this.#cboPartner = new $fgta5.Combobox('dlg-obj_partner_id')
 		this.#cboPartner.markAsRequired(true)
 		this.#cboPartner.addEventListener('selecting', async (evt) => {
@@ -114,6 +118,26 @@ function dialog_create(self) {
 	btnLoad.addEventListener('click', (evt) => {
 		btnLoad_click(self)
 	})
+
+	const checkAll = document.getElementById('selectall-outstanding-checkbox')
+	checkAll.addEventListener('change', (evt) => {
+		if (evt.target.checked) {
+			selectAllRows(self, true)
+		} else {
+			selectAllRows(self, false)
+		}
+	})
+
+	console.log('create dialog')
+	if (!self.multiselect) {
+		const selectorHead = dlg.querySelector("thead [rowselector]")
+		if (selectorHead) {
+			selectorHead.classList.add('hidden')
+		}
+
+		const divSummary = document.getElementById('dialog-outstanding-summary')
+		divSummary.classList.add('hidden')
+	}
 
 	return dlg;
 }
@@ -226,7 +250,8 @@ async function dialog_loaddata(self, outstandingtype) {
 		const rows = await Module.apiCall(url, apiParam)
 
 
-
+		const checkAll = document.getElementById('selectall-outstanding-checkbox')
+		checkAll.checked = false
 
 		for (let row of rows) {
 			let renderedHtml = self.rowTemplate.cloneNode(true).outerHTML.trim()
@@ -241,10 +266,42 @@ async function dialog_loaddata(self, outstandingtype) {
 			const tempContainer = document.createElement('tbody');
 			tempContainer.innerHTML = renderedHtml;
 			const tr = tempContainer.firstChild;
+			const chk = tr.querySelector('[rowselector] [type="checkbox"]')
 
 			tr.addEventListener('dblclick', (evt) => {
-				dialog_rowselected(self, tr)
+				if (!self.multiselect) {
+					dialog_rowselected(self, tr)
+				} else {
+					if (chk) {
+						chk.checked = !chk.checked
+						if (chk.checked) {
+							tr.setAttribute('checked', true)
+						} else {
+							tr.removeAttribute('checked');
+						}
+						calculateSelected(self)
+					}
+				}
 			})
+
+			if (chk) {
+				chk.addEventListener('change', (evt) => {
+					if (evt.target.checked) {
+						tr.setAttribute('checked', 'true');
+					} else {
+						tr.removeAttribute('checked');
+					}
+					calculateSelected(self)
+				})
+			}
+
+
+			if (!self.multiselect) {
+				const rowselector = tr.querySelector("[rowselector]")
+				if (rowselector) {
+					rowselector.classList.add('hidden')
+				}
+			}
 
 			// format angka decimal
 			const colsDecimals = tr.querySelectorAll("td[data-format=\"decimal\"]")
@@ -279,6 +336,60 @@ async function dialog_loaddata(self, outstandingtype) {
 		mask.close()
 		mask = null
 	}
+}
+
+
+function selectAllRows(self, selectall) {
+	const rows = self.tableBody.querySelectorAll('tr')
+	for (const tr of rows) {
+		const chk = tr.querySelector('input[type="checkbox"]')
+		if (selectall) {
+			chk.checked = true
+			tr.setAttribute('checked', 'true');
+		} else {
+			chk.checked = false
+			tr.removeAttribute('checked');
+		}
+	}
+	calculateSelected(self)
+}
+
+
+function calculateSelected(self) {
+	const elSelectedRows = document.getElementById('outstanding-selected')
+	const elTotalValue = document.getElementById('outstanding-total-value')
+	const elTotalIdr = document.getElementById('outstanding-total-idr')
+
+	const selectedRows = self.tableBody.querySelectorAll('tr[checked="true"]')
+	let totalValue = 0
+	let totalIdr = 0
+	let countRows = 0
+	if (selectedRows.length > 0) {
+		for (const tr of selectedRows) {
+			const tdValue = tr.querySelector('[data-name="outstanding_value"]')
+			const tdIdr = tr.querySelector('[data-name="outstanding_idr"]')
+
+			const sValue = tdValue.getAttribute('value')
+			const sIdr = tdIdr.getAttribute('value')
+
+			const value = Number(sValue)
+			const idr = Number(sIdr)
+
+			totalValue += value
+			totalIdr += idr
+			countRows++
+		}
+	} else {
+		totalValue = 0
+		totalIdr = 0
+		countRows = 0
+	}
+
+	elSelectedRows.innerHTML = countRows
+	elTotalValue.innerHTML = formatNumber(totalValue)
+	elTotalIdr.innerHTML = formatNumber(totalIdr)
+
+	// console.log(countRows, totalValue, totalIdr)
 }
 
 async function cboPartner_selecting(self, evt) {

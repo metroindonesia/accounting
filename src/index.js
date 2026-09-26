@@ -6,6 +6,8 @@ import { createWebApplication, createDefaultAppConfig } from '@agung_dhewe/webap
 import { getApplicationSetting, requireSetting, authorizeRequest } from '@agung_dhewe/webapps/src/startup.js'
 import { createRouter } from './router.js'
 import db from '@agung_dhewe/webapps/src/db.js'
+
+
 // import bucket from '@agung_dhewe/webapps/src/bucket.js'
 
 
@@ -17,6 +19,7 @@ const webapp = createWebApplication()
 const appName = process.env.APPNAME
 const appTitle = process.env.APPTITLE
 const moduleWhiteList = ['profile']
+
 
 
 main()
@@ -127,6 +130,10 @@ async function settingInit(db, setting) {
 		requireSetting(db, setting, 'TAX_PARTNER_ID', 'kode partner untuk kas negara'),
 		requireSetting(db, setting, 'RE_COA_ID', 'kode coa untuk retain earning'),
 		requireSetting(db, setting, 'COA_LENGTH', 'panjang coa'),
+		requireSetting(db, setting, 'ICON_MENU_URL', 'icon menu kanan atas'),
+		requireSetting(db, setting, 'THEME_CSS_URL', 'CSS theme application'),
+
+
 	])
 
 	const errors = results

@@ -1113,3 +1113,14 @@ function isUnbalance(balance_value, balance_idr) {
 
 	return false
 }
+
+
+export function updateTotal(self, total_idr, total_value) {
+
+	console.log(total_idr, total_value)
+	const jurnalHeaderEdit = self.Modules.jurnalHeaderEdit;
+	const frm = jurnalHeaderEdit.getForm();
+	frm.Inputs[_jurnal_value].value = total_value
+	frm.Inputs[_jurnal_idr].value = total_idr
+	frm.acceptChanges()
+}

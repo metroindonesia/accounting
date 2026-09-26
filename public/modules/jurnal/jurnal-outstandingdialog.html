@@ -4,39 +4,58 @@
 
 			<div class="dialog-outstanding-content">
 
-				<div id="dialog-outstanding-filter">
+				<div id="dialog-outstanding-header">
 
-					<div style="width: 455px;">
-						<input id="dlg-obj_partner_id" fgta5-component="Combobox" placeholder="pilih partner"
-							autocomplete="off" spellcheck="false" binding="partner_id" data-display="partner_name"
-							style="width: 100%;">
-					</div>
+					<div id="dialog-outstanding-filter">
 
-
-					<div>
-						<div style="width: 300px;">
-							<input id="dlg-obj_coa_id" fgta5-component="Combobox" placeholder="pilih coa"
-								autocomplete="off" spellcheck="false" binding="coa_id" data-display="coa_name"
-								style="width: 100%;">
-						</div>
-
-						<div style="width: 150px;">
-							<input id="dlg-obj_curr_id" fgta5-component="Combobox" placeholder="pilih currency"
-								autocomplete="off" spellcheck="false" binding="curr_id" data-display="curr_code"
-								style="width: 100%;">
-						</div>
-
-
-					</div>
-
-					<div>
 						<div style="width: 455px;">
-							<input id="dlg-obj_searchtext" fgta5-component="Textbox" placeholder="searchtext"
-								autocomplete="off" spellcheck="false" binding="jurnal_descr" maxlength="255">
+							<input id="dlg-obj_partner_id" fgta5-component="Combobox" placeholder="pilih partner"
+								autocomplete="off" spellcheck="false" binding="partner_id" data-display="partner_name"
+								style="width: 100%;">
 						</div>
 
-						<button id="dialog-outstanding-btnLoad">Load</button>
+
+						<div>
+							<div style="width: 300px;">
+								<input id="dlg-obj_coa_id" fgta5-component="Combobox" placeholder="pilih coa"
+									autocomplete="off" spellcheck="false" binding="coa_id" data-display="coa_name"
+									style="width: 100%;">
+							</div>
+
+							<div style="width: 150px;">
+								<input id="dlg-obj_curr_id" fgta5-component="Combobox" placeholder="pilih currency"
+									autocomplete="off" spellcheck="false" binding="curr_id" data-display="curr_code"
+									style="width: 100%;">
+							</div>
+
+
+						</div>
+
+						<div>
+							<div style="width: 365px;">
+								<input id="dlg-obj_searchtext" fgta5-component="Textbox" placeholder="searchtext"
+									autocomplete="off" spellcheck="false" binding="jurnal_descr" maxlength="255">
+							</div>
+
+							<button id="dialog-outstanding-btnLoad" style="width: 80px;">Load</button>
+						</div>
+
 					</div>
+
+					<div id="dialog-outstanding-summary">
+						<div><div class="dosum-label">Selected</div></div>
+						<div><div class="dosum-value" id="outstanding-selected">0</div></div>
+						<div><div class="dosum-label">Total Value</div></div>
+						<div><div class="dosum-value" id="outstanding-total-value">0.00</div></div>
+						<div><div class="dosum-label">Total IDR</div></div>
+						<div><div class="dosum-value" id="outstanding-total-idr">0.00</div></div>
+
+						<div style="grid-column: 1 / span 2; user-select: none; margin-top: 10px;">
+							<button>Proceed Selected</button>
+						</div>
+					</div>
+					
+
 				</div>
 
 
@@ -45,6 +64,11 @@
 				<table id="dialog-outstanding-table" cellspacing="0" id="dialog-outstanding-table" style="width: 100%;">
 					<thead>
 						<tr>
+							<th rowselector>
+								<label class="fgta5-gridview-checkbox">
+									<input type="checkbox" id="selectall-outstanding-checkbox"><span class="fgta5-gridview-checkmark"></span>
+								</label>
+							</th>
 							<th data-name="ref_jurnal_doc">ID</th>
 							<th data-name="ref_jurnal_date">Date</th>
 							<th data-name="ref_jurnal_due">Due</th>
@@ -57,6 +81,11 @@
 					</thead>
 					<tbody id="dialog-outstanding-tablebody">
 						<tr data-value="{{ref_jurnaldetil_id}}">
+							<td rowselector>
+								<label class="fgta5-gridview-checkbox">
+									<input type="checkbox"><span class="fgta5-gridview-checkmark"></span>
+								</label>
+							</td>
 							<td data-name="ref_jurnal_doc">{{ref_jurnal_doc}}</td>
 							<td data-name="ref_jurnal_date" data-format="date">{{ref_jurnal_date}}</td>
 							<td data-name="ref_jurnal_due" style="text-align: center;">{{ref_jurnal_due}}</td>
