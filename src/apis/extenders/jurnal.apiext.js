@@ -113,12 +113,23 @@ export async function sequencerSetup(self, tx, sequencer, data, args) {
 }
 
 export async function headerListCriteria(self, db, searchMap, criteria, sort, columns, args) {
-	searchMap.periode_id = 'periode_id = ${periode_id}'
-	searchMap.iscommit = 'iscommit = ${iscommit}'
-	searchMap.ispost = 'ispost = ${ispost}'
-	searchMap.jurnaltype_id = 'jurnaltype_id = ${jurnaltype_id}'
+	const req = self.req
+	const user_id = req.session.user.userId
 
+	searchMap.periode_id = 'A.periode_id = ${periode_id}'
+	searchMap.iscommit = 'A.iscommit = ${iscommit}'
+	searchMap.ispost = 'A.ispost = ${ispost}'
+	searchMap.jurnaltype_id = 'A.jurnaltype_id = ${jurnaltype_id}'
+	searchMap.user_id = 'C.user_id = ${user_id}'
 
+	args.tablename = `
+		public.jurnal A inner join public.jurnaltype B on B.jurnaltype_id=A.jurnaltype_id
+		                inner join public.jurnaltypeuser C on C.jurnaltype_id=A.jurnaltype_id   	
+	`
+
+	criteria.user_id = user_id
+	columns.push('A.*')
+	// columns.push('jurnal_doc')
 
 }
 

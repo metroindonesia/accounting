@@ -607,14 +607,14 @@ CREATE INDEX idx$public$jurnaldetil$_timestamp ON public.jurnaldetil (_timestamp
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$coa_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$partner_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$struct_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$site_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$unit_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$project_id;
-ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$curr_id;
 ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$periode_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$curr_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$project_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$unit_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$site_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$struct_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$partner_id;
+ALTER TABLE public."jurnaldetil" DROP CONSTRAINT fk$public$jurnaldetil$coa_id;
 
 
 -- Add Foreign Key Constraint  
