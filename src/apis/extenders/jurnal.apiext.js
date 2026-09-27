@@ -146,6 +146,16 @@ export async function headerListRow(self, row, args) {
 export async function headerCreating(self, tx, data, seqdata) {
 	excludeNonEditableHeader(data)  // buang data yang tidak boleh dimodif user
 	data.jurnal_doc = seqdata.doc;
+
+	try {
+		const jurnaltype = await sqlUtil.lookupdb(db, TABLE.jurnaltype, 'jurnaltype_id', data.jurnaltype_id)
+		const { jurnaltype_name, jurnaltype_isallowselect } = jurnaltype
+		if (!jurnaltype.jurnaltype_isallowselect) {
+			throw new Error(`anda tidak punya otoritas untuk menyimpan ke buku '${jurnaltype_name}'`)
+		}
+	} catch (err) {
+		throw err
+	}
 }
 
 export async function headerCreated(self, tx, ret, data, logMetadata, args) {
