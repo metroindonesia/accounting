@@ -128,6 +128,11 @@ function dialog_create(self) {
 		}
 	})
 
+	const btnProcess = document.getElementById('process-outstanding-button')
+	btnProcess.addEventListener('click', (evt) => {
+		btnProcess_click(self, evt)
+	})
+
 	console.log('create dialog')
 	if (!self.multiselect) {
 		const selectorHead = dlg.querySelector("thead [rowselector]")
@@ -235,6 +240,10 @@ async function dialog_loaddata(self, outstandingtype) {
 		return; // harus pilih dulu partnernya
 	}
 
+	// reset data
+	const checkAll = document.getElementById('selectall-outstanding-checkbox')
+	checkAll.checked = false
+	calculateSelected(self)
 
 	let mask = $fgta5.Modal.createMask()
 	try {
@@ -250,8 +259,6 @@ async function dialog_loaddata(self, outstandingtype) {
 		const rows = await Module.apiCall(url, apiParam)
 
 
-		const checkAll = document.getElementById('selectall-outstanding-checkbox')
-		checkAll.checked = false
 
 		for (let row of rows) {
 			let renderedHtml = self.rowTemplate.cloneNode(true).outerHTML.trim()
@@ -520,4 +527,73 @@ async function dialog_rowselected(self, tr) {
 	} catch (err) {
 		$fgta5.MessageBox.error(err.message)
 	}
+}
+
+
+async function btnProcess_click(self, evt) {
+	const dlg = self.dialog
+	const elSelectedRows = document.getElementById('outstanding-selected')
+	const elTotalIdr = document.getElementById('outstanding-total-idr')
+
+
+	// konfirmasi
+	const totalRows = elSelectedRows.innerHTML
+	const totalIdr = elTotalIdr.innerHTML
+
+
+	if (totalRows == '0' || totalRows == 0) {
+		$fgta5.MessageBox.info('Belum ada baris yang dipilih')
+		return
+	}
+
+	const res = await $fgta5.MessageBox.confirm(`Anda akan memproses <b>${totalRows}</b> baris data dengan total <b>${totalIdr}</b> IDR. Lanjutkan?`)
+
+	if (res == 'cancel') {
+		return
+	}
+
+
+	const tobeProcess = []
+	const selectedRows = self.tableBody.querySelectorAll('tr[checked="true"]')
+	for (const tr of selectedRows) {
+		const jurnaldetil_id = tr.getAttribute('data-value')
+
+		const tdValue = tr.querySelector('[data-name="outstanding_value"]')
+		const tdIdr = tr.querySelector('[data-name="outstanding_idr"]')
+
+		const sValue = tdValue.getAttribute('value')
+		const sIdr = tdIdr.getAttribute('value')
+
+		const value = Number(sValue)
+		const idr = Number(sIdr)
+
+		tobeProcess.push({
+			jurnaldetil_id, value, idr
+		})
+	}
+
+	const frm = Context.program.Modules.jurnalHeaderEdit.getForm()
+	const jurnal_id = frm.Inputs['jurnalHeaderEdit-obj_jurnal_id'].value
+
+	try {
+
+		const url = '/jurnal-outstanding/process'
+		const apiParam = {
+			jurnal_id: jurnal_id,
+			tobeProcess: tobeProcess
+		}
+
+		const data = await Module.apiCall(url, apiParam)
+
+		console.log(data)
+
+	} catch (err) {
+		console.error(err)
+		$fgta5.MessageBox.error(err.message)
+	} finally {
+		dlg.close()
+	}
+
+
+
 }
