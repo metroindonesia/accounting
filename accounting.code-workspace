@@ -29,14 +29,19 @@
 			"**/node_modules": true
 		},
 		"remote.autoForwardPortsSource": "output",
-		"remote.restoreForwardedPorts": false,
+		"remote.restoreForwardedPorts": true,
 		"remote.portsAttributes": {
 			"3003": {
 				"label": "Accounting Server",
-				"onAutoForward": "openBrowser"
+				"onAutoForward": "notify"
 			},
-			"other": {
-				"onAutoForward": "ignore"
+			"6379": {
+				"label": "Redis Server",
+				"onAutoForward": "silent"
+			},
+			"8080": {
+				"label": "HTTP Service (8080)",
+				"onAutoForward": "silent"
 			}
 		}
 	},

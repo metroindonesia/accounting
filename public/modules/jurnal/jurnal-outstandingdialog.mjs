@@ -16,6 +16,7 @@ export default class {
 	#agingtypeId
 	#rowTemplate
 	#isMultiselect
+	#modules
 
 	get title() { return this.#title }
 	get dialog() { return this.#dlg }
@@ -27,6 +28,7 @@ export default class {
 	get tableBody() { return this.#tbody }
 	get rowTemplate() { return this.#rowTemplate }
 	get multiselect() { return this.#isMultiselect }
+	get Modules() { return this.#modules }
 
 
 	get outstandingType() { return this.#outstandingType }
@@ -42,6 +44,7 @@ export default class {
 		const self = this
 
 		this.#isMultiselect = options?.multiselect ?? false
+		this.#modules = options?.Modules ?? {}
 
 
 		this.#dlg = dialog_create(self)
@@ -586,6 +589,12 @@ async function btnProcess_click(self, evt) {
 		const data = await Module.apiCall(url, apiParam)
 
 		console.log(data)
+
+		// refresh grid detil
+		const detilListModule = self.Modules.jurnalDetilList
+		await detilListModule.openList(self, {
+			moduleHeaderEdit: self.Modules.jurnalHeaderEdit
+		})
 
 	} catch (err) {
 		console.error(err)

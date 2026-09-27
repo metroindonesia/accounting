@@ -293,6 +293,20 @@ async function renderResponse(response) {
 	}
 }
 
+export function jurnalHeaderEdit_formLocked(self, frm, CurrentState) {
+	const extenderDetil = self.Modules.extenderDetil
+	if (extenderDetil) {
+		extenderDetil.headerFormLocked(self)
+	}
+}
+
+export function jurnalHeaderEdit_formUnlocked(self, frm, CurrentState) {
+	const extenderDetil = self.Modules.extenderDetil
+	if (extenderDetil) {
+		extenderDetil.headerFormUnlocked(self)
+	}
+}
+
 
 export async function jurnalHeaderEdit_newData(self, datainit, frm) {
 	disableJurnaltype(frm, false)  // aktifkan kembali jurnaltype saat membuat data baru

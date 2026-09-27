@@ -96,7 +96,10 @@ function setup_getOutstandingButtonMulti(self) {
 		target.insertAdjacentElement('afterend', divButton);
 
 
-		const dlg = new outstandingDialog({ multiselect: true })
+		const dlg = new outstandingDialog({
+			multiselect: true,
+			Modules: self.Modules
+		})
 		dlg.addEventListener('selected', async evt => {
 			await outstandingSelected(self, evt.detail.data, evt)
 			if (evt.detail.cancelSelect) {
@@ -232,6 +235,9 @@ export function headerJurnaltype_changed(self, jurnaltype, headerFrm) {
 
 	refButtons.payable.hide(!jurnaltype.isdetilallowgetap)
 	refButtons.receivable.hide(!jurnaltype.isdetilallowgetar)
+
+	refButtons.payableMulti.hide(!jurnaltype.isdetilallowgetap)
+	refButtons.receivableMulti.hide(!jurnaltype.isdetilallowgetar)
 
 
 	// setup sub account
@@ -420,9 +426,14 @@ export function jurnalDetilEdit_formLocked(self, frm, CurrentState) {
 	if (refButtons.payable) {
 		refButtons.payable.disabled = true;
 	}
+
 	if (refButtons.receivable) {
 		refButtons.receivable.disabled = true;
 	}
+
+
+
+
 
 	// hide upload-panel
 	const uploadPanel = document.getElementById('upload-panel')
@@ -438,6 +449,7 @@ export function jurnalDetilEdit_formUnlocked(self, frm) {
 	if (refButtons.payable) {
 		refButtons.payable.disabled = false;
 	}
+
 	if (refButtons.receivable) {
 		refButtons.receivable.disabled = false;
 	}
@@ -450,6 +462,26 @@ export function jurnalDetilEdit_formUnlocked(self, frm) {
 
 }
 
+
+export function headerFormLocked(self) {
+	if (refButtons.payableMulti) {
+		refButtons.payableMulti.disabled = true
+	}
+
+	if (refButtons.receivableMulti) {
+		refButtons.receivableMulti.disabled = true
+	}
+}
+
+export function headerFormUnlocked(self) {
+	if (refButtons.payableMulti) {
+		refButtons.payableMulti.disabled = false
+	}
+
+	if (refButtons.receivableMulti) {
+		refButtons.receivableMulti.disabled = false
+	}
+}
 
 export async function jurnalDetilList_rowsDeleted(self, data) {
 	updateBalance(self, data.balance_value, data.balance_idr)
