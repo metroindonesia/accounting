@@ -37,7 +37,12 @@
 									autocomplete="off" spellcheck="false" binding="jurnal_descr" maxlength="255">
 							</div>
 
-							<button id="dialog-outstanding-btnLoad" style="width: 80px;">Load</button>
+							<button id="dialog-outstanding-btnLoad" class="action-button" style="width: 80px; background-color: #3b3b3b; user-select: none;">
+								<span class="action-button-icon">
+									<img src="public/icons/button-load.svg">
+								</span>
+								<span class="action-button-text">Load</span>
+							</button>
 						</div>
 
 					</div>
@@ -50,8 +55,13 @@
 						<div><div class="dosum-label">Total IDR</div></div>
 						<div><div class="dosum-value" id="outstanding-total-idr">0.00</div></div>
 
-						<div style="grid-column: 1 / span 2; user-select: none; margin-top: 10px;">
-							<button id="process-outstanding-button">Proceed Selected</button>
+						<div style="grid-column: 1 / span 2; user-select: none; margin-top: 10px; display: flex; justify-content: flex-end;">
+							<button id="process-outstanding-button" class="action-button" style="user-select: none;">
+								<span class="action-button-icon">
+									<img src="public/icons/button-proceed.svg">
+								</span>
+								<span class="action-button-text">Proceed Selected</span>
+							</button>
 						</div>
 					</div>
 					
