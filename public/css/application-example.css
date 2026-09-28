@@ -1,0 +1,17 @@
+/* theme css */
+@import url('./../lib/css/app-darkred.css');
+
+
+.login-logo-left {
+	grid-column: 1 / span 1 !important;
+}
+
+
+.login-logo-right {
+	display: unset !important;
+	background-image: url('/public/local/your-logo-128x32.svg');
+	background-size: 150% 150% !important;
+	background-position: left center;
+
+	grid-column: 2;
+}

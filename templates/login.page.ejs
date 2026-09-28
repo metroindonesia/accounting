@@ -11,7 +11,16 @@
 	<link rel="manifest" href="/public/manifest.json">
 	<link rel="icon" type="image/svg+xml" href="/public/favicon.svg">
 
-	<link rel="stylesheet" href="public/local/application.css" />
+	
+	<% if (themeCssUrl) { %>
+		<link rel="stylesheet" href="<%= themeCssUrl %>"/>
+	<% } else { %>
+		<% if (cssApplicationExists) { %>
+		<link rel="stylesheet" href="public/local/application.css" />
+		<% } %>
+	<% } %>	
+
+
 
 	<% if (fgta5jsDebugMode) { %>
 		<!-- DEBUG MODE -->

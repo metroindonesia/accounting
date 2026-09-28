@@ -89,9 +89,17 @@ body {
 .login-logo-left {
 	background-image: url('/public/images/kalista-accounting-400x170.svg');
 	background-size: 100% 100%;
+
+	grid-row: 1;
+	grid-column: 1 / span 2;
+	justify-self: center;
 }
 
 .login-logo-right {
-	background-image: url('/public/local/logo-128x32.svg');
+	/* background-image: url('/public/local/logo-128x32.svg'); */
+	display: none;
 	background-size: 100% 100%;
+
+	grid-row: 1;
+	justify-self: center;
 }
