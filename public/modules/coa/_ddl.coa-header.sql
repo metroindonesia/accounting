@@ -57,6 +57,21 @@ comment on column public."coa".coa_code is '';
 
 
 -- =============================================
+-- FIELD: coa_iscashflow boolean
+-- =============================================
+-- ADD coa_iscashflow
+alter table public."coa" add coa_iscashflow boolean not null default false;
+comment on column public."coa".coa_iscashflow is '';
+
+-- MODIFY coa_iscashflow
+alter table public."coa"
+	alter column coa_iscashflow type boolean,
+	ALTER COLUMN coa_iscashflow SET DEFAULT false,
+	ALTER COLUMN coa_iscashflow SET NOT NULL;
+comment on column public."coa".coa_iscashflow is '';
+
+
+-- =============================================
 -- FIELD: coa_name text
 -- =============================================
 -- ADD coa_name
@@ -114,6 +129,21 @@ alter table public."coa"
 	ALTER COLUMN coagroup_id DROP DEFAULT,
 	ALTER COLUMN coagroup_id DROP NOT NULL;
 comment on column public."coa".coagroup_id is '';
+
+
+-- =============================================
+-- FIELD: activity_id smallint
+-- =============================================
+-- ADD activity_id
+alter table public."coa" add activity_id smallint  ;
+comment on column public."coa".activity_id is '';
+
+-- MODIFY activity_id
+alter table public."coa"
+	alter column activity_id type smallint,
+	ALTER COLUMN activity_id DROP DEFAULT,
+	ALTER COLUMN activity_id DROP NOT NULL;
+comment on column public."coa".activity_id is '';
 
 
 -- =============================================
@@ -232,10 +262,11 @@ CREATE INDEX idx$public$coa$_timestamp ON public.coa (_timestamp);
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$agingtype_id;
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coarpt_id;
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coagroup_id;
 ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$curr_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coagroup_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$activity_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coarpt_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$agingtype_id;
 
 
 -- Add Foreign Key Constraint  
@@ -259,6 +290,17 @@ ALTER TABLE public."coa"
 -- Add As Index, drop dulu jika sudah ada
 DROP INDEX IF EXISTS public.idx_fk$public$coa$coagroup_id;
 CREATE INDEX idx_fk$public$coa$coagroup_id ON public."coa"(coagroup_id);	
+
+
+ALTER TABLE public."coa"
+	ADD CONSTRAINT fk$public$coa$activity_id
+	FOREIGN KEY (activity_id)
+	REFERENCES public."activity"(activity_id);
+
+
+-- Add As Index, drop dulu jika sudah ada
+DROP INDEX IF EXISTS public.idx_fk$public$coa$activity_id;
+CREATE INDEX idx_fk$public$coa$activity_id ON public."coa"(activity_id);	
 
 
 ALTER TABLE public."coa"

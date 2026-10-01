@@ -3,51 +3,43 @@
  * DO NOT modify this script! All modification will lost on regeneration
  **************************************************************** */
 
-import Context from './coa-context.mjs'
-import * as Ext from './coa-ext.mjs'
+import Context from './activity-context.mjs'
+import * as Ext from './activity-ext.mjs'
 import * as pageHelper from '/public/lib/fgta5app/pagehelper.mjs'
 
 const Extender = Ext.extenderHeader ?? Ext
 
 
 const Crsl =  Context.Crsl
-const CurrentSectionId = Context.Sections.coaHeaderEdit
+const CurrentSectionId = Context.Sections.activityHeaderEdit
 const CurrentSection = Crsl.Items[CurrentSectionId]
 const Source = Context.Source
 const CurrentState = {}
 
-const TitleWhenNew = 'New Chart of Account'
-const TitleWhenView = 'View Chart of Account'
-const TitleWhenEdit = 'Edit Chart of Account'
+const TitleWhenNew = 'New Activity'
+const TitleWhenView = 'View Activity'
+const TitleWhenEdit = 'Edit Activity'
 const EditModeText = 'Edit'
 const LockModeText = 'Lock'
 
-const btn_edit = new $fgta5.ActionButton('coaHeaderEdit-btn_edit')
-const btn_save = new $fgta5.ActionButton('coaHeaderEdit-btn_save')
-const btn_new = new $fgta5.ActionButton('coaHeaderEdit-btn_new', 'coaHeader-new')
-const btn_del = new $fgta5.ActionButton('coaHeaderEdit-btn_delete')
-const btn_reset = new $fgta5.ActionButton('coaHeaderEdit-btn_reset')
-const btn_prev = new $fgta5.ActionButton('coaHeaderEdit-btn_prev')
-const btn_next = new $fgta5.ActionButton('coaHeaderEdit-btn_next')
+const btn_edit = new $fgta5.ActionButton('activityHeaderEdit-btn_edit')
+const btn_save = new $fgta5.ActionButton('activityHeaderEdit-btn_save')
+const btn_new = new $fgta5.ActionButton('activityHeaderEdit-btn_new', 'activityHeader-new')
+const btn_del = new $fgta5.ActionButton('activityHeaderEdit-btn_delete')
+const btn_reset = new $fgta5.ActionButton('activityHeaderEdit-btn_reset')
+const btn_prev = new $fgta5.ActionButton('activityHeaderEdit-btn_prev')
+const btn_next = new $fgta5.ActionButton('activityHeaderEdit-btn_next')
 
 
-const btn_recordstatus = document.getElementById('coaHeader-btn_recordstatus')
-const btn_logs = document.getElementById('coaHeader-btn_logs')
-const btn_about = document.getElementById('coaHeader-btn_about')
+const btn_recordstatus = document.getElementById('activityHeader-btn_recordstatus')
+const btn_logs = document.getElementById('activityHeader-btn_logs')
+const btn_about = document.getElementById('activityHeader-btn_about')
 
-const frm = new $fgta5.Form('coaHeaderEdit-frm');
-const obj_coa_id = frm.Inputs['coaHeaderEdit-obj_coa_id']
-const obj_coa_isdisabled = frm.Inputs['coaHeaderEdit-obj_coa_isdisabled']
-const obj_iscurradj = frm.Inputs['coaHeaderEdit-obj_iscurradj']
-const obj_coa_code = frm.Inputs['coaHeaderEdit-obj_coa_code']
-const obj_coa_iscashflow = frm.Inputs['coaHeaderEdit-obj_coa_iscashflow']
-const obj_coa_name = frm.Inputs['coaHeaderEdit-obj_coa_name']
-const obj_curr_id = frm.Inputs['coaHeaderEdit-obj_curr_id']
-const obj_coa_descr = frm.Inputs['coaHeaderEdit-obj_coa_descr']
-const obj_coagroup_id = frm.Inputs['coaHeaderEdit-obj_coagroup_id']
-const obj_activity_id = frm.Inputs['coaHeaderEdit-obj_activity_id']
-const obj_coarpt_id = frm.Inputs['coaHeaderEdit-obj_coarpt_id']
-const obj_agingtype_id = frm.Inputs['coaHeaderEdit-obj_agingtype_id']	
+const frm = new $fgta5.Form('activityHeaderEdit-frm');
+const obj_activity_id = frm.Inputs['activityHeaderEdit-obj_activity_id']
+const obj_activity_isdisabled = frm.Inputs['activityHeaderEdit-obj_activity_isdisabled']
+const obj_activity_name = frm.Inputs['activityHeaderEdit-obj_activity_name']
+const obj_activity_descr = frm.Inputs['activityHeaderEdit-obj_activity_descr']	
 const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
 const rec_createdate = document.getElementById('fRecord-section-createdate')
@@ -60,7 +52,7 @@ export const Section = CurrentSection
 
 
 export async function init(self, args) {
-	console.log('initializing coaHeaderEdit ...')
+	console.log('initializing activityHeaderEdit ...')
 	
 
 	CurrentSection.addEventListener($fgta5.Section.EVT_BACKBUTTONCLICK, async (evt)=>{
@@ -92,8 +84,8 @@ export async function init(self, args) {
 		save: btn_save,	
 	}
 	
-	// export async function coaHeaderEdit_init(self, CurrentState)
-	const fn_init_name = 'coaHeaderEdit_init'
+	// export async function activityHeaderEdit_init(self, CurrentState)
+	const fn_init_name = 'activityHeaderEdit_init'
 	const fn_init = Extender[fn_init_name]
 	if (typeof fn_init === 'function') {
 		await fn_init(self, CurrentState)
@@ -112,291 +104,6 @@ export async function init(self, args) {
 	}
 
 	
-	
-	// Combobox: obj_curr_id
-	obj_curr_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_curr_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_curr_id_selecting(self, obj_curr_id, frm, evt) {}
-			fn_selecting(self, obj_curr_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'curr/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_curr_id_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_curr_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_curr_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.curr_id, row.curr_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_coagroup_id
-	obj_coagroup_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_coagroup_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_coagroup_id_selecting(self, obj_coagroup_id, frm, evt) {}
-			fn_selecting(self, obj_coagroup_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'coagroup/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_coagroup_id_selecting_criteria(self, obj_coagroup_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_coagroup_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_coagroup_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.coagroup_id, row.coagroup_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_activity_id
-	obj_activity_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_activity_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_activity_id_selecting(self, obj_activity_id, frm, evt) {}
-			fn_selecting(self, obj_activity_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'activity/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_activity_id_selecting_criteria(self, obj_activity_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_activity_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_activity_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.activity_id, row.activity_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_coarpt_id
-	obj_coarpt_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_coarpt_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_coarpt_id_selecting(self, obj_coarpt_id, frm, evt) {}
-			fn_selecting(self, obj_coarpt_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'coarpt/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_coarpt_id_selecting_criteria(self, obj_coarpt_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_coarpt_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_coarpt_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.coarpt_id, row.coarpt_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
-	
-	// Combobox: obj_agingtype_id
-	obj_agingtype_id.addEventListener('selecting', async (evt)=>{
-		
-		evt.detail.CurrentState = CurrentState
-		
-		const fn_selecting_name = 'obj_agingtype_id_selecting'
-		const fn_selecting = Extender[fn_selecting_name]
-		if (typeof fn_selecting === 'function') {
-			// create function di Extender (jika perlu):
-			// export async function obj_agingtype_id_selecting(self, obj_agingtype_id, frm, evt) {}
-			fn_selecting(self, obj_agingtype_id, frm, evt)
-		} else {
-			// default selecting
-			const cbo = evt.detail.sender
-			const dialog = evt.detail.dialog
-			const searchtext = evt.detail.searchtext!=null ? evt.detail.searchtext : ''
-			const url = 'agingtype/header-list'
-			const sort = {}
-			const criteria = {
-				searchtext: searchtext,
-			}
-
-			evt.detail.url = url 
-			
-			// buat function di extender:
-			// export function obj_agingtype_id_selecting_criteria(self, obj_agingtype_id, frm, criteria, sort, evt) {}
-			const fn_selecting_criteria_name = 'obj_agingtype_id_selecting_criteria'
-			const fn_selecting_criteria = Extender[fn_selecting_criteria_name]
-			if (typeof fn_selecting_criteria === 'function') {
-				fn_selecting_criteria(self, obj_agingtype_id, frm, criteria, sort, evt)
-			}
-
-			cbo.wait()
-			try {
-				const result = await Module.apiCall(evt.detail.url, {
-					sort,
-					criteria,
-					offset: evt.detail.offset,
-					limit: evt.detail.limit,
-				}) 
-
-				for (var row of result.data) {
-					evt.detail.addRow(row.agingtype_id, row.agingtype_name, row)
-				}
-
-				dialog.setNext(result.nextoffset, result.limit)
-			} catch (err) {
-				$fgta5.MessageBox.error(err.message)
-			} finally {
-				cbo.wait(false)
-			}
-
-			
-		}		
-	})
-	
 		
 	
 }
@@ -406,11 +113,6 @@ export async function openSelectedData(self, params) {
 
 	let mask = $fgta5.Modal.createMask()
 	try {
-		obj_curr_id.clear()
-		obj_coagroup_id.clear()
-		obj_activity_id.clear()
-		obj_coarpt_id.clear()
-		obj_agingtype_id.clear()
 					
 		const id = params.keyvalue
 		const data = await openData(self, id)
@@ -419,8 +121,8 @@ export async function openSelectedData(self, params) {
 
 		CurrentState.currentOpenedId = id
 
-		// export async function coaHeaderEdit_isEditDisabled(self, data)
-		const fn_iseditdisabled_name = 'coaHeaderEdit_isEditDisabled'
+		// export async function activityHeaderEdit_isEditDisabled(self, data)
+		const fn_iseditdisabled_name = 'activityHeaderEdit_isEditDisabled'
 		const fn_iseditdisabled = Extender[fn_iseditdisabled_name]
 		if (typeof fn_iseditdisabled === 'function') {
 			const editDisabled = fn_iseditdisabled(self, data)
@@ -434,8 +136,8 @@ export async function openSelectedData(self, params) {
 		frm.setData(data)
 
 		// jika ada kebutuhan untuk oleh lagi form dan data, bisa lakukan di extender
-		// export async function coaHeaderEdit_formOpened(self, frm, CurrentState)
-		const fn_formopened_name = 'coaHeaderEdit_formOpened'
+		// export async function activityHeaderEdit_formOpened(self, frm, CurrentState)
+		const fn_formopened_name = 'activityHeaderEdit_formOpened'
 		const fn_formopened = Extender[fn_formopened_name]
 		if (typeof fn_formopened === 'function') {
 			await fn_formopened(self, frm, CurrentState)
@@ -576,7 +278,7 @@ async function backToList(self, evt) {
 
 	if (goback) {
 		frm.lock()
-		const listId =  Context.Sections.coaHeaderList
+		const listId =  Context.Sections.activityHeaderList
 		const listSection = Crsl.Items[listId]
 		listSection.show({direction: 1})
 	}
@@ -606,8 +308,8 @@ async function  frm_locked(self, evt) {
 	
 	
 	// Extender untuk event locked
-	// export function coaHeaderEdit_formLocked(self, frm, CurrentState) {}
-	const fn_name = 'coaHeaderEdit_formLocked'
+	// export function activityHeaderEdit_formLocked(self, frm, CurrentState) {}
+	const fn_name = 'activityHeaderEdit_formLocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
@@ -618,10 +320,6 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
-	
-	// trigger lock event di ref
-	self.Modules.coaRefList.headerLocked(self)
-	self.Modules.coaRefEdit.headerLocked(self)
 		
 
 }
@@ -655,17 +353,13 @@ async function  frm_unlocked(self, evt) {
 	
 
 	// Extender untuk event Unlocked
-	// export function coaHeaderEdit_formUnlocked(self, frm, CurrentState) {}
-	const fn_name = 'coaHeaderEdit_formUnlocked'
+	// export function activityHeaderEdit_formUnlocked(self, frm, CurrentState) {}
+	const fn_name = 'activityHeaderEdit_formUnlocked'
 	const fn = Extender[fn_name]
 	if (typeof fn === 'function') {
 		fn(self, frm, CurrentState)
 	}
 
-	
-	// trigger unlock event di ref
-	self.Modules.coaRefList.headerUnlocked(self)
-	self.Modules.coaRefEdit.headerUnlocked(self)	
 		
 }
 
@@ -701,8 +395,8 @@ async function btn_new_click(self, evt) {
 	console.log('btn_new_click')
 	const sourceSection = evt.currentTarget.getAttribute('data-sectionsource') 
 
-	const coaHeaderList = self.Modules.coaHeaderList
-	const listsecid = coaHeaderList.Section.Id
+	const activityHeaderList = self.Modules.activityHeaderList
+	const listsecid = activityHeaderList.Section.Id
 	const fromListSection = sourceSection===listsecid
 	if (fromListSection) {
 		// klik new dari list (tidak perlu cek ada perubahan data)
@@ -737,10 +431,10 @@ async function btn_new_click(self, evt) {
 
 		// jika perlu modifikasi data initial,
 		// atau dialog untuk opsi data baru, dapat dibuat di Extender
-		const fn_newdata_name = 'coaHeaderEdit_newData'
+		const fn_newdata_name = 'activityHeaderEdit_newData'
 		const fn_newdata = Extender[fn_newdata_name]
 		if (typeof fn_newdata === 'function') {
-			// export async function coaHeaderEdit_newData(self, datainit, frm) {}
+			// export async function activityHeaderEdit_newData(self, datainit, frm) {}
 			await fn_newdata(self, datainit, frm)
 		}
 
@@ -762,7 +456,7 @@ async function btn_new_click(self, evt) {
 		await $fgta5.MessageBox.error(err.message)
 		if (fromListSection) {
 			// jika saat tombol baru dipilih saat di list, tampilan kembalikan ke list
-			self.Modules.coaHeaderList.Section.show()
+			self.Modules.activityHeaderList.Section.show()
 		}
 	}
 }
@@ -772,7 +466,7 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Autofill
-	const fn_autofill_name = 'coaHeaderEdit_autofill'
+	const fn_autofill_name = 'activityHeaderEdit_autofill'
 	const fn_autofill = Extender[fn_autofill_name]
 	if (typeof fn_autofill === 'function') {
 		await fn_autofill(self, frm)
@@ -823,9 +517,9 @@ async function btn_save_click(self, evt) {
 
 
 	// Extender Saving
-	// export async function coaHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
+	// export async function activityHeaderEdit_dataSaving(self, dataToSave, frm, args) {}
 	const args = { cancelSave: false }
-	const fn_datasaving_name = 'coaHeaderEdit_dataSaving'
+	const fn_datasaving_name = 'activityHeaderEdit_dataSaving'
 	const fn_datasaving = Extender[fn_datasaving_name]
 	if (typeof fn_datasaving === 'function') {
 		await fn_datasaving(self, dataToSave, frm, args)
@@ -875,10 +569,10 @@ async function btn_save_click(self, evt) {
 
 
 		// Extender Saving
-		const fn_datasaved_name = 'coaHeaderEdit_dataSaved'
+		const fn_datasaved_name = 'activityHeaderEdit_dataSaved'
 		const fn_datasaved = Extender[fn_datasaved_name]
 		if (typeof fn_datasaved === 'function') {
-			// export async function coaHeaderEdit_dataSaved(self, data, frm) {}
+			// export async function activityHeaderEdit_dataSaved(self, data, frm) {}
 			await fn_datasaved(self, result, frm)
 		}
 
@@ -894,10 +588,10 @@ async function btn_save_click(self, evt) {
 
 			// buat baris baru di grid
 			console.log('tamabah baris baru di grid')
-			self.Modules.coaHeaderList.addNewRow(self, data)
+			self.Modules.activityHeaderList.addNewRow(self, data)
 		} else {
 			console.log('update data baris yang dibuka')
-			self.Modules.coaHeaderList.updateCurrentRow(self, data)
+			self.Modules.activityHeaderList.updateCurrentRow(self, data)
 		}
 
 	} catch (err) {
@@ -936,10 +630,10 @@ async function btn_del_click(self, evt) {
 		const result = await deleteData(self, idValue)
 		
 		// hapus current row yang dipilih di list
-		self.Modules.coaHeaderList.removeCurrentRow(self)
+		self.Modules.activityHeaderList.removeCurrentRow(self)
 		
 		// kembali ke list
-		self.Modules.coaHeaderList.Section.show()
+		self.Modules.activityHeaderList.Section.show()
 
 
 		// lock kembali form
@@ -984,12 +678,12 @@ async function btn_reset_click(self, evt) {
 
 async function btn_prev_click(self, evt) {
 	console.log('btn_prev_click')
-	self.Modules.coaHeaderList.selectPreviousRow(self)
+	self.Modules.activityHeaderList.selectPreviousRow(self)
 }
 
 async function btn_next_click(self, evt) {
 	console.log('btn_next_click')
-	self.Modules.coaHeaderList.selectNextRow(self)
+	self.Modules.activityHeaderList.selectNextRow(self)
 }
 
 
@@ -1024,7 +718,7 @@ async function btn_recordstatus_click(self, evt) {
 			rec_modifyby.innerHTML = data._modifyby || '-'
 			rec_modifydate.innerHTML = pageHelper.formatLocalDateTime(data._modifydate)
 
-			const fn_addrecordinfo_name = 'coaHeaderEdit_addRecordInfo'
+			const fn_addrecordinfo_name = 'activityHeaderEdit_addRecordInfo'
 			const fn_addrecordinfo = Extender[fn_addrecordinfo_name]
 			if (typeof fn_addrecordinfo === 'function') {
 				await fn_addrecordinfo(self, data)
@@ -1066,7 +760,7 @@ async function btn_logs_click(self, evt) {
 			const url = `${logApp.url}/logs/list`
 			const criteria = {
 				module: Context.moduleName,
-				table: 'public.coa',
+				table: 'public.activity',
 				id: id
 			}
 
@@ -1096,7 +790,7 @@ async function btn_about_click(self, evt) {
 	pageHelper.openSection(self, 'fAbout-section', params, async ()=>{
 		
 		const AboutSection = Crsl.Items['fAbout-section']
-		AboutSection.Title = 'About Chart of Account'
+		AboutSection.Title = 'About Activity'
 
 		const section = document.getElementById('fAbout-section')
 

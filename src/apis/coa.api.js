@@ -197,6 +197,11 @@ async function coa_headerList(self, body) {
 				const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', row.coagroup_id)
 				row.coagroup_name = coagroup_name ?? null
 			}
+			// lookup: activity_name dari field activity_name pada table public.activity dimana (public.activity.activity_id = public.coa.activity_id)
+			if (row.activity_id !== undefined) {
+				const { activity_name } = await sqlUtil.lookupdb(db, 'public.activity', 'activity_id', row.activity_id)
+				row.activity_name = activity_name ?? null
+			}
 			// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coa.coarpt_id)
 			if (row.coarpt_id !== undefined) {
 				const { coarpt_name } = await sqlUtil.lookupdb(db, 'public.coarpt', 'coarpt_id', row.coarpt_id)
@@ -265,6 +270,11 @@ async function coa_headerOpen(self, body) {
 		if (data.coagroup_id !== undefined) {
 			const { coagroup_name } = await sqlUtil.lookupdb(db, 'public.coagroup', 'coagroup_id', data.coagroup_id)
 			data.coagroup_name = coagroup_name ?? null
+		}
+		// lookup: activity_name dari field activity_name pada table public.activity dimana (public.activity.activity_id = public.coa.activity_id)
+		if (data.activity_id !== undefined) {
+			const { activity_name } = await sqlUtil.lookupdb(db, 'public.activity', 'activity_id', data.activity_id)
+			data.activity_name = activity_name ?? null
 		}
 		// lookup: coarpt_name dari field coarpt_name pada table public.coarpt dimana (public.coarpt.coarpt_id = public.coa.coarpt_id)
 		if (data.coarpt_id !== undefined) {
