@@ -1,0 +1,56 @@
+<section id="reportviewerMain-section" class="fgta5-carousell" data-title="Report Viewer">
+
+	<div id="reportPanel">
+		<div id="filter-container">
+			<div id="obj_reporttype-container" style="width: 250px;">
+				<input id="obj_reporttype" fgta5-component="Combobox" placeholder="report type" autocomplete="off" spellcheck="false" 
+					required
+					binding="reporttype_id"
+					data-display="reporttype_name">
+				<datalist for="obj_reporttype">
+					<option value="coa" default>by COA</option>
+					<option value="activity">by Activity</option>
+				</datalist>
+			</div>
+
+			<div id="obj_date-container">
+				<input id="obj_date" fgta5-component="Datepicker"
+					placeholder="Select Date..." autocomplete="off" spellcheck="false">
+			</div>
+			
+			<button id="btnLoad" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-load.svg">
+				</span>
+				<span class="action-button-text">LOAD</span>
+			</button>
+
+
+		</div>
+
+		<div id="btn-panel">
+
+			<button id="btnDownload" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-download.svg">
+				</span>
+				<span class="action-button-text">Download</span>
+			</button>
+
+			<button id="btnPrint" class="action-button button-load">
+				<span class="action-button-icon">
+					<img src="public/icons/button-print.svg">
+				</span>
+				<span class="action-button-text">Print</span>
+			</button>
+		</div>
+
+	</div>
+
+
+
+	<div id="print-media">
+		<!-- sESUAIKAN -->
+		<%- include(`${moduleDir}/rptcashflowPage.html`) %>
+	</div>
+</section>
