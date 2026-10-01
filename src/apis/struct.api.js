@@ -18,7 +18,8 @@ const moduleName = 'struct'
 const headerSectionName = 'header'
 const headerTableName = 'public.struct' 
 const headerPrimaryKey = 'struct_id' 
-const memberTableName = 'public.structmember'  	
+const memberTableName = 'public.structmember'  
+const refTableName = 'public.structref'  	
 
 // api: account
 export default class extends Api {
@@ -51,6 +52,14 @@ export default class extends Api {
 	async memberCreate(body) { return await struct_memberCreate(this, body) }
 	async memberDelete(body) { return await struct_memberDelete(this, body) }
 	async memberDeleteRows(body) { return await struct_memberDeleteRows(this, body) }
+	
+	// ref	
+	async refList(body) { return await struct_refList(this, body) }
+	async refOpen(body) { return await struct_refOpen(this, body) }
+	async refUpdate(body) { return await struct_refUpdate(this, body)}
+	async refCreate(body) { return await struct_refCreate(this, body) }
+	async refDelete(body) { return await struct_refDelete(this, body) }
+	async refDeleteRows(body) { return await struct_refDeleteRows(this, body) }
 			
 }	
 
@@ -188,21 +197,21 @@ async function struct_headerList(self, body) {
 			if (i>max_rows) { break }
 
 			// lookup: structhrk_name dari field structhrk_name pada table public.structhrk dimana (public.structhrk.structhrk_id = public.struct.structhrk_id)
-			{
+			if (row.structhrk_id !== undefined) {
 				const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', row.structhrk_id)
-				row.structhrk_name = structhrk_name
+				row.structhrk_name = structhrk_name ?? null
 			}
 			// lookup: auth_name dari field auth_name pada table core.auth dimana (core.auth.auth_id = public.struct.auth_id)
-			{
+			if (row.auth_id !== undefined) {
 				const { auth_name } = await sqlUtil.lookupdb(db, 'core.auth', 'auth_id', row.auth_id)
-				row.auth_name = auth_name
+				row.auth_name = auth_name ?? null
 			}
 			// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
-			{
+			if (row.struct_parent !== undefined) {
 				const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', row.struct_parent)
-				row.struct_parent_name = struct_name
+				row.struct_parent_name = struct_name ?? null
 			}
-			
+			 
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
 				// export async function headerListRow(self, row, args) {}
@@ -252,30 +261,29 @@ async function struct_headerOpen(self, body) {
 		}	
 
 		// lookup: structhrk_name dari field structhrk_name pada table public.structhrk dimana (public.structhrk.structhrk_id = public.struct.structhrk_id)
-		{
+		if (data.structhrk_id !== undefined) {
 			const { structhrk_name } = await sqlUtil.lookupdb(db, 'public.structhrk', 'structhrk_id', data.structhrk_id)
-			data.structhrk_name = structhrk_name
+			data.structhrk_name = structhrk_name ?? null
 		}
 		// lookup: auth_name dari field auth_name pada table core.auth dimana (core.auth.auth_id = public.struct.auth_id)
-		{
+		if (data.auth_id !== undefined) {
 			const { auth_name } = await sqlUtil.lookupdb(db, 'core.auth', 'auth_id', data.auth_id)
-			data.auth_name = auth_name
+			data.auth_name = auth_name ?? null
 		}
 		// lookup: struct_parent_name dari field struct_name pada table public.struct dimana (public.struct.struct_id = public.struct.struct_parent)
-		{
+		if (data.struct_parent !== undefined) {
 			const { struct_name } = await sqlUtil.lookupdb(db, 'public.struct', 'struct_id', data.struct_parent)
-			data.struct_parent_name = struct_name
+			data.struct_parent_name = struct_name ?? null
 		}
-		
-
+		 
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
@@ -473,6 +481,37 @@ async function struct_headerDelete(self, body) {
 				}	
 			}
 
+			// hapus data ref
+			{
+				const sql = `select * from ${refTableName} where struct_id=\${struct_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowref of rows) {
+					
+					const logMetadata = {}
+					
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.refDeleting === 'function') {
+						// export async function refDeleting(self, tx, rowref, logMetadata) {}
+						await Extender.refDeleting(self, tx, rowref, logMetadata)
+					}
+
+					const param = {structref_id: rowref.structref_id}
+					const cmd = sqlUtil.createDeleteCommand(refTableName, ['structref_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.refDeleted === 'function') {
+						// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					struct_log(self, body, startTime, refTableName, rowref.structref_id, 'DELETE', {rowdata: deletedRow})
+					struct_log(self, body, startTime, headerTableName, rowref.struct_id, 'DELETE ROW REF', {structref_id: rowref.structref_id, tablename: refTableName}, `removed: ${rowref.structref_id}`)
+
+
+				}	
+			}
+
 			
 			
 
@@ -556,12 +595,11 @@ async function struct_memberList(self, body) {
 			if (i>max_rows) { break }
 
 			// lookup: user_fullname dari field user_fullname pada table core.user dimana (core.user.user_id = public.struct.user_id)
-			{
+			if (row.user_id !== undefined) {
 				const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', row.user_id)
-				row.user_fullname = user_fullname
+				row.user_fullname = user_fullname ?? null
 			}
-			
-
+			 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
 				// export async function detilListRow(self, row, args) {}
@@ -619,20 +657,19 @@ async function struct_memberOpen(self, body) {
 
 
 		// lookup: user_fullname dari field user_fullname pada table core.user dimana (core.user.user_id = public.struct.user_id)
-		{
+		if (data.user_id !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data.user_id)
-			data.user_fullname = user_fullname
+			data.user_fullname = user_fullname ?? null
 		}
-		
-
+		  
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}	
@@ -675,7 +712,7 @@ async function struct_memberCreate(self, body) {
 
 			const args = { 
 				section: 'member', 
-				prefix: 'STRU'	
+				doc_id: 'STRU'	
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -689,7 +726,7 @@ async function struct_memberCreate(self, body) {
 			}
 
 
-			const seqdata = await sequencer.increment(args.prefix)
+			const seqdata = await sequencer.increment(args.doc_id)
 			data.structmember_id = seqdata.id
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -912,6 +949,437 @@ async function struct_memberDeleteRows(self, body) {
 		const fn = Extender[fn_name]
 		if (typeof fn === 'function') {
 			// export async function memberRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
+
+
+// ref	
+
+async function struct_refList(self, body) {
+	const tablename = refTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		struct_id: `struct_id=try_cast_bigint(\${struct_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.structref_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria, tablename }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.refListCriteria === 'function') {
+			// export async function refListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.refListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.struct.interface_id)
+			if (row.interface_id !== undefined) {
+				const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', row.interface_id)
+				row.interface_name = interface_name ?? null
+			}
+			 
+			// field dengan tipedata json/jsonb	
+			{
+				if (row.ref_data) {
+					row.ref_data = JSON.stringify(row.ref_data)
+				}
+			}
+			
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+
+		const listData = {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_refOpen(self, body) {
+	const tablename = refTableName
+
+	try {
+		const { id } = body 
+		const criteria = { structref_id: id }
+		const searchMap = { structref_id: `structref_id = \${structref_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.struct.interface_id)
+		if (data.interface_id !== undefined) {
+			const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', data.interface_id)
+			data.interface_name = interface_name ?? null
+		}
+		  
+		// field dengan tipedata json/jsonb	
+		{
+			if (data.ref_data) {
+				data.ref_data = JSON.stringify(data.ref_data)
+			}
+		}
+		
+		// lookup data createby
+		if (data._createby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		if (data._modifyby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function refOpen(self, db, data) {}
+		if (typeof Extender.refOpen === 'function') {
+			// export async function refOpen(self, db, data) {}
+			await Extender.refOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_refCreate(self, body) {
+	const { source='struct', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = refTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._createby = user_id
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'ref', 
+				doc_id: 'STRU'	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.doc_id)
+			data.structref_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.refCreating === 'function') {
+				// export async function refCreating(self, tx, data, seqdata, args) {}
+				await Extender.refCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.struct_id
+			})
+
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.refCreated === 'function') {
+				// export async function refCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.refCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			struct_log(self, body, startTime, tablename, ret.structref_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_refUpdate(self, body) {
+	const { source='struct', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = refTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._modifyby = user_id
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToUpdate = {structref_id: data.structref_id}
+			const sql = `select * from ${refTableName} where structref_id=\${structref_id}`
+			const rowref = await tx.oneOrNone(sql, dataToUpdate)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.refUpdating === 'function') {
+				// export async function refUpdating(self, tx, data) {}
+				await Extender.refUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['structref_id'])
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowref.struct_id
+			})
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.refUpdated === 'function') {
+				// export async function refUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.refUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			struct_log(self, body, startTime, tablename, data.structref_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_refDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = refTableName
+
+	try {
+
+		const data_timestamp = (new Date()).toISOString()
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {structref_id: id}
+			const sql = `select * from ${refTableName} where structref_id=\${structref_id}`
+			const rowref = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.refDeleting === 'function') {
+				// export async function refDeleting(self, tx, rowref, logMetadata) {}
+				await Extender.refDeleting(self, tx, rowref, logMetadata)
+			}
+
+			const param = {structref_id: rowref.structref_id}
+			const cmd = sqlUtil.createDeleteCommand(refTableName, ['structref_id'])
+			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowref.struct_id
+			})
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.refDeleted === 'function') {
+				// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			struct_log(self, body, startTime, refTableName, rowref.structref_id, 'DELETE', {rowdata: deletedRow})
+			struct_log(self, body, startTime, headerTableName, rowref.struct_id, 'DELETE ROW REF', {structref_id: rowref.structref_id, tablename: refTableName}, `removed: ${rowref.structref_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function struct_refDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = refTableName
+
+
+	try {
+
+
+		const data_timestamp = (new Date()).toISOString()
+
+		let struct_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {structref_id: id}
+				const sql = `select * from ${refTableName} where structref_id=\${structref_id}`
+				const rowref = await tx.oneOrNone(sql, dataToRemove)
+				struct_id = rowref.struct_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.refDeleting === 'function') {
+					// async function refDeleting(self, tx, rowref, logMetadata) {}
+					await Extender.refDeleting(self, tx, rowref, logMetadata)
+				}
+
+				const param = {structref_id: rowref.structref_id}
+				const cmd = sqlUtil.createDeleteCommand(refTableName, ['structref_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowref.struct_id
+				})
+				
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.refDeleted === 'function') {
+					// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				struct_log(self, body, startTime, refTableName, rowref.structref_id, 'DELETE', {rowdata: deletedRow})
+				struct_log(self, body, startTime, headerTableName, rowref.struct_id, 'DELETE ROW REF', {structref_id: rowref.structref_id, tablename: refTableName}, `removed: ${rowref.structref_id}`)
+			}
+		})
+		
+
+		const res = {
+			deleted: true,
+			struct_id: struct_id,
+			message: ''
+		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'refRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function refRowsDeleted(self, db, res) {}
 			await fn(self, db, res)
 		}
 

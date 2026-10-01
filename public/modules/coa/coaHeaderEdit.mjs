@@ -39,6 +39,7 @@ const frm = new $fgta5.Form('coaHeaderEdit-frm');
 const obj_coa_id = frm.Inputs['coaHeaderEdit-obj_coa_id']
 const obj_coa_isdisabled = frm.Inputs['coaHeaderEdit-obj_coa_isdisabled']
 const obj_iscurradj = frm.Inputs['coaHeaderEdit-obj_iscurradj']
+const obj_coa_code = frm.Inputs['coaHeaderEdit-obj_coa_code']
 const obj_coa_name = frm.Inputs['coaHeaderEdit-obj_coa_name']
 const obj_curr_id = frm.Inputs['coaHeaderEdit-obj_curr_id']
 const obj_coa_descr = frm.Inputs['coaHeaderEdit-obj_coa_descr']
@@ -557,6 +558,10 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
+	
+	// trigger lock event di ref
+	self.Modules.coaRefList.headerLocked(self)
+	self.Modules.coaRefEdit.headerLocked(self)
 		
 
 }
@@ -597,6 +602,10 @@ async function  frm_unlocked(self, evt) {
 		fn(self, frm, CurrentState)
 	}
 
+	
+	// trigger unlock event di ref
+	self.Modules.coaRefList.headerUnlocked(self)
+	self.Modules.coaRefEdit.headerUnlocked(self)	
 		
 }
 

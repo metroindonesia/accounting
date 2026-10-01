@@ -17,11 +17,15 @@ export default {
 		structHeaderEdit: 'structHeaderEdit-section', 
 		structMemberList: 'structMemberList-section', 
 		structMemberEdit: 'structMemberEdit-section', 
+		structRefList: 'structRefList-section', 
+		structRefEdit: 'structRefEdit-section', 
 	},
 	SectionMap: { 
 		'structHeaderList-section' : 'structHeaderList', 
 		'structHeaderEdit-section' : 'structHeaderEdit', 
 		'structMemberList-section' : 'structMemberList', 
 		'structMemberEdit-section' : 'structMemberEdit', 
+		'structRefList-section' : 'structRefList', 
+		'structRefEdit-section' : 'structRefEdit', 
 	}
 }

@@ -42,6 +42,21 @@ comment on column public."coa".iscurradj is '';
 
 
 -- =============================================
+-- FIELD: coa_code text
+-- =============================================
+-- ADD coa_code
+alter table public."coa" add coa_code text  ;
+comment on column public."coa".coa_code is '';
+
+-- MODIFY coa_code
+alter table public."coa"
+	alter column coa_code type text,
+	ALTER COLUMN coa_code DROP DEFAULT,
+	ALTER COLUMN coa_code DROP NOT NULL;
+comment on column public."coa".coa_code is '';
+
+
+-- =============================================
 -- FIELD: coa_name text
 -- =============================================
 -- ADD coa_name
@@ -217,10 +232,10 @@ CREATE INDEX idx$public$coa$_timestamp ON public.coa (_timestamp);
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$curr_id;
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coagroup_id;
-ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coarpt_id;
 ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$agingtype_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coarpt_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$coagroup_id;
+ALTER TABLE public."coa" DROP CONSTRAINT fk$public$coa$curr_id;
 
 
 -- Add Foreign Key Constraint  

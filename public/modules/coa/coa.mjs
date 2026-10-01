@@ -6,6 +6,8 @@
 import Context from './coa-context.mjs'  
 import * as coaHeaderList from './coaHeaderList.mjs' 
 import * as coaHeaderEdit from './coaHeaderEdit.mjs' 
+import * as coaRefList from './coaRefList.mjs' 
+import * as coaRefEdit from './coaRefEdit.mjs' 
 import * as Extender from './coa-ext.mjs'
 
 const app = Context.app
@@ -49,6 +51,8 @@ export default class extends Module {
 		self.Modules = { 
 			coaHeaderList, 
 			coaHeaderEdit, 
+			coaRefList, 
+			coaRefEdit, 
 		}
 
 		try {
@@ -71,6 +75,8 @@ export default class extends Module {
 			await Promise.all([ 
 				coaHeaderList.init(self, args), 
 				coaHeaderEdit.init(self, args), 
+				coaRefList.init(self, args), 
+				coaRefEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -82,7 +88,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['coaHeaderEdit']
+			const modNameList = ['coaHeaderEdit', 'coaRefEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

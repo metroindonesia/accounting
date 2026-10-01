@@ -2,6 +2,7 @@ import Context from './struct-context.mjs'
 
 export const extenderHeader = null
 export const extenderMember = null
+export const extenderRef = null
 
 const VIEW_VARIANCE = 'view'
 

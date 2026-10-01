@@ -17,7 +17,8 @@ import * as Extender from './extenders/site.apiext.js'
 const moduleName = 'site'
 const headerSectionName = 'header'
 const headerTableName = 'public.site' 
-const headerPrimaryKey = 'site_id' 	
+const headerPrimaryKey = 'site_id' 
+const refTableName = 'public.siteref'  	
 
 // api: account
 export default class extends Api {
@@ -42,6 +43,14 @@ export default class extends Api {
 	async headerCreate(body) { return await site_headerCreate(this, body)}
 	async headerDelete(body) { return await site_headerDelete(this, body) }
 
+	
+	// ref	
+	async refList(body) { return await site_refList(this, body) }
+	async refOpen(body) { return await site_refOpen(this, body) }
+	async refUpdate(body) { return await site_refUpdate(this, body)}
+	async refCreate(body) { return await site_refCreate(this, body) }
+	async refDelete(body) { return await site_refDelete(this, body) }
+	async refDeleteRows(body) { return await site_refDeleteRows(this, body) }
 			
 }	
 
@@ -178,7 +187,7 @@ async function site_headerList(self, body) {
 			i++
 			if (i>max_rows) { break }
 
-			
+			 
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
 				// export async function headerListRow(self, row, args) {}
@@ -227,16 +236,15 @@ async function site_headerOpen(self, body) {
 			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
 		}	
 
-		
-
+		 
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
@@ -403,6 +411,39 @@ async function site_headerDelete(self, body) {
 			}
 
 			
+			// hapus data ref
+			{
+				const sql = `select * from ${refTableName} where site_id=\${site_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowref of rows) {
+					
+					const logMetadata = {}
+					
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.refDeleting === 'function') {
+						// export async function refDeleting(self, tx, rowref, logMetadata) {}
+						await Extender.refDeleting(self, tx, rowref, logMetadata)
+					}
+
+					const param = {siteref_id: rowref.siteref_id}
+					const cmd = sqlUtil.createDeleteCommand(refTableName, ['siteref_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.refDeleted === 'function') {
+						// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					site_log(self, body, startTime, refTableName, rowref.siteref_id, 'DELETE', {rowdata: deletedRow})
+					site_log(self, body, startTime, headerTableName, rowref.site_id, 'DELETE ROW REF', {siteref_id: rowref.siteref_id, tablename: refTableName}, `removed: ${rowref.siteref_id}`)
+
+
+				}	
+			}
+
+			
+			
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['site_id'])
@@ -429,5 +470,436 @@ async function site_headerDelete(self, body) {
 	}
 }
 
+
+
+// ref	
+
+async function site_refList(self, body) {
+	const tablename = refTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		site_id: `site_id=try_cast_bigint(\${site_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.siteref_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria, tablename }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.refListCriteria === 'function') {
+			// export async function refListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.refListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.site.interface_id)
+			if (row.interface_id !== undefined) {
+				const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', row.interface_id)
+				row.interface_name = interface_name ?? null
+			}
+			 
+			// field dengan tipedata json/jsonb	
+			{
+				if (row.ref_data) {
+					row.ref_data = JSON.stringify(row.ref_data)
+				}
+			}
+			
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+
+		const listData = {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
+	} catch (err) {
+		throw err
+	}
+}
+
+async function site_refOpen(self, body) {
+	const tablename = refTableName
+
+	try {
+		const { id } = body 
+		const criteria = { siteref_id: id }
+		const searchMap = { siteref_id: `siteref_id = \${siteref_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.site.interface_id)
+		if (data.interface_id !== undefined) {
+			const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', data.interface_id)
+			data.interface_name = interface_name ?? null
+		}
+		  
+		// field dengan tipedata json/jsonb	
+		{
+			if (data.ref_data) {
+				data.ref_data = JSON.stringify(data.ref_data)
+			}
+		}
+		
+		// lookup data createby
+		if (data._createby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		if (data._modifyby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function refOpen(self, db, data) {}
+		if (typeof Extender.refOpen === 'function') {
+			// export async function refOpen(self, db, data) {}
+			await Extender.refOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function site_refCreate(self, body) {
+	const { source='site', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = refTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._createby = user_id
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'ref', 
+				doc_id: 'SITE'	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.doc_id)
+			data.siteref_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.refCreating === 'function') {
+				// export async function refCreating(self, tx, data, seqdata, args) {}
+				await Extender.refCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.site_id
+			})
+
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.refCreated === 'function') {
+				// export async function refCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.refCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			site_log(self, body, startTime, tablename, ret.siteref_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function site_refUpdate(self, body) {
+	const { source='site', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = refTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._modifyby = user_id
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToUpdate = {siteref_id: data.siteref_id}
+			const sql = `select * from ${refTableName} where siteref_id=\${siteref_id}`
+			const rowref = await tx.oneOrNone(sql, dataToUpdate)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.refUpdating === 'function') {
+				// export async function refUpdating(self, tx, data) {}
+				await Extender.refUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['siteref_id'])
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowref.site_id
+			})
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.refUpdated === 'function') {
+				// export async function refUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.refUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			site_log(self, body, startTime, tablename, data.siteref_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function site_refDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = refTableName
+
+	try {
+
+		const data_timestamp = (new Date()).toISOString()
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {siteref_id: id}
+			const sql = `select * from ${refTableName} where siteref_id=\${siteref_id}`
+			const rowref = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.refDeleting === 'function') {
+				// export async function refDeleting(self, tx, rowref, logMetadata) {}
+				await Extender.refDeleting(self, tx, rowref, logMetadata)
+			}
+
+			const param = {siteref_id: rowref.siteref_id}
+			const cmd = sqlUtil.createDeleteCommand(refTableName, ['siteref_id'])
+			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowref.site_id
+			})
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.refDeleted === 'function') {
+				// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			site_log(self, body, startTime, refTableName, rowref.siteref_id, 'DELETE', {rowdata: deletedRow})
+			site_log(self, body, startTime, headerTableName, rowref.site_id, 'DELETE ROW REF', {siteref_id: rowref.siteref_id, tablename: refTableName}, `removed: ${rowref.siteref_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function site_refDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = refTableName
+
+
+	try {
+
+
+		const data_timestamp = (new Date()).toISOString()
+
+		let site_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {siteref_id: id}
+				const sql = `select * from ${refTableName} where siteref_id=\${siteref_id}`
+				const rowref = await tx.oneOrNone(sql, dataToRemove)
+				site_id = rowref.site_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.refDeleting === 'function') {
+					// async function refDeleting(self, tx, rowref, logMetadata) {}
+					await Extender.refDeleting(self, tx, rowref, logMetadata)
+				}
+
+				const param = {siteref_id: rowref.siteref_id}
+				const cmd = sqlUtil.createDeleteCommand(refTableName, ['siteref_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowref.site_id
+				})
+				
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.refDeleted === 'function') {
+					// export async function refDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.refDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				site_log(self, body, startTime, refTableName, rowref.siteref_id, 'DELETE', {rowdata: deletedRow})
+				site_log(self, body, startTime, headerTableName, rowref.site_id, 'DELETE ROW REF', {siteref_id: rowref.siteref_id, tablename: refTableName}, `removed: ${rowref.siteref_id}`)
+			}
+		})
+		
+
+		const res = {
+			deleted: true,
+			site_id: site_id,
+			message: ''
+		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'refRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function refRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
 
 	

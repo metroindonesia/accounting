@@ -156,10 +156,6 @@ CREATE INDEX idx$public$unit$_timestamp ON public.unit (_timestamp);
 -- =============================================
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
--- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."unit" DROP CONSTRAINT fk$public$unit$struct_id;
-
-
 -- Add Foreign Key Constraint  
 ALTER TABLE public."unit"
 	ADD CONSTRAINT fk$public$unit$struct_id

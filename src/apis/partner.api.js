@@ -206,9 +206,9 @@ async function partner_headerList(self, body) {
 			if (i>max_rows) { break }
 
 			// lookup: partnertype_name dari field partnertype_name pada table public.partnertype dimana (public.partnertype.partnertype_id = public.partner.partnertype_id)
-			{
+			if (row.partnertype_id !== undefined) {
 				const { partnertype_name } = await sqlUtil.lookupdb(db, 'public.partnertype', 'partnertype_id', row.partnertype_id)
-				row.partnertype_name = partnertype_name
+				row.partnertype_name = partnertype_name ?? null
 			}
 			 
 			// pasang extender di sini
@@ -260,19 +260,19 @@ async function partner_headerOpen(self, body) {
 		}	
 
 		// lookup: partnertype_name dari field partnertype_name pada table public.partnertype dimana (public.partnertype.partnertype_id = public.partner.partnertype_id)
-		{
+		if (data.partnertype_id !== undefined) {
 			const { partnertype_name } = await sqlUtil.lookupdb(db, 'public.partnertype', 'partnertype_id', data.partnertype_id)
-			data.partnertype_name = partnertype_name
+			data.partnertype_name = partnertype_name ?? null
 		}
 		 
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
@@ -673,13 +673,13 @@ async function partner_bankOpen(self, body) {
 
 		  
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}	
@@ -722,7 +722,7 @@ async function partner_bankCreate(self, body) {
 
 			const args = { 
 				section: 'bank', 
-				prefix: 'PATR'	
+				doc_id: 'PATR'	
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -736,7 +736,7 @@ async function partner_bankCreate(self, body) {
 			}
 
 
-			const seqdata = await sequencer.increment(args.prefix)
+			const seqdata = await sequencer.increment(args.doc_id)
 			data.partnerbank_id = seqdata.id
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -1080,13 +1080,13 @@ async function partner_contactOpen(self, body) {
 
 		  
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}	
@@ -1129,7 +1129,7 @@ async function partner_contactCreate(self, body) {
 
 			const args = { 
 				section: 'contact', 
-				prefix: 'PATR'	
+				doc_id: 'PATR'	
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -1143,7 +1143,7 @@ async function partner_contactCreate(self, body) {
 			}
 
 
-			const seqdata = await sequencer.increment(args.prefix)
+			const seqdata = await sequencer.increment(args.doc_id)
 			data.partnercontact_id = seqdata.id
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan
@@ -1429,14 +1429,16 @@ async function partner_refList(self, body) {
 			if (i>max_rows) { break }
 
 			// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.partner.interface_id)
-			{
+			if (row.interface_id !== undefined) {
 				const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', row.interface_id)
-				row.interface_name = interface_name
+				row.interface_name = interface_name ?? null
 			}
 			 
 			// field dengan tipedata json/jsonb	
 			{
-				row.partnerref_data = JSON.stringify(row.partnerref_data)
+				if (row.ref_data) {
+					row.ref_data = JSON.stringify(row.ref_data)
+				}
 			}
 			
 			// pasang extender di sini
@@ -1496,24 +1498,26 @@ async function partner_refOpen(self, body) {
 
 
 		// lookup: interface_name dari field interface_name pada table core.interface dimana (core.interface.interface_id = public.partner.interface_id)
-		{
+		if (data.interface_id !== undefined) {
 			const { interface_name } = await sqlUtil.lookupdb(db, 'core.interface', 'interface_id', data.interface_id)
-			data.interface_name = interface_name
+			data.interface_name = interface_name ?? null
 		}
 		  
 		// field dengan tipedata json/jsonb	
 		{
-			data.partnerref_data = JSON.stringify(data.partnerref_data)
+			if (data.ref_data) {
+				data.ref_data = JSON.stringify(data.ref_data)
+			}
 		}
 		
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}	
@@ -1556,7 +1560,7 @@ async function partner_refCreate(self, body) {
 
 			const args = { 
 				section: 'ref', 
-				prefix: 'PATR'	
+				doc_id: 'PATR'	
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -1570,7 +1574,7 @@ async function partner_refCreate(self, body) {
 			}
 
 
-			const seqdata = await sequencer.increment(args.prefix)
+			const seqdata = await sequencer.increment(args.doc_id)
 			data.partnerref_id = seqdata.id
 
 			// apabila ada keperluan pengolahan data SEBELUM disimpan

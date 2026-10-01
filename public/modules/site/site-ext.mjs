@@ -1,6 +1,7 @@
 import Context from './site-context.mjs'
 
 export const extenderHeader = null
+export const extenderRef = null
 
 
 const _site_code = 'siteHeaderEdit-obj_site_code'

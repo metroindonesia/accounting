@@ -68,6 +68,24 @@
 		</div>
 		
 
+		<!-- Textbox: coa_code-->
+		<div id="coaHeaderEdit-obj_coa_code-container" class="input-field" field="coaHeaderEdit-obj_coa_code">
+			<label for="coaHeaderEdit-obj_coa_code">
+				Code
+			</label>
+			<input id="coaHeaderEdit-obj_coa_code" fgta5-component="Textbox"
+				placeholder="code account" autocomplete="off" spellcheck="false"
+				binding="coa_code" 
+			data-tabindex="4"
+				
+			autocomplete="off" spellcheck="false"
+				
+			maxlength="30"
+				
+					>
+		</div>
+		
+
 		<!-- Textbox: coa_name-->
 		<div id="coaHeaderEdit-obj_coa_name-container" class="input-field" field="coaHeaderEdit-obj_coa_name">
 			<label for="coaHeaderEdit-obj_coa_name">
@@ -76,7 +94,7 @@
 			<input id="coaHeaderEdit-obj_coa_name" fgta5-component="Textbox"
 				placeholder="name" autocomplete="off" spellcheck="false"
 				binding="coa_name" 
-			data-tabindex="4"
+			data-tabindex="5"
 				
 			required
 				
@@ -98,7 +116,7 @@
 			<input id="coaHeaderEdit-obj_curr_id" fgta5-component="Combobox"
 				placeholder="currency" autocomplete="off" spellcheck="false"
 				binding="curr_id" 
-			data-tabindex="5"
+			data-tabindex="6"
 				
 			data-display="curr_name"
 				
@@ -114,7 +132,7 @@
 			<input id="coaHeaderEdit-obj_coa_descr" fgta5-component="Textbox"
 				placeholder="descr" autocomplete="off" spellcheck="false"
 				binding="coa_descr" 
-			data-tabindex="6"
+			data-tabindex="7"
 				
 			autocomplete="off" spellcheck="false"
 				
@@ -132,7 +150,7 @@
 			<input id="coaHeaderEdit-obj_coagroup_id" fgta5-component="Combobox"
 				placeholder="group" autocomplete="off" spellcheck="false"
 				binding="coagroup_id" 
-			data-tabindex="7"
+			data-tabindex="8"
 				
 			data-display="coagroup_name"
 				
@@ -148,7 +166,7 @@
 			<input id="coaHeaderEdit-obj_coarpt_id" fgta5-component="Combobox"
 				placeholder="report" autocomplete="off" spellcheck="false"
 				binding="coarpt_id" 
-			data-tabindex="8"
+			data-tabindex="9"
 				
 			required
 				
@@ -168,7 +186,7 @@
 			<input id="coaHeaderEdit-obj_agingtype_id" fgta5-component="Combobox"
 				placeholder="non aging" autocomplete="off" spellcheck="false"
 				binding="agingtype_id" 
-			data-tabindex="9"
+			data-tabindex="10"
 				
 			data-display="agingtype_name"
 				
@@ -181,12 +199,20 @@
 <div id="coaHeaderEdit-footer">
 </div>
 
-<div id="panel-detil-selector" class="panel-detil hidden">
+<div id="panel-detil-selector" class="panel-detil ">
 	<div panel-title>
 		Information Detil
 	</div>
 	<div panel-content>
 		
+			<div class="panel-detil-row" id="coaHeaderEdit-info-ref-row">
+				<div data-label><a href="javascript:void(0)" data-target-section="coaRefList"
+						data-current-section="coaHeaderEdit">
+						Reference
+					</a></div>
+				<div data-info>&nbsp</div>
+			</div>
+			
 
 				<div id="panel-detil-additionalinfo">
 					<!-- tambahkan additional info disini -->
@@ -199,7 +225,7 @@
 </div>
 
 
-<div class="panel-recordbar" data-view="nodetil">
+<div class="panel-recordbar" >
 
 		<button id="coaHeader-btn_recordstatus" tabindex="-1">
 			<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

@@ -8,6 +8,8 @@ import * as structHeaderList from './structHeaderList.mjs'
 import * as structHeaderEdit from './structHeaderEdit.mjs' 
 import * as structMemberList from './structMemberList.mjs' 
 import * as structMemberEdit from './structMemberEdit.mjs' 
+import * as structRefList from './structRefList.mjs' 
+import * as structRefEdit from './structRefEdit.mjs' 
 import * as Extender from './struct-ext.mjs'
 
 const app = Context.app
@@ -53,6 +55,8 @@ export default class extends Module {
 			structHeaderEdit, 
 			structMemberList, 
 			structMemberEdit, 
+			structRefList, 
+			structRefEdit, 
 		}
 
 		try {
@@ -77,6 +81,8 @@ export default class extends Module {
 				structHeaderEdit.init(self, args), 
 				structMemberList.init(self, args), 
 				structMemberEdit.init(self, args), 
+				structRefList.init(self, args), 
+				structRefEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -88,7 +94,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['structHeaderEdit', 'structMemberEdit']
+			const modNameList = ['structHeaderEdit', 'structMemberEdit', 'structRefEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

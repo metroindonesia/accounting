@@ -508,6 +508,10 @@ async function  frm_locked(self, evt) {
 	// trigger lock event di member
 	self.Modules.structMemberList.headerLocked(self)
 	self.Modules.structMemberEdit.headerLocked(self)
+	
+	// trigger lock event di ref
+	self.Modules.structRefList.headerLocked(self)
+	self.Modules.structRefEdit.headerLocked(self)
 		
 
 }
@@ -552,6 +556,10 @@ async function  frm_unlocked(self, evt) {
 	// trigger unlock event di member
 	self.Modules.structMemberList.headerUnlocked(self)
 	self.Modules.structMemberEdit.headerUnlocked(self)	
+	
+	// trigger unlock event di ref
+	self.Modules.structRefList.headerUnlocked(self)
+	self.Modules.structRefEdit.headerUnlocked(self)	
 		
 }
 

@@ -15,9 +15,13 @@ export default {
 	Sections: { 
 		coaHeaderList: 'coaHeaderList-section', 
 		coaHeaderEdit: 'coaHeaderEdit-section', 
+		coaRefList: 'coaRefList-section', 
+		coaRefEdit: 'coaRefEdit-section', 
 	},
 	SectionMap: { 
 		'coaHeaderList-section' : 'coaHeaderList', 
 		'coaHeaderEdit-section' : 'coaHeaderEdit', 
+		'coaRefList-section' : 'coaRefList', 
+		'coaRefEdit-section' : 'coaRefEdit', 
 	}
 }

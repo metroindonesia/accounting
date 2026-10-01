@@ -27,63 +27,63 @@ comment on column public."partnerref".interface_id is '';
 
 
 -- =============================================
--- FIELD: partnerref_name text
+-- FIELD: ref_name text
 -- =============================================
--- ADD partnerref_name
-alter table public."partnerref" add partnerref_name text  ;
-comment on column public."partnerref".partnerref_name is '';
+-- ADD ref_name
+alter table public."partnerref" add ref_name text  ;
+comment on column public."partnerref".ref_name is '';
 
--- MODIFY partnerref_name
+-- MODIFY ref_name
 alter table public."partnerref"
-	alter column partnerref_name type text,
-	ALTER COLUMN partnerref_name DROP DEFAULT,
-	ALTER COLUMN partnerref_name DROP NOT NULL;
-comment on column public."partnerref".partnerref_name is '';
+	alter column ref_name type text,
+	ALTER COLUMN ref_name DROP DEFAULT,
+	ALTER COLUMN ref_name DROP NOT NULL;
+comment on column public."partnerref".ref_name is '';
 
 
 -- =============================================
--- FIELD: partnerref_value text
+-- FIELD: ref_value text
 -- =============================================
--- ADD partnerref_value
-alter table public."partnerref" add partnerref_value text  ;
-comment on column public."partnerref".partnerref_value is '';
+-- ADD ref_value
+alter table public."partnerref" add ref_value text  ;
+comment on column public."partnerref".ref_value is '';
 
--- MODIFY partnerref_value
+-- MODIFY ref_value
 alter table public."partnerref"
-	alter column partnerref_value type text,
-	ALTER COLUMN partnerref_value DROP DEFAULT,
-	ALTER COLUMN partnerref_value DROP NOT NULL;
-comment on column public."partnerref".partnerref_value is '';
+	alter column ref_value type text,
+	ALTER COLUMN ref_value DROP DEFAULT,
+	ALTER COLUMN ref_value DROP NOT NULL;
+comment on column public."partnerref".ref_value is '';
 
 
 -- =============================================
--- FIELD: partnerref_descr text
+-- FIELD: ref_descr text
 -- =============================================
--- ADD partnerref_descr
-alter table public."partnerref" add partnerref_descr text  ;
-comment on column public."partnerref".partnerref_descr is '';
+-- ADD ref_descr
+alter table public."partnerref" add ref_descr text  ;
+comment on column public."partnerref".ref_descr is '';
 
--- MODIFY partnerref_descr
+-- MODIFY ref_descr
 alter table public."partnerref"
-	alter column partnerref_descr type text,
-	ALTER COLUMN partnerref_descr DROP DEFAULT,
-	ALTER COLUMN partnerref_descr DROP NOT NULL;
-comment on column public."partnerref".partnerref_descr is '';
+	alter column ref_descr type text,
+	ALTER COLUMN ref_descr DROP DEFAULT,
+	ALTER COLUMN ref_descr DROP NOT NULL;
+comment on column public."partnerref".ref_descr is '';
 
 
 -- =============================================
--- FIELD: partnerref_data json
+-- FIELD: ref_data json
 -- =============================================
--- ADD partnerref_data
-alter table public."partnerref" add partnerref_data json  ;
-comment on column public."partnerref".partnerref_data is '';
+-- ADD ref_data
+alter table public."partnerref" add ref_data json  ;
+comment on column public."partnerref".ref_data is '';
 
--- MODIFY partnerref_data
+-- MODIFY ref_data
 alter table public."partnerref"
-	alter column partnerref_data type json,
-	ALTER COLUMN partnerref_data DROP DEFAULT,
-	ALTER COLUMN partnerref_data DROP NOT NULL;
-comment on column public."partnerref".partnerref_data is '';
+	alter column ref_data type json,
+	ALTER COLUMN ref_data DROP DEFAULT,
+	ALTER COLUMN ref_data DROP NOT NULL;
+comment on column public."partnerref".ref_data is '';
 
 
 -- =============================================
@@ -214,5 +214,5 @@ alter table public."partnerref"
 
 -- Add unique index 
 alter table  public."partnerref"
-	add constraint uq$public$partnerref$partnerref_pair unique (interface_id, partnerref_name, partnerref_value); 
+	add constraint uq$public$partnerref$partnerref_pair unique (interface_id, ref_name, ref_value); 
 

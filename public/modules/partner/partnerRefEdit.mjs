@@ -38,10 +38,10 @@ const btn_logs = document.getElementById('partnerRef-btn_logs')
 const frm = new $fgta5.Form('partnerRefEdit-frm');
 const obj_partnerref_id = frm.Inputs['partnerRefEdit-obj_partnerref_id']
 const obj_interface_id = frm.Inputs['partnerRefEdit-obj_interface_id']
-const Name = frm.Inputs['partnerRefEdit-Name']
-const obj_partnerref_value = frm.Inputs['partnerRefEdit-obj_partnerref_value']
-const obj_partnerref_descr = frm.Inputs['partnerRefEdit-obj_partnerref_descr']
-const obj_partnerref_data = frm.Inputs['partnerRefEdit-obj_partnerref_data']
+const obj_ref_name = frm.Inputs['partnerRefEdit-obj_ref_name']
+const obj_ref_value = frm.Inputs['partnerRefEdit-obj_ref_value']
+const obj_ref_descr = frm.Inputs['partnerRefEdit-obj_ref_descr']
+const obj_ref_data = frm.Inputs['partnerRefEdit-obj_ref_data']
 const obj_partner_id = frm.Inputs['partnerRefEdit-obj_partner_id']	
 const rec_timestamp = document.getElementById('fRecord-section-timestamp')
 const rec_createby = document.getElementById('fRecord-section-createby')
@@ -509,7 +509,7 @@ async function btn_new_click(self, evt) {
 		// inisiasi data baru
 		const datainit = {
 			partner_id,
-			partnerref_data: '{}',
+			ref_data: '{}',
 		}
 
 

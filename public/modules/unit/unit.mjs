@@ -6,6 +6,8 @@
 import Context from './unit-context.mjs'  
 import * as unitHeaderList from './unitHeaderList.mjs' 
 import * as unitHeaderEdit from './unitHeaderEdit.mjs' 
+import * as unitRefList from './unitRefList.mjs' 
+import * as unitRefEdit from './unitRefEdit.mjs' 
 import * as Extender from './unit-ext.mjs'
 
 const app = Context.app
@@ -49,6 +51,8 @@ export default class extends Module {
 		self.Modules = { 
 			unitHeaderList, 
 			unitHeaderEdit, 
+			unitRefList, 
+			unitRefEdit, 
 		}
 
 		try {
@@ -71,6 +75,8 @@ export default class extends Module {
 			await Promise.all([ 
 				unitHeaderList.init(self, args), 
 				unitHeaderEdit.init(self, args), 
+				unitRefList.init(self, args), 
+				unitRefEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -82,7 +88,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['unitHeaderEdit']
+			const modNameList = ['unitHeaderEdit', 'unitRefEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

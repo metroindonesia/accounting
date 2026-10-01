@@ -15,9 +15,13 @@ export default {
 	Sections: { 
 		siteHeaderList: 'siteHeaderList-section', 
 		siteHeaderEdit: 'siteHeaderEdit-section', 
+		siteRefList: 'siteRefList-section', 
+		siteRefEdit: 'siteRefEdit-section', 
 	},
 	SectionMap: { 
 		'siteHeaderList-section' : 'siteHeaderList', 
 		'siteHeaderEdit-section' : 'siteHeaderEdit', 
+		'siteRefList-section' : 'siteRefList', 
+		'siteRefEdit-section' : 'siteRefEdit', 
 	}
 }

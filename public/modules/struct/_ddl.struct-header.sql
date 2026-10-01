@@ -292,9 +292,9 @@ CREATE INDEX idx$public$struct$_timestamp ON public.struct (_timestamp);
 -- FOREIGN KEY CONSTRAINT
 -- =============================================
 -- Drop Existing Foreign Key Constraint 
-ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$structhrk_id;
-ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$auth_id;
 ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$struct_parent;
+ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$auth_id;
+ALTER TABLE public."struct" DROP CONSTRAINT fk$public$struct$structhrk_id;
 
 
 -- Add Foreign Key Constraint  
@@ -338,10 +338,10 @@ CREATE INDEX idx_fk$public$struct$struct_parent ON public."struct"(struct_parent
 -- =============================================
 -- Drop existing unique index 
 alter table public."struct"
-	drop constraint uq$public$struct$struct_code;
+	drop constraint uq$public$struct$struct_name;
 
 alter table public."struct"
-	drop constraint uq$public$struct$struct_name;
+	drop constraint uq$public$struct$struct_code;
 	
 
 -- Add unique index 

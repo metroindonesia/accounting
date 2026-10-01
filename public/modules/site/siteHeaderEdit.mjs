@@ -323,6 +323,10 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
+	
+	// trigger lock event di ref
+	self.Modules.siteRefList.headerLocked(self)
+	self.Modules.siteRefEdit.headerLocked(self)
 		
 
 }
@@ -363,6 +367,10 @@ async function  frm_unlocked(self, evt) {
 		fn(self, frm, CurrentState)
 	}
 
+	
+	// trigger unlock event di ref
+	self.Modules.siteRefList.headerUnlocked(self)
+	self.Modules.siteRefEdit.headerUnlocked(self)	
 		
 }
 

@@ -1996,10 +1996,10 @@
             "loadingdata": false
           }
         },
-        "partnerref_name": {
+        "ref_name": {
           "component": "Textbox",
-          "data_fieldname": "partnerref_name",
-          "name": "partnerref_name",
+          "data_fieldname": "ref_name",
+          "name": "ref_name",
           "data_type": "text",
           "data_length": "60",
           "data_precision": "0",
@@ -2007,7 +2007,7 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "Name",
+          "input_name": "obj_ref_name",
           "input_index": "0",
           "input_label": "Name",
           "input_placeholder": "variable name",
@@ -2063,10 +2063,10 @@
             "loadingdata": false
           }
         },
-        "partnerref_value": {
+        "ref_value": {
           "component": "Textbox",
-          "data_fieldname": "partnerref_value",
-          "name": "partnerref_value",
+          "data_fieldname": "ref_value",
+          "name": "ref_value",
           "data_type": "text",
           "data_length": "90",
           "data_precision": "0",
@@ -2074,7 +2074,7 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_partnerref_value",
+          "input_name": "obj_ref_value",
           "input_index": "0",
           "input_label": "Value",
           "input_placeholder": "value",
@@ -2130,10 +2130,10 @@
             "loadingdata": false
           }
         },
-        "partnerref_descr": {
+        "ref_descr": {
           "component": "Textbox",
-          "data_fieldname": "partnerref_descr",
-          "name": "partnerref_descr",
+          "data_fieldname": "ref_descr",
+          "name": "ref_descr",
           "data_type": "text",
           "data_length": "255",
           "data_precision": "0",
@@ -2141,10 +2141,10 @@
           "input_multiline": false,
           "data_defaultvalue": "",
           "description": "",
-          "input_name": "obj_partnerref_descr",
+          "input_name": "obj_ref_descr",
           "input_index": "0",
           "input_label": "Descr",
-          "input_placeholder": "partnerref_descr",
+          "input_placeholder": "description",
           "input_caption": "",
           "input_information": "",
           "input_containercss": "",
@@ -2197,18 +2197,18 @@
             "loadingdata": false
           }
         },
-        "partnerref_data": {
+        "ref_data": {
           "component": "Textbox",
-          "data_fieldname": "partnerref_data",
-          "name": "partnerref_data",
+          "data_fieldname": "ref_data",
+          "name": "ref_data",
           "data_type": "json",
-          "data_length": "30",
+          "data_length": "2048",
           "data_precision": "0",
           "data_allownull": true,
           "input_multiline": false,
           "data_defaultvalue": "{}",
           "description": "",
-          "input_name": "obj_partnerref_data",
+          "input_name": "obj_ref_data",
           "input_index": "0",
           "input_label": "Data",
           "input_placeholder": "data",
@@ -2234,7 +2234,7 @@
             "isMinimum": false,
             "isMaximum": true,
             "Minimum": "",
-            "Maximum": "30",
+            "Maximum": "2048",
             "messageDefault": "",
             "messageRequired": "",
             "messageMinimum": "",
@@ -2268,7 +2268,7 @@
       "Uniques": {
         "partnerref_pair": {
           "name": "partnerref_pair",
-          "fields": "interface_id, partnerref_name, partnerref_value"
+          "fields": "interface_id, ref_name, ref_value"
         }
       },
       "Search": {}

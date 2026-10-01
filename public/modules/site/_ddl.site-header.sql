@@ -190,10 +190,10 @@ CREATE INDEX idx$public$site$_timestamp ON public.site (_timestamp);
 -- =============================================
 -- Drop existing unique index 
 alter table public."site"
-	drop constraint uq$public$site$site_code;
+	drop constraint uq$public$site$site_name;
 
 alter table public."site"
-	drop constraint uq$public$site$site_name;
+	drop constraint uq$public$site$site_code;
 	
 
 -- Add unique index 

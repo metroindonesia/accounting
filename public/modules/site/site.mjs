@@ -6,6 +6,8 @@
 import Context from './site-context.mjs'  
 import * as siteHeaderList from './siteHeaderList.mjs' 
 import * as siteHeaderEdit from './siteHeaderEdit.mjs' 
+import * as siteRefList from './siteRefList.mjs' 
+import * as siteRefEdit from './siteRefEdit.mjs' 
 import * as Extender from './site-ext.mjs'
 
 const app = Context.app
@@ -49,6 +51,8 @@ export default class extends Module {
 		self.Modules = { 
 			siteHeaderList, 
 			siteHeaderEdit, 
+			siteRefList, 
+			siteRefEdit, 
 		}
 
 		try {
@@ -71,6 +75,8 @@ export default class extends Module {
 			await Promise.all([ 
 				siteHeaderList.init(self, args), 
 				siteHeaderEdit.init(self, args), 
+				siteRefList.init(self, args), 
+				siteRefEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -82,7 +88,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['siteHeaderEdit']
+			const modNameList = ['siteHeaderEdit', 'siteRefEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

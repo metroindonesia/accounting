@@ -15,9 +15,13 @@ export default {
 	Sections: { 
 		unitHeaderList: 'unitHeaderList-section', 
 		unitHeaderEdit: 'unitHeaderEdit-section', 
+		unitRefList: 'unitRefList-section', 
+		unitRefEdit: 'unitRefEdit-section', 
 	},
 	SectionMap: { 
 		'unitHeaderList-section' : 'unitHeaderList', 
 		'unitHeaderEdit-section' : 'unitHeaderEdit', 
+		'unitRefList-section' : 'unitRefList', 
+		'unitRefEdit-section' : 'unitRefEdit', 
 	}
 }

@@ -379,6 +379,10 @@ async function  frm_locked(self, evt) {
 		btn_edit.disabled = true
 	}
 
+	
+	// trigger lock event di ref
+	self.Modules.unitRefList.headerLocked(self)
+	self.Modules.unitRefEdit.headerLocked(self)
 		
 
 }
@@ -419,6 +423,10 @@ async function  frm_unlocked(self, evt) {
 		fn(self, frm, CurrentState)
 	}
 
+	
+	// trigger unlock event di ref
+	self.Modules.unitRefList.headerUnlocked(self)
+	self.Modules.unitRefEdit.headerUnlocked(self)	
 		
 }
 

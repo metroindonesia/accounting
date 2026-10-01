@@ -1,6 +1,7 @@
 import Context from './unit-context.mjs'
 
 export const extenderHeader = null
+export const extenderRef = null
 
 const VIEW_VARIANCE = 'view'
 
