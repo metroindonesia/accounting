@@ -6,6 +6,8 @@
 import Context from './program-context.mjs'  
 import * as programHeaderList from './programHeaderList.mjs' 
 import * as programHeaderEdit from './programHeaderEdit.mjs' 
+import * as programSettingList from './programSettingList.mjs' 
+import * as programSettingEdit from './programSettingEdit.mjs' 
 import * as Extender from './program-ext.mjs'
 
 const app = Context.app
@@ -49,6 +51,8 @@ export default class extends Module {
 		self.Modules = { 
 			programHeaderList, 
 			programHeaderEdit, 
+			programSettingList, 
+			programSettingEdit, 
 		}
 
 		try {
@@ -71,6 +75,8 @@ export default class extends Module {
 			await Promise.all([ 
 				programHeaderList.init(self, args), 
 				programHeaderEdit.init(self, args), 
+				programSettingList.init(self, args), 
+				programSettingEdit.init(self, args), 
 				Extender.init(self, args)
 			])
 
@@ -82,7 +88,7 @@ export default class extends Module {
 			
 
 			// kalau user melakukan reload, konfirm dulu
-			const modNameList = ['programHeaderEdit']
+			const modNameList = ['programHeaderEdit', 'programSettingEdit']
 			window.onbeforeunload = (evt)=>{ 
 				// cek dulu semua form
 				let isFormDirty = false

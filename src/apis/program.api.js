@@ -17,7 +17,8 @@ import * as Extender from './extenders/program.apiext.js'
 const moduleName = 'program'
 const headerSectionName = 'header'
 const headerTableName = 'core.program' 
-const headerPrimaryKey = 'program_id' 	
+const headerPrimaryKey = 'program_id' 
+const settingTableName = 'core.programsetting'  	
 
 // api: account
 export default class extends Api {
@@ -42,6 +43,14 @@ export default class extends Api {
 	async headerCreate(body) { return await program_headerCreate(this, body)}
 	async headerDelete(body) { return await program_headerDelete(this, body) }
 
+	
+	// setting	
+	async settingList(body) { return await program_settingList(this, body) }
+	async settingOpen(body) { return await program_settingOpen(this, body) }
+	async settingUpdate(body) { return await program_settingUpdate(this, body)}
+	async settingCreate(body) { return await program_settingCreate(this, body) }
+	async settingDelete(body) { return await program_settingDelete(this, body) }
+	async settingDeleteRows(body) { return await program_settingDeleteRows(this, body) }
 			
 }	
 
@@ -179,16 +188,16 @@ async function program_headerList(self, body) {
 			if (i>max_rows) { break }
 
 			// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
-			{
+			if (row.programgroup_id !== undefined) {
 				const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', row.programgroup_id)
-				row.programgroup_name = programgroup_name
+				row.programgroup_name = programgroup_name ?? null
 			}
 			// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
-			{
+			if (row.apps_id !== undefined) {
 				const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', row.apps_id)
-				row.apps_name = apps_name
+				row.apps_name = apps_name ?? null
 			}
-			
+			 
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
 				// export async function headerListRow(self, row, args) {}
@@ -238,25 +247,24 @@ async function program_headerOpen(self, body) {
 		}	
 
 		// lookup: programgroup_name dari field programgroup_name pada table core.programgroup dimana (core.programgroup.programgroup_id = core.program.programgroup_id)
-		{
+		if (data.programgroup_id !== undefined) {
 			const { programgroup_name } = await sqlUtil.lookupdb(db, 'core.programgroup', 'programgroup_id', data.programgroup_id)
-			data.programgroup_name = programgroup_name
+			data.programgroup_name = programgroup_name ?? null
 		}
 		// lookup: apps_name dari field apps_name pada table core.apps dimana (core.apps.apps_id = core.program.apps_id)
-		{
+		if (data.apps_id !== undefined) {
 			const { apps_name } = await sqlUtil.lookupdb(db, 'core.apps', 'apps_id', data.apps_id)
-			data.apps_name = apps_name
+			data.apps_name = apps_name ?? null
 		}
-		
-
+		 
 		// lookup data createby
-		{
+		if (data._createby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
 			data._createby = user_fullname ?? ''
 		}
 
 		// lookup data modifyby
-		{
+		if (data._modifyby !== undefined) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
@@ -423,6 +431,39 @@ async function program_headerDelete(self, body) {
 			}
 
 			
+			// hapus data setting
+			{
+				const sql = `select * from ${settingTableName} where program_id=\${program_id}`
+				const rows = await tx.any(sql, dataToRemove)
+				for (let rowsetting of rows) {
+					
+					const logMetadata = {}
+					
+					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+					if (typeof Extender.settingDeleting === 'function') {
+						// export async function settingDeleting(self, tx, rowsetting, logMetadata) {}
+						await Extender.settingDeleting(self, tx, rowsetting, logMetadata)
+					}
+
+					const param = {programsetting_id: rowsetting.programsetting_id}
+					const cmd = sqlUtil.createDeleteCommand(settingTableName, ['programsetting_id'])
+					const deletedRow = await cmd.execute(param)
+
+					// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+					if (typeof Extender.settingDeleted === 'function') {
+						// export async function settingDeleted(self, tx, deletedRow, logMetadata) {}
+						await Extender.settingDeleted(self, tx, deletedRow, logMetadata)
+					}					
+
+					program_log(self, body, startTime, settingTableName, rowsetting.programsetting_id, 'DELETE', {rowdata: deletedRow})
+					program_log(self, body, startTime, headerTableName, rowsetting.program_id, 'DELETE ROW SETTING', {programsetting_id: rowsetting.programsetting_id, tablename: settingTableName}, `removed: ${rowsetting.programsetting_id}`)
+
+
+				}	
+			}
+
+			
+			
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['program_id'])
@@ -449,5 +490,426 @@ async function program_headerDelete(self, body) {
 	}
 }
 
+
+
+// setting	
+
+async function program_settingList(self, body) {
+	const tablename = settingTableName
+	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const searchMap = {
+		program_id: `program_id=try_cast_bigint(\${program_id}, 0)`,
+	};
+
+
+	if (Object.keys(sort).length === 0) {
+		sort.programsetting_id = 'asc'
+	}
+
+
+	try {
+	
+		// hilangkan criteria '' atau null
+		for (var cname in criteria) {
+			if (criteria[cname]==='' || criteria[cname]===null) {
+				delete criteria[cname]
+			}
+		}
+
+		const args = { db, criteria, tablename }
+
+		// apabila ada keperluan untuk recompose criteria
+		if (typeof Extender.settingListCriteria === 'function') {
+			// export async function settingListCriteria(self, db, searchMap, criteria, sort, columns, args) {}
+			await Extender.settingListCriteria(self, db, searchMap, criteria, sort, columns, args)
+		}
+
+		var max_rows = limit==0 ? 10 : limit
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename: args.tablename, 
+			columns, 
+			whereClause, 
+			sort: args.sqlSort ?? sort, 
+			limit:max_rows+1, 
+			offset, 
+			queryParams
+		})
+		const rows = await db.any(sql, queryParams);
+
+		
+		var i = 0
+		const data = []
+		for (var row of rows) {
+			i++
+			if (i>max_rows) { break }
+
+			 
+			// field dengan tipedata json/jsonb	
+			{
+				if (row.setting_data) {
+					row.setting_data = JSON.stringify(row.setting_data)
+				}
+			}
+			
+			// pasang extender di sini
+			if (typeof Extender.detilListRow === 'function') {
+				// export async function detilListRow(self, row, args) {}
+				await Extender.detilListRow(self, row, args)
+			}
+
+			data.push(row)
+		}
+
+		var nextoffset = null
+		if (rows.length>max_rows) {
+			nextoffset = offset+max_rows
+		}
+
+
+		const listData = {
+			criteria: criteria,
+			limit:  max_rows,
+			nextoffset: nextoffset,
+			data: data
+		}
+
+		if (typeof Extender.detilList === 'function') {
+			// export async function detilList(self, listData, args) {}
+			await Extender.detilList(self, listData, args)
+		}
+
+		return listData
+	} catch (err) {
+		throw err
+	}
+}
+
+async function program_settingOpen(self, body) {
+	const tablename = settingTableName
+
+	try {
+		const { id } = body 
+		const criteria = { programsetting_id: id }
+		const searchMap = { programsetting_id: `programsetting_id = \${programsetting_id}`}
+		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const sql = sqlUtil.createSqlSelect({
+			tablename, 
+			columns:[], 
+			whereClause, 
+			sort:{}, 
+			limit:0, 
+			offset:0, 
+			queryParams
+		})
+		const data = await db.one(sql, queryParams);
+		if (data==null) { 
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
+		}	
+
+
+		  
+		// field dengan tipedata json/jsonb	
+		{
+			if (data.setting_data) {
+				data.setting_data = JSON.stringify(data.setting_data)
+			}
+		}
+		
+		// lookup data createby
+		if (data._createby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._createby)
+			data._createby = user_fullname ?? ''
+		}
+
+		// lookup data modifyby
+		if (data._modifyby !== undefined) {
+			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
+			data._modifyby = user_fullname ?? ''
+		}	
+
+
+		// pasang extender untuk olah data
+		// export async function settingOpen(self, db, data) {}
+		if (typeof Extender.settingOpen === 'function') {
+			// export async function settingOpen(self, db, data) {}
+			await Extender.settingOpen(self, db, data)
+		}
+
+		return data
+	} catch (err) {
+		throw err
+	}
+}
+
+async function program_settingCreate(self, body) {
+	const { source='program', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = settingTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._createby = user_id
+		data._createdate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+
+			const args = { 
+				section: 'setting', 
+				doc_id: 'PROG'	
+			}
+
+			const sequencer = createSequencerLine(tx, {})
+
+
+			if (typeof Extender.sequencerSetup === 'function') {
+				// jika ada keperluan menambahkan code block/cluster di sequencer
+				// dapat diimplementasikan di exterder sequencerSetup 
+				// export async function sequencerSetup(self, tx, sequencer, data, args) {}
+				await Extender.sequencerSetup(self, tx, sequencer, data, args)
+			}
+
+
+			const seqdata = await sequencer.increment(args.doc_id)
+			data.programsetting_id = seqdata.id
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.settingCreating === 'function') {
+				// export async function settingCreating(self, tx, data, seqdata, args) {}
+				await Extender.settingCreating(self, tx, data, seqdata, args)
+			}
+
+			const cmd = sqlUtil.createInsertCommand(tablename, data)
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: data.program_id
+			})
+
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.settingCreated === 'function') {
+				// export async function settingCreated(self, tx, ret, data, logMetadata, args) {}
+				await Extender.settingCreated(self, tx, ret, data, logMetadata, args)
+			}
+
+			// record log
+			program_log(self, body, startTime, tablename, ret.programsetting_id, 'CREATE', logMetadata)
+
+			return ret
+		})
+
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function program_settingUpdate(self, body) {
+	const { source='program', data={} } = body
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = settingTableName
+
+	try {
+
+		// parse uploaded data
+		const files = Api.parseUploadData(data, req.files)
+
+		const data_timestamp = (new Date()).toISOString()
+
+		data._modifyby = user_id
+		data._modifydate = data_timestamp
+		data._timestamp = data_timestamp
+
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToUpdate = {programsetting_id: data.programsetting_id}
+			const sql = `select * from ${settingTableName} where programsetting_id=\${programsetting_id}`
+			const rowsetting = await tx.oneOrNone(sql, dataToUpdate)
+
+
+			// apabila ada keperluan pengolahan data SEBELUM disimpan
+			if (typeof Extender.settingUpdating === 'function') {
+				// export async function settingUpdating(self, tx, data) {}
+				await Extender.settingUpdating(self, tx, data)
+			}			
+			
+			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['programsetting_id'])
+			const ret = await cmd.execute(data)
+			
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowsetting.program_id
+			})
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
+			if (typeof Extender.settingUpdated === 'function') {
+				// export async function settingUpdated(self, tx, ret, data, logMetadata) {}
+				await Extender.settingUpdated(self, tx, ret, data, logMetadata)
+			}
+
+			// record log
+			program_log(self, body, startTime, tablename, data.programsetting_id, 'UPDATE', logMetadata)
+
+			return ret
+		})
+	
+		return result
+	} catch (err) {
+		throw err
+	}
+}
+
+async function program_settingDelete(self, body) {
+	const { source, id } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint()
+	const tablename = settingTableName
+
+	try {
+
+		const data_timestamp = (new Date()).toISOString()
+
+		const deletedRow = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			const dataToRemove = {programsetting_id: id}
+			const sql = `select * from ${settingTableName} where programsetting_id=\${programsetting_id}`
+			const rowsetting = await tx.oneOrNone(sql, dataToRemove)
+
+			const logMetadata = {}
+
+			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+			if (typeof Extender.settingDeleting === 'function') {
+				// export async function settingDeleting(self, tx, rowsetting, logMetadata) {}
+				await Extender.settingDeleting(self, tx, rowsetting, logMetadata)
+			}
+
+			const param = {programsetting_id: rowsetting.programsetting_id}
+			const cmd = sqlUtil.createDeleteCommand(settingTableName, ['programsetting_id'])
+			const deletedRow = await cmd.execute(param)
+
+
+			// update timestamp pada header
+			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+				_timestamp: data_timestamp,
+				pk: rowsetting.program_id
+			})
+
+			// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+			if (typeof Extender.settingDeleted === 'function') {
+				// export async function settingDeleted(self, tx, deletedRow, logMetadata) {}
+				await Extender.settingDeleted(self, tx, deletedRow, logMetadata)
+			}					
+
+			program_log(self, body, startTime, settingTableName, rowsetting.programsetting_id, 'DELETE', {rowdata: deletedRow})
+			program_log(self, body, startTime, headerTableName, rowsetting.program_id, 'DELETE ROW SETTING', {programsetting_id: rowsetting.programsetting_id, tablename: settingTableName}, `removed: ${rowsetting.programsetting_id}`)
+
+			return deletedRow
+		})
+	
+
+		return deletedRow
+	} catch (err) {
+		throw err
+	}
+}
+
+async function program_settingDeleteRows(self, body) {
+	const { data } = body 
+	const req = self.req
+	const user_id = req.session.user.userId
+	const startTime = process.hrtime.bigint();
+	const tablename = settingTableName
+
+
+	try {
+
+
+		const data_timestamp = (new Date()).toISOString()
+
+		let program_id
+		const result = await db.tx(async tx=>{
+			sqlUtil.connect(tx)
+
+			for (let id of data) {
+				const dataToRemove = {programsetting_id: id}
+				const sql = `select * from ${settingTableName} where programsetting_id=\${programsetting_id}`
+				const rowsetting = await tx.oneOrNone(sql, dataToRemove)
+				program_id = rowsetting.program_id
+
+				const logMetadata = {}
+
+				
+				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
+				if (typeof Extender.settingDeleting === 'function') {
+					// async function settingDeleting(self, tx, rowsetting, logMetadata) {}
+					await Extender.settingDeleting(self, tx, rowsetting, logMetadata)
+				}
+
+				const param = {programsetting_id: rowsetting.programsetting_id}
+				const cmd = sqlUtil.createDeleteCommand(settingTableName, ['programsetting_id'])
+				const deletedRow = await cmd.execute(param)
+
+				// update timestamp pada header
+				tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
+					_timestamp: data_timestamp,
+					pk: rowsetting.program_id
+				})
+				
+				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
+				if (typeof Extender.settingDeleted === 'function') {
+					// export async function settingDeleted(self, tx, deletedRow, logMetadata) {}
+					await Extender.settingDeleted(self, tx, deletedRow, logMetadata)
+				}					
+
+				program_log(self, body, startTime, settingTableName, rowsetting.programsetting_id, 'DELETE', {rowdata: deletedRow})
+				program_log(self, body, startTime, headerTableName, rowsetting.program_id, 'DELETE ROW SETTING', {programsetting_id: rowsetting.programsetting_id, tablename: settingTableName}, `removed: ${rowsetting.programsetting_id}`)
+			}
+		})
+		
+
+		const res = {
+			deleted: true,
+			program_id: program_id,
+			message: ''
+		}
+
+		// apabila ada keperluan update info / pemrosesan data setelah hapus multirow, lakukan di extender
+		const fn_name = 'settingRowsDeleted'
+		const fn = Extender[fn_name]
+		if (typeof fn === 'function') {
+			// export async function settingRowsDeleted(self, db, res) {}
+			await fn(self, db, res)
+		}
+
+		return res
+	} catch (err) {
+		throw err
+	}	
+}
 
 	

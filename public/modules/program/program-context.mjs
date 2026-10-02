@@ -15,9 +15,13 @@ export default {
 	Sections: { 
 		programHeaderList: 'programHeaderList-section', 
 		programHeaderEdit: 'programHeaderEdit-section', 
+		programSettingList: 'programSettingList-section', 
+		programSettingEdit: 'programSettingEdit-section', 
 	},
 	SectionMap: { 
 		'programHeaderList-section' : 'programHeaderList', 
 		'programHeaderEdit-section' : 'programHeaderEdit', 
+		'programSettingList-section' : 'programSettingList', 
+		'programSettingEdit-section' : 'programSettingEdit', 
 	}
 }
