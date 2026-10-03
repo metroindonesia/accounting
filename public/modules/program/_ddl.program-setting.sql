@@ -173,7 +173,12 @@ CREATE INDEX idx$core$programsetting$_timestamp ON core.programsetting (_timesta
 -- =============================================
 -- UNIQUE INDEX
 -- =============================================
+-- Drop existing unique index 
+alter table core."programsetting"
+	drop constraint uq$core$programsetting$programsetting_pair;
+	
+
 -- Add unique index 
 alter table  core."programsetting"
-	add constraint uq$core$programsetting$programsetting_pair unique (programsetting_id, setting_name, setting_value); 
+	add constraint uq$core$programsetting$programsetting_pair unique (programsetting_id, setting_name); 
 

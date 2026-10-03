@@ -1077,7 +1077,7 @@
       "Uniques": {
         "programsetting_pair": {
           "name": "programsetting_pair",
-          "fields": "programsetting_id, setting_name, setting_value"
+          "fields": "programsetting_id, setting_name"
         }
       },
       "Search": {}
