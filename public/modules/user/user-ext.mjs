@@ -39,6 +39,17 @@ export async function init(self, args) {
 		}
 	}
 
+	// hide tombol add dan romove row pada detil Login dan Favourite
+	const faveAddRow = document.querySelectorAll('button[data-action="userFavourite-addrow"]')
+	const faveDelRows = document.getElementById('userFavouriteList-btn_delrow')
+	const faveEdit = document.getElementById('userFavouriteEdit-btn_edit')
+	const loginAddRow = document.querySelectorAll('button[data-action="userLogin-addrow"]')
+	const loginDelRows = document.getElementById('userLoginList-btn_delrow')
+	const loginEdit = document.getElementById('userLoginEdit-btn_edit')
+	for (let btn of [...faveAddRow, faveDelRows, faveEdit, ...loginAddRow, loginDelRows, loginEdit]) {
+		btn.classList.add('hidden')
+	}
+
 
 
 	// tambahkan tombol di user password
