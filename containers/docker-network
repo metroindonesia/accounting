@@ -1,0 +1,8 @@
+#!/bin/bash
+
+docker network create \
+  --driver=bridge \
+  --subnet=192.168.131.0/24 \
+  --gateway=192.168.131.1 \
+  --opt "com.docker.network.bridge.name"="docker1" \
+  docker1

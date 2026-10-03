@@ -146,6 +146,8 @@ public/icons/icon-logo-*
 public/modules/--*
 
 
+containers/.data
+
 public/local
 
 production.config.js

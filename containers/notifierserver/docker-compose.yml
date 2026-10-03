@@ -1,0 +1,16 @@
+services:
+  notifierserver:
+    image: dhewe/notifierserver:latest
+    container_name: notifierserver
+    restart: unless-stopped
+    environment:
+      - PORT=8080
+    ports:
+      - "8080:8080"
+    networks:
+      - docker1
+
+networks:
+  docker1:
+    name: docker1
+    external: true
