@@ -8,21 +8,22 @@ import pgp from 'pg-promise';
 import db from '@agung_dhewe/webapps/src/db.js'
 import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
-import context from '@agung_dhewe/webapps/src/context.js'  
+import context from '@agung_dhewe/webapps/src/context.js'
 import logger from '@agung_dhewe/webapps/src/logger.js'
-import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js' 
+import { getProgramSetting } from '@agung_dhewe/webapps/src/helper.js'
+import { createSequencerLine } from '@agung_dhewe/webapps/src/sequencerline.js'
 
 import * as Extender from './extenders/user.apiext.js'
 
 const moduleName = 'user'
 const headerSectionName = 'header'
-const headerTableName = 'core.user' 
-const headerPrimaryKey = 'user_id' 
-const loginTableName = 'core.userlogin'  
-const propTableName = 'core.userprop'  
-const groupTableName = 'core.usergroup'  
-const favouriteTableName = 'core.userfavouriteprogram'  
-const roleTableName = 'core.userrole'  	
+const headerTableName = 'core.user'
+const headerPrimaryKey = 'user_id'
+const loginTableName = 'core.userlogin'
+const propTableName = 'core.userprop'
+const groupTableName = 'core.usergroup'
+const favouriteTableName = 'core.userfavouriteprogram'
+const roleTableName = 'core.userrole'
 
 // api: account
 export default class extends Api {
@@ -43,52 +44,52 @@ export default class extends Api {
 	// header
 	async headerList(body) { return await user_headerList(this, body) }
 	async headerOpen(body) { return await user_headerOpen(this, body) }
-	async headerUpdate(body) { return await user_headerUpdate(this, body)}
-	async headerCreate(body) { return await user_headerCreate(this, body)}
+	async headerUpdate(body) { return await user_headerUpdate(this, body) }
+	async headerCreate(body) { return await user_headerCreate(this, body) }
 	async headerDelete(body) { return await user_headerDelete(this, body) }
 
-	
+
 	// login	
 	async loginList(body) { return await user_loginList(this, body) }
 	async loginOpen(body) { return await user_loginOpen(this, body) }
-	async loginUpdate(body) { return await user_loginUpdate(this, body)}
+	async loginUpdate(body) { return await user_loginUpdate(this, body) }
 	async loginCreate(body) { return await user_loginCreate(this, body) }
 	async loginDelete(body) { return await user_loginDelete(this, body) }
 	async loginDeleteRows(body) { return await user_loginDeleteRows(this, body) }
-	
+
 	// prop	
 	async propList(body) { return await user_propList(this, body) }
 	async propOpen(body) { return await user_propOpen(this, body) }
-	async propUpdate(body) { return await user_propUpdate(this, body)}
+	async propUpdate(body) { return await user_propUpdate(this, body) }
 	async propCreate(body) { return await user_propCreate(this, body) }
 	async propDelete(body) { return await user_propDelete(this, body) }
 	async propDeleteRows(body) { return await user_propDeleteRows(this, body) }
-	
+
 	// group	
 	async groupList(body) { return await user_groupList(this, body) }
 	async groupOpen(body) { return await user_groupOpen(this, body) }
-	async groupUpdate(body) { return await user_groupUpdate(this, body)}
+	async groupUpdate(body) { return await user_groupUpdate(this, body) }
 	async groupCreate(body) { return await user_groupCreate(this, body) }
 	async groupDelete(body) { return await user_groupDelete(this, body) }
 	async groupDeleteRows(body) { return await user_groupDeleteRows(this, body) }
-	
+
 	// favourite	
 	async favouriteList(body) { return await user_favouriteList(this, body) }
 	async favouriteOpen(body) { return await user_favouriteOpen(this, body) }
-	async favouriteUpdate(body) { return await user_favouriteUpdate(this, body)}
+	async favouriteUpdate(body) { return await user_favouriteUpdate(this, body) }
 	async favouriteCreate(body) { return await user_favouriteCreate(this, body) }
 	async favouriteDelete(body) { return await user_favouriteDelete(this, body) }
 	async favouriteDeleteRows(body) { return await user_favouriteDeleteRows(this, body) }
-	
+
 	// role	
 	async roleList(body) { return await user_roleList(this, body) }
 	async roleOpen(body) { return await user_roleOpen(this, body) }
-	async roleUpdate(body) { return await user_roleUpdate(this, body)}
+	async roleUpdate(body) { return await user_roleUpdate(this, body) }
 	async roleCreate(body) { return await user_roleCreate(this, body) }
 	async roleDelete(body) { return await user_roleDelete(this, body) }
 	async roleDeleteRows(body) { return await user_roleDeleteRows(this, body) }
-			
-}	
+
+}
 
 // init module
 async function user_init(self, body) {
@@ -109,25 +110,30 @@ async function user_init(self, body) {
 			}
 		}
 
+		const programName = req.params.modulename;
+		const variance = req.query.variance;
+		const programSetting = await getProgramSetting(db, programName, variance)
 		const initialData = {
 			userId: req.session.user.userId,
 			userName: req.session.user.userName,
 			userFullname: req.session.userFullname,
-			sid: req.session.sid ,
+			sid: req.session.sid,
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
 			appName: req.app.locals.appConfig.appName,
 			appsUrls: appsUrls,
-			setting: {}
+			setting: {
+				program: programSetting
+			}
 		}
-		
+
 		if (typeof Extender.user_init === 'function') {
 			// export async function user_init(self, initialData) {}
 			await Extender.user_init(self, initialData)
 		}
 
 		return initialData
-		
+
 	} catch (err) {
 		throw err
 	}
@@ -138,8 +144,8 @@ async function user_init(self, body) {
 async function user_execute(self, body) {
 	const { fnName } = body
 
-	if (fnName==null || fnName=='') {
-		throw new Error('fnName belum didefinisikan di api call') 
+	if (fnName == null || fnName == '') {
+		throw new Error('fnName belum didefinisikan di api call')
 	}
 
 	if (typeof Extender[fnName] === 'function') {
@@ -153,17 +159,17 @@ async function user_execute(self, body) {
 
 
 // data logging
-async function user_log(self, body, startTime, tablename, id, action, data={}, remark='') {
+async function user_log(self, body, startTime, tablename, id, action, data = {}, remark = '') {
 	const { source } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const user_name = req.session.user.userFullname
 	const ipaddress = req.ip
-	const metadata = JSON.stringify({...{source:source}, ...data})
+	const metadata = JSON.stringify({ ...{ source: source }, ...data })
 	const endTime = process.hrtime.bigint();
 	const executionTimeMs = Number((endTime - startTime) / 1_000_000n); // hasil dalam ms tanpa desimal
-	
-	const logdata = {id, user_id, user_name, moduleName, action, tablename, executionTimeMs, remark, metadata, ipaddress}
+
+	const logdata = { id, user_id, user_name, moduleName, action, tablename, executionTimeMs, remark, metadata, ipaddress }
 	const ret = await logger.log(logdata)
 	return ret
 }
@@ -174,22 +180,22 @@ async function user_log(self, body, startTime, tablename, id, action, data={}, r
 
 async function user_headerList(self, body) {
 	const tablename = headerTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		searchtext: `user_name ILIKE '%' || \${searchtext} || '%'`,
 	};
 
 	try {
-	
+
 		// jika tidak ada default searchtext
-		if (searchMap.searchtext===undefined) {
-			throw new Error(`'searchtext' belum didefinisikan di searchMap`)	
+		if (searchMap.searchtext === undefined) {
+			throw new Error(`'searchtext' belum didefinisikan di searchMap`)
 		}
-		
+
 
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -202,28 +208,28 @@ async function user_headerList(self, body) {
 			await Extender.headerListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
 			sort: args.sqlSort ?? sort,
-			limit:max_rows+1, 
-			offset, 
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
-			
+
 			// pasang extender di sini
 			if (typeof Extender.headerListRow === 'function') {
 				// export async function headerListRow(self, row, args) {}
@@ -234,13 +240,13 @@ async function user_headerList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 		return {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -254,25 +260,25 @@ async function user_headerOpen(self, body) {
 	const tablename = headerTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { user_id: id }
-		const searchMap = { user_id: `user_id = \${user_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { user_id: `user_id = \${user_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename: tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
-		
+
 
 		// lookup data createby
 		{
@@ -285,7 +291,7 @@ async function user_headerOpen(self, body) {
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
 		}
-		
+
 		// pasang extender untuk olah data
 		// export async function headerOpen(self, db, data) {}
 		if (typeof Extender.headerOpen === 'function') {
@@ -301,7 +307,7 @@ async function user_headerOpen(self, body) {
 
 
 async function user_headerCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -318,13 +324,13 @@ async function user_headerCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { section: 'header', doc_id:'USER' }
+			const args = { section: 'header', doc_id: 'USER' }
 
-			
+
 			// buat short sequencer	
 			const sequencer = createSequencerLine(tx, {})
 
@@ -345,12 +351,12 @@ async function user_headerCreate(self, body) {
 				await Extender.headerCreating(self, tx, data, seqdata, args)
 			}
 
-			
+
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
 
-			
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
@@ -372,7 +378,7 @@ async function user_headerCreate(self, body) {
 }
 
 async function user_headerUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -390,7 +396,7 @@ async function user_headerUpdate(self, body) {
 		data._timestamp = data_timestamp
 
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
@@ -404,21 +410,21 @@ async function user_headerUpdate(self, body) {
 			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['user_id'])
 			const ret = await cmd.execute(data)
 
-			
+
 			const logMetadata = {}
 
 			// apabila ada keperluan pengelohan data setelah disimpan, lakukan di extender headerCreated
 			if (typeof Extender.headerUpdated === 'function') {
 				// export async function headerUpdated(self, tx, ret, data, logMetadata) {}
 				await Extender.headerUpdated(self, tx, ret, data, logMetadata)
-			}			
+			}
 
 			// record log
 			user_log(self, body, startTime, tablename, data.user_id, 'UPDATE')
 
 			return ret
 		})
-		
+
 
 		return result
 	} catch (err) {
@@ -436,10 +442,10 @@ async function user_headerDelete(self, body) {
 
 	try {
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {user_id: id}
+			const dataToRemove = { user_id: id }
 
 			// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender headerDeleting
 			if (typeof Extender.headerDeleting === 'function') {
@@ -447,22 +453,22 @@ async function user_headerDelete(self, body) {
 				await Extender.headerDeleting(self, tx, dataToRemove)
 			}
 
-			
+
 			// hapus data login
 			{
 				const sql = `select * from ${loginTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowlogin of rows) {
-					
+
 					const logMetadata = {}
-					
+
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.loginDeleting === 'function') {
 						// export async function loginDeleting(self, tx, rowlogin, logMetadata) {}
 						await Extender.loginDeleting(self, tx, rowlogin, logMetadata)
 					}
 
-					const param = {userlogin_id: rowlogin.userlogin_id}
+					const param = { userlogin_id: rowlogin.userlogin_id }
 					const cmd = sqlUtil.createDeleteCommand(loginTableName, ['userlogin_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -470,13 +476,13 @@ async function user_headerDelete(self, body) {
 					if (typeof Extender.loginDeleted === 'function') {
 						// export async function loginDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.loginDeleted(self, tx, deletedRow, logMetadata)
-					}					
+					}
 
-					user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', {rowdata: deletedRow})
-					user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', {userlogin_id: rowlogin.userlogin_id, tablename: loginTableName}, `removed: ${rowlogin.userlogin_id}`)
+					user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', { rowdata: deletedRow })
+					user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', { userlogin_id: rowlogin.userlogin_id, tablename: loginTableName }, `removed: ${rowlogin.userlogin_id}`)
 
 
-				}	
+				}
 			}
 
 			// hapus data prop
@@ -484,16 +490,16 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${propTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowprop of rows) {
-					
+
 					const logMetadata = {}
-					
+
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.propDeleting === 'function') {
 						// export async function propDeleting(self, tx, rowprop, logMetadata) {}
 						await Extender.propDeleting(self, tx, rowprop, logMetadata)
 					}
 
-					const param = {userprop_id: rowprop.userprop_id}
+					const param = { userprop_id: rowprop.userprop_id }
 					const cmd = sqlUtil.createDeleteCommand(propTableName, ['userprop_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -501,13 +507,13 @@ async function user_headerDelete(self, body) {
 					if (typeof Extender.propDeleted === 'function') {
 						// export async function propDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.propDeleted(self, tx, deletedRow, logMetadata)
-					}					
+					}
 
-					user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', {rowdata: deletedRow})
-					user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', {userprop_id: rowprop.userprop_id, tablename: propTableName}, `removed: ${rowprop.userprop_id}`)
+					user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', { rowdata: deletedRow })
+					user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', { userprop_id: rowprop.userprop_id, tablename: propTableName }, `removed: ${rowprop.userprop_id}`)
 
 
-				}	
+				}
 			}
 
 			// hapus data group
@@ -515,16 +521,16 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${groupTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowgroup of rows) {
-					
+
 					const logMetadata = {}
-					
+
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.groupDeleting === 'function') {
 						// export async function groupDeleting(self, tx, rowgroup, logMetadata) {}
 						await Extender.groupDeleting(self, tx, rowgroup, logMetadata)
 					}
 
-					const param = {usergroup_id: rowgroup.usergroup_id}
+					const param = { usergroup_id: rowgroup.usergroup_id }
 					const cmd = sqlUtil.createDeleteCommand(groupTableName, ['usergroup_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -532,13 +538,13 @@ async function user_headerDelete(self, body) {
 					if (typeof Extender.groupDeleted === 'function') {
 						// export async function groupDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.groupDeleted(self, tx, deletedRow, logMetadata)
-					}					
+					}
 
-					user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', {rowdata: deletedRow})
-					user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', {usergroup_id: rowgroup.usergroup_id, tablename: groupTableName}, `removed: ${rowgroup.usergroup_id}`)
+					user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', { rowdata: deletedRow })
+					user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', { usergroup_id: rowgroup.usergroup_id, tablename: groupTableName }, `removed: ${rowgroup.usergroup_id}`)
 
 
-				}	
+				}
 			}
 
 			// hapus data favourite
@@ -546,16 +552,16 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${favouriteTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowfavourite of rows) {
-					
+
 					const logMetadata = {}
-					
+
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.favouriteDeleting === 'function') {
 						// export async function favouriteDeleting(self, tx, rowfavourite, logMetadata) {}
 						await Extender.favouriteDeleting(self, tx, rowfavourite, logMetadata)
 					}
 
-					const param = {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id}
+					const param = { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id }
 					const cmd = sqlUtil.createDeleteCommand(favouriteTableName, ['userfavouriteprogram_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -563,13 +569,13 @@ async function user_headerDelete(self, body) {
 					if (typeof Extender.favouriteDeleted === 'function') {
 						// export async function favouriteDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.favouriteDeleted(self, tx, deletedRow, logMetadata)
-					}					
+					}
 
-					user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', {rowdata: deletedRow})
-					user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName}, `removed: ${rowfavourite.userfavouriteprogram_id}`)
+					user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', { rowdata: deletedRow })
+					user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName }, `removed: ${rowfavourite.userfavouriteprogram_id}`)
 
 
-				}	
+				}
 			}
 
 			// hapus data role
@@ -577,16 +583,16 @@ async function user_headerDelete(self, body) {
 				const sql = `select * from ${roleTableName} where user_id=\${user_id}`
 				const rows = await tx.any(sql, dataToRemove)
 				for (let rowrole of rows) {
-					
+
 					const logMetadata = {}
-					
+
 					// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 					if (typeof Extender.roleDeleting === 'function') {
 						// export async function roleDeleting(self, tx, rowrole, logMetadata) {}
 						await Extender.roleDeleting(self, tx, rowrole, logMetadata)
 					}
 
-					const param = {userrole_id: rowrole.userrole_id}
+					const param = { userrole_id: rowrole.userrole_id }
 					const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
 					const deletedRow = await cmd.execute(param)
 
@@ -594,17 +600,17 @@ async function user_headerDelete(self, body) {
 					if (typeof Extender.roleDeleted === 'function') {
 						// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
 						await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
-					}					
+					}
 
-					user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
-					user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
+					user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', { rowdata: deletedRow })
+					user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', { userrole_id: rowrole.userrole_id, tablename: roleTableName }, `removed: ${rowrole.userrole_id}`)
 
 
-				}	
+				}
 			}
 
-			
-			
+
+
 
 			// hapus data header
 			const cmd = sqlUtil.createDeleteCommand(tablename, ['user_id'])
@@ -623,7 +629,7 @@ async function user_headerDelete(self, body) {
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -637,7 +643,7 @@ async function user_headerDelete(self, body) {
 
 async function user_loginList(self, body) {
 	const tablename = loginTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
 	};
@@ -649,10 +655,10 @@ async function user_loginList(self, body) {
 
 
 	try {
-	
+
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -665,27 +671,27 @@ async function user_loginList(self, body) {
 			await Extender.loginListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
-			sort: args.sqlSort ?? sort, 
-			limit:max_rows+1, 
-			offset, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
+			sort: args.sqlSort ?? sort,
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
-			
+
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -697,14 +703,14 @@ async function user_loginList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -724,26 +730,26 @@ async function user_loginOpen(self, body) {
 	const tablename = loginTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { userlogin_id: id }
-		const searchMap = { userlogin_id: `userlogin_id = \${userlogin_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { userlogin_id: `userlogin_id = \${userlogin_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
 
-		
+
 
 		// lookup data createby
 		{
@@ -755,7 +761,7 @@ async function user_loginOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}	
+		}
 
 
 		// pasang extender untuk olah data
@@ -772,7 +778,7 @@ async function user_loginOpen(self, body) {
 }
 
 async function user_loginCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -789,13 +795,13 @@ async function user_loginCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { 
-				section: 'login', 
-				prefix: 'USER'	
+			const args = {
+				section: 'login',
+				prefix: 'USER'
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -820,7 +826,7 @@ async function user_loginCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -850,7 +856,7 @@ async function user_loginCreate(self, body) {
 }
 
 async function user_loginUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -867,10 +873,10 @@ async function user_loginUpdate(self, body) {
 		data._modifydate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToUpdate = {userlogin_id: data.userlogin_id}
+			const dataToUpdate = { userlogin_id: data.userlogin_id }
 			const sql = `select * from ${loginTableName} where userlogin_id=\${userlogin_id}`
 			const rowlogin = await tx.oneOrNone(sql, dataToUpdate)
 
@@ -879,11 +885,11 @@ async function user_loginUpdate(self, body) {
 			if (typeof Extender.loginUpdating === 'function') {
 				// export async function loginUpdating(self, tx, data) {}
 				await Extender.loginUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['userlogin_id'])
+			}
+
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['userlogin_id'])
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -904,7 +910,7 @@ async function user_loginUpdate(self, body) {
 
 			return ret
 		})
-	
+
 		return result
 	} catch (err) {
 		throw err
@@ -912,7 +918,7 @@ async function user_loginUpdate(self, body) {
 }
 
 async function user_loginDelete(self, body) {
-	const { source, id } = body 
+	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -922,10 +928,10 @@ async function user_loginDelete(self, body) {
 
 		const data_timestamp = (new Date()).toISOString()
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {userlogin_id: id}
+			const dataToRemove = { userlogin_id: id }
 			const sql = `select * from ${loginTableName} where userlogin_id=\${userlogin_id}`
 			const rowlogin = await tx.oneOrNone(sql, dataToRemove)
 
@@ -937,7 +943,7 @@ async function user_loginDelete(self, body) {
 				await Extender.loginDeleting(self, tx, rowlogin, logMetadata)
 			}
 
-			const param = {userlogin_id: rowlogin.userlogin_id}
+			const param = { userlogin_id: rowlogin.userlogin_id }
 			const cmd = sqlUtil.createDeleteCommand(loginTableName, ['userlogin_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -952,14 +958,14 @@ async function user_loginDelete(self, body) {
 			if (typeof Extender.loginDeleted === 'function') {
 				// export async function loginDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.loginDeleted(self, tx, deletedRow, logMetadata)
-			}					
+			}
 
-			user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', {rowdata: deletedRow})
-			user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', {userlogin_id: rowlogin.userlogin_id, tablename: loginTableName}, `removed: ${rowlogin.userlogin_id}`)
+			user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', { rowdata: deletedRow })
+			user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', { userlogin_id: rowlogin.userlogin_id, tablename: loginTableName }, `removed: ${rowlogin.userlogin_id}`)
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -968,7 +974,7 @@ async function user_loginDelete(self, body) {
 }
 
 async function user_loginDeleteRows(self, body) {
-	const { data } = body 
+	const { data } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -981,25 +987,25 @@ async function user_loginDeleteRows(self, body) {
 		const data_timestamp = (new Date()).toISOString()
 
 		let user_id
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = {userlogin_id: id}
+				const dataToRemove = { userlogin_id: id }
 				const sql = `select * from ${loginTableName} where userlogin_id=\${userlogin_id}`
 				const rowlogin = await tx.oneOrNone(sql, dataToRemove)
 				user_id = rowlogin.user_id
 
 				const logMetadata = {}
 
-				
+
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.loginDeleting === 'function') {
 					// async function loginDeleting(self, tx, rowlogin, logMetadata) {}
 					await Extender.loginDeleting(self, tx, rowlogin, logMetadata)
 				}
 
-				const param = {userlogin_id: rowlogin.userlogin_id}
+				const param = { userlogin_id: rowlogin.userlogin_id }
 				const cmd = sqlUtil.createDeleteCommand(loginTableName, ['userlogin_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -1008,18 +1014,18 @@ async function user_loginDeleteRows(self, body) {
 					_timestamp: data_timestamp,
 					pk: rowlogin.user_id
 				})
-				
+
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.loginDeleted === 'function') {
 					// export async function loginDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.loginDeleted(self, tx, deletedRow, logMetadata)
-				}					
+				}
 
-				user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', {rowdata: deletedRow})
-				user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', {userlogin_id: rowlogin.userlogin_id, tablename: loginTableName}, `removed: ${rowlogin.userlogin_id}`)
+				user_log(self, body, startTime, loginTableName, rowlogin.userlogin_id, 'DELETE', { rowdata: deletedRow })
+				user_log(self, body, startTime, headerTableName, rowlogin.user_id, 'DELETE ROW LOGIN', { userlogin_id: rowlogin.userlogin_id, tablename: loginTableName }, `removed: ${rowlogin.userlogin_id}`)
 			}
 		})
-		
+
 
 		const res = {
 			deleted: true,
@@ -1038,7 +1044,7 @@ async function user_loginDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}	
+	}
 }
 
 
@@ -1046,7 +1052,7 @@ async function user_loginDeleteRows(self, body) {
 
 async function user_propList(self, body) {
 	const tablename = propTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
 	};
@@ -1058,10 +1064,10 @@ async function user_propList(self, body) {
 
 
 	try {
-	
+
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -1074,27 +1080,27 @@ async function user_propList(self, body) {
 			await Extender.propListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
-			sort: args.sqlSort ?? sort, 
-			limit:max_rows+1, 
-			offset, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
+			sort: args.sqlSort ?? sort,
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
-			
+
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -1106,14 +1112,14 @@ async function user_propList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -1133,26 +1139,26 @@ async function user_propOpen(self, body) {
 	const tablename = propTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { userprop_id: id }
-		const searchMap = { userprop_id: `userprop_id = \${userprop_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { userprop_id: `userprop_id = \${userprop_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
 
-		
+
 
 		// lookup data createby
 		{
@@ -1164,7 +1170,7 @@ async function user_propOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}	
+		}
 
 
 		// pasang extender untuk olah data
@@ -1181,7 +1187,7 @@ async function user_propOpen(self, body) {
 }
 
 async function user_propCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -1198,13 +1204,13 @@ async function user_propCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { 
-				section: 'prop', 
-				prefix: 'USER'	
+			const args = {
+				section: 'prop',
+				prefix: 'USER'
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -1229,7 +1235,7 @@ async function user_propCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -1259,7 +1265,7 @@ async function user_propCreate(self, body) {
 }
 
 async function user_propUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -1276,10 +1282,10 @@ async function user_propUpdate(self, body) {
 		data._modifydate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToUpdate = {userprop_id: data.userprop_id}
+			const dataToUpdate = { userprop_id: data.userprop_id }
 			const sql = `select * from ${propTableName} where userprop_id=\${userprop_id}`
 			const rowprop = await tx.oneOrNone(sql, dataToUpdate)
 
@@ -1288,11 +1294,11 @@ async function user_propUpdate(self, body) {
 			if (typeof Extender.propUpdating === 'function') {
 				// export async function propUpdating(self, tx, data) {}
 				await Extender.propUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['userprop_id'])
+			}
+
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['userprop_id'])
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -1313,7 +1319,7 @@ async function user_propUpdate(self, body) {
 
 			return ret
 		})
-	
+
 		return result
 	} catch (err) {
 		throw err
@@ -1321,7 +1327,7 @@ async function user_propUpdate(self, body) {
 }
 
 async function user_propDelete(self, body) {
-	const { source, id } = body 
+	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -1331,10 +1337,10 @@ async function user_propDelete(self, body) {
 
 		const data_timestamp = (new Date()).toISOString()
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {userprop_id: id}
+			const dataToRemove = { userprop_id: id }
 			const sql = `select * from ${propTableName} where userprop_id=\${userprop_id}`
 			const rowprop = await tx.oneOrNone(sql, dataToRemove)
 
@@ -1346,7 +1352,7 @@ async function user_propDelete(self, body) {
 				await Extender.propDeleting(self, tx, rowprop, logMetadata)
 			}
 
-			const param = {userprop_id: rowprop.userprop_id}
+			const param = { userprop_id: rowprop.userprop_id }
 			const cmd = sqlUtil.createDeleteCommand(propTableName, ['userprop_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -1361,14 +1367,14 @@ async function user_propDelete(self, body) {
 			if (typeof Extender.propDeleted === 'function') {
 				// export async function propDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.propDeleted(self, tx, deletedRow, logMetadata)
-			}					
+			}
 
-			user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', {rowdata: deletedRow})
-			user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', {userprop_id: rowprop.userprop_id, tablename: propTableName}, `removed: ${rowprop.userprop_id}`)
+			user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', { rowdata: deletedRow })
+			user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', { userprop_id: rowprop.userprop_id, tablename: propTableName }, `removed: ${rowprop.userprop_id}`)
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -1377,7 +1383,7 @@ async function user_propDelete(self, body) {
 }
 
 async function user_propDeleteRows(self, body) {
-	const { data } = body 
+	const { data } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -1390,25 +1396,25 @@ async function user_propDeleteRows(self, body) {
 		const data_timestamp = (new Date()).toISOString()
 
 		let user_id
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = {userprop_id: id}
+				const dataToRemove = { userprop_id: id }
 				const sql = `select * from ${propTableName} where userprop_id=\${userprop_id}`
 				const rowprop = await tx.oneOrNone(sql, dataToRemove)
 				user_id = rowprop.user_id
 
 				const logMetadata = {}
 
-				
+
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.propDeleting === 'function') {
 					// async function propDeleting(self, tx, rowprop, logMetadata) {}
 					await Extender.propDeleting(self, tx, rowprop, logMetadata)
 				}
 
-				const param = {userprop_id: rowprop.userprop_id}
+				const param = { userprop_id: rowprop.userprop_id }
 				const cmd = sqlUtil.createDeleteCommand(propTableName, ['userprop_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -1417,18 +1423,18 @@ async function user_propDeleteRows(self, body) {
 					_timestamp: data_timestamp,
 					pk: rowprop.user_id
 				})
-				
+
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.propDeleted === 'function') {
 					// export async function propDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.propDeleted(self, tx, deletedRow, logMetadata)
-				}					
+				}
 
-				user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', {rowdata: deletedRow})
-				user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', {userprop_id: rowprop.userprop_id, tablename: propTableName}, `removed: ${rowprop.userprop_id}`)
+				user_log(self, body, startTime, propTableName, rowprop.userprop_id, 'DELETE', { rowdata: deletedRow })
+				user_log(self, body, startTime, headerTableName, rowprop.user_id, 'DELETE ROW PROP', { userprop_id: rowprop.userprop_id, tablename: propTableName }, `removed: ${rowprop.userprop_id}`)
 			}
 		})
-		
+
 
 		const res = {
 			deleted: true,
@@ -1447,7 +1453,7 @@ async function user_propDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}	
+	}
 }
 
 
@@ -1455,7 +1461,7 @@ async function user_propDeleteRows(self, body) {
 
 async function user_groupList(self, body) {
 	const tablename = groupTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
 	};
@@ -1467,10 +1473,10 @@ async function user_groupList(self, body) {
 
 
 	try {
-	
+
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -1483,32 +1489,32 @@ async function user_groupList(self, body) {
 			await Extender.groupListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
-			sort: args.sqlSort ?? sort, 
-			limit:max_rows+1, 
-			offset, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
+			sort: args.sqlSort ?? sort,
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
 			// lookup: group_name dari field group_name pada table core.group dimana (core.group.group_id = core.user.group_id)
 			{
 				const { group_name } = await sqlUtil.lookupdb(db, 'core.group', 'group_id', row.group_id)
 				row.group_name = group_name
 			}
-			
+
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -1520,14 +1526,14 @@ async function user_groupList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -1547,23 +1553,23 @@ async function user_groupOpen(self, body) {
 	const tablename = groupTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { usergroup_id: id }
-		const searchMap = { usergroup_id: `usergroup_id = \${usergroup_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { usergroup_id: `usergroup_id = \${usergroup_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
 
 		// lookup: group_name dari field group_name pada table core.group dimana (core.group.group_id = core.user.group_id)
@@ -1571,7 +1577,7 @@ async function user_groupOpen(self, body) {
 			const { group_name } = await sqlUtil.lookupdb(db, 'core.group', 'group_id', data.group_id)
 			data.group_name = group_name
 		}
-		
+
 
 		// lookup data createby
 		{
@@ -1583,7 +1589,7 @@ async function user_groupOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}	
+		}
 
 
 		// pasang extender untuk olah data
@@ -1600,7 +1606,7 @@ async function user_groupOpen(self, body) {
 }
 
 async function user_groupCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -1617,13 +1623,13 @@ async function user_groupCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { 
-				section: 'group', 
-				prefix: 'USER'	
+			const args = {
+				section: 'group',
+				prefix: 'USER'
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -1648,7 +1654,7 @@ async function user_groupCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -1678,7 +1684,7 @@ async function user_groupCreate(self, body) {
 }
 
 async function user_groupUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -1695,10 +1701,10 @@ async function user_groupUpdate(self, body) {
 		data._modifydate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToUpdate = {usergroup_id: data.usergroup_id}
+			const dataToUpdate = { usergroup_id: data.usergroup_id }
 			const sql = `select * from ${groupTableName} where usergroup_id=\${usergroup_id}`
 			const rowgroup = await tx.oneOrNone(sql, dataToUpdate)
 
@@ -1707,11 +1713,11 @@ async function user_groupUpdate(self, body) {
 			if (typeof Extender.groupUpdating === 'function') {
 				// export async function groupUpdating(self, tx, data) {}
 				await Extender.groupUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['usergroup_id'])
+			}
+
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['usergroup_id'])
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -1732,7 +1738,7 @@ async function user_groupUpdate(self, body) {
 
 			return ret
 		})
-	
+
 		return result
 	} catch (err) {
 		throw err
@@ -1740,7 +1746,7 @@ async function user_groupUpdate(self, body) {
 }
 
 async function user_groupDelete(self, body) {
-	const { source, id } = body 
+	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -1750,10 +1756,10 @@ async function user_groupDelete(self, body) {
 
 		const data_timestamp = (new Date()).toISOString()
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {usergroup_id: id}
+			const dataToRemove = { usergroup_id: id }
 			const sql = `select * from ${groupTableName} where usergroup_id=\${usergroup_id}`
 			const rowgroup = await tx.oneOrNone(sql, dataToRemove)
 
@@ -1765,7 +1771,7 @@ async function user_groupDelete(self, body) {
 				await Extender.groupDeleting(self, tx, rowgroup, logMetadata)
 			}
 
-			const param = {usergroup_id: rowgroup.usergroup_id}
+			const param = { usergroup_id: rowgroup.usergroup_id }
 			const cmd = sqlUtil.createDeleteCommand(groupTableName, ['usergroup_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -1780,14 +1786,14 @@ async function user_groupDelete(self, body) {
 			if (typeof Extender.groupDeleted === 'function') {
 				// export async function groupDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.groupDeleted(self, tx, deletedRow, logMetadata)
-			}					
+			}
 
-			user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', {rowdata: deletedRow})
-			user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', {usergroup_id: rowgroup.usergroup_id, tablename: groupTableName}, `removed: ${rowgroup.usergroup_id}`)
+			user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', { rowdata: deletedRow })
+			user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', { usergroup_id: rowgroup.usergroup_id, tablename: groupTableName }, `removed: ${rowgroup.usergroup_id}`)
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -1796,7 +1802,7 @@ async function user_groupDelete(self, body) {
 }
 
 async function user_groupDeleteRows(self, body) {
-	const { data } = body 
+	const { data } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -1809,25 +1815,25 @@ async function user_groupDeleteRows(self, body) {
 		const data_timestamp = (new Date()).toISOString()
 
 		let user_id
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = {usergroup_id: id}
+				const dataToRemove = { usergroup_id: id }
 				const sql = `select * from ${groupTableName} where usergroup_id=\${usergroup_id}`
 				const rowgroup = await tx.oneOrNone(sql, dataToRemove)
 				user_id = rowgroup.user_id
 
 				const logMetadata = {}
 
-				
+
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.groupDeleting === 'function') {
 					// async function groupDeleting(self, tx, rowgroup, logMetadata) {}
 					await Extender.groupDeleting(self, tx, rowgroup, logMetadata)
 				}
 
-				const param = {usergroup_id: rowgroup.usergroup_id}
+				const param = { usergroup_id: rowgroup.usergroup_id }
 				const cmd = sqlUtil.createDeleteCommand(groupTableName, ['usergroup_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -1836,18 +1842,18 @@ async function user_groupDeleteRows(self, body) {
 					_timestamp: data_timestamp,
 					pk: rowgroup.user_id
 				})
-				
+
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.groupDeleted === 'function') {
 					// export async function groupDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.groupDeleted(self, tx, deletedRow, logMetadata)
-				}					
+				}
 
-				user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', {rowdata: deletedRow})
-				user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', {usergroup_id: rowgroup.usergroup_id, tablename: groupTableName}, `removed: ${rowgroup.usergroup_id}`)
+				user_log(self, body, startTime, groupTableName, rowgroup.usergroup_id, 'DELETE', { rowdata: deletedRow })
+				user_log(self, body, startTime, headerTableName, rowgroup.user_id, 'DELETE ROW GROUP', { usergroup_id: rowgroup.usergroup_id, tablename: groupTableName }, `removed: ${rowgroup.usergroup_id}`)
 			}
 		})
-		
+
 
 		const res = {
 			deleted: true,
@@ -1866,7 +1872,7 @@ async function user_groupDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}	
+	}
 }
 
 
@@ -1874,7 +1880,7 @@ async function user_groupDeleteRows(self, body) {
 
 async function user_favouriteList(self, body) {
 	const tablename = favouriteTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
 	};
@@ -1886,10 +1892,10 @@ async function user_favouriteList(self, body) {
 
 
 	try {
-	
+
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -1902,32 +1908,32 @@ async function user_favouriteList(self, body) {
 			await Extender.favouriteListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
-			sort: args.sqlSort ?? sort, 
-			limit:max_rows+1, 
-			offset, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
+			sort: args.sqlSort ?? sort,
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
 			// lookup: program_name dari field program_name pada table core.program dimana (core.program.program_id = core.user.program_id)
 			{
 				const { program_name } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', row.program_id)
 				row.program_name = program_name
 			}
-			
+
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -1939,14 +1945,14 @@ async function user_favouriteList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -1966,23 +1972,23 @@ async function user_favouriteOpen(self, body) {
 	const tablename = favouriteTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { userfavouriteprogram_id: id }
-		const searchMap = { userfavouriteprogram_id: `userfavouriteprogram_id = \${userfavouriteprogram_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { userfavouriteprogram_id: `userfavouriteprogram_id = \${userfavouriteprogram_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
 
 		// lookup: program_name dari field program_name pada table core.program dimana (core.program.program_id = core.user.program_id)
@@ -1990,7 +1996,7 @@ async function user_favouriteOpen(self, body) {
 			const { program_name } = await sqlUtil.lookupdb(db, 'core.program', 'program_id', data.program_id)
 			data.program_name = program_name
 		}
-		
+
 
 		// lookup data createby
 		{
@@ -2002,7 +2008,7 @@ async function user_favouriteOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}	
+		}
 
 
 		// pasang extender untuk olah data
@@ -2019,7 +2025,7 @@ async function user_favouriteOpen(self, body) {
 }
 
 async function user_favouriteCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -2036,13 +2042,13 @@ async function user_favouriteCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { 
-				section: 'favourite', 
-				prefix: 'USER'	
+			const args = {
+				section: 'favourite',
+				prefix: 'USER'
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -2067,7 +2073,7 @@ async function user_favouriteCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -2097,7 +2103,7 @@ async function user_favouriteCreate(self, body) {
 }
 
 async function user_favouriteUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -2114,10 +2120,10 @@ async function user_favouriteUpdate(self, body) {
 		data._modifydate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToUpdate = {userfavouriteprogram_id: data.userfavouriteprogram_id}
+			const dataToUpdate = { userfavouriteprogram_id: data.userfavouriteprogram_id }
 			const sql = `select * from ${favouriteTableName} where userfavouriteprogram_id=\${userfavouriteprogram_id}`
 			const rowfavourite = await tx.oneOrNone(sql, dataToUpdate)
 
@@ -2126,11 +2132,11 @@ async function user_favouriteUpdate(self, body) {
 			if (typeof Extender.favouriteUpdating === 'function') {
 				// export async function favouriteUpdating(self, tx, data) {}
 				await Extender.favouriteUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['userfavouriteprogram_id'])
+			}
+
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['userfavouriteprogram_id'])
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -2151,7 +2157,7 @@ async function user_favouriteUpdate(self, body) {
 
 			return ret
 		})
-	
+
 		return result
 	} catch (err) {
 		throw err
@@ -2159,7 +2165,7 @@ async function user_favouriteUpdate(self, body) {
 }
 
 async function user_favouriteDelete(self, body) {
-	const { source, id } = body 
+	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -2169,10 +2175,10 @@ async function user_favouriteDelete(self, body) {
 
 		const data_timestamp = (new Date()).toISOString()
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {userfavouriteprogram_id: id}
+			const dataToRemove = { userfavouriteprogram_id: id }
 			const sql = `select * from ${favouriteTableName} where userfavouriteprogram_id=\${userfavouriteprogram_id}`
 			const rowfavourite = await tx.oneOrNone(sql, dataToRemove)
 
@@ -2184,7 +2190,7 @@ async function user_favouriteDelete(self, body) {
 				await Extender.favouriteDeleting(self, tx, rowfavourite, logMetadata)
 			}
 
-			const param = {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id}
+			const param = { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id }
 			const cmd = sqlUtil.createDeleteCommand(favouriteTableName, ['userfavouriteprogram_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -2199,14 +2205,14 @@ async function user_favouriteDelete(self, body) {
 			if (typeof Extender.favouriteDeleted === 'function') {
 				// export async function favouriteDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.favouriteDeleted(self, tx, deletedRow, logMetadata)
-			}					
+			}
 
-			user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', {rowdata: deletedRow})
-			user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName}, `removed: ${rowfavourite.userfavouriteprogram_id}`)
+			user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', { rowdata: deletedRow })
+			user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName }, `removed: ${rowfavourite.userfavouriteprogram_id}`)
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -2215,7 +2221,7 @@ async function user_favouriteDelete(self, body) {
 }
 
 async function user_favouriteDeleteRows(self, body) {
-	const { data } = body 
+	const { data } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -2228,25 +2234,25 @@ async function user_favouriteDeleteRows(self, body) {
 		const data_timestamp = (new Date()).toISOString()
 
 		let user_id
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = {userfavouriteprogram_id: id}
+				const dataToRemove = { userfavouriteprogram_id: id }
 				const sql = `select * from ${favouriteTableName} where userfavouriteprogram_id=\${userfavouriteprogram_id}`
 				const rowfavourite = await tx.oneOrNone(sql, dataToRemove)
 				user_id = rowfavourite.user_id
 
 				const logMetadata = {}
 
-				
+
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.favouriteDeleting === 'function') {
 					// async function favouriteDeleting(self, tx, rowfavourite, logMetadata) {}
 					await Extender.favouriteDeleting(self, tx, rowfavourite, logMetadata)
 				}
 
-				const param = {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id}
+				const param = { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id }
 				const cmd = sqlUtil.createDeleteCommand(favouriteTableName, ['userfavouriteprogram_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -2255,18 +2261,18 @@ async function user_favouriteDeleteRows(self, body) {
 					_timestamp: data_timestamp,
 					pk: rowfavourite.user_id
 				})
-				
+
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.favouriteDeleted === 'function') {
 					// export async function favouriteDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.favouriteDeleted(self, tx, deletedRow, logMetadata)
-				}					
+				}
 
-				user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', {rowdata: deletedRow})
-				user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', {userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName}, `removed: ${rowfavourite.userfavouriteprogram_id}`)
+				user_log(self, body, startTime, favouriteTableName, rowfavourite.userfavouriteprogram_id, 'DELETE', { rowdata: deletedRow })
+				user_log(self, body, startTime, headerTableName, rowfavourite.user_id, 'DELETE ROW FAVOURITE', { userfavouriteprogram_id: rowfavourite.userfavouriteprogram_id, tablename: favouriteTableName }, `removed: ${rowfavourite.userfavouriteprogram_id}`)
 			}
 		})
-		
+
 
 		const res = {
 			deleted: true,
@@ -2285,7 +2291,7 @@ async function user_favouriteDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}	
+	}
 }
 
 
@@ -2293,7 +2299,7 @@ async function user_favouriteDeleteRows(self, body) {
 
 async function user_roleList(self, body) {
 	const tablename = roleTableName
-	const { criteria={}, limit=0, offset=0, columns=[], sort={} } = body
+	const { criteria = {}, limit = 0, offset = 0, columns = [], sort = {} } = body
 	const searchMap = {
 		user_id: `user_id=try_cast_bigint(\${user_id}, 0)`,
 	};
@@ -2305,10 +2311,10 @@ async function user_roleList(self, body) {
 
 
 	try {
-	
+
 		// hilangkan criteria '' atau null
 		for (var cname in criteria) {
-			if (criteria[cname]==='' || criteria[cname]===null) {
+			if (criteria[cname] === '' || criteria[cname] === null) {
 				delete criteria[cname]
 			}
 		}
@@ -2321,32 +2327,32 @@ async function user_roleList(self, body) {
 			await Extender.roleListCriteria(self, db, searchMap, criteria, sort, columns, args)
 		}
 
-		var max_rows = limit==0 ? 10 : limit
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		var max_rows = limit == 0 ? 10 : limit
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename: args.tablename, 
-			columns, 
-			whereClause, 
-			sort: args.sqlSort ?? sort, 
-			limit:max_rows+1, 
-			offset, 
+			tablename: args.tablename,
+			columns,
+			whereClause,
+			sort: args.sqlSort ?? sort,
+			limit: max_rows + 1,
+			offset,
 			queryParams
 		})
 		const rows = await db.any(sql, queryParams);
 
-		
+
 		var i = 0
 		const data = []
 		for (var row of rows) {
 			i++
-			if (i>max_rows) { break }
+			if (i > max_rows) { break }
 
 			// lookup: role_name dari field role_name pada table core.role dimana (core.role.role_id = core.user.role_id)
 			{
 				const { role_name } = await sqlUtil.lookupdb(db, 'core.role', 'role_id', row.role_id)
 				row.role_name = role_name
 			}
-			
+
 
 			// pasang extender di sini
 			if (typeof Extender.detilListRow === 'function') {
@@ -2358,14 +2364,14 @@ async function user_roleList(self, body) {
 		}
 
 		var nextoffset = null
-		if (rows.length>max_rows) {
-			nextoffset = offset+max_rows
+		if (rows.length > max_rows) {
+			nextoffset = offset + max_rows
 		}
 
 
 		const listData = {
 			criteria: criteria,
-			limit:  max_rows,
+			limit: max_rows,
 			nextoffset: nextoffset,
 			data: data
 		}
@@ -2385,23 +2391,23 @@ async function user_roleOpen(self, body) {
 	const tablename = roleTableName
 
 	try {
-		const { id } = body 
+		const { id } = body
 		const criteria = { userrole_id: id }
-		const searchMap = { userrole_id: `userrole_id = \${userrole_id}`}
-		const {whereClause, queryParams} = sqlUtil.createWhereClause(criteria, searchMap) 
+		const searchMap = { userrole_id: `userrole_id = \${userrole_id}` }
+		const { whereClause, queryParams } = sqlUtil.createWhereClause(criteria, searchMap)
 		const sql = sqlUtil.createSqlSelect({
-			tablename, 
-			columns:[], 
-			whereClause, 
-			sort:{}, 
-			limit:0, 
-			offset:0, 
+			tablename,
+			columns: [],
+			whereClause,
+			sort: {},
+			limit: 0,
+			offset: 0,
 			queryParams
 		})
 		const data = await db.one(sql, queryParams);
-		if (data==null) { 
-			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`) 
-		}	
+		if (data == null) {
+			throw new Error(`[${tablename}] data dengan id '${id}' tidak ditemukan`)
+		}
 
 
 		// lookup: role_name dari field role_name pada table core.role dimana (core.role.role_id = core.user.role_id)
@@ -2409,7 +2415,7 @@ async function user_roleOpen(self, body) {
 			const { role_name } = await sqlUtil.lookupdb(db, 'core.role', 'role_id', data.role_id)
 			data.role_name = role_name
 		}
-		
+
 
 		// lookup data createby
 		{
@@ -2421,7 +2427,7 @@ async function user_roleOpen(self, body) {
 		{
 			const { user_fullname } = await sqlUtil.lookupdb(db, 'core.user', 'user_id', data._modifyby)
 			data._modifyby = user_fullname ?? ''
-		}	
+		}
 
 
 		// pasang extender untuk olah data
@@ -2438,7 +2444,7 @@ async function user_roleOpen(self, body) {
 }
 
 async function user_roleCreate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -2455,13 +2461,13 @@ async function user_roleCreate(self, body) {
 		data._createdate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 
-			const args = { 
-				section: 'role', 
-				prefix: 'USER'	
+			const args = {
+				section: 'role',
+				prefix: 'USER'
 			}
 
 			const sequencer = createSequencerLine(tx, {})
@@ -2486,7 +2492,7 @@ async function user_roleCreate(self, body) {
 
 			const cmd = sqlUtil.createInsertCommand(tablename, data)
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -2516,7 +2522,7 @@ async function user_roleCreate(self, body) {
 }
 
 async function user_roleUpdate(self, body) {
-	const { source='user', data={} } = body
+	const { source = 'user', data = {} } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -2533,10 +2539,10 @@ async function user_roleUpdate(self, body) {
 		data._modifydate = data_timestamp
 		data._timestamp = data_timestamp
 
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToUpdate = {userrole_id: data.userrole_id}
+			const dataToUpdate = { userrole_id: data.userrole_id }
 			const sql = `select * from ${roleTableName} where userrole_id=\${userrole_id}`
 			const rowrole = await tx.oneOrNone(sql, dataToUpdate)
 
@@ -2545,11 +2551,11 @@ async function user_roleUpdate(self, body) {
 			if (typeof Extender.roleUpdating === 'function') {
 				// export async function roleUpdating(self, tx, data) {}
 				await Extender.roleUpdating(self, tx, data)
-			}			
-			
-			const cmd =  sqlUtil.createUpdateCommand(tablename, data, ['userrole_id'])
+			}
+
+			const cmd = sqlUtil.createUpdateCommand(tablename, data, ['userrole_id'])
 			const ret = await cmd.execute(data)
-			
+
 
 			// update timestamp pada header
 			tx.none(`update ${headerTableName} set _timestamp=$[_timestamp] where ${headerPrimaryKey}=$[pk]`, {
@@ -2570,7 +2576,7 @@ async function user_roleUpdate(self, body) {
 
 			return ret
 		})
-	
+
 		return result
 	} catch (err) {
 		throw err
@@ -2578,7 +2584,7 @@ async function user_roleUpdate(self, body) {
 }
 
 async function user_roleDelete(self, body) {
-	const { source, id } = body 
+	const { source, id } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint()
@@ -2588,10 +2594,10 @@ async function user_roleDelete(self, body) {
 
 		const data_timestamp = (new Date()).toISOString()
 
-		const deletedRow = await db.tx(async tx=>{
+		const deletedRow = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
-			const dataToRemove = {userrole_id: id}
+			const dataToRemove = { userrole_id: id }
 			const sql = `select * from ${roleTableName} where userrole_id=\${userrole_id}`
 			const rowrole = await tx.oneOrNone(sql, dataToRemove)
 
@@ -2603,7 +2609,7 @@ async function user_roleDelete(self, body) {
 				await Extender.roleDeleting(self, tx, rowrole, logMetadata)
 			}
 
-			const param = {userrole_id: rowrole.userrole_id}
+			const param = { userrole_id: rowrole.userrole_id }
 			const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
 			const deletedRow = await cmd.execute(param)
 
@@ -2618,14 +2624,14 @@ async function user_roleDelete(self, body) {
 			if (typeof Extender.roleDeleted === 'function') {
 				// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
 				await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
-			}					
+			}
 
-			user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
-			user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
+			user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', { rowdata: deletedRow })
+			user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', { userrole_id: rowrole.userrole_id, tablename: roleTableName }, `removed: ${rowrole.userrole_id}`)
 
 			return deletedRow
 		})
-	
+
 
 		return deletedRow
 	} catch (err) {
@@ -2634,7 +2640,7 @@ async function user_roleDelete(self, body) {
 }
 
 async function user_roleDeleteRows(self, body) {
-	const { data } = body 
+	const { data } = body
 	const req = self.req
 	const user_id = req.session.user.userId
 	const startTime = process.hrtime.bigint();
@@ -2647,25 +2653,25 @@ async function user_roleDeleteRows(self, body) {
 		const data_timestamp = (new Date()).toISOString()
 
 		let user_id
-		const result = await db.tx(async tx=>{
+		const result = await db.tx(async tx => {
 			sqlUtil.connect(tx)
 
 			for (let id of data) {
-				const dataToRemove = {userrole_id: id}
+				const dataToRemove = { userrole_id: id }
 				const sql = `select * from ${roleTableName} where userrole_id=\${userrole_id}`
 				const rowrole = await tx.oneOrNone(sql, dataToRemove)
 				user_id = rowrole.user_id
 
 				const logMetadata = {}
 
-				
+
 				// apabila ada keperluan pengelohan data sebelum dihapus, lakukan di extender
 				if (typeof Extender.roleDeleting === 'function') {
 					// async function roleDeleting(self, tx, rowrole, logMetadata) {}
 					await Extender.roleDeleting(self, tx, rowrole, logMetadata)
 				}
 
-				const param = {userrole_id: rowrole.userrole_id}
+				const param = { userrole_id: rowrole.userrole_id }
 				const cmd = sqlUtil.createDeleteCommand(roleTableName, ['userrole_id'])
 				const deletedRow = await cmd.execute(param)
 
@@ -2674,18 +2680,18 @@ async function user_roleDeleteRows(self, body) {
 					_timestamp: data_timestamp,
 					pk: rowrole.user_id
 				})
-				
+
 				// apabila ada keperluan pengelohan data setelah dihapus, lakukan di extender
 				if (typeof Extender.roleDeleted === 'function') {
 					// export async function roleDeleted(self, tx, deletedRow, logMetadata) {}
 					await Extender.roleDeleted(self, tx, deletedRow, logMetadata)
-				}					
+				}
 
-				user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', {rowdata: deletedRow})
-				user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', {userrole_id: rowrole.userrole_id, tablename: roleTableName}, `removed: ${rowrole.userrole_id}`)
+				user_log(self, body, startTime, roleTableName, rowrole.userrole_id, 'DELETE', { rowdata: deletedRow })
+				user_log(self, body, startTime, headerTableName, rowrole.user_id, 'DELETE ROW ROLE', { userrole_id: rowrole.userrole_id, tablename: roleTableName }, `removed: ${rowrole.userrole_id}`)
 			}
 		})
-		
+
 
 		const res = {
 			deleted: true,
@@ -2704,7 +2710,6 @@ async function user_roleDeleteRows(self, body) {
 		return res
 	} catch (err) {
 		throw err
-	}	
+	}
 }
 
-	

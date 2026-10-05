@@ -48,16 +48,21 @@ export default class extends Module {
 				Context.maxCoaLevel = result.maxCoaLevel
 
 
-
+				const defaultLevel = Context.setting.program.DEFAULT_LEVEL?.value ?? 0
 				const obj_coalevelData = document.getElementById('obj_coalevel-data')
 				for (let level = 0; level <= Context.maxCoaLevel; level++) {
 					const opt = document.createElement('option')
 					opt.innerHTML = level
 					opt.setAttribute('value', level)
 					obj_coalevelData.appendChild(opt)
+
+
 				}
 				obj_coalevel = new $fgta5.Combobox('obj_coalevel')
 				obj_coalevel.maxValue = Context.maxCoaLevel
+				obj_coalevel.setSelected(defaultLevel, defaultLevel)
+
+
 
 			} catch (err) {
 				throw err

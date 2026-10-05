@@ -4,6 +4,7 @@ import db from '@agung_dhewe/webapps/src/db.js'
 import Api from '@agung_dhewe/webapps/src/api.js'
 import sqlUtil from '@agung_dhewe/pgsqlc'
 import context from '@agung_dhewe/webapps/src/context.js'
+import { getProgramSetting } from '@agung_dhewe/webapps/src/helper.js'
 import { Worker } from 'worker_threads';
 import * as path from 'path'
 
@@ -49,6 +50,9 @@ async function reportviewer_init(self, body) {
 			}
 		}
 
+		const programName = req.params.modulename;
+		const variance = req.query.variance;
+		const programSetting = await getProgramSetting(db, programName, variance)
 		const initialData = {
 			userId: req.session.user.userId,
 			userName: req.session.user.userName,
@@ -57,7 +61,9 @@ async function reportviewer_init(self, body) {
 			notifierId: Api.generateNotifierId(moduleName, req.sessionID),
 			notifierSocket: req.app.locals.appConfig.notifierSocket,
 			appsUrls: appsUrls,
-			setting: {}
+			setting: {
+				program: programSetting
+			}
 		}
 
 		// set data setting	
