@@ -6,18 +6,7 @@
 		}
 	],
 	"settings": {
-		"keybindings": [
-			{
-				"key": "tab",
-				"command": "acceptSelectedSuggestion",
-				"when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
-			},
-			{
-				"key": "enter",
-				"command": "-acceptSelectedSuggestion",
-				"when": "acceptSuggestionOnEnter && suggestWidgetHasFocusedSuggestion && suggestWidgetVisible && suggestionMakesTextEdit && textInputFocus"
-			}
-		],
+		"npm.packageManager": "npm",
 		"editor.insertSpaces": false,
 		"[html]": {
 			"editor.formatOnSave": false
@@ -28,8 +17,13 @@
 		"files.watcherExclude": {
 			"**/node_modules": true
 		},
-		"remote.autoForwardPortsSource": "output",
+
+		"remote.autoForwardPorts": true,
+		"remote.autoForwardPortsSource": "hybrid",
 		"remote.restoreForwardedPorts": true,
+		"remote.otherPortsAttributes": {
+			"onAutoForward": "ignore"
+		},
 		"remote.portsAttributes": {
 			"3003": {
 				"label": "Accounting Server",
@@ -43,17 +37,17 @@
 				"label": "HTTP Service (8080)",
 				"onAutoForward": "silent"
 			}
-		}
+		},
 	},
 	"launch": {
 		"version": "0.2.0",
 		"configurations": [
-			{
-				"type": "bun",
-				"request": "launch",
-				"name": "Backend Accounting Debug (bun)",
-				"program": "${workspaceFolder}/src/index.js",
-			},
+			// {
+			// 	"type": "bun",
+			// 	"request": "launch",
+			// 	"name": "Backend Accounting Debug (bun)",
+			// 	"program": "${workspaceFolder}/src/index.js",
+			// },
 			{
 				"name": "Chrome",
 				"request": "launch",
