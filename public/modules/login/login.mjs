@@ -45,6 +45,8 @@ export default class extends Module {
 		})
 
 
+		document.body.classList.add('login-page')
+
 
 		try {
 			// inisiasi sisi server
